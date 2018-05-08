@@ -1,0 +1,43 @@
+{
+  "name": "flutter-react-data-table",
+  "version": "1.0.0",
+  "description": "React-Redux data table",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --watch",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/eonsequeira/flutter-react-data-table.git"
+  },
+  "keywords": [
+    "data-table",
+    "react-data-table",
+    "react-table",
+    "redux-table",
+    "react-redux-data-table"
+  ],
+  "author": "“Eon <“eons@yahoo.com”> (http:/www.fluttercms.com)",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/eonsequeira/flutter-react-data-table#readme",
+  "peerDependencies": {
+    "react": ">=16.3.0",
+    "react-dom": ">=16.3.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.5.1",
+    "react": ">=16.3.0",
+    "react-dom": ">=16.3.0"
+  },
+  "dependencies": {
+    "react": "^16.3.0",
+    "webpack": "^2.6.1"
+  }
+}
