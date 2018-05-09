@@ -633,14 +633,14 @@ var fillRange = function fillRange(start, end) {
 };
 
 var getPages = function getPages(props) {
-    var last = NUM_LINKS;
-    last = props.total < last ? props.total : last;
+    var currentPage = props.page;
+    var padding = Math.floor(NUM_LINKS / 2);
+    var left = currentPage - padding < padding ? 1 : currentPage - padding;
+    var right = left + NUM_LINKS - 1 > props.total ? props.total : left + NUM_LINKS - 1;
 
-    var first = props.page - Math.floor(last / 2);
-    first = first + last < props.total ? first : props.total - last + 1;
-    first = first > 1 ? first : 1;
+    left = right == props.total ? right - NUM_LINKS < 1 ? 1 : right - NUM_LINKS + 1 : left;
 
-    return fillRange(first, last);
+    return fillRange(left, right);
 };
 
 var Pagination = function Pagination(props) {
