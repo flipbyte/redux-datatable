@@ -20,8 +20,9 @@ const calculatePaginationProps = (props) => {
         page: page,
         start: start,
         end: (count > end) ? end: count,
-        limit: limit,
-        count: count
+        // limit: limit,
+        count: count,
+        total: Math.ceil(count / limit)
     }
 }
 
