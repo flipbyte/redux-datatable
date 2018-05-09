@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -93,11 +93,11 @@ if (process.env.NODE_ENV !== 'production') {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(17)(isValidElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(18)(isValidElement, throwOnDirectAccess);
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(16)();
+  module.exports = __webpack_require__(17)();
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
@@ -507,7 +507,7 @@ var _propTypes = __webpack_require__(0);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Renderer = __webpack_require__(11);
+var _Renderer = __webpack_require__(12);
 
 var _Renderer2 = _interopRequireDefault(_Renderer);
 
@@ -565,11 +565,11 @@ var _propTypes = __webpack_require__(0);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Cell = __webpack_require__(10);
+var _Cell = __webpack_require__(11);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
-var _Filter = __webpack_require__(13);
+var _Filter = __webpack_require__(14);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
@@ -622,6 +622,92 @@ var _propTypes = __webpack_require__(0);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NUM_LINKS = 5;
+
+var fillRange = function fillRange(start, end) {
+    return Array(end - start + 1).fill().map(function (item, index) {
+        return start + index;
+    });
+};
+
+var getPages = function getPages(props) {
+    var last = NUM_LINKS;
+    last = props.total < last ? props.total : last;
+
+    var first = props.page - Math.floor(last / 2);
+    first = first + last < props.total ? first : props.total - last + 1;
+    first = first > 1 ? first : 1;
+
+    return fillRange(first, last);
+};
+
+var Pagination = function Pagination(props) {
+    _react2.default.createElement(
+        "ul",
+        { className: "pagination" },
+        _react2.default.createElement(
+            "li",
+            { className:  true ? 'disabled' : '' },
+            _react2.default.createElement(
+                "a",
+                { className: "page-link", href: "#" /*onClick={ setPage( props.currentPage - 1 ) }*/ },
+                "Previous"
+            )
+        ),
+        getPages(props).filter(function (link) {
+            return _react2.default.createElement(
+                "li",
+                { className:  true ? 'active' : '' },
+                _react2.default.createElement(
+                    "a",
+                    { className: "page-link" /*onClick={ setPage( link ) }*/ },
+                    link
+                )
+            );
+        }),
+        _react2.default.createElement(
+            "li",
+            { className:  true ? 'disabled' : '' },
+            _react2.default.createElement(
+                "a",
+                { className: "page-link", href: "#" /*onClick={ setPage( props.currentPage + 1 ) }*/ },
+                "Next"
+            )
+        )
+    );
+};
+
+Pagination.propTypes = {
+    start: _propTypes2.default.number.isRequired,
+    end: _propTypes2.default.number.isRequired,
+    page: _propTypes2.default.number.isRequired,
+    total: _propTypes2.default.number.isRequired,
+    count: _propTypes2.default.number.isRequired
+};
+
+exports.default = Pagination;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(0);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _Header = __webpack_require__(8);
 
 var _Header2 = _interopRequireDefault(_Header);
@@ -630,7 +716,32 @@ var _Body = __webpack_require__(7);
 
 var _Body2 = _interopRequireDefault(_Body);
 
+var _Pagination = __webpack_require__(9);
+
+var _Pagination2 = _interopRequireDefault(_Pagination);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var calculatePaginationProps = function calculatePaginationProps(props) {
+    var page = props.page ? props.page : 1;
+    page > 1 ? page : 1;
+
+    var limit = props.limit ? props.limit : 10;
+    limit = limit > 10 ? limit : 10;
+
+    var start = (page - 1) * limit;
+    var count = props.count;
+
+    var end = start + limit - 1;
+
+    return {
+        page: page,
+        start: start,
+        end: count > end ? end : count,
+        limit: limit,
+        count: count
+    };
+};
 
 var Table = function Table(props) {
     return _react2.default.createElement(
@@ -663,7 +774,8 @@ var Table = function Table(props) {
                                 { className: 'table table-striped table-sm' },
                                 _react2.default.createElement(_Header2.default, { columns: props.columns }),
                                 _react2.default.createElement(_Body2.default, { data: props.data, columns: props.columns })
-                            )
+                            ),
+                            _react2.default.createElement(_Pagination2.default, calculatePaginationProps(props))
                         )
                     )
                 )
@@ -677,8 +789,10 @@ Table.propTypes = {
     columns: _propTypes2.default.object.isRequired,
     data: _propTypes2.default.array.isRequired,
     query: _propTypes2.default.shape({
+        page: _propTypes2.default.number,
         limit: _propTypes2.default.number,
         offset: _propTypes2.default.number,
+        count: _propTypes2.default.number,
         search: _propTypes2.default.object
     }).isRequired
 };
@@ -695,7 +809,7 @@ Table.defaultProps = {
 exports.default = Table;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -744,7 +858,7 @@ Cell.defaultProps = {
 exports.default = Cell;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -762,7 +876,7 @@ var _propTypes = __webpack_require__(0);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Text = __webpack_require__(12);
+var _Text = __webpack_require__(13);
 
 var _Text2 = _interopRequireDefault(_Text);
 
@@ -786,7 +900,7 @@ Renderer.defaultProps = {
 exports.default = Renderer;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -821,7 +935,7 @@ var Text = function Text(_ref) {
 exports.default = Text;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -861,7 +975,7 @@ Filter.defaultProps = {
 exports.default = Filter;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -958,7 +1072,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1025,7 +1139,7 @@ module.exports = checkPropTypes;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1090,7 +1204,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1106,10 +1220,10 @@ module.exports = function() {
 var emptyFunction = __webpack_require__(3);
 var invariant = __webpack_require__(4);
 var warning = __webpack_require__(6);
-var assign = __webpack_require__(14);
+var assign = __webpack_require__(15);
 
 var ReactPropTypesSecret = __webpack_require__(5);
-var checkPropTypes = __webpack_require__(15);
+var checkPropTypes = __webpack_require__(16);
 
 module.exports = function(isValidElement, throwOnDirectAccess) {
   /* global Symbol */
