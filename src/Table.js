@@ -41,7 +41,7 @@ const Table = ( props ) =>
                                 <Header columns={ props.columns } />
                                 <Body data={ props.data } columns={ props.columns } />
                             </table>
-                            <Pagination { ...calculatePaginationProps(props) }/>
+                            <Pagination { ...calculatePaginationProps(props.query) }/>
                         </div>
                     </div>
                 </div>

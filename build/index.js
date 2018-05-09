@@ -776,7 +776,7 @@ var Table = function Table(props) {
                                 _react2.default.createElement(_Header2.default, { columns: props.columns }),
                                 _react2.default.createElement(_Body2.default, { data: props.data, columns: props.columns })
                             ),
-                            _react2.default.createElement(_Pagination2.default, calculatePaginationProps(props))
+                            _react2.default.createElement(_Pagination2.default, calculatePaginationProps(props.query))
                         )
                     )
                 )
