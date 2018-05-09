@@ -18,7 +18,7 @@ const getPages = (props) => {
     return fillRange(first, last)
 }
 
-const Pagination = (props) => {
+const Pagination = (props) =>
     <ul className="pagination">
         <li className={"page-item " + (props.currentPage < 2) ? 'disabled': ''}>
             <a className="page-link" href="#" /*onClick={ setPage( props.currentPage - 1 ) }*/>Previous</a>
@@ -34,7 +34,6 @@ const Pagination = (props) => {
             <a className="page-link" href="#" /*onClick={ setPage( props.currentPage + 1 ) }*/>Next</a>
         </li>
     </ul>
-};
 
 Pagination.propTypes = {
     start: PropTypes.number.isRequired,

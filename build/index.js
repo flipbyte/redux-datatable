@@ -644,7 +644,7 @@ var getPages = function getPages(props) {
 };
 
 var Pagination = function Pagination(props) {
-    _react2.default.createElement(
+    return _react2.default.createElement(
         "ul",
         { className: "pagination" },
         _react2.default.createElement(
