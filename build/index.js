@@ -649,27 +649,27 @@ var Pagination = function Pagination(props) {
         { className: "pagination" },
         _react2.default.createElement(
             "li",
-            { className:  true ? 'disabled' : '' },
+            { className: "page-item " + (props.page < 2 ? 'disabled' : '') },
             _react2.default.createElement(
                 "a",
                 { className: "page-link", href: "#" /*onClick={ setPage( props.currentPage - 1 ) }*/ },
                 "Previous"
             )
         ),
-        getPages(props).filter(function (link) {
+        getPages(props).map(function (link, index) {
             return _react2.default.createElement(
                 "li",
-                { className:  true ? 'active' : '' },
+                { key: index, className: "page-item " + (link == props.page ? 'active' : '') },
                 _react2.default.createElement(
                     "a",
-                    { className: "page-link" /*onClick={ setPage( link ) }*/ },
+                    { className: "page-link", href: "#" /*onClick={ setPage( link ) }*/ },
                     link
                 )
             );
         }),
         _react2.default.createElement(
             "li",
-            { className:  true ? 'disabled' : '' },
+            { className: "page-item " + (props.page >= props.total ? 'disabled' : '') },
             _react2.default.createElement(
                 "a",
                 { className: "page-link", href: "#" /*onClick={ setPage( props.currentPage + 1 ) }*/ },

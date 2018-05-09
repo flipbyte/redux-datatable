@@ -20,17 +20,17 @@ const getPages = (props) => {
 
 const Pagination = (props) =>
     <ul className="pagination">
-        <li className={"page-item " + (props.currentPage < 2) ? 'disabled': ''}>
+        <li className={"page-item " + (props.page < 2 ? 'disabled': '')}>
             <a className="page-link" href="#" /*onClick={ setPage( props.currentPage - 1 ) }*/>Previous</a>
         </li>
 
-        { getPages(props).filter( link =>
-            <li className={"page-item " + (link == props.currentPage) ? 'active' : ''}>
-                <a className="page-link" /*onClick={ setPage( link ) }*/>{ link }</a>
+        { getPages(props).map( (link, index) =>
+            <li key={ index } className={"page-item " + (link == props.page ? 'active' : '')}>
+                <a className="page-link" href="#" /*onClick={ setPage( link ) }*/>{ link }</a>
             </li>
         ) }
 
-        <li className={"page-item " + (props.currentPage >= props.totalPages) ? 'disabled': ''}>
+        <li className={"page-item " + (props.page >= props.total ? 'disabled': '')}>
             <a className="page-link" href="#" /*onClick={ setPage( props.currentPage + 1 ) }*/>Next</a>
         </li>
     </ul>
