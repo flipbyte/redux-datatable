@@ -19,7 +19,7 @@ const calculatePaginationProps = (props) => {
     return {
         page: page,
         start: start,
-        end: (count > end) ? end: count,
+        end: (count > end) ? end : count,
         // limit: limit,
         count: count,
         total: Math.ceil(count / limit)
@@ -41,7 +41,7 @@ const Table = ( props ) =>
                                 <Header columns={ props.columns } />
                                 <Body data={ props.data } columns={ props.columns } />
                             </table>
-                            <Pagination { ...calculatePaginationProps(props.query) }/>
+                            <Pagination { ...calculatePaginationProps(props.query) } />
                         </div>
                     </div>
                 </div>
