@@ -14859,7 +14859,7 @@ var createReducer = exports.createReducer = function createReducer(reducer, pred
     };
 };
 
-exports.default = createTable = function createTable(_ref) {
+exports.default = function (_ref) {
     var name = _ref.name,
         url = _ref.url,
         params = _ref.params,

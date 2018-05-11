@@ -52,7 +52,7 @@ export const createReducer = (reducer, predicate) => (state, action) =>
     predicate(action) || state === undefined ? reducer(state, action) : state
 
 
-export default createTable = ({ name, url, params, loadingMessage }) => Table => {
+export default ({ name, url, params, loadingMessage }) => Table => {
     class WrappedTable extends Component {
         // static propTypes = {
         //     name: PropTypes.string.isRequired,
