@@ -89,23 +89,23 @@ export default ({ name, url, params, loadingMessage }) => Table => {
         }
     }
 
-    WrappedTable.propTypes = {
-        name: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-        params: PropTypes.object,
-        query: PropTypes.object,
-        requestData: PropTypes.func,
-        data: PropTypes.array
-    };
-
-    WrappedTable.defaultProps = {
-        query: {
-            limit: 10,
-            offset: ( /*page - 1*/ ( 1 - 1) * /*limit*/5 ),
-            count: 56,
-            page: 5
-        }
-    };
+    // WrappedTable.propTypes = {
+    //     name: PropTypes.string.isRequired,
+    //     url: PropTypes.string.isRequired,
+    //     params: PropTypes.object,
+    //     query: PropTypes.object,
+    //     requestData: PropTypes.func,
+    //     data: PropTypes.array
+    // };
+    //
+    // WrappedTable.defaultProps = {
+    //     query: {
+    //         limit: 10,
+    //         offset: ( /*page - 1*/ ( 1 - 1) * /*limit*/5 ),
+    //         count: 56,
+    //         page: 5
+    //     }
+    // };
 
     return WrappedTable
 }

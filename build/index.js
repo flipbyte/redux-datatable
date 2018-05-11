@@ -14914,23 +14914,23 @@ exports.default = function (_ref) {
             return WrappedTable;
         }(_react.Component);
 
-        WrappedTable.propTypes = {
-            name: _propTypes2.default.string.isRequired,
-            url: _propTypes2.default.string.isRequired,
-            params: _propTypes2.default.object,
-            query: _propTypes2.default.object,
-            requestData: _propTypes2.default.func,
-            data: _propTypes2.default.array
-        };
-
-        WrappedTable.defaultProps = {
-            query: {
-                limit: 10,
-                offset: /*page - 1*/(1 - 1) * /*limit*/5,
-                count: 56,
-                page: 5
-            }
-        };
+        // WrappedTable.propTypes = {
+        //     name: PropTypes.string.isRequired,
+        //     url: PropTypes.string.isRequired,
+        //     params: PropTypes.object,
+        //     query: PropTypes.object,
+        //     requestData: PropTypes.func,
+        //     data: PropTypes.array
+        // };
+        //
+        // WrappedTable.defaultProps = {
+        //     query: {
+        //         limit: 10,
+        //         offset: ( /*page - 1*/ ( 1 - 1) * /*limit*/5 ),
+        //         count: 56,
+        //         page: 5
+        //     }
+        // };
 
         return WrappedTable;
     };
