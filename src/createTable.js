@@ -39,7 +39,7 @@ let initialState = {
     title: "",
     items: [],
     query: {
-        page: 1,
+        page: 0,
         limit: 10,
         offset: 0,
         count: 0,
