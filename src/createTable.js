@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import 'rxjs';
 import { Observable  } from 'rxjs/Observable';
+import queryString from 'query-string';
+
 // import { ajax } from 'rxjs/observable/dom/ajax';
 
 export const REQUEST_DATA = 'REQUEST_DATA';

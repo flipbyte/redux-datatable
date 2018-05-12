@@ -3,7 +3,7 @@ import createTable, {
     data,
     requestData,
     receiveData,
-    fetchData,
+    fetchDataEpic,
     REQUEST_DATA,
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL
@@ -17,7 +17,7 @@ export {
     data,
     requestData,
     receiveData,
-    fetchData,
+    fetchDataEpic,
     REQUEST_DATA,
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL
