@@ -21,10 +21,14 @@ export {
     data,
     requestData,
     receiveData,
+    setPage,
+    setFilters,
     fetchDataEpic,
     REQUEST_DATA,
     RECEIVE_DATA,
-    REQUEST_DATA_CANCEL
+    REQUEST_DATA_CANCEL,
+    SET_PAGE,
+    SET_FILTERS
 }
 
 export default createTable;

@@ -15375,7 +15375,7 @@ exports.default = Pagination;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
+exports.SET_FILTERS = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.setFilters = exports.setPage = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
 
 var _createTable = __webpack_require__(167);
 
@@ -15392,10 +15392,14 @@ exports.createReducer = _createTable.createReducer;
 exports.data = _createTable.data;
 exports.requestData = _createTable.requestData;
 exports.receiveData = _createTable.receiveData;
+exports.setPage = _createTable.setPage;
+exports.setFilters = _createTable.setFilters;
 exports.fetchDataEpic = _createTable.fetchDataEpic;
 exports.REQUEST_DATA = _createTable.REQUEST_DATA;
 exports.RECEIVE_DATA = _createTable.RECEIVE_DATA;
 exports.REQUEST_DATA_CANCEL = _createTable.REQUEST_DATA_CANCEL;
+exports.SET_PAGE = _createTable.SET_PAGE;
+exports.SET_FILTERS = _createTable.SET_FILTERS;
 exports.default = _createTable2.default;
 
 /***/ }),
