@@ -14814,7 +14814,7 @@ var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
 var SET_FILTERS = exports.SET_FILTERS = 'SET_FILTERS';
 
 var requestData = exports.requestData = function requestData(name, query) {
-    return { type: REQUEST_DATA, name: name };
+    return { type: REQUEST_DATA, name: name, query: query };
 };
 var receiveData = exports.receiveData = function receiveData(payload, name) {
     return { type: RECEIVE_DATA, name: name, payload: payload };
