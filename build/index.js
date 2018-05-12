@@ -14833,7 +14833,7 @@ var setFilters = exports.setFilters = function setFilters(name, url, filters) {
 //             .takeUntil(action$.ofType(actions.REQUEST_DATA_CANCEL))
 //     );
 
-var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, _ref) {
+var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
     var getJSONSecure = _ref.getJSONSecure;
     return action$.ofType({ REQUEST_DATA: REQUEST_DATA, SET_PAGE: SET_PAGE, SET_FILTERS: SET_FILTERS }).mergeMap(function (action) {
         return getJSONSecure(action.url + '?' + _queryString2.default.stringify(action.query)).map(function (response) {
@@ -14867,7 +14867,7 @@ var data = exports.data = function data() {
         case RECEIVE_DATA:
             data = {
                 isFetching: false,
-                items: { action: action }
+                items: action.payload.data
             };
             return Object.assign({}, state, data);
         case SET_PAGE:

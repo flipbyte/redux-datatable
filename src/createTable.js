@@ -26,7 +26,7 @@ export const setFilters = ( name, url, filters ) => ({ type: SET_FILTERS, name, 
 //             .takeUntil(action$.ofType(actions.REQUEST_DATA_CANCEL))
 //     );
 
-export const fetchDataEpic = ( action$, { getJSONSecure }) =>
+export const fetchDataEpic = ( action$, store, { getJSONSecure }) =>
     action$.ofType({ REQUEST_DATA, SET_PAGE, SET_FILTERS }).mergeMap(action =>
         getJSONSecure(`${action.url}?${queryString.stringify(action.query)}`)
             .map(response => receiveData(response))
@@ -56,7 +56,7 @@ export const data = (state = initialState, action) => {
         case RECEIVE_DATA:
             data = {
                 isFetching: false,
-                items: { action }
+                items: action.payload.data
             }
             return Object.assign({}, state, data);
         case SET_PAGE:
