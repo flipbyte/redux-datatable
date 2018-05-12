@@ -14905,7 +14905,9 @@ exports.default = function (_ref2) {
                 value: function componentWillMount() {
                     console.log(this.props);
 
-                    var requestData = this.props.requestData;
+                    var _props = this.props,
+                        requestData = _props.requestData,
+                        query = _props.query;
 
                     requestData(name, query);
                 }

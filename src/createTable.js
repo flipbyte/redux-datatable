@@ -79,7 +79,7 @@ export default ({ name, url, params, loadingMessage }) => Table => {
         componentWillMount() {
             console.log(this.props);
 
-            const { requestData } = this.props;
+            const { requestData, query } = this.props;
             requestData(name, query)
         }
 
