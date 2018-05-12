@@ -1,6 +1,6 @@
 import createTable, {
     createReducer,
-    reducer,
+    data,
     requestData,
     receiveData,
     fetchData,
@@ -14,7 +14,7 @@ import Table from './Table';
 export {
     Table,
     createReducer,
-    reducer,
+    data,
     requestData,
     receiveData,
     fetchData,

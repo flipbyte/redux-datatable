@@ -14774,7 +14774,7 @@ exports.default = Table;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.createReducer = exports.reducer = exports.fetchData = exports.receiveData = exports.requestData = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
+exports.createReducer = exports.data = exports.fetchDataEpic = exports.setFilters = exports.setPage = exports.receiveData = exports.requestData = exports.SET_FILTERS = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -14804,26 +14804,42 @@ var REQUEST_DATA = exports.REQUEST_DATA = 'REQUEST_DATA';
 var RECEIVE_DATA = exports.RECEIVE_DATA = 'RECEIVE_DATA';
 var REQUEST_DATA_CANCEL = exports.REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
 
+var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
+var SET_FILTERS = exports.SET_FILTERS = 'SET_FILTERS';
+
 var requestData = exports.requestData = function requestData(name, query) {
     return { type: REQUEST_DATA, name: name };
 };
 var receiveData = exports.receiveData = function receiveData(payload, name) {
     return { type: RECEIVE_DATA, name: name, payload: payload };
 };
+var setPage = exports.setPage = function setPage(name, page) {
+    return { type: SET_PAGE, name: name, page: page };
+};
+var setFilters = exports.setFilters = function setFilters(name, filters) {
+    return { type: SET_FILTERS, name: name, filters: filters };
+};
 
-var fetchData = exports.fetchData = function fetchData(endpoint, query, name, ajax) {
-    return function (action$) {
-        return action$.ofType(REQUEST_DATA).mergeMap(function (action) {
-            return ajax.getJSON(endpoint + '?' + queryString.stringify(query)).map(function (response) {
-                return actions.receiveData(response);
-            }).takeUntil(action$.ofType(actions.REQUEST_DATA_CANCEL));
-        });
-    };
+// export const fetchDataEpic = ( endpoint, name, ajax ) => action$ =>
+//     action$.ofType(REQUEST_DATA).mergeMap(action =>
+//         ajax.getJSON(`${endpoint}?${queryString.stringify(query)}`)
+//             .map(response => actions.receiveData(response))
+//             .takeUntil(action$.ofType(actions.REQUEST_DATA_CANCEL))
+//     );
+
+var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, _ref) {
+    var getJSONSecure = _ref.getJSONSecure;
+    return action$.ofType({ REQUEST_DATA: REQUEST_DATA, SET_PAGE: SET_PAGE, SET_FILTERS: SET_FILTERS }).mergeMap(function (action) {
+        return getJSONSecure(action.url + '?' + queryString.stringify(action.query)).map(function (response) {
+            return receiveData(response);
+        }).takeUntil(action$.ofType(REQUEST_DATA_CANCEL));
+    });
 };
 
 var initialState = {
+    isFetching: false,
     title: "",
-    data: [],
+    items: [],
     query: {
         page: 1,
         limit: 10,
@@ -14833,20 +14849,26 @@ var initialState = {
     }
 };
 
-var reducer = exports.reducer = function reducer() {
+var data = exports.data = function data() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
     var action = arguments[1];
 
     var data = initialState;
     switch (action.type) {
-        case 'REQUEST_DATA':
+        case REQUEST_DATA:
             data[action.name].isFetching = true;
             return Object.assign({}, state, data);
-        case 'RECEIVE_DATA':
+        case RECEIVE_DATA:
             data[action.name] = {
                 isFetching: false,
-                data: { action: action }
+                items: { action: action }
             };
+            return Object.assign({}, state, data);
+        case SET_PAGE:
+            data[action.name].query.page = action.page;
+            return Object.assign({}, state, data);
+        case SET_FILTERS:
+            data[action.name].query.search = action.filters;
             return Object.assign({}, state, data);
         default:
             return state;
@@ -14859,11 +14881,11 @@ var createReducer = exports.createReducer = function createReducer(reducer, pred
     };
 };
 
-exports.default = function (_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        params = _ref.params,
-        loadingMessage = _ref.loadingMessage;
+exports.default = function (_ref2) {
+    var name = _ref2.name,
+        url = _ref2.url,
+        params = _ref2.params,
+        loadingMessage = _ref2.loadingMessage;
     return function (Table) {
         var WrappedTable = function (_Component) {
             _inherits(WrappedTable, _Component);
@@ -14876,33 +14898,12 @@ exports.default = function (_ref) {
 
             _createClass(WrappedTable, [{
                 key: 'componentWillMount',
-
-                // static propTypes = {
-                //     name: PropTypes.string.isRequired,
-                //     url: PropTypes.string.isRequired,
-                //     params: PropTypes.object,
-                //     query: PropTypes.object,
-                //     requestData: PropTypes.func,
-                //     data: PropTypes.array
-                // }
-
-                // static defaultProps = {
-                //     query: {
-                //         limit: 10,
-                //         offset: ( /*page - 1*/ ( 1 - 1) * /*limit*/5 ),
-                //         count: 56,
-                //         page: 5
-                //     }
-                // }
-
                 value: function componentWillMount() {
                     console.log(this.props);
 
-                    // const { requestContent, query } = this.props;
-                    // requestContent(1, query);
+                    var requestData = this.props.requestData;
 
-                    // const { name, query } = this.props;
-                    // requestContent(name, query)
+                    requestData(name, query);
                 }
             }, {
                 key: 'render',
@@ -14913,24 +14914,6 @@ exports.default = function (_ref) {
 
             return WrappedTable;
         }(_react.Component);
-
-        // WrappedTable.propTypes = {
-        //     name: PropTypes.string.isRequired,
-        //     url: PropTypes.string.isRequired,
-        //     params: PropTypes.object,
-        //     query: PropTypes.object,
-        //     requestData: PropTypes.func,
-        //     data: PropTypes.array
-        // };
-        //
-        // WrappedTable.defaultProps = {
-        //     query: {
-        //         limit: 10,
-        //         offset: ( /*page - 1*/ ( 1 - 1) * /*limit*/5 ),
-        //         count: 56,
-        //         page: 5
-        //     }
-        // };
 
         return WrappedTable;
     };
@@ -15382,7 +15365,7 @@ exports.default = Pagination;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchData = exports.receiveData = exports.requestData = exports.reducer = exports.createReducer = exports.Table = undefined;
+exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchData = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
 
 var _createTable = __webpack_require__(167);
 
@@ -15396,7 +15379,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.Table = _Table2.default;
 exports.createReducer = _createTable.createReducer;
-exports.reducer = _createTable.reducer;
+exports.data = _createTable.data;
 exports.requestData = _createTable.requestData;
 exports.receiveData = _createTable.receiveData;
 exports.fetchData = _createTable.fetchData;
