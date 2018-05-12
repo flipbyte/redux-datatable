@@ -15,7 +15,7 @@ export const SET_PAGE = 'SET_PAGE';
 export const SET_FILTERS = 'SET_FILTERS';
 
 export const requestData = ( name, url, query ) => ({ type: REQUEST_DATA, name, url, query })
-export const receiveData = ( payload, name ) => ({ type: RECEIVE_DATA, name, payload })
+export const receiveData = ( name, payload ) => ({ type: RECEIVE_DATA, name, payload })
 export const setPage = ( name, url, page ) => ({ type: SET_PAGE, name, url, page })
 export const setFilters = ( name, url, filters ) => ({ type: SET_FILTERS, name, url, filters })
 

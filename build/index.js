@@ -14816,7 +14816,7 @@ var SET_FILTERS = exports.SET_FILTERS = 'SET_FILTERS';
 var requestData = exports.requestData = function requestData(name, url, query) {
     return { type: REQUEST_DATA, name: name, url: url, query: query };
 };
-var receiveData = exports.receiveData = function receiveData(payload, name) {
+var receiveData = exports.receiveData = function receiveData(name, payload) {
     return { type: RECEIVE_DATA, name: name, payload: payload };
 };
 var setPage = exports.setPage = function setPage(name, url, page) {
