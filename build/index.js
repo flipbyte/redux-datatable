@@ -14776,6 +14776,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createReducer = exports.data = exports.fetchDataEpic = exports.setFilters = exports.setPage = exports.receiveData = exports.requestData = exports.SET_FILTERS = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(13);
@@ -14860,19 +14862,19 @@ var data = exports.data = function data() {
     var data = initialState;
     switch (action.type) {
         case REQUEST_DATA:
-            data[action.name].isFetching = true;
+            data.isFetching = true;
             return Object.assign({}, state, data);
         case RECEIVE_DATA:
-            data[action.name] = {
+            data = {
                 isFetching: false,
                 items: { action: action }
             };
             return Object.assign({}, state, data);
         case SET_PAGE:
-            data[action.name].query.page = action.page;
+            data.query.page = action.page;
             return Object.assign({}, state, data);
         case SET_FILTERS:
-            data[action.name].query.search = action.filters;
+            data.query.search = action.filters;
             return Object.assign({}, state, data);
         default:
             return state;
@@ -14889,6 +14891,7 @@ exports.default = function (_ref2) {
     var name = _ref2.name,
         url = _ref2.url,
         params = _ref2.params,
+        columns = _ref2.columns,
         loadingMessage = _ref2.loadingMessage;
     return function (Table) {
         var WrappedTable = function (_Component) {
@@ -14914,7 +14917,7 @@ exports.default = function (_ref2) {
             }, {
                 key: 'render',
                 value: function render() {
-                    return _react2.default.createElement(Table, this.props);
+                    return _react2.default.createElement(Table, _extends({ columns: columns }, this.props));
                 }
             }]);
 

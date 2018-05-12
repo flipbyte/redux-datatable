@@ -16,8 +16,8 @@ export const SET_FILTERS = 'SET_FILTERS';
 
 export const requestData = ( name, query ) => ({ type: REQUEST_DATA, name })
 export const receiveData = ( payload, name ) => ({ type: RECEIVE_DATA, name, payload })
-export const setPage = ( name, page ) => ({ type: SET_PAGE, name, page: page })
-export const setFilters = ( name, filters ) => ({ type: SET_FILTERS, name, filters: filters })
+export const setPage = ( name, page ) => ({ type: SET_PAGE, name, page })
+export const setFilters = ( name, filters ) => ({ type: SET_FILTERS, name, filters })
 
 // export const fetchDataEpic = ( endpoint, name, ajax ) => action$ =>
 //     action$.ofType(REQUEST_DATA).mergeMap(action =>
@@ -51,19 +51,19 @@ export const data = (state = initialState, action) => {
     let data = initialState;
     switch (action.type) {
         case REQUEST_DATA:
-            data[action.name].isFetching = true;
+            data.isFetching = true;
             return Object.assign({}, state, data);
         case RECEIVE_DATA:
-            data[action.name] = {
+            data = {
                 isFetching: false,
                 items: { action }
             }
             return Object.assign({}, state, data);
         case SET_PAGE:
-            data[action.name].query.page = action.page;
+            data.query.page = action.page;
             return Object.assign({}, state, data);
         case SET_FILTERS:
-            data[action.name].query.search = action.filters;
+            data.query.search = action.filters;
             return Object.assign({}, state, data);
         default:
             return state;
@@ -74,7 +74,7 @@ export const createReducer = (reducer, predicate) => (state, action) =>
     predicate(action) || state === undefined ? reducer(state, action) : state
 
 
-export default ({ name, url, params, loadingMessage }) => Table => {
+export default ({ name, url, params, columns, loadingMessage }) => Table => {
     class WrappedTable extends Component {
         componentWillMount() {
             console.log(this.props);
@@ -85,7 +85,7 @@ export default ({ name, url, params, loadingMessage }) => Table => {
 
         render() {
             return (
-                <Table { ...this.props } />
+                <Table columns={ columns } { ...this.props } />
             )
         }
     }
