@@ -61,7 +61,7 @@ export const data = (state = initialState, action) => {
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
-            data.query.offset = offset: ( (data.query.page - 1) * data.query.limit ),
+            data.query.offset = offset: ( (data.query.page - 1) * data.query.limit );
             return Object.assign({}, state, data);
         case SET_FILTERS:
             data.query.search = action.filters;
