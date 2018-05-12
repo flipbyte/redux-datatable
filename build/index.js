@@ -14813,16 +14813,16 @@ var REQUEST_DATA_CANCEL = exports.REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
 var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
 var SET_FILTERS = exports.SET_FILTERS = 'SET_FILTERS';
 
-var requestData = exports.requestData = function requestData(name, query) {
+var requestData = exports.requestData = function requestData(name, url, query) {
     return { type: REQUEST_DATA, name: name, url: url, query: query };
 };
 var receiveData = exports.receiveData = function receiveData(payload, name) {
     return { type: RECEIVE_DATA, name: name, payload: payload };
 };
-var setPage = exports.setPage = function setPage(name, page) {
+var setPage = exports.setPage = function setPage(name, url, page) {
     return { type: SET_PAGE, name: name, url: url, page: page };
 };
-var setFilters = exports.setFilters = function setFilters(name, filters) {
+var setFilters = exports.setFilters = function setFilters(name, url, filters) {
     return { type: SET_FILTERS, name: name, url: url, filters: filters };
 };
 

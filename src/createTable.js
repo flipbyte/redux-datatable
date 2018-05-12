@@ -14,10 +14,10 @@ export const REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
 export const SET_PAGE = 'SET_PAGE';
 export const SET_FILTERS = 'SET_FILTERS';
 
-export const requestData = ( name, query ) => ({ type: REQUEST_DATA, name, url, query })
+export const requestData = ( name, url, query ) => ({ type: REQUEST_DATA, name, url, query })
 export const receiveData = ( payload, name ) => ({ type: RECEIVE_DATA, name, payload })
-export const setPage = ( name, page ) => ({ type: SET_PAGE, name, url, page })
-export const setFilters = ( name, filters ) => ({ type: SET_FILTERS, name, url, filters })
+export const setPage = ( name, url, page ) => ({ type: SET_PAGE, name, url, page })
+export const setFilters = ( name, url, filters ) => ({ type: SET_FILTERS, name, url, filters })
 
 // export const fetchDataEpic = ( endpoint, name, ajax ) => action$ =>
 //     action$.ofType(REQUEST_DATA).mergeMap(action =>
