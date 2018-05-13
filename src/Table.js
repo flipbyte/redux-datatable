@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Header from './Table/Header';
 import Body from './Table/Body';
 import Pagination from './Table/Pagination';
+import Limiter from './Table/Limiter';
 
 const calculatePaginationProps = (props) => {
     let page = props.page ? props.page : 1
@@ -42,6 +43,7 @@ const Table = ( props ) =>
                                 <Body data={ props.data } columns={ props.columns } />
                             </table>
                             <Pagination { ...calculatePaginationProps(props.query) } />
+                            <Limiter options={ props.limiterOptions } />
                         </div>
                     </div>
                 </div>
@@ -52,6 +54,7 @@ const Table = ( props ) =>
 Table.propTypes = {
     title: PropTypes.string,
     columns: PropTypes.object.isRequired,
+    limiterOptions: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired,
     query: PropTypes.shape({
         page: PropTypes.number,
