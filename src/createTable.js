@@ -55,17 +55,16 @@ export const data = (state = initialState, action) => {
             data.isFetching = true;
             return Object.assign({}, state, data);
         case RECEIVE_DATA:
-            data = {
-                isFetching: false,
-                items: action.payload.data
-            }
+            data.isFetching = false;
+            data.items = action.payload.data.items;
+            data.query.count = parseInt(action.payload.data.total);
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
             data.query.offset = ( (data.query.page - 1) * data.query.limit );
             return Object.assign({}, state, data);
         case SET_LIMIT:
-            data.query.limit = action.limit;
+            data.query.limit = parseInt(action.limit);
             data.query.offset = ( (data.query.page - 1) * data.query.limit );
             return Object.assign({}, state, data);
         case SET_FILTERS:
@@ -91,81 +90,14 @@ export default ({ name, url, params, columns, limiterOptions, loadingMessage }) 
 
         render() {
             return (
-                <Table columns={ columns } limiterOptions={ limiterOptions } { ...this.props } />
+                <Table name={ name }
+                    url={ url }
+                    columns={ columns }
+                    limiterOptions={ limiterOptions }
+                    { ...this.props } />
             )
         }
     }
 
     return WrappedTable
 }
-
-
-
-// src/components/Filters/FilterWrapper/index.js
-
-// import React, {
-//     Component
-// } from‘ react’;
-// import {
-//     bindActionCreators
-// } from‘ redux’;
-// import {
-//     connect
-// } from‘ react - redux’;
-//
-// function FilterWrapper(ComposedFilter, filterInfo) {
-//     class BaseFilter extends Component {
-//         constructor() {
-//             super();
-//             this.state = {
-//                 count: 0
-//             };
-//             this.onCheckboxChange = this.onCheckboxChange.bind(this);
-//         }
-//
-//         onClick(e) {
-//
-//         }
-//
-//         onCheckboxChange(e) {
-//
-//         }
-//
-//         render() {
-//             let countLabel = this.state.count > 0 ?
-//                 < span > {
-//                     this.state.count
-//                 } < /span> :
-//             null;
-//
-//             return ( < div className = ”filterDetailsWrapper” >
-//                 < div className = ”filterTotalCount” > {
-//                     countLabel
-//                 } < /div> < div className = ”optionsDropDownContainer” >
-//                 < ComposedFilter {…
-//                     this.state
-//                 } {…
-//                     this.props
-//                 }
-//                 onCheckboxChange = {
-//                     this.onCheckboxChange
-//                 }
-//                 /> < /div> < /div>
-//             );
-//         }
-//     }
-//
-//     function mapStateToProps(state) {
-//         // REDACTED
-//         return {};
-//     }
-//
-//     function mapDispatchToProps(dispatch) {
-//         return {…
-//             bindActionCreators(actions, dispatch)
-//         };
-//     }
-//     return connect(mapStateToProps, mapDispatchToProps)(BaseFilter);
-// }
-//
-// export default FilterWrapper;

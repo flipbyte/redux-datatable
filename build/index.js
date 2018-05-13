@@ -499,6 +499,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
@@ -579,8 +581,8 @@ var Table = function Table(props) {
                                 _react2.default.createElement(_Header2.default, { columns: props.columns }),
                                 _react2.default.createElement(_Body2.default, { data: props.data, columns: props.columns })
                             ),
-                            _react2.default.createElement(_Pagination2.default, calculatePaginationProps(props.query)),
-                            _react2.default.createElement(_Limiter2.default, { options: props.limiterOptions })
+                            _react2.default.createElement(_Pagination2.default, _extends({ name: props.name, url: props.url, setPage: props.setPage }, calculatePaginationProps(props.query))),
+                            _react2.default.createElement(_Limiter2.default, { name: props.name, url: props.url, setLimit: props.setLimit, options: props.limiterOptions })
                         )
                     )
                 )
@@ -590,6 +592,8 @@ var Table = function Table(props) {
 };
 
 Table.propTypes = {
+    name: _propTypes2.default.string.isRequired,
+    url: _propTypes2.default.string.isRequired,
     title: _propTypes2.default.string,
     columns: _propTypes2.default.object.isRequired,
     limiterOptions: _propTypes2.default.array.isRequired,
@@ -723,17 +727,16 @@ var data = exports.data = function data() {
             data.isFetching = true;
             return Object.assign({}, state, data);
         case RECEIVE_DATA:
-            data = {
-                isFetching: false,
-                items: action.payload.data
-            };
+            data.isFetching = false;
+            data.items = action.payload.data.items;
+            data.query.count = parseInt(action.payload.data.total);
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
             data.query.offset = (data.query.page - 1) * data.query.limit;
             return Object.assign({}, state, data);
         case SET_LIMIT:
-            data.query.limit = action.limit;
+            data.query.limit = parseInt(action.limit);
             data.query.offset = (data.query.page - 1) * data.query.limit;
             return Object.assign({}, state, data);
         case SET_FILTERS:
@@ -781,7 +784,11 @@ exports.default = function (_ref2) {
             }, {
                 key: 'render',
                 value: function render() {
-                    return _react2.default.createElement(Table, _extends({ columns: columns, limiterOptions: limiterOptions }, this.props));
+                    return _react2.default.createElement(Table, _extends({ name: name,
+                        url: url,
+                        columns: columns,
+                        limiterOptions: limiterOptions
+                    }, this.props));
                 }
             }]);
 
@@ -791,75 +798,6 @@ exports.default = function (_ref2) {
         return WrappedTable;
     };
 };
-
-// src/components/Filters/FilterWrapper/index.js
-
-// import React, {
-//     Component
-// } from‘ react’;
-// import {
-//     bindActionCreators
-// } from‘ redux’;
-// import {
-//     connect
-// } from‘ react - redux’;
-//
-// function FilterWrapper(ComposedFilter, filterInfo) {
-//     class BaseFilter extends Component {
-//         constructor() {
-//             super();
-//             this.state = {
-//                 count: 0
-//             };
-//             this.onCheckboxChange = this.onCheckboxChange.bind(this);
-//         }
-//
-//         onClick(e) {
-//
-//         }
-//
-//         onCheckboxChange(e) {
-//
-//         }
-//
-//         render() {
-//             let countLabel = this.state.count > 0 ?
-//                 < span > {
-//                     this.state.count
-//                 } < /span> :
-//             null;
-//
-//             return ( < div className = ”filterDetailsWrapper” >
-//                 < div className = ”filterTotalCount” > {
-//                     countLabel
-//                 } < /div> < div className = ”optionsDropDownContainer” >
-//                 < ComposedFilter {…
-//                     this.state
-//                 } {…
-//                     this.props
-//                 }
-//                 onCheckboxChange = {
-//                     this.onCheckboxChange
-//                 }
-//                 /> < /div> < /div>
-//             );
-//         }
-//     }
-//
-//     function mapStateToProps(state) {
-//         // REDACTED
-//         return {};
-//     }
-//
-//     function mapDispatchToProps(dispatch) {
-//         return {…
-//             bindActionCreators(actions, dispatch)
-//         };
-//     }
-//     return connect(mapStateToProps, mapDispatchToProps)(BaseFilter);
-// }
-//
-// export default FilterWrapper;
 
 /***/ }),
 /* 9 */
@@ -1164,10 +1102,15 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Limiter = function Limiter(_ref) {
-    var options = _ref.options;
+    var name = _ref.name,
+        url = _ref.url,
+        options = _ref.options,
+        setLimit = _ref.setLimit;
     return _react2.default.createElement(
         "select",
-        { className: "form-control", id: "limiter" },
+        { className: "form-control", id: "limiter", onChange: function onChange(event) {
+                return setLimit(name, url, event.target.value);
+            } },
         options.map(function (option, index) {
             return _react2.default.createElement(
                 "option",
@@ -1179,7 +1122,8 @@ var Limiter = function Limiter(_ref) {
 };
 
 Limiter.propTypes = {
-    options: _propTypes2.default.array.isRequired
+    options: _propTypes2.default.array.isRequired,
+    setLimit: _propTypes2.default.func
 };
 
 exports.default = Limiter;
@@ -1233,7 +1177,9 @@ var Pagination = function Pagination(props) {
             { className: "page-item " + (props.page < 2 ? 'disabled' : '') },
             _react2.default.createElement(
                 "a",
-                { className: "page-link", href: "#" /*onClick={ setPage( props.currentPage - 1 ) }*/ },
+                { className: "page-link", href: "#", onClick: function onClick(event) {
+                        return props.setPage(props.name, props.url, props.page - 1);
+                    } },
                 "Previous"
             )
         ),
@@ -1243,7 +1189,9 @@ var Pagination = function Pagination(props) {
                 { key: index, className: "page-item " + (link == props.page ? 'active' : '') },
                 _react2.default.createElement(
                     "a",
-                    { className: "page-link", href: "#" /*onClick={ setPage( link ) }*/ },
+                    { className: "page-link", href: "#", onClick: function onClick(event) {
+                            return props.setPage(props.name, props.url, link);
+                        } },
                     link
                 )
             );
@@ -1253,7 +1201,9 @@ var Pagination = function Pagination(props) {
             { className: "page-item " + (props.page >= props.total ? 'disabled' : '') },
             _react2.default.createElement(
                 "a",
-                { className: "page-link", href: "#" /*onClick={ setPage( props.currentPage + 1 ) }*/ },
+                { className: "page-link", href: "#", onClick: function onClick(event) {
+                        return props.setPage(props.name, props.url, props.page + 1);
+                    } },
                 "Next"
             )
         )
@@ -1265,7 +1215,10 @@ Pagination.propTypes = {
     end: _propTypes2.default.number.isRequired,
     page: _propTypes2.default.number.isRequired,
     total: _propTypes2.default.number.isRequired,
-    count: _propTypes2.default.number.isRequired
+    count: _propTypes2.default.number.isRequired,
+    name: _propTypes2.default.string.isRequired,
+    url: _propTypes2.default.string.isRequired,
+    setPage: _propTypes2.default.func
 };
 
 exports.default = Pagination;
@@ -1280,7 +1233,7 @@ exports.default = Pagination;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.SET_FILTERS = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilters = exports.setPage = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
+exports.SET_FILTERS = exports.SET_LIMIT = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilters = exports.setLimit = exports.setPage = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
 
 var _createTable = __webpack_require__(8);
 
@@ -1298,6 +1251,7 @@ exports.data = _createTable.data;
 exports.requestData = _createTable.requestData;
 exports.receiveData = _createTable.receiveData;
 exports.setPage = _createTable.setPage;
+exports.setLimit = _createTable.setLimit;
 exports.setFilters = _createTable.setFilters;
 exports.setParamsEpic = _createTable.setParamsEpic;
 exports.fetchDataEpic = _createTable.fetchDataEpic;
@@ -1305,6 +1259,7 @@ exports.REQUEST_DATA = _createTable.REQUEST_DATA;
 exports.RECEIVE_DATA = _createTable.RECEIVE_DATA;
 exports.REQUEST_DATA_CANCEL = _createTable.REQUEST_DATA_CANCEL;
 exports.SET_PAGE = _createTable.SET_PAGE;
+exports.SET_LIMIT = _createTable.SET_LIMIT;
 exports.SET_FILTERS = _createTable.SET_FILTERS;
 exports.default = _createTable2.default;
 

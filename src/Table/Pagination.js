@@ -23,17 +23,17 @@ const getPages = (props) => {
 const Pagination = (props) =>
     <ul className="pagination">
         <li className={"page-item " + (props.page < 2 ? 'disabled': '')}>
-            <a className="page-link" href="#" /*onClick={ setPage( props.currentPage - 1 ) }*/>Previous</a>
+            <a className="page-link" href="#" onClick={ (event) => props.setPage( props.name, props.url, (props.page - 1) ) }>Previous</a>
         </li>
 
         { getPages(props).map( (link, index) =>
             <li key={ index } className={"page-item " + (link == props.page ? 'active' : '')}>
-                <a className="page-link" href="#" /*onClick={ setPage( link ) }*/>{ link }</a>
+                <a className="page-link" href="#" onClick={ (event) => props.setPage( props.name, props.url, link ) }>{ link }</a>
             </li>
         ) }
 
         <li className={"page-item " + (props.page >= props.total ? 'disabled': '')}>
-            <a className="page-link" href="#" /*onClick={ setPage( props.currentPage + 1 ) }*/>Next</a>
+            <a className="page-link" href="#" onClick={ (event) => props.setPage( props.name, props.url, (props.page + 1) ) }>Next</a>
         </li>
     </ul>
 
@@ -42,7 +42,10 @@ Pagination.propTypes = {
     end: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
-    count: PropTypes.number.isRequired
+    count: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    setPage: PropTypes.func
 }
 
 export default Pagination;

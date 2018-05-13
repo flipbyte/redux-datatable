@@ -4,6 +4,7 @@ import createTable, {
     requestData,
     receiveData,
     setPage,
+    setLimit,
     setFilters,
     setParamsEpic,
     fetchDataEpic,
@@ -11,6 +12,7 @@ import createTable, {
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL,
     SET_PAGE,
+    SET_LIMIT,
     SET_FILTERS
 } from './createTable';
 
@@ -23,6 +25,7 @@ export {
     requestData,
     receiveData,
     setPage,
+    setLimit,
     setFilters,
     setParamsEpic,
     fetchDataEpic,
@@ -30,6 +33,7 @@ export {
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL,
     SET_PAGE,
+    SET_LIMIT,
     SET_FILTERS
 }
 

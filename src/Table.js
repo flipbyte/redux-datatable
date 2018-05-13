@@ -42,8 +42,8 @@ const Table = ( props ) =>
                                 <Header columns={ props.columns } />
                                 <Body data={ props.data } columns={ props.columns } />
                             </table>
-                            <Pagination { ...calculatePaginationProps(props.query) } />
-                            <Limiter options={ props.limiterOptions } />
+                            <Pagination name={ props.name } url={ props.url } setPage={ props.setPage } { ...calculatePaginationProps(props.query) } />
+                            <Limiter name={ props.name } url={ props.url } setLimit={ props.setLimit } options={ props.limiterOptions } />
                         </div>
                     </div>
                 </div>
@@ -52,6 +52,8 @@ const Table = ( props ) =>
     </div>
 
 Table.propTypes = {
+    name: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
     title: PropTypes.string,
     columns: PropTypes.object.isRequired,
     limiterOptions: PropTypes.array.isRequired,
