@@ -43,6 +43,7 @@ module.exports = {
     'rxjs/operator/mergeMap': 'commonjs rxjs/operator/mergeMap',
     'rxjs/operator/map': 'commonjs rxjs/operator/map',
     'rxjs/operator/takeUntil': 'commonjs rxjs/operator/takeUntil',
+    'rxjs/operator/filter': 'commonjs rxjs/operator/filter',
     'rxjs/observable/of': 'commonjs rxjs/observable/of',
   }
 };

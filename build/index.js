@@ -236,7 +236,7 @@ exports.default = Table;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.createReducer = exports.data = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilter = exports.setLimit = exports.setSort = exports.setPage = exports.receiveData = exports.requestData = exports.SET_LIMIT = exports.SET_SORT = exports.SET_FILTER = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
+exports.createReducer = exports.data = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilter = exports.setLimit = exports.setSort = exports.setPage = exports.receiveData = exports.requestData = exports.cancelRequest = exports.SET_LIMIT = exports.SET_SORT = exports.SET_FILTER = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -278,6 +278,9 @@ var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
 var SET_SORT = exports.SET_SORT = 'SET_SORT';
 var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
 
+var cancelRequest = exports.cancelRequest = function cancelRequest(name) {
+    return { type: REQUEST_DATA_CANCEL, name: name };
+};
 var requestData = exports.requestData = function requestData(name, url, query) {
     return { type: REQUEST_DATA, name: name, url: url, query: query };
 };
@@ -299,7 +302,7 @@ var setFilter = exports.setFilter = function setFilter(name, url, key, filter) {
 
 var setParamsEpic = exports.setParamsEpic = function setParamsEpic(action$, store) {
     return action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).mergeMap(function (action) {
-        return _Observable.Observable.of(requestData(action.name, action.url, store.getState()[action.name].query));
+        return _Observable.Observable.of(cancelRequest(action.name), requestData(action.name, action.url, store.getState()[action.name].query));
     });
 };
 
@@ -308,7 +311,9 @@ var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, stor
     return action$.ofType(REQUEST_DATA).mergeMap(function (action) {
         return getJSONSecure(action.url + '?' + _qs2.default.stringify(action.query)).map(function (response) {
             return receiveData(action.name, response);
-        }).takeUntil(action$.ofType(REQUEST_DATA_CANCEL));
+        }).takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(function (cancelAction) {
+            return cancelAction.name == action.name;
+        }));
     });
 };
 
@@ -339,7 +344,13 @@ var data = exports.data = function data() {
         case RECEIVE_DATA:
             data.isFetching = false;
             data.items = action.payload.data.items;
-            data.query.count = parseInt(action.payload.data.total);
+
+            var totalEntries = parseInt(action.payload.data.total);
+            var totalPages = Math.ceil(totalEntries / data.query.limit);
+            if (totalPages < data.page) {
+                data.query.page = totalPages;
+            }
+            data.query.count = totalEntries;
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
@@ -647,8 +658,25 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _applyFilters = function _applyFilters(tableName, url, event) {
-    filterer(tableName, url, event.target.name, event.target.value);
+var SEARCH_OPERATOR_CONTAINS = 'contains';
+var SEARCH_OPERATOR_BETWEEN = 'between';
+var SEARCH_OPERATOR_IS = 'is';
+var SEARCH_OPERATOR_IN = 'in';
+var SEARCH_OPERATOR_NOT_IN = 'not in';
+var SEARCH_TYPE_DATE = 'date';
+
+var _applyFilters = function _applyFilters(tableName, url, filterer, event) {
+    var filter = {};
+    if (event.target.value) {
+        filter = {
+            operator: SEARCH_OPERATOR_IS,
+            field: event.target.name,
+            value: event.target.value,
+            logic: 'where'
+        };
+    }
+
+    filterer(tableName, url, event.target.name, filter);
 };
 
 var Filter = function Filter(_ref) {
@@ -657,10 +685,10 @@ var Filter = function Filter(_ref) {
         name = _ref.name,
         filterer = _ref.filterer;
     return _react2.default.createElement(
-        "td",
+        'td',
         null,
-        _react2.default.createElement("input", { name: name, onChange: function onChange(event) {
-                return _applyFilters(tableName, url, event);
+        _react2.default.createElement('input', { name: name, onChange: function onChange(event) {
+                return _applyFilters(tableName, url, filterer, event);
             } })
     );
 };
@@ -916,7 +944,7 @@ var Pagination = function Pagination(_ref) {
                     _react2.default.createElement(
                         "a",
                         { className: "page-link", href: "#", onClick: function onClick(event) {
-                                return props.setPage(name, url, page + 1);
+                                return setPage(name, url, page + 1);
                             } },
                         "Next"
                     )

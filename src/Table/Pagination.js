@@ -43,7 +43,7 @@ const Pagination = ({
                 ) }
 
                 <li className={"page-item " + (page >= total ? 'disabled': '')}>
-                    <a className="page-link" href="#" onClick={ (event) => props.setPage( name, url, (page + 1) ) }>Next</a>
+                    <a className="page-link" href="#" onClick={ (event) => setPage( name, url, (page + 1) ) }>Next</a>
                 </li>
             </ul>
         </div>

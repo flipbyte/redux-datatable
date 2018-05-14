@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 // import 'rxjs';
 import { Observable  } from 'rxjs/Observable';
-import { mergeMap, map, takeUntil } from 'rxjs/operator/mergeMap';
+import { mergeMap, map, takeUntil, filter } from 'rxjs/operator/mergeMap';
 import { of } from 'rxjs/observable/of';
 // import 'rxjs/add/operator/mergeMap';
 import qs from 'qs';
@@ -16,6 +16,7 @@ export const SET_FILTER = 'SET_FILTER';
 export const SET_SORT = 'SET_SORT';
 export const SET_LIMIT = 'SET_LIMIT';
 
+export const cancelRequest = ( name ) => ({ type: REQUEST_DATA_CANCEL, name })
 export const requestData = ( name, url, query ) => ({ type: REQUEST_DATA, name, url, query })
 export const receiveData = ( name, payload ) => ({ type: RECEIVE_DATA, name, payload })
 export const setPage = ( name, url, page ) => ({ type: SET_PAGE, name, url, page })
@@ -25,14 +26,14 @@ export const setFilter = ( name, url, key, filter ) => ({ type: SET_FILTER, name
 
 export const setParamsEpic = ( action$, store ) =>
     action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).mergeMap( action =>
-        Observable.of(requestData(action.name, action.url, store.getState()[action.name].query))
+        Observable.of(cancelRequest(action.name), requestData(action.name, action.url, store.getState()[action.name].query))
     );
 
 export const fetchDataEpic = ( action$, store, { getJSONSecure }) =>
     action$.ofType(REQUEST_DATA).mergeMap(action =>
         getJSONSecure(`${action.url}?${qs.stringify(action.query)}`)
             .map(response => receiveData(action.name, response))
-            .takeUntil(action$.ofType(REQUEST_DATA_CANCEL))
+            .takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(cancelAction => cancelAction.name == action.name))
     );
 
 
@@ -60,7 +61,13 @@ export const data = (state = initialState, action) => {
         case RECEIVE_DATA:
             data.isFetching = false;
             data.items = action.payload.data.items;
-            data.query.count = parseInt(action.payload.data.total);
+
+            let totalEntries = parseInt(action.payload.data.total);
+            let totalPages = Math.ceil(totalEntries / data.query.limit);
+            if(totalPages < data.page) {
+                data.query.page = totalPages;
+            }
+            data.query.count = totalEntries;
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
