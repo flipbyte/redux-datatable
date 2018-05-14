@@ -5,24 +5,25 @@ import Body from './Table/Body';
 import Pagination from './Table/Pagination';
 import Limiter from './Table/Limiter';
 
+const MIN_LIMIT = 20;
+
 const calculatePaginationProps = (props) => {
     let page = props.page ? props.page : 1
     page > 1 ? page : 1
 
     let limit = props.limit ? props.limit : 10
-    limit = limit > 10 ? limit: 10
+    limit = limit > MIN_LIMIT ? limit : MIN_LIMIT
 
     let start = (page - 1) * limit
     let count = props.count
-
     let end = start + limit - 1
 
     return {
         page: page,
         start: start,
         end: (count > end) ? end : count,
-        // limit: limit,
         count: count,
+        limit: limit,
         total: Math.ceil(count / limit)
     }
 }
@@ -38,12 +39,28 @@ const Table = ( props ) =>
                     </div>}
                     <div className="card-block">
                         <div className="table-responsive">
-                            <table className="table table-striped table-sm">
-                                <Header columns={ props.columns } />
+                            <Limiter
+                                name={ props.name }
+                                url={ props.url }
+                                setLimit={ props.setLimit }
+                                options={ props.limiterOptions } />
+
+                            <table className="table table-sm table-hover">
+                                <Header
+                                    name={ props.name }
+                                    url={ props.url }
+                                    columns={ props.columns }
+                                    setSortOrder={ props.setSortOrder }
+                                    setFilter={ props.setFilter }
+                                    query={ props.query } />
                                 <Body data={ props.data } columns={ props.columns } />
                             </table>
-                            <Pagination name={ props.name } url={ props.url } setPage={ props.setPage } { ...calculatePaginationProps(props.query) } />
-                            <Limiter name={ props.name } url={ props.url } setLimit={ props.setLimit } options={ props.limiterOptions } />
+
+                            <Pagination
+                                name={ props.name }
+                                url={ props.url }
+                                setPage={ props.setPage }
+                                { ...calculatePaginationProps(props.query) } />
                         </div>
                     </div>
                 </div>
@@ -59,6 +76,8 @@ Table.propTypes = {
     limiterOptions: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired,
     query: PropTypes.shape({
+        sort: PropTypes.string,
+        dir: PropTypes.string,
         page: PropTypes.number,
         limit: PropTypes.number,
         offset: PropTypes.number,
@@ -70,7 +89,7 @@ Table.propTypes = {
 Table.defaultProps = {
     data: {},
     query: {
-        limit: 10,
+        limit: MIN_LIMIT,
         offset: 1,
         search: {}
     }

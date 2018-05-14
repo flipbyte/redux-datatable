@@ -4,16 +4,18 @@ import createTable, {
     requestData,
     receiveData,
     setPage,
+    setSort,
     setLimit,
-    setFilters,
+    setFilter,
     setParamsEpic,
     fetchDataEpic,
     REQUEST_DATA,
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL,
     SET_PAGE,
+    SET_SORT,
     SET_LIMIT,
-    SET_FILTERS
+    SET_FILTER
 } from './createTable';
 
 import Table from './Table';
@@ -25,16 +27,18 @@ export {
     requestData,
     receiveData,
     setPage,
+    setSort,
     setLimit,
-    setFilters,
+    setFilter,
     setParamsEpic,
     fetchDataEpic,
     REQUEST_DATA,
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL,
     SET_PAGE,
+    SET_SORT,
     SET_LIMIT,
-    SET_FILTERS
+    SET_FILTER
 }
 
 export default createTable;

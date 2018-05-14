@@ -3,39 +3,51 @@ import PropTypes from "prop-types";
 
 const NUM_LINKS = 5;
 
-const fillRange = (start, end) => {
+const fillRange = ( start, end ) => {
     return Array(end - start + 1).fill().map((item, index) => start + index);
 };
 
-const getPages = (props) => {
-    var currentPage = props.page;
+const getPages = ( currentPage, total ) => {
     var padding = Math.floor(NUM_LINKS / 2);
     var left = (currentPage - padding < padding) ? 1 : currentPage - padding;
-    var right = (left + NUM_LINKS - 1 > props.total) ? props.total : left + NUM_LINKS - 1;
+    var right = (left + NUM_LINKS - 1 > total) ? total : left + NUM_LINKS - 1;
 
-    left = (right == props.total) ?
+    left = (right == total) ?
         (right - NUM_LINKS < 1) ? 1 : right - NUM_LINKS + 1
         : left;
 
     return fillRange(left, right);
 }
 
-const Pagination = (props) =>
-    <ul className="pagination">
-        <li className={"page-item " + (props.page < 2 ? 'disabled': '')}>
-            <a className="page-link" href="#" onClick={ (event) => props.setPage( props.name, props.url, (props.page - 1) ) }>Previous</a>
-        </li>
+const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
+const upperLimit = ( page, limit, count ) =>  (page * limit) > count ? count : page * limit;
 
-        { getPages(props).map( (link, index) =>
-            <li key={ index } className={"page-item " + (link == props.page ? 'active' : '')}>
-                <a className="page-link" href="#" onClick={ (event) => props.setPage( props.name, props.url, link ) }>{ link }</a>
-            </li>
-        ) }
+const Pagination = ({
+    name, url, start, end, page, total, count, limit, setPage
+}) =>
+    <div className="row">
+        <div className="col-sm-12 col-md-6">
+            {!!count > 0 &&
+                <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
+        </div>
+        <div className="col-sm-12 col-md-6">
+            <ul className="pagination justify-content-end">
+                <li className={"page-item " + (page < 2 ? 'disabled': '')}>
+                    <a className="page-link" href="#" onClick={ (event) => setPage( name, url, (page - 1) ) }>Previous</a>
+                </li>
 
-        <li className={"page-item " + (props.page >= props.total ? 'disabled': '')}>
-            <a className="page-link" href="#" onClick={ (event) => props.setPage( props.name, props.url, (props.page + 1) ) }>Next</a>
-        </li>
-    </ul>
+                { getPages(page, total).map( (link, index) =>
+                    <li key={ index } className={"page-item " + (link == page ? 'active' : '')}>
+                        <a className="page-link" href="#" onClick={ (event) => setPage( name, url, link ) }>{ link }</a>
+                    </li>
+                ) }
+
+                <li className={"page-item " + (page >= total ? 'disabled': '')}>
+                    <a className="page-link" href="#" onClick={ (event) => props.setPage( name, url, (page + 1) ) }>Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 
 Pagination.propTypes = {
     start: PropTypes.number.isRequired,
