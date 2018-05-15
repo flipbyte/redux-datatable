@@ -120,15 +120,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var MIN_LIMIT = 20;
 
-var calculatePaginationProps = function calculatePaginationProps(props) {
-    var page = props.page ? props.page : 1;
-    page > 1 ? page : 1;
-
-    var limit = props.limit ? props.limit : 10;
+var calculatePaginationProps = function calculatePaginationProps(page, limit, count) {
+    page = page > 1 ? page : 1;
     limit = limit > MIN_LIMIT ? limit : MIN_LIMIT;
 
     var start = (page - 1) * limit;
-    var count = props.count;
     var end = start + limit - 1;
 
     return {
@@ -166,15 +162,23 @@ var Table = function Table(props) {
                         { className: 'card-block' },
                         _react2.default.createElement(
                             'div',
-                            { className: 'table-responsive' },
-                            _react2.default.createElement(_Limiter2.default, {
-                                name: props.name,
-                                url: props.url,
-                                setLimit: props.setLimit,
-                                options: props.limiterOptions }),
+                            { className: 'row' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'col-sm-12 col-md-3' },
+                                _react2.default.createElement(_Limiter2.default, {
+                                    name: props.name,
+                                    url: props.url,
+                                    setLimit: props.setLimit,
+                                    options: props.limiterOptions })
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { id: props.name, className: 'flutter-table-container table-responsive' },
                             _react2.default.createElement(
                                 'table',
-                                { className: 'table table-sm table-hover' },
+                                { className: 'table table-sm table-hover flutter-table' },
                                 _react2.default.createElement(_Header2.default, {
                                     name: props.name,
                                     url: props.url,
@@ -183,13 +187,13 @@ var Table = function Table(props) {
                                     setFilter: props.setFilter,
                                     query: props.query }),
                                 _react2.default.createElement(_Body2.default, { data: props.data, columns: props.columns })
-                            ),
-                            _react2.default.createElement(_Pagination2.default, _extends({
-                                name: props.name,
-                                url: props.url,
-                                setPage: props.setPage
-                            }, calculatePaginationProps(props.query)))
-                        )
+                            )
+                        ),
+                        _react2.default.createElement(_Pagination2.default, _extends({
+                            name: props.name,
+                            url: props.url,
+                            setPage: props.setPage
+                        }, calculatePaginationProps(props.query.page, props.query.limit, props.query.count)))
                     )
                 )
             )
@@ -246,13 +250,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Observable = __webpack_require__(14);
+var _Observable = __webpack_require__(15);
 
-var _mergeMap = __webpack_require__(16);
+var _operator = __webpack_require__(13);
 
-var _of = __webpack_require__(15);
+var _of = __webpack_require__(16);
 
-var _qs = __webpack_require__(13);
+var _qs = __webpack_require__(14);
 
 var _qs2 = _interopRequireDefault(_qs);
 
@@ -301,18 +305,18 @@ var setFilter = exports.setFilter = function setFilter(name, url, key, filter) {
 };
 
 var setParamsEpic = exports.setParamsEpic = function setParamsEpic(action$, store) {
-    return action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).mergeMap(function (action) {
+    return action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).concatMap(function (action) {
         return _Observable.Observable.of(cancelRequest(action.name), requestData(action.name, action.url, store.getState()[action.name].query));
     });
 };
 
 var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
     var getJSONSecure = _ref.getJSONSecure;
-    return action$.ofType(REQUEST_DATA).mergeMap(function (action) {
+    return action$.ofType(REQUEST_DATA).switchMap(function (action) {
         return getJSONSecure(action.url + '?' + _qs2.default.stringify(action.query)).map(function (response) {
             return receiveData(action.name, response);
         }).takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(function (cancelAction) {
-            return cancelAction.name == action.name;
+            return cancelAction.type == REQUEST_DATA_CANCEL && cancelAction.name == action.name;
         }));
     });
 };
@@ -344,17 +348,12 @@ var data = exports.data = function data() {
         case RECEIVE_DATA:
             data.isFetching = false;
             data.items = action.payload.data.items;
-
-            var totalEntries = parseInt(action.payload.data.total);
-            var totalPages = Math.ceil(totalEntries / data.query.limit);
-            if (totalPages < data.page) {
-                data.query.page = totalPages;
-            }
-            data.query.count = totalEntries;
+            data.query.count = parseInt(action.payload.data.total);
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
             data.query.offset = (data.query.page - 1) * data.query.limit;
+            data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
             return Object.assign({}, state, data);
         case SET_SORT:
             data.query.sort = action.sort;
@@ -365,7 +364,6 @@ var data = exports.data = function data() {
             data.query.offset = (data.query.page - 1) * data.query.limit;
             return Object.assign({}, state, data);
         case SET_FILTER:
-            // data.search = action.filters;
             data.query.search[action.key] = action.filter;
             return Object.assign({}, state, data);
         default:
@@ -403,6 +401,27 @@ exports.default = function (_ref2) {
                         query = _props.query;
 
                     onLoad(name, url, onLoadParams);
+                }
+            }, {
+                key: 'setValidPage',
+                value: function setValidPage(nextProps) {
+                    if (nextProps.query.count <= 0) {
+                        return true;
+                    }
+
+                    var totalEntries = parseInt(nextProps.query.count);
+                    var totalPages = Math.ceil(totalEntries / nextProps.query.limit);
+                    if (totalPages < this.props.query.page) {
+                        this.props.setPage(name, url, totalPages);
+                        return false;
+                    }
+
+                    return true;
+                }
+            }, {
+                key: 'shouldComponentUpdate',
+                value: function shouldComponentUpdate(nextProps, nextState) {
+                    return this.setValidPage(nextProps);
                 }
             }, {
                 key: 'render',
@@ -532,10 +551,14 @@ var Cell = function Cell(_ref) {
         attributes = _ref.attributes;
     return isHeader ? _react2.default.createElement(
         'th',
-        _extends({ className: 'sortable ' + (name == query.sort ? query.dir : '') }, attributes, { onClick: function onClick(event) {
+        _extends({
+            className: 'sortable ' + name + ' ' + (name == query.sort ? query.dir + 'ending' : '') }, attributes, {
+            onClick: function onClick(event) {
                 return changeSortOrder(tableName, url, query, name, sorter, event);
             } }),
-        label
+        label,
+        ' ',
+        _react2.default.createElement('b', { className: 'sort-caret' })
     ) : _react2.default.createElement(
         'td',
         attributes,
@@ -813,17 +836,22 @@ var Limiter = function Limiter(_ref) {
         options = _ref.options,
         setLimit = _ref.setLimit;
     return _react2.default.createElement(
-        "select",
-        { className: "form-control", id: "limiter", onChange: function onChange(event) {
-                return setLimit(name, url, event.target.value);
-            } },
-        options.map(function (option, index) {
-            return _react2.default.createElement(
-                "option",
-                { key: index },
-                option
-            );
-        })
+        "label",
+        { className: "limiter" },
+        _react2.default.createElement(
+            "select",
+            { className: "form-control input-sm", id: "limiter", onChange: function onChange(event) {
+                    return setLimit(name, url, event.target.value);
+                } },
+            options.map(function (option, index) {
+                return _react2.default.createElement(
+                    "option",
+                    { key: index },
+                    option
+                );
+            })
+        ),
+        " per page"
     );
 };
 
@@ -1011,27 +1039,29 @@ exports.default = _createTable2.default;
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("qs");
+"use strict";
+
+//# sourceMappingURL=Operator.js.map
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-module.exports = require("rxjs/Observable");
+module.exports = require("qs");
 
 /***/ }),
 /* 15 */
 /***/ (function(module, exports) {
 
-module.exports = require("rxjs/observable/of");
+module.exports = require("rxjs/Observable");
 
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = require("rxjs/operator/mergeMap");
+module.exports = require("rxjs/observable/of");
 
 /***/ })
 /******/ ]);

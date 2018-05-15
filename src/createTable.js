@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 // import 'rxjs';
 import { Observable  } from 'rxjs/Observable';
-import { mergeMap, map, takeUntil, filter } from 'rxjs/operator/mergeMap';
+import { concatMap, switchMap, map, takeUntil, filter } from 'rxjs/operator';
 import { of } from 'rxjs/observable/of';
 // import 'rxjs/add/operator/mergeMap';
 import qs from 'qs';
@@ -25,17 +25,16 @@ export const setLimit = ( name, url, limit ) => ({ type: SET_LIMIT, name, url, l
 export const setFilter = ( name, url, key, filter ) => ({ type: SET_FILTER, name, url, key, filter })
 
 export const setParamsEpic = ( action$, store ) =>
-    action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).mergeMap( action =>
+    action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).concatMap( action =>
         Observable.of(cancelRequest(action.name), requestData(action.name, action.url, store.getState()[action.name].query))
     );
 
 export const fetchDataEpic = ( action$, store, { getJSONSecure }) =>
-    action$.ofType(REQUEST_DATA).mergeMap(action =>
+    action$.ofType(REQUEST_DATA).switchMap( action =>
         getJSONSecure(`${action.url}?${qs.stringify(action.query)}`)
             .map(response => receiveData(action.name, response))
-            .takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(cancelAction => cancelAction.name == action.name))
+            .takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(cancelAction => cancelAction.type == REQUEST_DATA_CANCEL && cancelAction.name == action.name))
     );
-
 
 let initialState = {
     isFetching: false,
@@ -61,17 +60,12 @@ export const data = (state = initialState, action) => {
         case RECEIVE_DATA:
             data.isFetching = false;
             data.items = action.payload.data.items;
-
-            let totalEntries = parseInt(action.payload.data.total);
-            let totalPages = Math.ceil(totalEntries / data.query.limit);
-            if(totalPages < data.page) {
-                data.query.page = totalPages;
-            }
-            data.query.count = totalEntries;
+            data.query.count = parseInt(action.payload.data.total);
             return Object.assign({}, state, data);
         case SET_PAGE:
             data.query.page = action.page;
             data.query.offset = ( (data.query.page - 1) * data.query.limit );
+            data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
             return Object.assign({}, state, data);
         case SET_SORT:
             data.query.sort = action.sort;
@@ -82,7 +76,6 @@ export const data = (state = initialState, action) => {
             data.query.offset = ( (data.query.page - 1) * data.query.limit );
             return Object.assign({}, state, data);
         case SET_FILTER:
-            // data.search = action.filters;
             data.query.search[action.key] = action.filter;
             return Object.assign({}, state, data);
         default:
@@ -99,6 +92,25 @@ export default ({ name, url, columns, limiterOptions, onLoadParams }) => Table =
         componentWillMount() {
             const { onLoad, query } = this.props;
             onLoad(name, url, onLoadParams);
+        }
+
+        setValidPage(nextProps) {
+            if(nextProps.query.count <= 0) {
+                return true;
+            }
+
+            let totalEntries = parseInt(nextProps.query.count);
+            let totalPages = Math.ceil(totalEntries / nextProps.query.limit);
+            if(totalPages < this.props.query.page) {
+                this.props.setPage(name, url, totalPages);
+                return false
+            }
+
+            return true;
+        }
+
+        shouldComponentUpdate(nextProps, nextState) {
+            return this.setValidPage(nextProps);
         }
 
         render() {

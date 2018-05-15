@@ -41,6 +41,8 @@ module.exports = {
     'rxjs': 'commonjs rxjs',
     'rxjs/Observable': 'commonjs rxjs/Observable',
     'rxjs/operator/mergeMap': 'commonjs rxjs/operator/mergeMap',
+    'rxjs/operator/concatMap': 'commonjs rxjs/operator/concatMap',
+    'rxjs/operator/switchMap': 'commonjs rxjs/operator/switchMap',
     'rxjs/operator/map': 'commonjs rxjs/operator/map',
     'rxjs/operator/takeUntil': 'commonjs rxjs/operator/takeUntil',
     'rxjs/operator/filter': 'commonjs rxjs/operator/filter',

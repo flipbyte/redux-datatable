@@ -23,7 +23,12 @@ const Cell = ({
     tableName, name, url, query, label, isHeader, sorter, attributes
 }) =>
     ( isHeader ) ?
-        <th className={ 'sortable ' + ( name == query.sort ? query.dir : '' ) } { ...attributes } onClick={ (event) => changeSortOrder(tableName, url, query, name, sorter, event) }>{ label }</th> :
+        <th
+            className={ 'sortable ' + name + ' ' + ( name == query.sort ? query.dir+'ending' : '' ) } { ...attributes }
+            onClick={ (event) => changeSortOrder(tableName, url, query, name, sorter, event) }>
+
+            { label } <b className="sort-caret"></b>
+        </th> :
         <td { ...attributes }>{ label }</td> ;
 
 Cell.propTypes = {

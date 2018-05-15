@@ -7,15 +7,11 @@ import Limiter from './Table/Limiter';
 
 const MIN_LIMIT = 20;
 
-const calculatePaginationProps = (props) => {
-    let page = props.page ? props.page : 1
-    page > 1 ? page : 1
-
-    let limit = props.limit ? props.limit : 10
+const calculatePaginationProps = (page, limit, count) => {
+    page = page > 1 ? page : 1
     limit = limit > MIN_LIMIT ? limit : MIN_LIMIT
 
     let start = (page - 1) * limit
-    let count = props.count
     let end = start + limit - 1
 
     return {
@@ -38,14 +34,18 @@ const Table = ( props ) =>
                         <i className="fa fa-align-justify"></i> { props.title }
                     </div>}
                     <div className="card-block">
-                        <div className="table-responsive">
-                            <Limiter
-                                name={ props.name }
-                                url={ props.url }
-                                setLimit={ props.setLimit }
-                                options={ props.limiterOptions } />
+                        <div className="row">
+                            <div className="col-sm-12 col-md-3">
+                                <Limiter
+                                    name={ props.name }
+                                    url={ props.url }
+                                    setLimit={ props.setLimit }
+                                    options={ props.limiterOptions } />
+                            </div>
+                        </div>
 
-                            <table className="table table-sm table-hover">
+                        <div id={ props.name } className="flutter-table-container table-responsive">
+                            <table className="table table-sm table-hover flutter-table">
                                 <Header
                                     name={ props.name }
                                     url={ props.url }
@@ -55,13 +55,14 @@ const Table = ( props ) =>
                                     query={ props.query } />
                                 <Body data={ props.data } columns={ props.columns } />
                             </table>
-
-                            <Pagination
-                                name={ props.name }
-                                url={ props.url }
-                                setPage={ props.setPage }
-                                { ...calculatePaginationProps(props.query) } />
                         </div>
+
+                        <Pagination
+                            name={ props.name }
+                            url={ props.url }
+                            setPage={ props.setPage }
+                            { ...calculatePaginationProps(props.query.page, props.query.limit, props.query.count) } />
+
                     </div>
                 </div>
             </div>
