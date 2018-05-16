@@ -12,7 +12,8 @@ const Body = ({ columns, data }) =>
                         <Renderer key={ key }
                             index={ columns[key].name }
                             data={ item }
-                            renderer={ columns[key].renderer } />
+                            renderer={ columns[key].renderer }
+                            config={ columns[key] } />
                 )) }
             </tr>
         ))}

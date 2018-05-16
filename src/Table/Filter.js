@@ -1,29 +1,22 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import String from './Filter/String';
+import Number from './Filter/Number';
+import Date from './Filter/Date';
 
-const SEARCH_OPERATOR_CONTAINS = 'contains';
-const SEARCH_OPERATOR_BETWEEN = 'between';
-const SEARCH_OPERATOR_IS = 'is';
-const SEARCH_OPERATOR_IN = 'in';
-const SEARCH_OPERATOR_NOT_IN = 'not in';
-const SEARCH_TYPE_DATE = 'date';
+export const SEARCH_OPERATOR_CONTAINS = 'contains';
+export const SEARCH_OPERATOR_BETWEEN = 'between';
+export const SEARCH_OPERATOR_IS = 'is';
+export const SEARCH_OPERATOR_IN = 'in';
+export const SEARCH_OPERATOR_NOT_IN = 'not in';
+export const SEARCH_TYPE_DATE = 'date';
 
-const _applyFilters = (tableName, url, filterer, event) => {
-    let filter = {};
-    if(event.target.value) {
-        filter = {
-            operator: SEARCH_OPERATOR_IS,
-            field: event.target.name,
-            value: event.target.value,
-            logic: 'where',
-        };
-    }
-
-    filterer(tableName, url, event.target.name, filter);
-};
-
-const Filter = ({ tableName, url, name, filterer }) =>
-    <td><input name={ name } onChange={ (event) => _applyFilters(tableName, url, filterer, event) } /></td>;
+const Filter = ( props ) => {
+    if( props.type == 'number') return <Number { ...props } />
+    if( props.type == 'string') return <String { ...props } />
+    if( props.type == 'date') return <Date { ...props } />
+    return <String { ...props } />
+}
 
 Filter.propTypes = {
     tableName: PropTypes.string.isRequired,

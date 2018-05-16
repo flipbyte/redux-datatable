@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -89,6 +89,68 @@ module.exports = require("prop-types");
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.SEARCH_TYPE_DATE = exports.SEARCH_OPERATOR_NOT_IN = exports.SEARCH_OPERATOR_IN = exports.SEARCH_OPERATOR_IS = exports.SEARCH_OPERATOR_BETWEEN = exports.SEARCH_OPERATOR_CONTAINS = undefined;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _String = __webpack_require__(13);
+
+var _String2 = _interopRequireDefault(_String);
+
+var _Number = __webpack_require__(12);
+
+var _Number2 = _interopRequireDefault(_Number);
+
+var _Date = __webpack_require__(11);
+
+var _Date2 = _interopRequireDefault(_Date);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SEARCH_OPERATOR_CONTAINS = exports.SEARCH_OPERATOR_CONTAINS = 'contains';
+var SEARCH_OPERATOR_BETWEEN = exports.SEARCH_OPERATOR_BETWEEN = 'between';
+var SEARCH_OPERATOR_IS = exports.SEARCH_OPERATOR_IS = 'is';
+var SEARCH_OPERATOR_IN = exports.SEARCH_OPERATOR_IN = 'in';
+var SEARCH_OPERATOR_NOT_IN = exports.SEARCH_OPERATOR_NOT_IN = 'not in';
+var SEARCH_TYPE_DATE = exports.SEARCH_TYPE_DATE = 'date';
+
+var Filter = function Filter(props) {
+    if (props.type == 'number') return _react2.default.createElement(_Number2.default, props);
+    if (props.type == 'string') return _react2.default.createElement(_String2.default, props);
+    if (props.type == 'date') return _react2.default.createElement(_Date2.default, props);
+    return _react2.default.createElement(_String2.default, props);
+};
+
+Filter.propTypes = {
+    tableName: _propTypes2.default.string.isRequired,
+    url: _propTypes2.default.string,
+    filterer: _propTypes2.default.func.isRequired,
+    type: _propTypes2.default.string.isRequired,
+    name: _propTypes2.default.string.isRequired
+};
+
+Filter.defaultProps = {
+    type: "string"
+};
+
+exports.default = Filter;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -100,19 +162,19 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Header = __webpack_require__(9);
+var _Header = __webpack_require__(14);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Body = __webpack_require__(4);
+var _Body = __webpack_require__(5);
 
 var _Body2 = _interopRequireDefault(_Body);
 
-var _Pagination = __webpack_require__(11);
+var _Pagination = __webpack_require__(16);
 
 var _Pagination2 = _interopRequireDefault(_Pagination);
 
-var _Limiter = __webpack_require__(10);
+var _Limiter = __webpack_require__(15);
 
 var _Limiter2 = _interopRequireDefault(_Limiter);
 
@@ -231,7 +293,7 @@ Table.defaultProps = {
 exports.default = Table;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -250,13 +312,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Observable = __webpack_require__(15);
+var _Observable = __webpack_require__(21);
 
-var _operator = __webpack_require__(13);
+var _operator = __webpack_require__(18);
 
-var _of = __webpack_require__(16);
+var _of = __webpack_require__(22);
 
-var _qs = __webpack_require__(14);
+var _qs = __webpack_require__(19);
 
 var _qs2 = _interopRequireDefault(_qs);
 
@@ -442,7 +504,7 @@ exports.default = function (_ref2) {
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -460,7 +522,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Renderer = __webpack_require__(6);
+var _Renderer = __webpack_require__(7);
 
 var _Renderer2 = _interopRequireDefault(_Renderer);
 
@@ -480,7 +542,8 @@ var Body = function Body(_ref) {
                     return !!columns[key].name && _react2.default.createElement(_Renderer2.default, { key: key,
                         index: columns[key].name,
                         data: item,
-                        renderer: columns[key].renderer });
+                        renderer: columns[key].renderer,
+                        config: columns[key] });
                 })
             );
         })
@@ -500,7 +563,7 @@ Body.defaultProps = {
 exports.default = Body;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -522,7 +585,13 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var changeSortOrder = function changeSortOrder(tableName, url, query, name, sorter, event) {
+var changeSortOrder = function changeSortOrder(_ref, event) {
+    var tableName = _ref.tableName,
+        url = _ref.url,
+        query = _ref.query,
+        name = _ref.name,
+        sorter = _ref.sorter;
+
     var dir = null;
     if (query.sort != name) {
         dir = 'asc';
@@ -540,26 +609,36 @@ var changeSortOrder = function changeSortOrder(tableName, url, query, name, sort
     sorter(tableName, url, name, dir);
 };
 
-var Cell = function Cell(_ref) {
-    var tableName = _ref.tableName,
-        name = _ref.name,
-        url = _ref.url,
-        query = _ref.query,
-        label = _ref.label,
-        isHeader = _ref.isHeader,
-        sorter = _ref.sorter,
-        attributes = _ref.attributes;
-    return isHeader ? _react2.default.createElement(
+var _prepareHeader = function _prepareHeader(props) {
+    return props.sortable ? _react2.default.createElement(
         'th',
         _extends({
-            className: 'sortable ' + name + ' ' + (name == query.sort ? query.dir + 'ending' : '') }, attributes, {
+            className: 'sortable ' + props.name + ' ' + (props.name == props.query.sort ? props.query.dir : ''),
             onClick: function onClick(event) {
-                return changeSortOrder(tableName, url, query, name, sorter, event);
-            } }),
-        label,
+                return changeSortOrder(props, event);
+            }
+        }, props.attributes),
+        props.label,
         ' ',
         _react2.default.createElement('b', { className: 'sort-caret' })
     ) : _react2.default.createElement(
+        'th',
+        null,
+        props.label
+    );
+};
+
+var Cell = function Cell(_ref2) {
+    var tableName = _ref2.tableName,
+        name = _ref2.name,
+        url = _ref2.url,
+        query = _ref2.query,
+        label = _ref2.label,
+        isHeader = _ref2.isHeader,
+        sortable = _ref2.sortable,
+        sorter = _ref2.sorter,
+        attributes = _ref2.attributes;
+    return isHeader ? _prepareHeader({ tableName: tableName, name: name, url: url, query: query, label: label, isHeader: isHeader, sortable: sortable, sorter: sorter, attributes: attributes }) : _react2.default.createElement(
         'td',
         attributes,
         label
@@ -571,6 +650,7 @@ Cell.propTypes = {
     name: _propTypes2.default.string.isRequired,
     url: _propTypes2.default.string,
     isHeader: _propTypes2.default.bool.isRequired,
+    sortable: _propTypes2.default.bool.isRequired,
     sorter: _propTypes2.default.func,
     label: _propTypes2.default.string.isRequired,
     attributes: _propTypes2.default.object
@@ -584,7 +664,7 @@ Cell.defaultProps = {
 exports.default = Cell;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -602,21 +682,52 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Text = __webpack_require__(7);
+var _Text = __webpack_require__(10);
 
 var _Text2 = _interopRequireDefault(_Text);
 
+var _Date = __webpack_require__(9);
+
+var _Date2 = _interopRequireDefault(_Date);
+
+var _Actions = __webpack_require__(8);
+
+var _Actions2 = _interopRequireDefault(_Actions);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Renderer = function Renderer(props) {
-    var TagName = props.renderer;
-    return _react2.default.createElement(TagName, { index: props.index, data: props.data });
+var _render = function _render(ComponentName, props) {
+    return _react2.default.createElement(ComponentName, props);
+};
+
+var Renderer = function Renderer(_ref) {
+    var index = _ref.index,
+        data = _ref.data,
+        renderer = _ref.renderer,
+        config = _ref.config;
+
+    if (renderer) {
+        return _render(renderer, { index: index, data: data, config: config });
+    } else {
+        switch (config.type) {
+            case 'date':
+                return _render(_Date2.default, { index: index, data: data });
+
+            case 'actions':
+                return _render(_Actions2.default, { data: data, config: config });
+
+            default:
+                return _render(_Text2.default, { index: index, data: data });
+
+        }
+    }
 };
 
 Renderer.propTypes = {
     index: _propTypes2.default.string.isRequired,
     data: _propTypes2.default.object.isRequired,
-    renderer: _propTypes2.default.func
+    renderer: _propTypes2.default.func,
+    config: _propTypes2.default.object
 };
 
 Renderer.defaultProps = {
@@ -626,7 +737,83 @@ Renderer.defaultProps = {
 exports.default = Renderer;
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Actions = function Actions(_ref) {
+    var data = _ref.data,
+        config = _ref.config;
+    return _react2.default.createElement(
+        "td",
+        null,
+        Object.keys(config.children).map(function (key) {
+            return _react2.default.createElement(
+                "a",
+                { href: "" },
+                "config.children[key].label"
+            );
+        })
+    );
+};
+
+exports.default = Actions;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactPureTime = __webpack_require__(20);
+
+var _reactPureTime2 = _interopRequireDefault(_reactPureTime);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Date = function Date(_ref) {
+    var index = _ref.index,
+        data = _ref.data;
+    return _react2.default.createElement(
+        'td',
+        null,
+        _react2.default.createElement(_reactPureTime2.default, { value: data[index], format: 'F j, Y, g:i a' })
+    );
+};
+
+exports.default = Date;
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -661,7 +848,7 @@ var Text = function Text(_ref) {
 exports.default = Text;
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -679,20 +866,185 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _Filter = __webpack_require__(2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var SEARCH_OPERATOR_CONTAINS = 'contains';
-var SEARCH_OPERATOR_BETWEEN = 'between';
-var SEARCH_OPERATOR_IS = 'is';
-var SEARCH_OPERATOR_IN = 'in';
-var SEARCH_OPERATOR_NOT_IN = 'not in';
-var SEARCH_TYPE_DATE = 'date';
+var dateFrom = null;
+var dateTo = null;
 
-var _applyFilters = function _applyFilters(tableName, url, filterer, event) {
+var _applyFilter = function _applyFilter(key, tableName, url, filterer, event) {
+    var filter = {};
+
+    if (key == 0) {
+        dateFrom = event.target.value;
+    } else {
+        dateTo = event.target.value;
+    }
+
+    if (dateFrom || dateTo) {
+        filter = {
+            operator: _Filter.SEARCH_OPERATOR_BETWEEN,
+            field: event.target.name,
+            value: [dateFrom, dateTo],
+            logic: 'where',
+            type: 'date'
+        };
+    }
+
+    filterer(tableName, url, event.target.name, filter);
+};
+
+var Date = function Date(_ref) {
+    var tableName = _ref.tableName,
+        url = _ref.url,
+        name = _ref.name,
+        filterer = _ref.filterer;
+    return _react2.default.createElement(
+        'td',
+        null,
+        _react2.default.createElement('input', {
+            className: 'form-control',
+            type: 'date',
+            name: name,
+            onChange: function onChange(event) {
+                return _applyFilter(0, tableName, url, filterer, event);
+            },
+            placeholder: 'From' }),
+        _react2.default.createElement('input', {
+            className: 'form-control',
+            type: 'date',
+            name: name,
+            onChange: function onChange(event) {
+                return _applyFilter(1, tableName, url, filterer, event);
+            },
+            placeholder: 'To' })
+    );
+};
+
+Date.propTypes = {
+    tableName: _propTypes2.default.string.isRequired,
+    url: _propTypes2.default.string,
+    filterer: _propTypes2.default.func.isRequired,
+    name: _propTypes2.default.string.isRequired
+};
+
+exports.default = Date;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _Filter = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var valFrom = null;
+var valTo = null;
+
+var _applyFilter = function _applyFilter(key, tableName, url, filterer, event) {
+    var filter = {};
+
+    console.log(event);
+
+    if (key == 0) {
+        valFrom = event.target.value;
+    } else {
+        valTo = event.target.value >= valFrom ? event.target.value : null;
+    }
+
+    if (valFrom || valTo) {
+        filter = {
+            operator: _Filter.SEARCH_OPERATOR_BETWEEN,
+            field: event.target.name,
+            value: [valFrom, valTo],
+            logic: 'where',
+            type: 'number'
+        };
+    }
+
+    filterer(tableName, url, event.target.name, filter);
+};
+
+var Number = function Number(_ref) {
+    var tableName = _ref.tableName,
+        url = _ref.url,
+        name = _ref.name,
+        filterer = _ref.filterer;
+    return _react2.default.createElement(
+        'td',
+        null,
+        _react2.default.createElement('input', {
+            className: 'form-control',
+            type: 'number',
+            name: name,
+            onChange: function onChange(event) {
+                return _applyFilter(0, tableName, url, filterer, event);
+            },
+            placeholder: 'From' }),
+        _react2.default.createElement('input', {
+            className: 'form-control',
+            type: 'number',
+            name: name,
+            onChange: function onChange(event) {
+                return _applyFilter(1, tableName, url, filterer, event);
+            },
+            placeholder: 'To' })
+    );
+};
+
+Number.propTypes = {
+    tableName: _propTypes2.default.string.isRequired,
+    url: _propTypes2.default.string,
+    filterer: _propTypes2.default.func.isRequired,
+    name: _propTypes2.default.string.isRequired
+};
+
+exports.default = Number;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _Filter = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _applyFilter = function _applyFilter(tableName, url, filterer, event) {
     var filter = {};
     if (event.target.value) {
         filter = {
-            operator: SEARCH_OPERATOR_IS,
+            operator: _Filter.SEARCH_OPERATOR_CONTAINS,
             field: event.target.name,
             value: event.target.value,
             logic: 'where'
@@ -702,7 +1054,7 @@ var _applyFilters = function _applyFilters(tableName, url, filterer, event) {
     filterer(tableName, url, event.target.name, filter);
 };
 
-var Filter = function Filter(_ref) {
+var String = function String(_ref) {
     var tableName = _ref.tableName,
         url = _ref.url,
         name = _ref.name,
@@ -710,28 +1062,26 @@ var Filter = function Filter(_ref) {
     return _react2.default.createElement(
         'td',
         null,
-        _react2.default.createElement('input', { name: name, onChange: function onChange(event) {
-                return _applyFilters(tableName, url, filterer, event);
+        _react2.default.createElement('input', {
+            className: 'form-control',
+            name: name,
+            onChange: function onChange(event) {
+                return _applyFilter(tableName, url, filterer, event);
             } })
     );
 };
 
-Filter.propTypes = {
+String.propTypes = {
     tableName: _propTypes2.default.string.isRequired,
     url: _propTypes2.default.string,
     filterer: _propTypes2.default.func.isRequired,
-    type: _propTypes2.default.string.isRequired,
     name: _propTypes2.default.string.isRequired
 };
 
-Filter.defaultProps = {
-    type: "string"
-};
-
-exports.default = Filter;
+exports.default = String;
 
 /***/ }),
-/* 9 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -749,11 +1099,11 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Cell = __webpack_require__(5);
+var _Cell = __webpack_require__(6);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
-var _Filter = __webpack_require__(8);
+var _Filter = __webpack_require__(2);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
@@ -776,6 +1126,7 @@ var Header = function Header(_ref) {
                 return _react2.default.createElement(_Cell2.default, {
                     key: key,
                     isHeader: true,
+                    sortable: columns[key].sortable ? true : false,
                     sorter: setSortOrder,
                     tableName: name,
                     url: url,
@@ -789,13 +1140,13 @@ var Header = function Header(_ref) {
             'tr',
             { className: 'filters' },
             Object.keys(columns).map(function (key) {
-                return _react2.default.createElement(_Filter2.default, {
+                return columns[key].type != 'actions' ? _react2.default.createElement(_Filter2.default, {
                     key: key,
                     type: columns[key].type,
                     name: columns[key].name,
                     tableName: name,
                     url: url,
-                    filterer: setFilter });
+                    filterer: setFilter }) : _react2.default.createElement('td', { key: key });
             })
         )
     );
@@ -810,7 +1161,7 @@ Header.propTypes = {
 exports.default = Header;
 
 /***/ }),
-/* 10 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -863,7 +1214,7 @@ Limiter.propTypes = {
 exports.default = Limiter;
 
 /***/ }),
-/* 11 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -996,7 +1347,7 @@ Pagination.propTypes = {
 exports.default = Pagination;
 
 /***/ }),
-/* 12 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1007,11 +1358,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SET_FILTER = exports.SET_LIMIT = exports.SET_SORT = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilter = exports.setLimit = exports.setSort = exports.setPage = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
 
-var _createTable = __webpack_require__(3);
+var _createTable = __webpack_require__(4);
 
 var _createTable2 = _interopRequireDefault(_createTable);
 
-var _Table = __webpack_require__(2);
+var _Table = __webpack_require__(3);
 
 var _Table2 = _interopRequireDefault(_Table);
 
@@ -1038,7 +1389,7 @@ exports.SET_FILTER = _createTable.SET_FILTER;
 exports.default = _createTable2.default;
 
 /***/ }),
-/* 13 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1046,19 +1397,25 @@ exports.default = _createTable2.default;
 //# sourceMappingURL=Operator.js.map
 
 /***/ }),
-/* 14 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = require("qs");
 
 /***/ }),
-/* 15 */
+/* 20 */
+/***/ (function(module, exports) {
+
+module.exports = require("react-pure-time");
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/Observable");
 
 /***/ }),
-/* 16 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/observable/of");

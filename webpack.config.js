@@ -28,6 +28,7 @@ module.exports = {
             // 'Observable': path.resolve(__dirname, './node_modules/rxjs/Observable'),
             'rxjs': path.resolve(__dirname, './node_modules/rxjs'),
             'prop-types': path.resolve(__dirname, './node_modules/prop-types'),
+            'react-pure-time': path.resolve(__dirname, './node_modules/react-pure-time'),
             'qs': path.resolve(__dirname, './node_modules/qs'),
             // 'mergeMap': path.resolve(__dirname, './node_modules/rxjs/operator/mergeMap'),
             // 'of': path.resolve(__dirname, './node_modules/rxjs/observable/of')
@@ -37,6 +38,7 @@ module.exports = {
     'react': 'commonjs react',
     'react-dom': 'commonjs react-dom',
     'prop-types': 'commonjs prop-types',
+    'react-pure-time': 'commonjs react-pure-time',
     'qs': 'commonjs qs',
     'rxjs': 'commonjs rxjs',
     'rxjs/Observable': 'commonjs rxjs/Observable',

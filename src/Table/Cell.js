@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-const changeSortOrder = (tableName, url, query, name, sorter, event) => {
+const changeSortOrder = ({ tableName, url, query, name, sorter }, event) => {
     let dir = null;
     if( query.sort != name ) {
         dir = 'asc';
@@ -19,16 +19,20 @@ const changeSortOrder = (tableName, url, query, name, sorter, event) => {
     sorter(tableName, url, name, dir);
 }
 
-const Cell = ({
-    tableName, name, url, query, label, isHeader, sorter, attributes
-}) =>
-    ( isHeader ) ?
+const _prepareHeader = ( props ) =>
+    ( props.sortable ) ?
         <th
-            className={ 'sortable ' + name + ' ' + ( name == query.sort ? query.dir+'ending' : '' ) } { ...attributes }
-            onClick={ (event) => changeSortOrder(tableName, url, query, name, sorter, event) }>
+            className={ 'sortable ' + props.name + ' ' + ( props.name == props.query.sort ? props.query.dir : '' ) }
+            onClick={ (event) => changeSortOrder(props, event) }
+            { ...props.attributes } >
 
-            { label } <b className="sort-caret"></b>
+            { props.label } <b className="sort-caret"></b>
         </th> :
+        <th>{ props.label }</th>
+
+const Cell = ({ tableName, name, url, query, label, isHeader, sortable, sorter, attributes }) =>
+    ( isHeader ) ?
+        _prepareHeader( { tableName, name, url, query, label, isHeader, sortable, sorter, attributes } ) :
         <td { ...attributes }>{ label }</td> ;
 
 Cell.propTypes = {
@@ -36,6 +40,7 @@ Cell.propTypes = {
     name: PropTypes.string.isRequired,
     url: PropTypes.string,
     isHeader: PropTypes.bool.isRequired,
+    sortable: PropTypes.bool.isRequired,
     sorter: PropTypes.func,
     label: PropTypes.string.isRequired,
     attributes: PropTypes.object

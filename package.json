@@ -40,6 +40,7 @@
     "react-dom": ">=16.3.0",
     "rxjs": "^5.5.8",
     "prop-types": "*",
+    "react-pure-time": "*",
     "qs": "^6.5.2"
   },
   "dependencies": {

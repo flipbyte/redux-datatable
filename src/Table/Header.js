@@ -11,6 +11,7 @@ const Header = ({ name, url, query, columns, setSortOrder, setFilter }) =>
                 <Cell
                     key={ key }
                     isHeader={ true }
+                    sortable={ columns[key].sortable ? true : false }
                     sorter={ setSortOrder }
                     tableName={ name }
                     url={ url }
@@ -22,13 +23,15 @@ const Header = ({ name, url, query, columns, setSortOrder, setFilter }) =>
         </tr>
         <tr className="filters">
             { Object.keys(columns).map( (key) => (
-                <Filter
-                    key={ key }
-                    type={ columns[key].type }
-                    name={ columns[key].name }
-                    tableName={ name }
-                    url={ url }
-                    filterer={ setFilter } />
+                (columns[key].type != 'actions') ?
+                    <Filter
+                        key={ key }
+                        type={ columns[key].type }
+                        name={ columns[key].name }
+                        tableName={ name }
+                        url={ url }
+                        filterer={ setFilter } /> :
+                    <td key={ key }></td>
             ) ) }
         </tr>
     </thead>;
