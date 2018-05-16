@@ -8,16 +8,16 @@ import Actions from './Renderer/Actions';
 const _render = (ComponentName, props) =>
     <ComponentName { ...props } />
 
-const Renderer = ({ index, data, renderer, config }) => {
+const Renderer = ({ name, url, query, index, data, renderer, config, deleter }) => {
     if(renderer) {
-        return _render(renderer, {index, data, config });
+        return _render(renderer, {index, data, config, name, url, query, deleter });
     } else {
         switch(config.type) {
             case 'date':
                 return _render(Date, {index, data});
 
             case 'actions':
-                return _render(Actions, {data, config});
+                return _render(Actions, {name, url, query, data, config, deleter});
 
             default:
                 return _render(Text, {index, data});
@@ -31,10 +31,6 @@ Renderer.propTypes = {
     data: PropTypes.object.isRequired,
     renderer: PropTypes.func,
     config: PropTypes.object
-};
-
-Renderer.defaultProps = {
-    renderer: Text
 };
 
 export default Renderer;

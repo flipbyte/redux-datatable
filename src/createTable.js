@@ -16,6 +16,8 @@ export const SET_FILTER = 'SET_FILTER';
 export const SET_SORT = 'SET_SORT';
 export const SET_LIMIT = 'SET_LIMIT';
 
+export const DELETE_DATA = 'DELETE_DATA';
+
 export const cancelRequest = ( name ) => ({ type: REQUEST_DATA_CANCEL, name })
 export const requestData = ( name, url, query ) => ({ type: REQUEST_DATA, name, url, query })
 export const receiveData = ( name, payload ) => ({ type: RECEIVE_DATA, name, payload })
@@ -23,6 +25,7 @@ export const setPage = ( name, url, page ) => ({ type: SET_PAGE, name, url, page
 export const setSort = ( name, url, sort, dir ) => ({ type: SET_SORT, name, url, sort, dir })
 export const setLimit = ( name, url, limit ) => ({ type: SET_LIMIT, name, url, limit })
 export const setFilter = ( name, url, key, filter ) => ({ type: SET_FILTER, name, url, key, filter })
+export const deleteData = ( name, url, id ) => ({ type: DELETE_DATA, name, url, id})
 
 export const setParamsEpic = ( action$, store ) =>
     action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).concatMap( action =>
@@ -35,6 +38,11 @@ export const fetchDataEpic = ( action$, store, { getJSONSecure }) =>
             .map(response => receiveData(action.name, response))
             .takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(cancelAction => cancelAction.type == REQUEST_DATA_CANCEL && cancelAction.name == action.name))
     );
+
+// export const deleteDataEpic = ( action$, store, { getJSONSecure }) =>
+//     action$.ofType(DELETE_DATA).switchMap( action =>
+//         getJSONSecure(`${action.url}?{qs.stringify}`)
+//     );
 
 let initialState = {
     isFetching: false,
@@ -87,7 +95,7 @@ export const createReducer = (reducer, predicate) => (state, action) =>
     predicate(action) || state === undefined ? reducer(state, action) : state
 
 
-export default ({ name, url, columns, limiterOptions, onLoadParams }) => Table => {
+export default ({ name, url, config, limiterOptions, onLoadParams }) => Table => {
     class WrappedTable extends Component {
         componentWillMount() {
             const { onLoad, query } = this.props;
@@ -117,7 +125,7 @@ export default ({ name, url, columns, limiterOptions, onLoadParams }) => Table =
             return (
                 <Table name={ name }
                     url={ url }
-                    columns={ columns }
+                    config={ config }
                     limiterOptions={ limiterOptions }
                     { ...this.props } />
             )

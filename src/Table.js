@@ -4,6 +4,7 @@ import Header from './Table/Header';
 import Body from './Table/Body';
 import Pagination from './Table/Pagination';
 import Limiter from './Table/Limiter';
+import Toolbar from './Table/Toolbar';
 
 const MIN_LIMIT = 20;
 
@@ -36,6 +37,13 @@ const Table = ( props ) =>
                     <div className="card-block">
                         <div className="row">
                             <div className="col-sm-12 col-md-3">
+                                <Toolbar
+                                    name={ props.name }
+                                    url={ props.url }
+                                    query={ props.query }
+                                    config={ props.config.toolbar } />
+                            </div>
+                            <div className="col-sm-12 col-md-3 pull-right">
                                 <Limiter
                                     name={ props.name }
                                     url={ props.url }
@@ -49,11 +57,18 @@ const Table = ( props ) =>
                                 <Header
                                     name={ props.name }
                                     url={ props.url }
-                                    columns={ props.columns }
+                                    columns={ props.config.columns }
                                     setSortOrder={ props.setSortOrder }
                                     setFilter={ props.setFilter }
                                     query={ props.query } />
-                                <Body data={ props.data } columns={ props.columns } />
+
+                                <Body
+                                    tableName={ props.name }
+                                    url={ props.url }
+                                    query={ props.query }
+                                    data={ props.data }
+                                    deleter={ props.deleter }
+                                    columns={ props.config.columns } />
                             </table>
                         </div>
 
@@ -62,7 +77,6 @@ const Table = ( props ) =>
                             url={ props.url }
                             setPage={ props.setPage }
                             { ...calculatePaginationProps(props.query.page, props.query.limit, props.query.count) } />
-
                     </div>
                 </div>
             </div>
@@ -73,7 +87,10 @@ Table.propTypes = {
     name: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
     title: PropTypes.string,
-    columns: PropTypes.object.isRequired,
+    config: PropTypes.shape({
+        toolbar: PropTypes.object,
+        columns: PropTypes.object,
+    }).isRequired,
     limiterOptions: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired,
     query: PropTypes.shape({
