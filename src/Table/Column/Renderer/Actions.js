@@ -17,20 +17,6 @@ const _prepareParams = (params, data) => {
         processedParams[key] = data[dataKey];
     }
 
-    // Object.keys(params).map( (key) => ({
-    //     if( !params[key].startsWith('@') ) {
-    //         return;
-    //     }
-    //
-    //     let dataKey = params[key].substr(1);
-    //     if(!data[dataKey]) {
-    //         return;
-    //     }
-    //
-    //     processedParams[key] = data[dataKey];
-    // })
-
-    console.log(qs.stringify(processedParams));
     return qs.stringify(processedParams);
 }
 
@@ -41,6 +27,10 @@ const _handleAction = (event, data, action, props, context) => {
                 pathname: action.route,
                 search: '?' + _prepareParams(action.params, data)
             })
+            break;
+
+        case 'action':
+            
             break;
 
         default:
