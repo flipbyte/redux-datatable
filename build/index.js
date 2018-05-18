@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -99,17 +99,21 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _String = __webpack_require__(14);
+var _String = __webpack_require__(17);
 
 var _String2 = _interopRequireDefault(_String);
 
-var _Number = __webpack_require__(13);
+var _Number = __webpack_require__(15);
 
 var _Number2 = _interopRequireDefault(_Number);
 
-var _Date = __webpack_require__(12);
+var _Date = __webpack_require__(14);
 
 var _Date2 = _interopRequireDefault(_Date);
+
+var _Selection = __webpack_require__(16);
+
+var _Selection2 = _interopRequireDefault(_Selection);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -124,6 +128,7 @@ var Filter = function Filter(props) {
     if (props.type == 'number') return _react2.default.createElement(_Number2.default, props);
     if (props.type == 'string') return _react2.default.createElement(_String2.default, props);
     if (props.type == 'date') return _react2.default.createElement(_Date2.default, props);
+    if (props.type == 'selection') return _react2.default.createElement(_Selection2.default, props);
     return _react2.default.createElement(_String2.default, props);
 };
 
@@ -157,6 +162,42 @@ module.exports = require("qs");
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.paramsResolver = undefined;
+
+var _qs = __webpack_require__(3);
+
+var _qs2 = _interopRequireDefault(_qs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var paramsResolver = exports.paramsResolver = function paramsResolver(params, data) {
+    var processedParams = {};
+    for (var key in params) {
+        if (!params[key].startsWith('@')) {
+            continue;
+        }
+
+        var dataKey = params[key].substr(1);
+        if (!data[dataKey]) {
+            continue;
+        }
+
+        processedParams[key] = data[dataKey];
+    }
+
+    return _qs2.default.stringify(processedParams);
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -168,23 +209,23 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Header = __webpack_require__(15);
+var _Header = __webpack_require__(18);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Body = __webpack_require__(6);
+var _Body = __webpack_require__(7);
 
 var _Body2 = _interopRequireDefault(_Body);
 
-var _Pagination = __webpack_require__(17);
+var _Pagination = __webpack_require__(20);
 
 var _Pagination2 = _interopRequireDefault(_Pagination);
 
-var _Limiter = __webpack_require__(16);
+var _Limiter = __webpack_require__(19);
 
 var _Limiter2 = _interopRequireDefault(_Limiter);
 
-var _Toolbar = __webpack_require__(18);
+var _Toolbar = __webpack_require__(21);
 
 var _Toolbar2 = _interopRequireDefault(_Toolbar);
 
@@ -321,7 +362,7 @@ Table.defaultProps = {
 exports.default = Table;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -340,13 +381,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Observable = __webpack_require__(23);
+var _Observable = __webpack_require__(26);
 
-var _operator = __webpack_require__(20);
+var _operator = __webpack_require__(23);
 
-var _of = __webpack_require__(24);
+var _of = __webpack_require__(27);
 
-var _normalizr = __webpack_require__(21);
+var _normalizr = __webpack_require__(24);
 
 var _qs = __webpack_require__(3);
 
@@ -442,7 +483,7 @@ var tableEpics = function tableEpics(name, url) {
             schemas = _ref.schemas;
         return action$.ofType(REQUEST_DATA).switchMap(function (action) {
             return getJSONSecure(url + '?' + _qs2.default.stringify(action.query)).map(function (response) {
-                var data = (0, _normalizr.normalize)(response.data.items, [schemas[name]]);
+                var data = (0, _normalizr.normalize)(response.data, [schemas[name]]);
                 return receiveData(name, response, data);
             }).takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(function (cancelAction) {
                 return cancelAction.name == name;
@@ -562,7 +603,7 @@ exports.default = function (props) {
 
                 case RECEIVE_DATA:
                     data.isFetching = false;
-                    data.query.count = parseInt(action.response.data.total);
+                    data.query.count = parseInt(action.response.total);
                     data.items = action.normalizedData.result;
                     return Object.assign({}, state, data);
 
@@ -616,7 +657,7 @@ exports.default = function (props) {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -634,7 +675,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Renderer = __webpack_require__(8);
+var _Renderer = __webpack_require__(9);
 
 var _Renderer2 = _interopRequireDefault(_Renderer);
 
@@ -684,7 +725,7 @@ Body.defaultProps = {
 exports.default = Body;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -773,7 +814,7 @@ Cell.propTypes = {
     isHeader: _propTypes2.default.bool.isRequired,
     sortable: _propTypes2.default.bool.isRequired,
     sorter: _propTypes2.default.func,
-    label: _propTypes2.default.string.isRequired,
+    label: _propTypes2.default.string,
     attributes: _propTypes2.default.object
 };
 
@@ -785,7 +826,7 @@ Cell.defaultProps = {
 exports.default = Cell;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -803,17 +844,21 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Text = __webpack_require__(11);
+var _Text = __webpack_require__(13);
 
 var _Text2 = _interopRequireDefault(_Text);
 
-var _Date = __webpack_require__(10);
+var _Date = __webpack_require__(11);
 
 var _Date2 = _interopRequireDefault(_Date);
 
-var _Actions = __webpack_require__(9);
+var _Actions = __webpack_require__(10);
 
 var _Actions2 = _interopRequireDefault(_Actions);
+
+var _Selection = __webpack_require__(12);
+
+var _Selection2 = _interopRequireDefault(_Selection);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -841,6 +886,9 @@ var Renderer = function Renderer(_ref) {
             case 'actions':
                 return _render(_Actions2.default, { name: name, url: url, query: query, data: data, config: config, deleter: deleter });
 
+            case 'selection':
+                return _render(_Selection2.default, { name: name, url: url, query: query, data: data, config: config });
+
             default:
                 return _render(_Text2.default, { index: index, data: data });
 
@@ -849,7 +897,7 @@ var Renderer = function Renderer(_ref) {
 };
 
 Renderer.propTypes = {
-    index: _propTypes2.default.string.isRequired,
+    index: _propTypes2.default.string,
     data: _propTypes2.default.object.isRequired,
     renderer: _propTypes2.default.func,
     config: _propTypes2.default.object
@@ -858,7 +906,7 @@ Renderer.propTypes = {
 exports.default = Renderer;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -882,34 +930,18 @@ var _qs = __webpack_require__(3);
 
 var _qs2 = _interopRequireDefault(_qs);
 
+var _utils = __webpack_require__(4);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-var _prepareParams = function _prepareParams(params, data) {
-    var processedParams = {};
-    for (var key in params) {
-        if (!params[key].startsWith('@')) {
-            continue;
-        }
-
-        var dataKey = params[key].substr(1);
-        if (!data[dataKey]) {
-            continue;
-        }
-
-        processedParams[key] = data[dataKey];
-    }
-
-    return _qs2.default.stringify(processedParams);
-};
 
 var _handleAction = function _handleAction(event, data, action, props, context) {
     switch (action.type) {
         case 'route':
             context.router.history.push({
                 pathname: action.route,
-                search: '?' + _prepareParams(action.params, data)
+                search: '?' + (0, _utils.paramsResolver)(action.params, data)
             });
             break;
 
@@ -960,7 +992,7 @@ Actions.contextTypes = {
 exports.default = Actions;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -978,7 +1010,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactPureTime = __webpack_require__(22);
+var _reactPureTime = __webpack_require__(25);
 
 var _reactPureTime2 = _interopRequireDefault(_reactPureTime);
 
@@ -997,7 +1029,54 @@ var Date = function Date(_ref) {
 exports.default = Date;
 
 /***/ }),
-/* 11 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _utils = __webpack_require__(4);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var Selection = function Selection(props) {
+    var data = props.data,
+        children = props.config.children,
+        rest = _objectWithoutProperties(props, ['data', 'config']);
+
+    return _react2.default.createElement(
+        'td',
+        null,
+        _react2.default.createElement(
+            'div',
+            { className: 'col-12' },
+            _react2.default.createElement('input', { type: 'checkbox', id: 'exampleCheck1' })
+        )
+    );
+};
+
+Selection.contextTypes = {
+    router: _propTypes2.default.object
+};
+
+exports.default = Selection;
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1032,7 +1111,7 @@ var Text = function Text(_ref) {
 exports.default = Text;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1116,7 +1195,7 @@ Date.propTypes = {
 exports.default = Date;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1202,7 +1281,69 @@ Number.propTypes = {
 exports.default = Number;
 
 /***/ }),
-/* 14 */
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _handleSelection = function _handleSelection(tableName, url, event) {
+    // let filter = {};
+    // if(event.target.value) {
+    //     filter = {
+    //         operator: SEARCH_OPERATOR_CONTAINS,
+    //         field: event.target.name,
+    //         value: event.target.value,
+    //         logic: 'where',
+    //     };
+    // }
+    //
+    // filterer(tableName, url, event.target.name, filter);
+};
+
+var Selection = function Selection(_ref) {
+    var tableName = _ref.tableName,
+        url = _ref.url,
+        name = _ref.name;
+    return _react2.default.createElement(
+        "td",
+        null,
+        _react2.default.createElement(
+            "div",
+            { className: "col-12" },
+            _react2.default.createElement("input", { type: "checkbox", id: "exampleCheck1",
+                onChange: function onChange(event) {
+                    return _handleSelection(tableName, url, event);
+                } })
+        )
+    );
+};
+
+Selection.propTypes = {
+    tableName: _propTypes2.default.string.isRequired,
+    url: _propTypes2.default.string,
+    filterer: _propTypes2.default.func.isRequired,
+    name: _propTypes2.default.string.isRequired
+};
+
+exports.default = Selection;
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1265,7 +1406,7 @@ String.propTypes = {
 exports.default = String;
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1283,7 +1424,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Cell = __webpack_require__(7);
+var _Cell = __webpack_require__(8);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
@@ -1345,7 +1486,7 @@ Header.propTypes = {
 exports.default = Header;
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1398,7 +1539,7 @@ Limiter.propTypes = {
 exports.default = Limiter;
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1531,7 +1672,7 @@ Pagination.propTypes = {
 exports.default = Pagination;
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1580,7 +1721,7 @@ Toolbar.propTypes = {
 exports.default = Toolbar;
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1591,11 +1732,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SET_FILTER = exports.SET_LIMIT = exports.SET_SORT = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilter = exports.setLimit = exports.setSort = exports.setPage = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
 
-var _createTable = __webpack_require__(5);
+var _createTable = __webpack_require__(6);
 
 var _createTable2 = _interopRequireDefault(_createTable);
 
-var _Table = __webpack_require__(4);
+var _Table = __webpack_require__(5);
 
 var _Table2 = _interopRequireDefault(_Table);
 
@@ -1622,7 +1763,7 @@ exports.SET_FILTER = _createTable.SET_FILTER;
 exports.default = _createTable2.default;
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1630,25 +1771,25 @@ exports.default = _createTable2.default;
 //# sourceMappingURL=Operator.js.map
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = require("normalizr");
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-pure-time");
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/Observable");
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/observable/of");

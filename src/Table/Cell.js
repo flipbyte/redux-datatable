@@ -42,7 +42,7 @@ Cell.propTypes = {
     isHeader: PropTypes.bool.isRequired,
     sortable: PropTypes.bool.isRequired,
     sorter: PropTypes.func,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     attributes: PropTypes.object
 };
 

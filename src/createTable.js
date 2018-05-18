@@ -71,7 +71,7 @@ const tableEpics = ( name, url ) => {
         action$.ofType(REQUEST_DATA).switchMap( action =>
             getJSONSecure(`${url}?${qs.stringify(action.query)}`)
                 .map(response => {
-                    const data = normalize(response.data.items, [schemas[name]])
+                    const data = normalize(response.data, [schemas[name]])
                     return receiveData(name, response, data)
                 })
                 .takeUntil(
@@ -172,7 +172,7 @@ export default ( props ) => Table => {
 
             case RECEIVE_DATA:
                 data.isFetching = false;
-                data.query.count = parseInt(action.response.data.total);
+                data.query.count = parseInt(action.response.total);
                 data.items = action.normalizedData.result;
                 return Object.assign({}, state, data);
 

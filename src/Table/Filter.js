@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import String from './Filter/String';
 import Number from './Filter/Number';
 import Date from './Filter/Date';
+import Selection from './Filter/Selection';
 
 export const SEARCH_OPERATOR_CONTAINS = 'contains';
 export const SEARCH_OPERATOR_BETWEEN = 'between';
@@ -15,6 +16,7 @@ const Filter = ( props ) => {
     if( props.type == 'number') return <Number { ...props } />
     if( props.type == 'string') return <String { ...props } />
     if( props.type == 'date') return <Date { ...props } />
+    if( props.type == 'selection') return <Selection { ...props } />
     return <String { ...props } />
 }
 

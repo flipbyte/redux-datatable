@@ -1,36 +1,19 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import qs from 'qs';
-
-const _prepareParams = (params, data) => {
-    let processedParams = {};
-    for(var key in params) {
-        if( !params[key].startsWith('@') ) {
-            continue;
-        }
-
-        let dataKey = params[key].substr(1);
-        if(!data[dataKey]) {
-            continue;
-        }
-
-        processedParams[key] = data[dataKey];
-    }
-
-    return qs.stringify(processedParams);
-}
+import { paramsResolver } from '../../../utils';
 
 const _handleAction = (event, data, action, props, context) => {
     switch( action.type ) {
         case 'route':
             context.router.history.push({
                 pathname: action.route,
-                search: '?' + _prepareParams(action.params, data)
+                search: '?' + paramsResolver(action.params, data)
             })
             break;
 
         case 'action':
-            
+
             break;
 
         default:
