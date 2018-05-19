@@ -20,3 +20,13 @@ export const paramsResolver = (params, data) => {
 
 export const getValueByPath = ( obj, path ) =>
     path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
+
+export const createActionCreator = ( name, url ) => ( type ) => ( payload ) => {
+    let action = ({ type: type, name, url, payload: payload });
+    action.toString = () => type;
+
+    return action;
+}
+
+export const createReducer = (reducer, predicate) => (state, action) =>
+    predicate(action) || state === undefined ? reducer(state, action) : state

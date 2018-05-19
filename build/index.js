@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 22);
+/******/ 	return __webpack_require__(__webpack_require__.s = 23);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -99,19 +99,19 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _String = __webpack_require__(17);
+var _String = __webpack_require__(18);
 
 var _String2 = _interopRequireDefault(_String);
 
-var _Number = __webpack_require__(15);
+var _Number = __webpack_require__(16);
 
 var _Number2 = _interopRequireDefault(_Number);
 
-var _Date = __webpack_require__(14);
+var _Date = __webpack_require__(15);
 
 var _Date2 = _interopRequireDefault(_Date);
 
-var _Selection = __webpack_require__(16);
+var _Selection = __webpack_require__(17);
 
 var _Selection2 = _interopRequireDefault(_Selection);
 
@@ -156,7 +156,7 @@ exports.default = Filter;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.getValueByPath = exports.paramsResolver = undefined;
+exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = undefined;
 
 var _qs = __webpack_require__(4);
 
@@ -188,6 +188,25 @@ var getValueByPath = exports.getValueByPath = function getValueByPath(obj, path)
     }, obj);
 };
 
+var createActionCreator = exports.createActionCreator = function createActionCreator(name, url) {
+    return function (type) {
+        return function (payload) {
+            var action = { type: type, name: name, url: url, payload: payload };
+            action.toString = function () {
+                return type;
+            };
+
+            return action;
+        };
+    };
+};
+
+var createReducer = exports.createReducer = function createReducer(reducer, predicate) {
+    return function (state, action) {
+        return predicate(action) || state === undefined ? reducer(state, action) : state;
+    };
+};
+
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
@@ -196,6 +215,27 @@ module.exports = require("qs");
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var REQUEST_DATA = exports.REQUEST_DATA = 'REQUEST_DATA';
+var RECEIVE_DATA = exports.RECEIVE_DATA = 'RECEIVE_DATA';
+var REQUEST_DATA_CANCEL = exports.REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
+
+var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
+var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
+var SET_SORT = exports.SET_SORT = 'SET_SORT';
+var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
+
+var DELETE_DATA = exports.DELETE_DATA = 'DELETE_DATA';
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -215,23 +255,23 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Header = __webpack_require__(18);
+var _Header = __webpack_require__(19);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Body = __webpack_require__(7);
+var _Body = __webpack_require__(8);
 
 var _Body2 = _interopRequireDefault(_Body);
 
-var _Pagination = __webpack_require__(20);
+var _Pagination = __webpack_require__(21);
 
 var _Pagination2 = _interopRequireDefault(_Pagination);
 
-var _Limiter = __webpack_require__(19);
+var _Limiter = __webpack_require__(20);
 
 var _Limiter2 = _interopRequireDefault(_Limiter);
 
-var _Toolbar = __webpack_require__(21);
+var _Toolbar = __webpack_require__(22);
 
 var _Toolbar2 = _interopRequireDefault(_Toolbar);
 
@@ -358,7 +398,7 @@ Table.defaultProps = {
 exports.default = Table;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -367,7 +407,6 @@ exports.default = Table;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.createReducer = exports.createActionCreator = exports.DELETE_DATA = exports.SET_LIMIT = exports.SET_SORT = exports.SET_FILTER = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -377,19 +416,25 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Observable = __webpack_require__(26);
+var _Observable = __webpack_require__(27);
 
-var _operator = __webpack_require__(23);
+var _operator = __webpack_require__(24);
 
-var _of = __webpack_require__(27);
+var _of = __webpack_require__(28);
 
-var _normalizr = __webpack_require__(24);
+var _normalizr = __webpack_require__(25);
 
 var _qs = __webpack_require__(4);
 
 var _qs2 = _interopRequireDefault(_qs);
 
 var _utils = __webpack_require__(3);
+
+var _actions = __webpack_require__(5);
+
+var actions = _interopRequireWildcard(_actions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -400,65 +445,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var REQUEST_DATA = exports.REQUEST_DATA = 'REQUEST_DATA';
-var RECEIVE_DATA = exports.RECEIVE_DATA = 'RECEIVE_DATA';
-var REQUEST_DATA_CANCEL = exports.REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
-
-var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
-var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
-var SET_SORT = exports.SET_SORT = 'SET_SORT';
-var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
-
-var DELETE_DATA = exports.DELETE_DATA = 'DELETE_DATA';
-
-var createActionCreator = exports.createActionCreator = function createActionCreator(name, url) {
-    return function (type) {
-        return function (payload) {
-            var action = { type: type, name: name, url: url, payload: payload };
-            action.toString = function () {
-                return type;
-            };
-
-            return action;
-        };
-    };
-};
-
-var tableEpics = function tableEpics(name, url, stateKeys, actionsCreators) {
-    var setParamsEpic = function setParamsEpic(action$, store) {
-        return action$.ofType(actionsCreators.setPage().toString(), actionsCreators.setFilter().toString(), actionsCreators.setLimit().toString(), actionsCreators.setSort().toString()).concatMap(function (action) {
-            return _Observable.Observable.of(actionsCreators.cancelRequest({ name: name }), actionsCreators.requestData({ query: (0, _utils.getValueByPath)(store.getState(), stateKeys).query }));
-        });
-    };
-
-    var fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
-        var getJSONSecure = _ref.getJSONSecure,
-            schemas = _ref.schemas;
-        return action$.ofType(actionsCreators.requestData().toString()).switchMap(function (action) {
-            return getJSONSecure(url + '?' + _qs2.default.stringify(action.payload.query)).map(function (response) {
-                var data = (0, _normalizr.normalize)(response.data, [schemas[name]]);
-                return actionsCreators.receiveData({ response: response, data: data });
-            }).takeUntil(action$.ofType(actionsCreators.cancelRequest().toString()).filter(function (cancelAction) {
-                return cancelAction.payload.name == name;
-            }));
-        });
-    };
-
-    return { setParamsEpic: setParamsEpic, fetchDataEpic: fetchDataEpic };
-};
-
-// export const deleteDataEpic = ( action$, store, { getJSONSecure }) =>
-//     action$.ofType(DELETE_DATA).switchMap( action =>
-//         getJSONSecure(`${action.url}?{qs.stringify}`)
-//     );
-
-
-var createReducer = exports.createReducer = function createReducer(reducer, predicate) {
-    return function (state, action) {
-        return predicate(action) || state === undefined ? reducer(state, action) : state;
-    };
-};
 
 exports.default = function (props) {
     return function (Table) {
@@ -546,33 +532,33 @@ exports.default = function (props) {
             var payload = _objectWithoutProperties(action.payload, []);
 
             switch (action.type) {
-                case REQUEST_DATA:
+                case actions.REQUEST_DATA:
                     data.isFetching = true;
                     return Object.assign({}, state, data);
 
-                case RECEIVE_DATA:
+                case actions.RECEIVE_DATA:
                     data.isFetching = false;
                     data.query.count = parseInt(payload.response.total);
                     data.items = payload.data.result;
                     return Object.assign({}, state, data);
 
-                case SET_PAGE:
+                case actions.SET_PAGE:
                     data.query.page = payload.page;
                     data.query.offset = (data.query.page - 1) * data.query.limit;
                     data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
                     return Object.assign({}, state, data);
 
-                case SET_SORT:
+                case actions.SET_SORT:
                     data.query.sort = payload.sort;
                     data.query.dir = payload.dir;
                     return Object.assign({}, state, data);
 
-                case SET_LIMIT:
+                case actions.SET_LIMIT:
                     data.query.limit = parseInt(payload.limit);
                     data.query.offset = (data.query.page - 1) * data.query.limit;
                     return Object.assign({}, state, data);
 
-                case SET_FILTER:
+                case actions.SET_FILTER:
                     data.query.search[payload.key] = payload.filter;
                     return Object.assign({}, state, data);
 
@@ -581,20 +567,43 @@ exports.default = function (props) {
             }
         };
 
-        var reducer = createReducer(tableReducer, function (action) {
+        var tableEpics = function tableEpics(name, url, stateKeys, actionsCreators) {
+            var setParamsEpic = function setParamsEpic(action$, store) {
+                return action$.ofType(actionsCreators.setPage().toString(), actionsCreators.setFilter().toString(), actionsCreators.setLimit().toString(), actionsCreators.setSort().toString()).concatMap(function (action) {
+                    return _Observable.Observable.of(actionsCreators.cancelRequest({ name: name }), actionsCreators.requestData({ query: (0, _utils.getValueByPath)(store.getState(), stateKeys).query }));
+                });
+            };
+
+            var fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
+                var getJSONSecure = _ref.getJSONSecure,
+                    schemas = _ref.schemas;
+                return action$.ofType(actionsCreators.requestData().toString()).switchMap(function (action) {
+                    return getJSONSecure(url + '?' + _qs2.default.stringify(action.payload.query)).map(function (response) {
+                        var data = (0, _normalizr.normalize)(response.data, [schemas[name]]);
+                        return actionsCreators.receiveData({ response: response, data: data });
+                    }).takeUntil(action$.ofType(actionsCreators.cancelRequest().toString()).filter(function (cancelAction) {
+                        return cancelAction.payload.name == name;
+                    }));
+                });
+            };
+
+            return { setParamsEpic: setParamsEpic, fetchDataEpic: fetchDataEpic };
+        };
+
+        var reducer = (0, _utils.createReducer)(tableReducer, function (action) {
             return action.name === name;
         });
 
-        var actionCreator = createActionCreator(name, url);
+        var actionCreator = (0, _utils.createActionCreator)(name, url);
         var actionCreators = {
-            cancelRequest: actionCreator(REQUEST_DATA_CANCEL),
-            requestData: actionCreator(REQUEST_DATA),
-            receiveData: actionCreator(RECEIVE_DATA),
-            setPage: actionCreator(SET_PAGE),
-            setSort: actionCreator(SET_SORT),
-            setLimit: actionCreator(SET_LIMIT),
-            setFilter: actionCreator(SET_FILTER),
-            deleteData: actionCreator(DELETE_DATA)
+            cancelRequest: actionCreator(actions.REQUEST_DATA_CANCEL),
+            requestData: actionCreator(actions.REQUEST_DATA),
+            receiveData: actionCreator(actions.RECEIVE_DATA),
+            setPage: actionCreator(actions.SET_PAGE),
+            setSort: actionCreator(actions.SET_SORT),
+            setLimit: actionCreator(actions.SET_LIMIT),
+            setFilter: actionCreator(actions.SET_FILTER),
+            deleteData: actionCreator(actions.DELETE_DATA)
         };
 
         var epics = tableEpics(name, url, stateKeys, actionCreators);
@@ -609,7 +618,7 @@ exports.default = function (props) {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -627,7 +636,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Renderer = __webpack_require__(9);
+var _Renderer = __webpack_require__(10);
 
 var _Renderer2 = _interopRequireDefault(_Renderer);
 
@@ -673,7 +682,7 @@ Body.defaultProps = {
 exports.default = Body;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,7 +777,7 @@ Cell.defaultProps = {
 exports.default = Cell;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -786,19 +795,19 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Text = __webpack_require__(13);
+var _Text = __webpack_require__(14);
 
 var _Text2 = _interopRequireDefault(_Text);
 
-var _Date = __webpack_require__(11);
+var _Date = __webpack_require__(12);
 
 var _Date2 = _interopRequireDefault(_Date);
 
-var _Actions = __webpack_require__(10);
+var _Actions = __webpack_require__(11);
 
 var _Actions2 = _interopRequireDefault(_Actions);
 
-var _Selection = __webpack_require__(12);
+var _Selection = __webpack_require__(13);
 
 var _Selection2 = _interopRequireDefault(_Selection);
 
@@ -846,7 +855,7 @@ Renderer.propTypes = {
 exports.default = Renderer;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -932,7 +941,7 @@ Actions.contextTypes = {
 exports.default = Actions;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -950,7 +959,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactPureTime = __webpack_require__(25);
+var _reactPureTime = __webpack_require__(26);
 
 var _reactPureTime2 = _interopRequireDefault(_reactPureTime);
 
@@ -969,7 +978,7 @@ var Date = function Date(_ref) {
 exports.default = Date;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1016,7 +1025,7 @@ Selection.contextTypes = {
 exports.default = Selection;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1051,7 +1060,7 @@ var Text = function Text(_ref) {
 exports.default = Text;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1131,7 +1140,7 @@ Date.propTypes = {
 exports.default = Date;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1213,7 +1222,7 @@ Number.propTypes = {
 exports.default = Number;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1270,7 +1279,7 @@ Selection.propTypes = {
 exports.default = Selection;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1329,7 +1338,7 @@ String.propTypes = {
 exports.default = String;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1347,7 +1356,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Cell = __webpack_require__(8);
+var _Cell = __webpack_require__(9);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
@@ -1403,7 +1412,7 @@ Header.propTypes = {
 exports.default = Header;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1454,7 +1463,7 @@ Limiter.propTypes = {
 exports.default = Limiter;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1583,7 +1592,7 @@ Pagination.propTypes = {
 exports.default = Pagination;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1626,49 +1635,39 @@ Toolbar.propTypes = {
 exports.default = Toolbar;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-exports.SET_FILTER = exports.SET_LIMIT = exports.SET_SORT = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = exports.fetchDataEpic = exports.setParamsEpic = exports.setFilter = exports.setLimit = exports.setSort = exports.setPage = exports.receiveData = exports.requestData = exports.data = exports.createReducer = exports.Table = undefined;
+exports.actions = exports.Table = undefined;
 
-var _createTable = __webpack_require__(6);
+var _createTable = __webpack_require__(7);
 
 var _createTable2 = _interopRequireDefault(_createTable);
 
-var _Table = __webpack_require__(5);
+var _Table = __webpack_require__(6);
 
 var _Table2 = _interopRequireDefault(_Table);
+
+var _actions = __webpack_require__(5);
+
+var actions = _interopRequireWildcard(_actions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.Table = _Table2.default;
-exports.createReducer = _createTable.createReducer;
-exports.data = _createTable.data;
-exports.requestData = _createTable.requestData;
-exports.receiveData = _createTable.receiveData;
-exports.setPage = _createTable.setPage;
-exports.setSort = _createTable.setSort;
-exports.setLimit = _createTable.setLimit;
-exports.setFilter = _createTable.setFilter;
-exports.setParamsEpic = _createTable.setParamsEpic;
-exports.fetchDataEpic = _createTable.fetchDataEpic;
-exports.REQUEST_DATA = _createTable.REQUEST_DATA;
-exports.RECEIVE_DATA = _createTable.RECEIVE_DATA;
-exports.REQUEST_DATA_CANCEL = _createTable.REQUEST_DATA_CANCEL;
-exports.SET_PAGE = _createTable.SET_PAGE;
-exports.SET_SORT = _createTable.SET_SORT;
-exports.SET_LIMIT = _createTable.SET_LIMIT;
-exports.SET_FILTER = _createTable.SET_FILTER;
+exports.actions = actions;
 exports.default = _createTable2.default;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1676,25 +1675,25 @@ exports.default = _createTable2.default;
 //# sourceMappingURL=Operator.js.map
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = require("normalizr");
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-pure-time");
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/Observable");
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/observable/of");
