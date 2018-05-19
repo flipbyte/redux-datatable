@@ -148,12 +148,6 @@ exports.default = Filter;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-module.exports = require("qs");
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -162,9 +156,9 @@ module.exports = require("qs");
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.paramsResolver = undefined;
+exports.getValueByPath = exports.paramsResolver = undefined;
 
-var _qs = __webpack_require__(3);
+var _qs = __webpack_require__(4);
 
 var _qs2 = _interopRequireDefault(_qs);
 
@@ -187,6 +181,18 @@ var paramsResolver = exports.paramsResolver = function paramsResolver(params, da
 
     return _qs2.default.stringify(processedParams);
 };
+
+var getValueByPath = exports.getValueByPath = function getValueByPath(obj, path) {
+    return path.reduce(function (acc, currVal) {
+        return acc && acc[currVal] ? acc[currVal] : null;
+    }, obj);
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("qs");
 
 /***/ }),
 /* 5 */
@@ -280,8 +286,6 @@ var Table = function Table(props) {
                                 'div',
                                 { className: 'col-sm-12 col-md-3' },
                                 _react2.default.createElement(_Toolbar2.default, {
-                                    name: props.name,
-                                    url: props.url,
                                     query: props.query,
                                     config: props.config.toolbar })
                             ),
@@ -289,8 +293,6 @@ var Table = function Table(props) {
                                 'div',
                                 { className: 'col-sm-12 col-md-3 pull-right' },
                                 _react2.default.createElement(_Limiter2.default, {
-                                    name: props.name,
-                                    url: props.url,
                                     setLimit: props.setLimit,
                                     options: props.limiterOptions })
                             )
@@ -302,15 +304,11 @@ var Table = function Table(props) {
                                 'table',
                                 { className: 'table table-sm table-hover flutter-table' },
                                 _react2.default.createElement(_Header2.default, {
-                                    name: props.name,
-                                    url: props.url,
                                     columns: props.config.columns,
                                     setSortOrder: props.setSortOrder,
                                     setFilter: props.setFilter,
                                     query: props.query }),
                                 _react2.default.createElement(_Body2.default, {
-                                    tableName: props.name,
-                                    url: props.url,
                                     query: props.query,
                                     data: props.data,
                                     deleter: props.deleter,
@@ -318,8 +316,6 @@ var Table = function Table(props) {
                             )
                         ),
                         _react2.default.createElement(_Pagination2.default, _extends({
-                            name: props.name,
-                            url: props.url,
                             setPage: props.setPage
                         }, calculatePaginationProps(props.query.page, props.query.limit, props.query.count)))
                     )
@@ -371,7 +367,7 @@ exports.default = Table;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.createReducer = exports.deleteData = exports.setFilter = exports.setLimit = exports.setSort = exports.setPage = exports.receiveData = exports.requestData = exports.cancelRequest = exports.DELETE_DATA = exports.SET_LIMIT = exports.SET_SORT = exports.SET_FILTER = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
+exports.createReducer = exports.createActionCreator = exports.DELETE_DATA = exports.SET_LIMIT = exports.SET_SORT = exports.SET_FILTER = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -389,25 +385,21 @@ var _of = __webpack_require__(27);
 
 var _normalizr = __webpack_require__(24);
 
-var _qs = __webpack_require__(3);
+var _qs = __webpack_require__(4);
 
 var _qs2 = _interopRequireDefault(_qs);
 
+var _utils = __webpack_require__(3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-// import 'rxjs';
-
-
-// import 'rxjs/add/operator/mergeMap';
-
-
-// import op from 'object-path';
 
 var REQUEST_DATA = exports.REQUEST_DATA = 'REQUEST_DATA';
 var RECEIVE_DATA = exports.RECEIVE_DATA = 'RECEIVE_DATA';
@@ -420,109 +412,47 @@ var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
 
 var DELETE_DATA = exports.DELETE_DATA = 'DELETE_DATA';
 
-var cancelRequest = exports.cancelRequest = function cancelRequest(name) {
-    return { type: REQUEST_DATA_CANCEL, name: name };
-};
-var requestData = exports.requestData = function requestData(name, url, query) {
-    return { type: REQUEST_DATA, name: name, url: url, query: query };
-};
-var receiveData = exports.receiveData = function receiveData(name, response, normalizedData) {
-    return { type: RECEIVE_DATA, name: name, response: response, normalizedData: normalizedData };
-};
-var setPage = exports.setPage = function setPage(name, url, page) {
-    return { type: SET_PAGE, name: name, url: url, page: page };
-};
-var setSort = exports.setSort = function setSort(name, url, sort, dir) {
-    return { type: SET_SORT, name: name, url: url, sort: sort, dir: dir };
-};
-var setLimit = exports.setLimit = function setLimit(name, url, limit) {
-    return { type: SET_LIMIT, name: name, url: url, limit: limit };
-};
-var setFilter = exports.setFilter = function setFilter(name, url, key, filter) {
-    return { type: SET_FILTER, name: name, url: url, key: key, filter: filter };
-};
-var deleteData = exports.deleteData = function deleteData(name, url, id) {
-    return { type: DELETE_DATA, name: name, url: url, id: id };
+var createActionCreator = exports.createActionCreator = function createActionCreator(name, url) {
+    return function (type) {
+        return function (payload) {
+            var action = { type: type, name: name, url: url, payload: payload };
+            action.toString = function () {
+                return type;
+            };
+
+            return action;
+        };
+    };
 };
 
-// export const setParamsEpic = ( action$, store ) =>
-//     action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).concatMap( action =>
-//         Observable.of(cancelRequest(action.name), requestData(action.name, action.url, store.getState().content[action.name].query))
-//     );
-
-// const createActionCreator => ( { name, url, type } ) => ( payload ) => {
-//     let action = ({ type: type, name, url, payload});
-//     action.toString = () => type;
-//
-//     return action;
-// }
-//
-//
-// const actionCreators = ( name, url, payload ) => {
-//     return {
-//         cancelRequest: createActionCreator({ type: REQUEST_DATA_CANCEL, name, url }) (),
-//         requestData: createActionCreator({ type: REQUEST_DATA, name, url })( payload ),
-//         receiveData: createActionCreator({ type: RECEIVE_DATA, name, url, payload }),
-//         setPage: createActionCreator({ type: SET_PAGE, name, url, payload }),
-//         setSort: createActionCreator({ type: SET_SORT, name, url, payload }),
-//         setLimit: createActionCreator({ type: SET_LIMIT, name, url, payload }),
-//         setFilter: createActionCreator({ type: SET_FILTER, name, url, payload }),
-//     }
-// }
-
-
-var tableEpics = function tableEpics(name, url) {
+var tableEpics = function tableEpics(name, url, stateKeys, actionsCreators) {
     var setParamsEpic = function setParamsEpic(action$, store) {
-        return action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).concatMap(function (action) {
-            return _Observable.Observable.of(cancelRequest(name), requestData(name, url, store.getState().content[name].query));
+        return action$.ofType(actionsCreators.setPage().toString(), actionsCreators.setFilter().toString(), actionsCreators.setLimit().toString(), actionsCreators.setSort().toString()).concatMap(function (action) {
+            return _Observable.Observable.of(actionsCreators.cancelRequest({ name: name }), actionsCreators.requestData({ query: (0, _utils.getValueByPath)(store.getState(), stateKeys).query }));
         });
     };
 
     var fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
         var getJSONSecure = _ref.getJSONSecure,
             schemas = _ref.schemas;
-        return action$.ofType(REQUEST_DATA).switchMap(function (action) {
-            return getJSONSecure(url + '?' + _qs2.default.stringify(action.query)).map(function (response) {
+        return action$.ofType(actionsCreators.requestData().toString()).switchMap(function (action) {
+            return getJSONSecure(url + '?' + _qs2.default.stringify(action.payload.query)).map(function (response) {
                 var data = (0, _normalizr.normalize)(response.data, [schemas[name]]);
-                return receiveData(name, response, data);
-            }).takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(function (cancelAction) {
-                return cancelAction.name == name;
+                return actionsCreators.receiveData({ response: response, data: data });
+            }).takeUntil(action$.ofType(actionsCreators.cancelRequest().toString()).filter(function (cancelAction) {
+                return cancelAction.payload.name == name;
             }));
         });
     };
 
     return { setParamsEpic: setParamsEpic, fetchDataEpic: fetchDataEpic };
 };
-// export const fetchDataEpic = ( action$, store, { getJSONSecure, schemas }) =>
-//     action$.ofType(REQUEST_DATA).switchMap( action =>
-//         getJSONSecure(`${action.url}?${qs.stringify(action.query)}`)
-//             .map(response => {
-//                 const data = normalize(response.data.items, [schemas[action.name]])
-//                 return receiveData(action.name, response, data)
-//             })
-//             .takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(
-//                 cancelAction => cancelAction.type == REQUEST_DATA_CANCEL && cancelAction.name == action.name))
-//     );
 
 // export const deleteDataEpic = ( action$, store, { getJSONSecure }) =>
 //     action$.ofType(DELETE_DATA).switchMap( action =>
 //         getJSONSecure(`${action.url}?{qs.stringify}`)
 //     );
 
-var initialState = {
-    isFetching: false,
-    title: "",
-    items: [],
-    query: {
-        dir: 'desc',
-        sort: null,
-        page: 0,
-        limit: 20,
-        offset: 0,
-        count: 0,
-        search: {}
-    }
-};
 
 var createReducer = exports.createReducer = function createReducer(reducer, predicate) {
     return function (state, action) {
@@ -536,7 +466,8 @@ exports.default = function (props) {
             url = props.url,
             config = props.config,
             limiterOptions = props.limiterOptions,
-            onLoadParams = props.onLoadParams;
+            onLoadParams = props.onLoadParams,
+            stateKeys = props.stateKeys;
 
         var WrappedTable = function (_Component) {
             _inherits(WrappedTable, _Component);
@@ -554,7 +485,7 @@ exports.default = function (props) {
                         onLoad = _props.onLoad,
                         query = _props.query;
 
-                    onLoad(name, url);
+                    onLoad();
                 }
             }, {
                 key: 'setValidPage',
@@ -591,11 +522,29 @@ exports.default = function (props) {
             return WrappedTable;
         }(_react.Component);
 
+        var initialState = {
+            isFetching: false,
+            title: "",
+            items: [],
+            query: {
+                dir: 'desc',
+                sort: null,
+                page: 0,
+                limit: 20,
+                offset: 0,
+                count: 0,
+                search: {}
+            }
+        };
+
         var tableReducer = function tableReducer() {
             var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
             var action = arguments[1];
 
             var data = initialState;
+
+            var payload = _objectWithoutProperties(action.payload, []);
+
             switch (action.type) {
                 case REQUEST_DATA:
                     data.isFetching = true;
@@ -603,28 +552,28 @@ exports.default = function (props) {
 
                 case RECEIVE_DATA:
                     data.isFetching = false;
-                    data.query.count = parseInt(action.response.total);
-                    data.items = action.normalizedData.result;
+                    data.query.count = parseInt(payload.response.total);
+                    data.items = payload.data.result;
                     return Object.assign({}, state, data);
 
                 case SET_PAGE:
-                    data.query.page = action.page;
+                    data.query.page = payload.page;
                     data.query.offset = (data.query.page - 1) * data.query.limit;
                     data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
                     return Object.assign({}, state, data);
 
                 case SET_SORT:
-                    data.query.sort = action.sort;
-                    data.query.dir = action.dir;
+                    data.query.sort = payload.sort;
+                    data.query.dir = payload.dir;
                     return Object.assign({}, state, data);
 
                 case SET_LIMIT:
-                    data.query.limit = parseInt(action.limit);
+                    data.query.limit = parseInt(payload.limit);
                     data.query.offset = (data.query.page - 1) * data.query.limit;
                     return Object.assign({}, state, data);
 
                 case SET_FILTER:
-                    data.query.search[action.key] = action.filter;
+                    data.query.search[payload.key] = payload.filter;
                     return Object.assign({}, state, data);
 
                 default:
@@ -635,17 +584,20 @@ exports.default = function (props) {
         var reducer = createReducer(tableReducer, function (action) {
             return action.name === name;
         });
-        var epics = tableEpics(name, url);
+
+        var actionCreator = createActionCreator(name, url);
         var actionCreators = {
-            cancelRequest: cancelRequest,
-            requestData: requestData,
-            receiveData: receiveData,
-            setPage: setPage,
-            setSort: setSort,
-            setLimit: setLimit,
-            setFilter: setFilter,
-            deleteData: deleteData
+            cancelRequest: actionCreator(REQUEST_DATA_CANCEL),
+            requestData: actionCreator(REQUEST_DATA),
+            receiveData: actionCreator(RECEIVE_DATA),
+            setPage: actionCreator(SET_PAGE),
+            setSort: actionCreator(SET_SORT),
+            setLimit: actionCreator(SET_LIMIT),
+            setFilter: actionCreator(SET_FILTER),
+            deleteData: actionCreator(DELETE_DATA)
         };
+
+        var epics = tableEpics(name, url, stateKeys, actionCreators);
 
         return {
             WrappedTable: WrappedTable,
@@ -682,9 +634,7 @@ var _Renderer2 = _interopRequireDefault(_Renderer);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Body = function Body(_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        query = _ref.query,
+    var query = _ref.query,
         columns = _ref.columns,
         data = _ref.data,
         deleter = _ref.deleter;
@@ -697,8 +647,6 @@ var Body = function Body(_ref) {
                 { key: index },
                 Object.keys(columns).map(function (key) {
                     return _react2.default.createElement(_Renderer2.default, { key: key,
-                        name: name,
-                        url: url,
                         query: query,
                         deleter: deleter,
                         index: columns[key].name,
@@ -748,9 +696,7 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var changeSortOrder = function changeSortOrder(_ref, event) {
-    var tableName = _ref.tableName,
-        url = _ref.url,
-        query = _ref.query,
+    var query = _ref.query,
         name = _ref.name,
         sorter = _ref.sorter;
 
@@ -768,7 +714,7 @@ var changeSortOrder = function changeSortOrder(_ref, event) {
         }
     }
 
-    sorter(tableName, url, name, dir);
+    sorter(name, dir);
 };
 
 var _prepareHeader = function _prepareHeader(props) {
@@ -791,16 +737,14 @@ var _prepareHeader = function _prepareHeader(props) {
 };
 
 var Cell = function Cell(_ref2) {
-    var tableName = _ref2.tableName,
-        name = _ref2.name,
-        url = _ref2.url,
+    var name = _ref2.name,
         query = _ref2.query,
         label = _ref2.label,
         isHeader = _ref2.isHeader,
         sortable = _ref2.sortable,
         sorter = _ref2.sorter,
         attributes = _ref2.attributes;
-    return isHeader ? _prepareHeader({ tableName: tableName, name: name, url: url, query: query, label: label, isHeader: isHeader, sortable: sortable, sorter: sorter, attributes: attributes }) : _react2.default.createElement(
+    return isHeader ? _prepareHeader({ name: name, query: query, label: label, isHeader: isHeader, sortable: sortable, sorter: sorter, attributes: attributes }) : _react2.default.createElement(
         'td',
         attributes,
         label
@@ -808,9 +752,7 @@ var Cell = function Cell(_ref2) {
 };
 
 Cell.propTypes = {
-    tableName: _propTypes2.default.string.isRequired,
     name: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string,
     isHeader: _propTypes2.default.bool.isRequired,
     sortable: _propTypes2.default.bool.isRequired,
     sorter: _propTypes2.default.func,
@@ -867,9 +809,7 @@ var _render = function _render(ComponentName, props) {
 };
 
 var Renderer = function Renderer(_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        query = _ref.query,
+    var query = _ref.query,
         index = _ref.index,
         data = _ref.data,
         renderer = _ref.renderer,
@@ -877,17 +817,17 @@ var Renderer = function Renderer(_ref) {
         deleter = _ref.deleter;
 
     if (renderer) {
-        return _render(renderer, { index: index, data: data, config: config, name: name, url: url, query: query, deleter: deleter });
+        return _render(renderer, { index: index, data: data, config: config, query: query, deleter: deleter });
     } else {
         switch (config.type) {
             case 'date':
                 return _render(_Date2.default, { index: index, data: data });
 
             case 'actions':
-                return _render(_Actions2.default, { name: name, url: url, query: query, data: data, config: config, deleter: deleter });
+                return _render(_Actions2.default, { query: query, data: data, config: config, deleter: deleter });
 
             case 'selection':
-                return _render(_Selection2.default, { name: name, url: url, query: query, data: data, config: config });
+                return _render(_Selection2.default, { query: query, data: data, config: config });
 
             default:
                 return _render(_Text2.default, { index: index, data: data });
@@ -926,11 +866,11 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _qs = __webpack_require__(3);
+var _qs = __webpack_require__(4);
 
 var _qs2 = _interopRequireDefault(_qs);
 
-var _utils = __webpack_require__(4);
+var _utils = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1047,7 +987,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _utils = __webpack_require__(4);
+var _utils = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1136,7 +1076,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var dateFrom = null;
 var dateTo = null;
 
-var _applyFilter = function _applyFilter(key, tableName, url, filterer, event) {
+var _applyFilter = function _applyFilter(key, filterer, event) {
     var filter = {};
 
     if (key == 0) {
@@ -1155,13 +1095,11 @@ var _applyFilter = function _applyFilter(key, tableName, url, filterer, event) {
         };
     }
 
-    filterer(tableName, url, event.target.name, filter);
+    filterer(event.target.name, filter);
 };
 
 var Date = function Date(_ref) {
-    var tableName = _ref.tableName,
-        url = _ref.url,
-        name = _ref.name,
+    var name = _ref.name,
         filterer = _ref.filterer;
     return _react2.default.createElement(
         'td',
@@ -1171,7 +1109,7 @@ var Date = function Date(_ref) {
             type: 'date',
             name: name,
             onChange: function onChange(event) {
-                return _applyFilter(0, tableName, url, filterer, event);
+                return _applyFilter(0, filterer, event);
             },
             placeholder: 'From' }),
         _react2.default.createElement('input', {
@@ -1179,15 +1117,13 @@ var Date = function Date(_ref) {
             type: 'date',
             name: name,
             onChange: function onChange(event) {
-                return _applyFilter(1, tableName, url, filterer, event);
+                return _applyFilter(1, filterer, event);
             },
             placeholder: 'To' })
     );
 };
 
 Date.propTypes = {
-    tableName: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string,
     filterer: _propTypes2.default.func.isRequired,
     name: _propTypes2.default.string.isRequired
 };
@@ -1220,7 +1156,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var valFrom = null;
 var valTo = null;
 
-var _applyFilter = function _applyFilter(key, tableName, url, filterer, event) {
+var _applyFilter = function _applyFilter(key, filterer, event) {
     var filter = {};
 
     console.log(event);
@@ -1241,13 +1177,11 @@ var _applyFilter = function _applyFilter(key, tableName, url, filterer, event) {
         };
     }
 
-    filterer(tableName, url, event.target.name, filter);
+    filterer(event.target.name, filter);
 };
 
 var Number = function Number(_ref) {
-    var tableName = _ref.tableName,
-        url = _ref.url,
-        name = _ref.name,
+    var name = _ref.name,
         filterer = _ref.filterer;
     return _react2.default.createElement(
         'td',
@@ -1257,7 +1191,7 @@ var Number = function Number(_ref) {
             type: 'number',
             name: name,
             onChange: function onChange(event) {
-                return _applyFilter(0, tableName, url, filterer, event);
+                return _applyFilter(0, filterer, event);
             },
             placeholder: 'From' }),
         _react2.default.createElement('input', {
@@ -1265,15 +1199,13 @@ var Number = function Number(_ref) {
             type: 'number',
             name: name,
             onChange: function onChange(event) {
-                return _applyFilter(1, tableName, url, filterer, event);
+                return _applyFilter(1, filterer, event);
             },
             placeholder: 'To' })
     );
 };
 
 Number.propTypes = {
-    tableName: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string,
     filterer: _propTypes2.default.func.isRequired,
     name: _propTypes2.default.string.isRequired
 };
@@ -1301,7 +1233,7 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _handleSelection = function _handleSelection(tableName, url, event) {
+var _handleSelection = function _handleSelection(event) {
     // let filter = {};
     // if(event.target.value) {
     //     filter = {
@@ -1312,13 +1244,11 @@ var _handleSelection = function _handleSelection(tableName, url, event) {
     //     };
     // }
     //
-    // filterer(tableName, url, event.target.name, filter);
+    // filterer(event.target.name, filter);
 };
 
 var Selection = function Selection(_ref) {
-    var tableName = _ref.tableName,
-        url = _ref.url,
-        name = _ref.name;
+    var name = _ref.name;
     return _react2.default.createElement(
         "td",
         null,
@@ -1327,16 +1257,13 @@ var Selection = function Selection(_ref) {
             { className: "col-12" },
             _react2.default.createElement("input", { type: "checkbox", id: "exampleCheck1",
                 onChange: function onChange(event) {
-                    return _handleSelection(tableName, url, event);
+                    return _handleSelection(event);
                 } })
         )
     );
 };
 
 Selection.propTypes = {
-    tableName: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string,
-    filterer: _propTypes2.default.func.isRequired,
     name: _propTypes2.default.string.isRequired
 };
 
@@ -1365,7 +1292,7 @@ var _Filter = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _applyFilter = function _applyFilter(tableName, url, filterer, event) {
+var _applyFilter = function _applyFilter(filterer, event) {
     var filter = {};
     if (event.target.value) {
         filter = {
@@ -1376,13 +1303,11 @@ var _applyFilter = function _applyFilter(tableName, url, filterer, event) {
         };
     }
 
-    filterer(tableName, url, event.target.name, filter);
+    filterer(event.target.name, filter);
 };
 
 var String = function String(_ref) {
-    var tableName = _ref.tableName,
-        url = _ref.url,
-        name = _ref.name,
+    var name = _ref.name,
         filterer = _ref.filterer;
     return _react2.default.createElement(
         'td',
@@ -1391,14 +1316,12 @@ var String = function String(_ref) {
             className: 'form-control',
             name: name,
             onChange: function onChange(event) {
-                return _applyFilter(tableName, url, filterer, event);
+                return _applyFilter(filterer, event);
             } })
     );
 };
 
 String.propTypes = {
-    tableName: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string,
     filterer: _propTypes2.default.func.isRequired,
     name: _propTypes2.default.string.isRequired
 };
@@ -1435,9 +1358,7 @@ var _Filter2 = _interopRequireDefault(_Filter);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Header = function Header(_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        query = _ref.query,
+    var query = _ref.query,
         columns = _ref.columns,
         setSortOrder = _ref.setSortOrder,
         setFilter = _ref.setFilter;
@@ -1453,8 +1374,6 @@ var Header = function Header(_ref) {
                     isHeader: true,
                     sortable: columns[key].sortable ? true : false,
                     sorter: setSortOrder,
-                    tableName: name,
-                    url: url,
                     name: columns[key].name,
                     label: columns[key].label,
                     query: query,
@@ -1469,8 +1388,6 @@ var Header = function Header(_ref) {
                     key: key,
                     type: columns[key].type,
                     name: columns[key].name,
-                    tableName: name,
-                    url: url,
                     filterer: setFilter }) : _react2.default.createElement('td', { key: key });
             })
         )
@@ -1507,9 +1424,7 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Limiter = function Limiter(_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        options = _ref.options,
+    var options = _ref.options,
         setLimit = _ref.setLimit;
     return _react2.default.createElement(
         "label",
@@ -1517,7 +1432,7 @@ var Limiter = function Limiter(_ref) {
         _react2.default.createElement(
             "select",
             { className: "form-control input-sm", id: "limiter", onChange: function onChange(event) {
-                    return setLimit(name, url, event.target.value);
+                    return setLimit(event.target.value);
                 } },
             options.map(function (option, index) {
                 return _react2.default.createElement(
@@ -1585,9 +1500,7 @@ var upperLimit = function upperLimit(page, limit, count) {
 };
 
 var Pagination = function Pagination(_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        start = _ref.start,
+    var start = _ref.start,
         end = _ref.end,
         page = _ref.page,
         total = _ref.total,
@@ -1624,7 +1537,7 @@ var Pagination = function Pagination(_ref) {
                     _react2.default.createElement(
                         "a",
                         { className: "page-link", href: "#", onClick: function onClick(event) {
-                                return setPage(name, url, page - 1);
+                                return setPage(page - 1);
                             } },
                         "Previous"
                     )
@@ -1636,7 +1549,7 @@ var Pagination = function Pagination(_ref) {
                         _react2.default.createElement(
                             "a",
                             { className: "page-link", href: "#", onClick: function onClick(event) {
-                                    return setPage(name, url, link);
+                                    return setPage(link);
                                 } },
                             link
                         )
@@ -1648,7 +1561,7 @@ var Pagination = function Pagination(_ref) {
                     _react2.default.createElement(
                         "a",
                         { className: "page-link", href: "#", onClick: function onClick(event) {
-                                return setPage(name, url, page + 1);
+                                return setPage(page + 1);
                             } },
                         "Next"
                     )
@@ -1664,8 +1577,6 @@ Pagination.propTypes = {
     page: _propTypes2.default.number.isRequired,
     total: _propTypes2.default.number.isRequired,
     count: _propTypes2.default.number.isRequired,
-    name: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string.isRequired,
     setPage: _propTypes2.default.func
 };
 
@@ -1693,24 +1604,18 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _renderMassAction = function _renderMassAction(_ref) {
-    var name = _ref.name,
-        url = _ref.url,
-        query = _ref.query,
+    var query = _ref.query,
         massActions = _ref.massActions;
     return _react2.default.createElement("div", null);
 };
 
 var Toolbar = function Toolbar(_ref2) {
-    var name = _ref2.name,
-        url = _ref2.url,
-        query = _ref2.query,
+    var query = _ref2.query,
         config = _ref2.config;
     return _react2.default.createElement("div", null);
 };
 
 Toolbar.propTypes = {
-    name: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string.isRequired,
     config: _propTypes2.default.object.isRequired
     // setSortOrder: PropTypes.func,
     // setFilter: PropTypes.func

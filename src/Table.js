@@ -38,15 +38,11 @@ const Table = ( props ) =>
                         <div className="row">
                             <div className="col-sm-12 col-md-3">
                                 <Toolbar
-                                    name={ props.name }
-                                    url={ props.url }
                                     query={ props.query }
                                     config={ props.config.toolbar } />
                             </div>
                             <div className="col-sm-12 col-md-3 pull-right">
                                 <Limiter
-                                    name={ props.name }
-                                    url={ props.url }
                                     setLimit={ props.setLimit }
                                     options={ props.limiterOptions } />
                             </div>
@@ -55,16 +51,12 @@ const Table = ( props ) =>
                         <div id={ props.name } className="flutter-table-container table-responsive">
                             <table className="table table-sm table-hover flutter-table">
                                 <Header
-                                    name={ props.name }
-                                    url={ props.url }
                                     columns={ props.config.columns }
                                     setSortOrder={ props.setSortOrder }
                                     setFilter={ props.setFilter }
                                     query={ props.query } />
 
                                 <Body
-                                    tableName={ props.name }
-                                    url={ props.url }
                                     query={ props.query }
                                     data={ props.data }
                                     deleter={ props.deleter }
@@ -73,8 +65,6 @@ const Table = ( props ) =>
                         </div>
 
                         <Pagination
-                            name={ props.name }
-                            url={ props.url }
                             setPage={ props.setPage }
                             { ...calculatePaginationProps(props.query.page, props.query.limit, props.query.count) } />
                     </div>

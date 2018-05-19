@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 
-// import 'rxjs';
 import { Observable  } from 'rxjs/Observable';
 import { concatMap, switchMap, map, takeUntil, filter } from 'rxjs/operator';
 import { of } from 'rxjs/observable/of';
 import { denormalize, normalize } from 'normalizr';
 
-// import 'rxjs/add/operator/mergeMap';
 import qs from 'qs';
-// import op from 'object-path';
+
+import { getValueByPath } from './utils';
 
 export const REQUEST_DATA = 'REQUEST_DATA';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
@@ -21,97 +20,47 @@ export const SET_LIMIT = 'SET_LIMIT';
 
 export const DELETE_DATA = 'DELETE_DATA';
 
-export const cancelRequest = ( name ) => ({ type: REQUEST_DATA_CANCEL, name })
-export const requestData = ( name, url, query ) => ({ type: REQUEST_DATA, name, url, query })
-export const receiveData = ( name, response, normalizedData ) => ({ type: RECEIVE_DATA, name, response, normalizedData })
-export const setPage = ( name, url, page ) => ({ type: SET_PAGE, name, url, page })
-export const setSort = ( name, url, sort, dir ) => ({ type: SET_SORT, name, url, sort, dir })
-export const setLimit = ( name, url, limit ) => ({ type: SET_LIMIT, name, url, limit })
-export const setFilter = ( name, url, key, filter ) => ({ type: SET_FILTER, name, url, key, filter })
-export const deleteData = ( name, url, id ) => ({ type: DELETE_DATA, name, url, id})
+export const createActionCreator = ( name, url ) => ( type ) => ( payload ) => {
+    let action = ({ type: type, name, url, payload: payload });
+    action.toString = () => type;
 
-// export const setParamsEpic = ( action$, store ) =>
-//     action$.ofType(SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT).concatMap( action =>
-//         Observable.of(cancelRequest(action.name), requestData(action.name, action.url, store.getState().content[action.name].query))
-//     );
+    return action;
+}
 
-// const createActionCreator => ( { name, url, type } ) => ( payload ) => {
-//     let action = ({ type: type, name, url, payload});
-//     action.toString = () => type;
-//
-//     return action;
-// }
-//
-//
-// const actionCreators = ( name, url, payload ) => {
-//     return {
-//         cancelRequest: createActionCreator({ type: REQUEST_DATA_CANCEL, name, url }) (),
-//         requestData: createActionCreator({ type: REQUEST_DATA, name, url })( payload ),
-//         receiveData: createActionCreator({ type: RECEIVE_DATA, name, url, payload }),
-//         setPage: createActionCreator({ type: SET_PAGE, name, url, payload }),
-//         setSort: createActionCreator({ type: SET_SORT, name, url, payload }),
-//         setLimit: createActionCreator({ type: SET_LIMIT, name, url, payload }),
-//         setFilter: createActionCreator({ type: SET_FILTER, name, url, payload }),
-//     }
-// }
-
-
-const tableEpics = ( name, url ) => {
+const tableEpics = ( name, url, stateKeys, actionsCreators ) => {
     const setParamsEpic = ( action$, store ) =>
         action$.ofType(
-            SET_PAGE, SET_FILTER, SET_LIMIT, SET_SORT
+            actionsCreators.setPage().toString(),
+            actionsCreators.setFilter().toString(),
+            actionsCreators.setLimit().toString(),
+            actionsCreators.setSort().toString()
         ).concatMap( action =>
             Observable.of(
-                cancelRequest(name),
-                requestData(name, url, store.getState().content[name].query)
+                actionsCreators.cancelRequest({ name }),
+                actionsCreators.requestData({ query: getValueByPath(store.getState(), stateKeys).query })
             )
         );
 
     const fetchDataEpic = ( action$, store, { getJSONSecure, schemas } ) =>
-        action$.ofType(REQUEST_DATA).switchMap( action =>
-            getJSONSecure(`${url}?${qs.stringify(action.query)}`)
+        action$.ofType(actionsCreators.requestData().toString()).switchMap( action =>
+            getJSONSecure(`${url}?${qs.stringify(action.payload.query)}`)
                 .map(response => {
                     const data = normalize(response.data, [schemas[name]])
-                    return receiveData(name, response, data)
+                    return actionsCreators.receiveData({ response, data })
                 })
                 .takeUntil(
-                    action$.ofType(REQUEST_DATA_CANCEL)
-                        .filter(cancelAction => cancelAction.name == name)
+                    action$.ofType(actionsCreators.cancelRequest().toString())
+                        .filter(cancelAction => cancelAction.payload.name == name)
                 )
         );
 
     return { setParamsEpic, fetchDataEpic };
 }
-// export const fetchDataEpic = ( action$, store, { getJSONSecure, schemas }) =>
-//     action$.ofType(REQUEST_DATA).switchMap( action =>
-//         getJSONSecure(`${action.url}?${qs.stringify(action.query)}`)
-//             .map(response => {
-//                 const data = normalize(response.data.items, [schemas[action.name]])
-//                 return receiveData(action.name, response, data)
-//             })
-//             .takeUntil(action$.ofType(REQUEST_DATA_CANCEL).filter(
-//                 cancelAction => cancelAction.type == REQUEST_DATA_CANCEL && cancelAction.name == action.name))
-//     );
 
 // export const deleteDataEpic = ( action$, store, { getJSONSecure }) =>
 //     action$.ofType(DELETE_DATA).switchMap( action =>
 //         getJSONSecure(`${action.url}?{qs.stringify}`)
 //     );
-
-let initialState = {
-    isFetching: false,
-    title: "",
-    items: [],
-    query: {
-        dir: 'desc',
-        sort: null,
-        page: 0,
-        limit: 20,
-        offset: 0,
-        count: 0,
-        search: {}
-    },
-}
 
 
 export const createReducer = (reducer, predicate) => (state, action) =>
@@ -124,13 +73,14 @@ export default ( props ) => Table => {
         url,
         config,
         limiterOptions,
-        onLoadParams
+        onLoadParams,
+        stateKeys
     } = props;
 
     class WrappedTable extends Component {
         componentWillMount() {
             const { onLoad, query } = this.props;
-            onLoad(name, url);
+            onLoad();
         }
 
         setValidPage(nextProps) {
@@ -163,8 +113,24 @@ export default ( props ) => Table => {
         }
     }
 
+    let initialState = {
+        isFetching: false,
+        title: "",
+        items: [],
+        query: {
+            dir: 'desc',
+            sort: null,
+            page: 0,
+            limit: 20,
+            offset: 0,
+            count: 0,
+            search: {}
+        },
+    }
+
     const tableReducer = (state = initialState, action) => {
         let data = initialState;
+        const { ...payload } = action.payload;
         switch (action.type) {
             case REQUEST_DATA:
                 data.isFetching = true;
@@ -172,28 +138,28 @@ export default ( props ) => Table => {
 
             case RECEIVE_DATA:
                 data.isFetching = false;
-                data.query.count = parseInt(action.response.total);
-                data.items = action.normalizedData.result;
+                data.query.count = parseInt(payload.response.total);
+                data.items = payload.data.result;
                 return Object.assign({}, state, data);
 
             case SET_PAGE:
-                data.query.page = action.page;
+                data.query.page = payload.page;
                 data.query.offset = ( (data.query.page - 1) * data.query.limit );
                 data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
                 return Object.assign({}, state, data);
 
             case SET_SORT:
-                data.query.sort = action.sort;
-                data.query.dir = action.dir;
+                data.query.sort = payload.sort;
+                data.query.dir = payload.dir;
                 return Object.assign({}, state, data);
 
             case SET_LIMIT:
-                data.query.limit = parseInt(action.limit);
+                data.query.limit = parseInt(payload.limit);
                 data.query.offset = ( (data.query.page - 1) * data.query.limit );
                 return Object.assign({}, state, data);
 
             case SET_FILTER:
-                data.query.search[action.key] = action.filter;
+                data.query.search[payload.key] = payload.filter;
                 return Object.assign({}, state, data);
 
             default:
@@ -203,17 +169,20 @@ export default ( props ) => Table => {
 
 
     const reducer = createReducer(tableReducer, action => action.name === name);
-    const epics = tableEpics(name, url);
+
+    const actionCreator = createActionCreator(name, url);
     const actionCreators =  {
-        cancelRequest: cancelRequest,
-        requestData: requestData,
-        receiveData: receiveData,
-        setPage: setPage,
-        setSort: setSort,
-        setLimit: setLimit,
-        setFilter: setFilter,
-        deleteData: deleteData,
+        cancelRequest: actionCreator(REQUEST_DATA_CANCEL),
+        requestData: actionCreator(REQUEST_DATA),
+        receiveData: actionCreator(RECEIVE_DATA),
+        setPage: actionCreator(SET_PAGE),
+        setSort: actionCreator(SET_SORT),
+        setLimit: actionCreator(SET_LIMIT),
+        setFilter: actionCreator(SET_FILTER),
+        deleteData: actionCreator(DELETE_DATA),
     }
+
+    const epics = tableEpics(name, url, stateKeys, actionCreators);
 
     return {
         WrappedTable,

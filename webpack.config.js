@@ -30,7 +30,6 @@ module.exports = {
             'prop-types': path.resolve(__dirname, './node_modules/prop-types'),
             'react-pure-time': path.resolve(__dirname, './node_modules/react-pure-time'),
             'qs': path.resolve(__dirname, './node_modules/qs'),
-            'object-path': path.resolve(__dirname, './node_modules/object-path'),
             'normalizr': path.resolve(__dirname, './node_modules/normalizr'),
             // 'mergeMap': path.resolve(__dirname, './node_modules/rxjs/operator/mergeMap'),
             // 'of': path.resolve(__dirname, './node_modules/rxjs/observable/of')
@@ -42,7 +41,6 @@ module.exports = {
     'prop-types': 'commonjs prop-types',
     'react-pure-time': 'commonjs react-pure-time',
     'qs': 'commonjs qs',
-    'object-path': 'commonjs object-path',
     'normalizr': 'commonjs normalizr',
     'rxjs': 'commonjs rxjs',
     'rxjs/Observable': 'commonjs rxjs/Observable',

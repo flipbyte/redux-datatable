@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Cell from './Cell';
 import Filter from './Filter';
 
-const Header = ({ name, url, query, columns, setSortOrder, setFilter }) =>
+const Header = ({ query, columns, setSortOrder, setFilter }) =>
     <thead>
         <tr className="headers">
             { Object.keys(columns).map( (key) => (
@@ -13,8 +13,6 @@ const Header = ({ name, url, query, columns, setSortOrder, setFilter }) =>
                     isHeader={ true }
                     sortable={ columns[key].sortable ? true : false }
                     sorter={ setSortOrder }
-                    tableName={ name }
-                    url={ url }
                     name={ columns[key].name }
                     label={ columns[key].label }
                     query={ query }
@@ -28,8 +26,6 @@ const Header = ({ name, url, query, columns, setSortOrder, setFilter }) =>
                         key={ key }
                         type={ columns[key].type }
                         name={ columns[key].name }
-                        tableName={ name }
-                        url={ url }
                         filterer={ setFilter } /> :
                     <td key={ key }></td>
             ) ) }

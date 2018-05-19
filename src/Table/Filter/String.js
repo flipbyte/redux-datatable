@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 import { SEARCH_OPERATOR_CONTAINS } from '../Filter';
 
-const _applyFilter = (tableName, url, filterer, event) => {
+const _applyFilter = (filterer, event) => {
     let filter = {};
     if(event.target.value) {
         filter = {
@@ -13,20 +13,18 @@ const _applyFilter = (tableName, url, filterer, event) => {
         };
     }
 
-    filterer(tableName, url, event.target.name, filter);
+    filterer(event.target.name, filter);
 };
 
-const String = ({ tableName, url, name, filterer }) =>
+const String = ({ name, filterer }) =>
     <td>
         <input
             className="form-control"
             name={ name }
-            onChange={ (event) => _applyFilter(tableName, url, filterer, event) } />
+            onChange={ (event) => _applyFilter(filterer, event) } />
     </td>
 
 String.propTypes = {
-    tableName: PropTypes.string.isRequired,
-    url: PropTypes.string,
     filterer: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired
 };

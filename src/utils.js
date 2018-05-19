@@ -17,3 +17,6 @@ export const paramsResolver = (params, data) => {
 
     return qs.stringify(processedParams);
 }
+
+export const getValueByPath = ( obj, path ) =>
+    path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);

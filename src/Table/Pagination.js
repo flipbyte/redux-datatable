@@ -23,7 +23,7 @@ const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
 const upperLimit = ( page, limit, count ) =>  (page * limit) > count ? count : page * limit;
 
 const Pagination = ({
-    name, url, start, end, page, total, count, limit, setPage
+    start, end, page, total, count, limit, setPage
 }) =>
     <div className="row">
         <div className="col-sm-12 col-md-6">
@@ -33,17 +33,17 @@ const Pagination = ({
         <div className="col-sm-12 col-md-6">
             <ul className="pagination justify-content-end">
                 <li className={"page-item " + (page < 2 ? 'disabled': '')}>
-                    <a className="page-link" href="#" onClick={ (event) => setPage( name, url, (page - 1) ) }>Previous</a>
+                    <a className="page-link" href="#" onClick={ (event) => setPage( page - 1 ) }>Previous</a>
                 </li>
 
                 { getPages(page, total).map( (link, index) =>
                     <li key={ index } className={"page-item " + (link == page ? 'active' : '')}>
-                        <a className="page-link" href="#" onClick={ (event) => setPage( name, url, link ) }>{ link }</a>
+                        <a className="page-link" href="#" onClick={ (event) => setPage( link ) }>{ link }</a>
                     </li>
                 ) }
 
                 <li className={"page-item " + (page >= total ? 'disabled': '')}>
-                    <a className="page-link" href="#" onClick={ (event) => setPage( name, url, (page + 1) ) }>Next</a>
+                    <a className="page-link" href="#" onClick={ (event) => setPage( page + 1 ) }>Next</a>
                 </li>
             </ul>
         </div>
@@ -55,8 +55,6 @@ Pagination.propTypes = {
     page: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
     count: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
     setPage: PropTypes.func
 }
 
