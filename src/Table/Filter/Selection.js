@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import { paramsResolver } from '../../utils';
 
-const _handleSelection = (event) => {
+const _handleSelection = ( selector, event ) => {
+    let params = paramsResolver(action.params, data);
     // let filter = {};
     // if(event.target.value) {
     //     filter = {
@@ -13,17 +15,20 @@ const _handleSelection = (event) => {
     // }
     //
     // filterer(event.target.name, filter);
+
+    selector(event.target.name, 0, event.target.value);
 };
 
-const Selection = ({ name }) =>
+const Selection = ({ name, selector }) =>
     <td>
         <div className="col-12">
-            <input type="checkbox" id="exampleCheck1"
-                onChange={ (event) => _handleSelection(event) }/>
+            <input type="checkbox" name={ name }
+                onChange={ (event) => _handleSelection(selector, event) }/>
         </div>
     </td>
 
 Selection.propTypes = {
+    selector: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired
 };
 

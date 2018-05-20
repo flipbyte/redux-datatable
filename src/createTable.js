@@ -7,7 +7,7 @@ import { denormalize, normalize } from 'normalizr';
 
 import qs from 'qs';
 
-import { getValueByPath, createActionCreator, createReducer } from './utils';
+import { getValueByPath, createActionCreator, createReducer, defaultLimiterCongig } from './utils';
 import * as actions from './actions';
 
 export default ( props ) => Table => {
@@ -15,9 +15,8 @@ export default ( props ) => Table => {
         name,
         url,
         config,
-        limiterOptions,
-        onLoadParams,
-        stateKeys
+        stateKeys,
+        limiterConfig = defaultLimiterCongig
     } = props;
 
     class WrappedTable extends Component {
@@ -50,7 +49,7 @@ export default ( props ) => Table => {
                 <Table name={ name }
                     url={ url }
                     config={ config }
-                    limiterOptions={ limiterOptions }
+                    limiterConfig={ limiterConfig }
                     { ...this.props } />
             )
         }
@@ -69,6 +68,7 @@ export default ( props ) => Table => {
             count: 0,
             search: {}
         },
+        selection: {}
     }
 
     const tableReducer = (state = initialState, action) => {
@@ -104,6 +104,12 @@ export default ( props ) => Table => {
             case actions.SET_FILTER:
                 data.query.search[payload.key] = payload.filter;
                 return Object.assign({}, state, data);
+
+            case actions.SET_SELECTION:
+                // data.query.selection[payload.key]
+                // if(payload.value == 0) {
+                //     data.query.selection[payload.key][] = ;
+                // }
 
             default:
                 return state;
@@ -153,6 +159,7 @@ export default ( props ) => Table => {
         setSort: actionCreator(actions.SET_SORT),
         setLimit: actionCreator(actions.SET_LIMIT),
         setFilter: actionCreator(actions.SET_FILTER),
+        setSelection: actionCreator(actions.SET_SELECTION),
         deleteData: actionCreator(actions.DELETE_DATA),
     }
 

@@ -6,11 +6,9 @@ import Pagination from './Table/Pagination';
 import Limiter from './Table/Limiter';
 import Toolbar from './Table/Toolbar';
 
-const MIN_LIMIT = 20;
-
-const calculatePaginationProps = (page, limit, count) => {
+const calculatePaginationProps = (page, limit, count, defaultLimit) => {
     page = page > 1 ? page : 1
-    limit = limit > MIN_LIMIT ? limit : MIN_LIMIT
+    limit = limit > defaultLimit ? limit : defaultLimit
 
     let start = (page - 1) * limit
     let end = start + limit - 1
@@ -36,15 +34,17 @@ const Table = ( props ) =>
                     </div>}
                     <div className="card-block">
                         <div className="row">
-                            <div className="col-sm-12 col-md-3">
+                            <div className="col-sm-12 col-md-9">
                                 <Toolbar
+                                    data={ props.selection }
                                     query={ props.query }
+                                    massActions={ props.massActions }
                                     config={ props.config.toolbar } />
                             </div>
                             <div className="col-sm-12 col-md-3 pull-right">
                                 <Limiter
                                     setLimit={ props.setLimit }
-                                    options={ props.limiterOptions } />
+                                    options={ props.limiterConfig.options } />
                             </div>
                         </div>
 
@@ -52,21 +52,27 @@ const Table = ( props ) =>
                             <table className="table table-sm table-hover flutter-table">
                                 <Header
                                     columns={ props.config.columns }
+                                    query={ props.query }
                                     setSortOrder={ props.setSortOrder }
                                     setFilter={ props.setFilter }
-                                    query={ props.query } />
+                                    setSelection={ props.setSelection } />
 
                                 <Body
                                     query={ props.query }
                                     data={ props.data }
-                                    deleter={ props.deleter }
+                                    actions={ props.actions }
                                     columns={ props.config.columns } />
                             </table>
                         </div>
 
                         <Pagination
                             setPage={ props.setPage }
-                            { ...calculatePaginationProps(props.query.page, props.query.limit, props.query.count) } />
+                            { ...calculatePaginationProps(
+                                props.query.page,
+                                props.query.limit,
+                                props.query.count,
+                                props.limiterConfig.default
+                            ) } />
                     </div>
                 </div>
             </div>
@@ -81,7 +87,10 @@ Table.propTypes = {
         toolbar: PropTypes.object,
         columns: PropTypes.object,
     }).isRequired,
-    limiterOptions: PropTypes.array.isRequired,
+    limiterConfig: PropTypes.shape({
+        options: PropTypes.array,
+        default: PropTypes.number,
+    }).isRequired,
     data: PropTypes.array.isRequired,
     query: PropTypes.shape({
         sort: PropTypes.string,
@@ -92,12 +101,13 @@ Table.propTypes = {
         count: PropTypes.number,
         search: PropTypes.object
     }).isRequired,
+    actions: PropTypes.object,
 };
 
 Table.defaultProps = {
     data: {},
     query: {
-        limit: MIN_LIMIT,
+        limit: 10,
         offset: 1,
         search: {}
     }

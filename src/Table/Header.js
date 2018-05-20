@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Cell from './Cell';
 import Filter from './Filter';
 
-const Header = ({ query, columns, setSortOrder, setFilter }) =>
+const Header = ({ query, columns, setSortOrder, setFilter, setSelection }) =>
     <thead>
         <tr className="headers">
             { Object.keys(columns).map( (key) => (
@@ -26,7 +26,8 @@ const Header = ({ query, columns, setSortOrder, setFilter }) =>
                         key={ key }
                         type={ columns[key].type }
                         name={ columns[key].name }
-                        filterer={ setFilter } /> :
+                        filterer={ setFilter }
+                        selector={ setSelection } /> :
                     <td key={ key }></td>
             ) ) }
         </tr>
@@ -34,8 +35,10 @@ const Header = ({ query, columns, setSortOrder, setFilter }) =>
 
 Header.propTypes = {
     columns: PropTypes.object.isRequired,
+    selection: PropTypes.object,
     setSortOrder: PropTypes.func,
-    setFilter: PropTypes.func
+    setFilter: PropTypes.func,
+    setSelection: PropTypes.func
 };
 
 export default Header;

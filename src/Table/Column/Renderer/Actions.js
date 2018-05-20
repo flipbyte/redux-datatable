@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import qs from 'qs';
 import { paramsResolver } from '../../../utils';
 
 const _handleAction = (event, data, action, props, context) => {
+    let params = paramsResolver(action.params, data);
     switch( action.type ) {
         case 'route':
             context.router.history.push({
                 pathname: action.route,
-                search: '?' + paramsResolver(action.params, data)
+                search: '?' + params.toString()
             })
             break;
 
         case 'action':
-
+            props.actions[action.name](params.get());
             break;
 
         default:

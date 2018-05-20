@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -81,6 +81,89 @@ module.exports = require("prop-types");
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = exports.getUrl = exports.defaultLimiterCongig = undefined;
+
+var _qs = __webpack_require__(5);
+
+var _qs2 = _interopRequireDefault(_qs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var defaultLimiterCongig = exports.defaultLimiterCongig = {
+    options: [10, 20, 50, 100, 200],
+    default: 10
+};
+
+var getUrl = exports.getUrl = function getUrl(baseUrl, endpoint) {
+    return baseUrl + endpoint;
+};
+
+// export const pushRoute = ( action, params, context ) => context.router.history.push({
+//     pathname: action.route,
+//     search: '?' + params.toString()
+// });
+
+var paramsResolver = exports.paramsResolver = function paramsResolver(params, data) {
+    var processedParams = {};
+    for (var key in params) {
+        if (!params[key].startsWith('@')) {
+            continue;
+        }
+
+        var dataKey = params[key].substr(1);
+        if (!data[dataKey]) {
+            continue;
+        }
+
+        processedParams[key] = data[dataKey];
+    }
+
+    var paramsObject = Object.assign({}, processedParams);
+    paramsObject.get = function () {
+        return processedParams;
+    };
+    paramsObject.toString = function () {
+        return _qs2.default.stringify(processedParams);
+    };;
+
+    return paramsObject;
+};
+
+var getValueByPath = exports.getValueByPath = function getValueByPath(obj, path) {
+    return path.reduce(function (acc, currVal) {
+        return acc && acc[currVal] ? acc[currVal] : null;
+    }, obj);
+};
+
+var createActionCreator = exports.createActionCreator = function createActionCreator(name, url) {
+    return function (type) {
+        return function (payload) {
+            var action = { type: type, name: name, url: url, payload: payload };
+            action.toString = function () {
+                return type;
+            };
+
+            return action;
+        };
+    };
+};
+
+var createReducer = exports.createReducer = function createReducer(reducer, predicate) {
+    return function (state, action) {
+        return predicate(action) || state === undefined ? reducer(state, action) : state;
+    };
+};
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -133,9 +216,7 @@ var Filter = function Filter(props) {
 };
 
 Filter.propTypes = {
-    tableName: _propTypes2.default.string.isRequired,
-    url: _propTypes2.default.string,
-    filterer: _propTypes2.default.func.isRequired,
+    action: _propTypes2.default.func.isRequired,
     type: _propTypes2.default.string.isRequired,
     name: _propTypes2.default.string.isRequired
 };
@@ -147,74 +228,7 @@ Filter.defaultProps = {
 exports.default = Filter;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = undefined;
-
-var _qs = __webpack_require__(4);
-
-var _qs2 = _interopRequireDefault(_qs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var paramsResolver = exports.paramsResolver = function paramsResolver(params, data) {
-    var processedParams = {};
-    for (var key in params) {
-        if (!params[key].startsWith('@')) {
-            continue;
-        }
-
-        var dataKey = params[key].substr(1);
-        if (!data[dataKey]) {
-            continue;
-        }
-
-        processedParams[key] = data[dataKey];
-    }
-
-    return _qs2.default.stringify(processedParams);
-};
-
-var getValueByPath = exports.getValueByPath = function getValueByPath(obj, path) {
-    return path.reduce(function (acc, currVal) {
-        return acc && acc[currVal] ? acc[currVal] : null;
-    }, obj);
-};
-
-var createActionCreator = exports.createActionCreator = function createActionCreator(name, url) {
-    return function (type) {
-        return function (payload) {
-            var action = { type: type, name: name, url: url, payload: payload };
-            action.toString = function () {
-                return type;
-            };
-
-            return action;
-        };
-    };
-};
-
-var createReducer = exports.createReducer = function createReducer(reducer, predicate) {
-    return function (state, action) {
-        return predicate(action) || state === undefined ? reducer(state, action) : state;
-    };
-};
-
-/***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-module.exports = require("qs");
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -231,8 +245,15 @@ var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
 var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
 var SET_SORT = exports.SET_SORT = 'SET_SORT';
 var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
+var SET_SELECTION = exports.SET_SELECTION = 'SET_SELECTION';
 
 var DELETE_DATA = exports.DELETE_DATA = 'DELETE_DATA';
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = require("qs");
 
 /***/ }),
 /* 6 */
@@ -277,11 +298,9 @@ var _Toolbar2 = _interopRequireDefault(_Toolbar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var MIN_LIMIT = 20;
-
-var calculatePaginationProps = function calculatePaginationProps(page, limit, count) {
+var calculatePaginationProps = function calculatePaginationProps(page, limit, count, defaultLimit) {
     page = page > 1 ? page : 1;
-    limit = limit > MIN_LIMIT ? limit : MIN_LIMIT;
+    limit = limit > defaultLimit ? limit : defaultLimit;
 
     var start = (page - 1) * limit;
     var end = start + limit - 1;
@@ -324,9 +343,11 @@ var Table = function Table(props) {
                             { className: 'row' },
                             _react2.default.createElement(
                                 'div',
-                                { className: 'col-sm-12 col-md-3' },
+                                { className: 'col-sm-12 col-md-9' },
                                 _react2.default.createElement(_Toolbar2.default, {
+                                    data: props.selection,
                                     query: props.query,
+                                    massActions: props.massActions,
                                     config: props.config.toolbar })
                             ),
                             _react2.default.createElement(
@@ -334,7 +355,7 @@ var Table = function Table(props) {
                                 { className: 'col-sm-12 col-md-3 pull-right' },
                                 _react2.default.createElement(_Limiter2.default, {
                                     setLimit: props.setLimit,
-                                    options: props.limiterOptions })
+                                    options: props.limiterConfig.options })
                             )
                         ),
                         _react2.default.createElement(
@@ -345,19 +366,20 @@ var Table = function Table(props) {
                                 { className: 'table table-sm table-hover flutter-table' },
                                 _react2.default.createElement(_Header2.default, {
                                     columns: props.config.columns,
+                                    query: props.query,
                                     setSortOrder: props.setSortOrder,
                                     setFilter: props.setFilter,
-                                    query: props.query }),
+                                    setSelection: props.setSelection }),
                                 _react2.default.createElement(_Body2.default, {
                                     query: props.query,
                                     data: props.data,
-                                    deleter: props.deleter,
+                                    actions: props.actions,
                                     columns: props.config.columns })
                             )
                         ),
                         _react2.default.createElement(_Pagination2.default, _extends({
                             setPage: props.setPage
-                        }, calculatePaginationProps(props.query.page, props.query.limit, props.query.count)))
+                        }, calculatePaginationProps(props.query.page, props.query.limit, props.query.count, props.limiterConfig.default)))
                     )
                 )
             )
@@ -373,7 +395,10 @@ Table.propTypes = {
         toolbar: _propTypes2.default.object,
         columns: _propTypes2.default.object
     }).isRequired,
-    limiterOptions: _propTypes2.default.array.isRequired,
+    limiterConfig: _propTypes2.default.shape({
+        options: _propTypes2.default.array,
+        default: _propTypes2.default.number
+    }).isRequired,
     data: _propTypes2.default.array.isRequired,
     query: _propTypes2.default.shape({
         sort: _propTypes2.default.string,
@@ -383,13 +408,14 @@ Table.propTypes = {
         offset: _propTypes2.default.number,
         count: _propTypes2.default.number,
         search: _propTypes2.default.object
-    }).isRequired
+    }).isRequired,
+    actions: _propTypes2.default.object
 };
 
 Table.defaultProps = {
     data: {},
     query: {
-        limit: MIN_LIMIT,
+        limit: 10,
         offset: 1,
         search: {}
     }
@@ -416,21 +442,21 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Observable = __webpack_require__(27);
+var _Observable = __webpack_require__(28);
 
-var _operator = __webpack_require__(24);
+var _operator = __webpack_require__(25);
 
-var _of = __webpack_require__(28);
+var _of = __webpack_require__(29);
 
-var _normalizr = __webpack_require__(25);
+var _normalizr = __webpack_require__(26);
 
-var _qs = __webpack_require__(4);
+var _qs = __webpack_require__(5);
 
 var _qs2 = _interopRequireDefault(_qs);
 
-var _utils = __webpack_require__(3);
+var _utils = __webpack_require__(2);
 
-var _actions = __webpack_require__(5);
+var _actions = __webpack_require__(4);
 
 var actions = _interopRequireWildcard(_actions);
 
@@ -451,9 +477,9 @@ exports.default = function (props) {
         var name = props.name,
             url = props.url,
             config = props.config,
-            limiterOptions = props.limiterOptions,
-            onLoadParams = props.onLoadParams,
-            stateKeys = props.stateKeys;
+            stateKeys = props.stateKeys,
+            _props$limiterConfig = props.limiterConfig,
+            limiterConfig = _props$limiterConfig === undefined ? _utils.defaultLimiterCongig : _props$limiterConfig;
 
         var WrappedTable = function (_Component) {
             _inherits(WrappedTable, _Component);
@@ -500,7 +526,7 @@ exports.default = function (props) {
                     return _react2.default.createElement(Table, _extends({ name: name,
                         url: url,
                         config: config,
-                        limiterOptions: limiterOptions
+                        limiterConfig: limiterConfig
                     }, this.props));
                 }
             }]);
@@ -520,7 +546,8 @@ exports.default = function (props) {
                 offset: 0,
                 count: 0,
                 search: {}
-            }
+            },
+            selection: {}
         };
 
         var tableReducer = function tableReducer() {
@@ -561,6 +588,12 @@ exports.default = function (props) {
                 case actions.SET_FILTER:
                     data.query.search[payload.key] = payload.filter;
                     return Object.assign({}, state, data);
+
+                case actions.SET_SELECTION:
+                // data.query.selection[payload.key]
+                // if(payload.value == 0) {
+                //     data.query.selection[payload.key][] = ;
+                // }
 
                 default:
                     return state;
@@ -603,6 +636,7 @@ exports.default = function (props) {
             setSort: actionCreator(actions.SET_SORT),
             setLimit: actionCreator(actions.SET_LIMIT),
             setFilter: actionCreator(actions.SET_FILTER),
+            setSelection: actionCreator(actions.SET_SELECTION),
             deleteData: actionCreator(actions.DELETE_DATA)
         };
 
@@ -646,7 +680,7 @@ var Body = function Body(_ref) {
     var query = _ref.query,
         columns = _ref.columns,
         data = _ref.data,
-        deleter = _ref.deleter;
+        actions = _ref.actions;
     return _react2.default.createElement(
         'tbody',
         null,
@@ -657,7 +691,7 @@ var Body = function Body(_ref) {
                 Object.keys(columns).map(function (key) {
                     return _react2.default.createElement(_Renderer2.default, { key: key,
                         query: query,
-                        deleter: deleter,
+                        actions: actions,
                         index: columns[key].name,
                         data: item,
                         renderer: columns[key].renderer,
@@ -671,7 +705,7 @@ var Body = function Body(_ref) {
 Body.propTypes = {
     columns: _propTypes2.default.object.isRequired,
     data: _propTypes2.default.array.isRequired,
-    deleter: _propTypes2.default.func
+    actions: _propTypes2.default.object
 };
 
 Body.defaultProps = {
@@ -823,17 +857,17 @@ var Renderer = function Renderer(_ref) {
         data = _ref.data,
         renderer = _ref.renderer,
         config = _ref.config,
-        deleter = _ref.deleter;
+        actions = _ref.actions;
 
     if (renderer) {
-        return _render(renderer, { index: index, data: data, config: config, query: query, deleter: deleter });
+        return _render(renderer, { index: index, data: data, config: config, query: query, actions: actions });
     } else {
         switch (config.type) {
             case 'date':
                 return _render(_Date2.default, { index: index, data: data });
 
             case 'actions':
-                return _render(_Actions2.default, { query: query, data: data, config: config, deleter: deleter });
+                return _render(_Actions2.default, { query: query, data: data, config: config, actions: actions });
 
             case 'selection':
                 return _render(_Selection2.default, { query: query, data: data, config: config });
@@ -849,7 +883,8 @@ Renderer.propTypes = {
     index: _propTypes2.default.string,
     data: _propTypes2.default.object.isRequired,
     renderer: _propTypes2.default.func,
-    config: _propTypes2.default.object
+    config: _propTypes2.default.object,
+    actions: _propTypes2.default.object
 };
 
 exports.default = Renderer;
@@ -875,27 +910,24 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _qs = __webpack_require__(4);
-
-var _qs2 = _interopRequireDefault(_qs);
-
-var _utils = __webpack_require__(3);
+var _utils = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var _handleAction = function _handleAction(event, data, action, props, context) {
+    var params = (0, _utils.paramsResolver)(action.params, data);
     switch (action.type) {
         case 'route':
             context.router.history.push({
                 pathname: action.route,
-                search: '?' + (0, _utils.paramsResolver)(action.params, data)
+                search: '?' + params.toString()
             });
             break;
 
         case 'action':
-
+            props.actions[action.name](params.get());
             break;
 
         default:
@@ -959,7 +991,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactPureTime = __webpack_require__(26);
+var _reactPureTime = __webpack_require__(27);
 
 var _reactPureTime2 = _interopRequireDefault(_reactPureTime);
 
@@ -996,7 +1028,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _utils = __webpack_require__(3);
+var _utils = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1078,7 +1110,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Filter = __webpack_require__(2);
+var _Filter = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1158,7 +1190,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Filter = __webpack_require__(2);
+var _Filter = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1168,12 +1200,10 @@ var valTo = null;
 var _applyFilter = function _applyFilter(key, filterer, event) {
     var filter = {};
 
-    console.log(event);
-
     if (key == 0) {
         valFrom = event.target.value;
     } else {
-        valTo = event.target.value >= valFrom ? event.target.value : null;
+        valTo = event.target.value;
     }
 
     if (valFrom || valTo) {
@@ -1242,7 +1272,7 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _handleSelection = function _handleSelection(event) {
+var _handleSelection = function _handleSelection(selector, event) {
     // let filter = {};
     // if(event.target.value) {
     //     filter = {
@@ -1254,25 +1284,29 @@ var _handleSelection = function _handleSelection(event) {
     // }
     //
     // filterer(event.target.name, filter);
+
+    selector(event.target.name, event.target.value);
 };
 
 var Selection = function Selection(_ref) {
-    var name = _ref.name;
+    var name = _ref.name,
+        selector = _ref.selector;
     return _react2.default.createElement(
         "td",
         null,
         _react2.default.createElement(
             "div",
             { className: "col-12" },
-            _react2.default.createElement("input", { type: "checkbox", id: "exampleCheck1",
+            _react2.default.createElement("input", { type: "checkbox", name: name,
                 onChange: function onChange(event) {
-                    return _handleSelection(event);
+                    return _handleSelection(selector, event);
                 } })
         )
     );
 };
 
 Selection.propTypes = {
+    selector: _propTypes2.default.func.isRequired,
     name: _propTypes2.default.string.isRequired
 };
 
@@ -1297,7 +1331,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Filter = __webpack_require__(2);
+var _Filter = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1360,7 +1394,7 @@ var _Cell = __webpack_require__(9);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
-var _Filter = __webpack_require__(2);
+var _Filter = __webpack_require__(3);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
@@ -1370,7 +1404,8 @@ var Header = function Header(_ref) {
     var query = _ref.query,
         columns = _ref.columns,
         setSortOrder = _ref.setSortOrder,
-        setFilter = _ref.setFilter;
+        setFilter = _ref.setFilter,
+        setSelection = _ref.setSelection;
     return _react2.default.createElement(
         'thead',
         null,
@@ -1397,7 +1432,8 @@ var Header = function Header(_ref) {
                     key: key,
                     type: columns[key].type,
                     name: columns[key].name,
-                    filterer: setFilter }) : _react2.default.createElement('td', { key: key });
+                    filterer: setFilter,
+                    selector: setSelection }) : _react2.default.createElement('td', { key: key });
             })
         )
     );
@@ -1405,8 +1441,10 @@ var Header = function Header(_ref) {
 
 Header.propTypes = {
     columns: _propTypes2.default.object.isRequired,
+    selection: _propTypes2.default.object,
     setSortOrder: _propTypes2.default.func,
-    setFilter: _propTypes2.default.func
+    setFilter: _propTypes2.default.func,
+    setSelection: _propTypes2.default.func
 };
 
 exports.default = Header;
@@ -1610,27 +1648,37 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _MassActions = __webpack_require__(23);
+
+var _MassActions2 = _interopRequireDefault(_MassActions);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _renderMassAction = function _renderMassAction(_ref) {
-    var query = _ref.query,
-        massActions = _ref.massActions;
-    return _react2.default.createElement("div", null);
+var _renderToolbarItem = function _renderToolbarItem(props) {
+    if (props.key == 'massActions') return _react2.default.createElement(_MassActions2.default, props);
+
+    return null;
 };
 
-var Toolbar = function Toolbar(_ref2) {
-    var query = _ref2.query,
-        config = _ref2.config;
-    return _react2.default.createElement("div", null);
+var Toolbar = function Toolbar(_ref) {
+    var data = _ref.data,
+        query = _ref.query,
+        config = _ref.config,
+        massActions = _ref.massActions;
+    return Object.keys(config).map(function (key) {
+        return _renderToolbarItem({ key: key, data: data, query: query, config: config[key], massActions: massActions });
+    });
 };
 
 Toolbar.propTypes = {
+    data: _propTypes2.default.object.isRequired,
+    query: _propTypes2.default.object,
     config: _propTypes2.default.object.isRequired
-    // setSortOrder: PropTypes.func,
-    // setFilter: PropTypes.func
 };
 
-// { _renderMassAction({ name, url, query, config.massActions }) }
+Toolbar.defaultProps = {
+    data: {}
+};
 
 exports.default = Toolbar;
 
@@ -1642,9 +1690,159 @@ exports.default = Toolbar;
 
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _utils = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _toggleDropdown = function _toggleDropdown(event) {
+    event.preventDefault();
+    event.target.parentElement.classList.toggle('open');
+};
+
+var _handleAction = function _handleAction(action, data, event, massActions, context) {
+    var params = (0, _utils.paramsResolver)(action.params, data);
+    if (!params.toString()) {
+        alert("No item(s) selected");
+        return false;
+    }
+
+    switch (action.type) {
+        case 'route':
+            context.router.history.push({
+                pathname: action.route,
+                search: '?' + params.toString()
+            });
+            break;
+
+        case 'action':
+            massActions[action.name](params.get());
+            break;
+    }
+};
+
+var _renderAction = function _renderAction(key, data, action, massActions, context) {
+    switch (action.type) {
+        case 'route':
+            return _react2.default.createElement(
+                'li',
+                { key: key, className: 'dropdown-item' },
+                _react2.default.createElement(
+                    'a',
+                    {
+                        className: action.name,
+                        href: '#',
+                        onClick: function onClick(event) {
+                            return _handleAction(action, data, event, massActions, context);
+                        } },
+                    action.label
+                )
+            );
+
+        case 'action':
+            if (!action.actions) {
+                return _react2.default.createElement(
+                    'li',
+                    { key: key, className: 'dropdown-item' },
+                    _react2.default.createElement(
+                        'a',
+                        {
+                            className: action.name,
+                            href: '#',
+                            onClick: function onClick(event) {
+                                return _handleAction(action, data, event, massActions, context);
+                            } },
+                        action.label
+                    )
+                );
+            }
+
+            return _react2.default.createElement(
+                'li',
+                { key: key, className: 'dropdown-item dropdown-submenu dropdown-menu-right' },
+                _react2.default.createElement(
+                    'a',
+                    { className: action.name, href: '#', onClick: function onClick(event) {
+                            return _toggleDropdown(event);
+                        } },
+                    action.label,
+                    _react2.default.createElement('span', { className: 'caret' })
+                ),
+                _react2.default.createElement(
+                    'ul',
+                    { className: 'dropdown-menu' },
+                    Object.keys(action.actions).map(function (key) {
+                        return _renderAction(key, data, action.actions[key], massActions, context);
+                    })
+                )
+            );
+
+    }
+};
+
+var MassActions = function MassActions(_ref, context) {
+    var data = _ref.data,
+        query = _ref.query,
+        config = _ref.config,
+        massActions = _ref.massActions;
+    return _react2.default.createElement(
+        'div',
+        { className: 'dropdown' },
+        _react2.default.createElement(
+            'button',
+            {
+                className: 'btn btn-default dropdown-toggle',
+                type: 'button',
+                'data-toggle': 'dropdown',
+                onClick: function onClick(event) {
+                    return _toggleDropdown(event);
+                } },
+            'Actions',
+            _react2.default.createElement('span', { className: 'caret' })
+        ),
+        _react2.default.createElement(
+            'ul',
+            { className: 'dropdown-menu' },
+            Object.keys(config).map(function (key) {
+                return _renderAction(key, data, config[key], massActions, context);
+            })
+        )
+    );
+};
+
+MassActions.propTypes = {
+    data: _propTypes2.default.object.isRequired,
+    query: _propTypes2.default.object,
+    config: _propTypes2.default.object.isRequired
+};
+
+MassActions.contextTypes = {
+    router: _propTypes2.default.object
+};
+
+exports.default = MassActions;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.actions = exports.Table = undefined;
+exports.utils = exports.actions = exports.Table = undefined;
 
 var _createTable = __webpack_require__(7);
 
@@ -1654,9 +1852,13 @@ var _Table = __webpack_require__(6);
 
 var _Table2 = _interopRequireDefault(_Table);
 
-var _actions = __webpack_require__(5);
+var _actions = __webpack_require__(4);
 
 var actions = _interopRequireWildcard(_actions);
+
+var _utils = __webpack_require__(2);
+
+var utils = _interopRequireWildcard(_utils);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1664,10 +1866,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.Table = _Table2.default;
 exports.actions = actions;
+exports.utils = utils;
 exports.default = _createTable2.default;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1675,25 +1878,25 @@ exports.default = _createTable2.default;
 //# sourceMappingURL=Operator.js.map
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = require("normalizr");
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = require("react-pure-time");
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/Observable");
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/observable/of");

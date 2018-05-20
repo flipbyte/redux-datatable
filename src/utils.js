@@ -1,5 +1,17 @@
 import qs from 'qs';
 
+export const defaultLimiterCongig = {
+    options: [10, 20, 50, 100, 200],
+    default: 10,
+};
+
+export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
+
+// export const pushRoute = ( action, params, context ) => context.router.history.push({
+//     pathname: action.route,
+//     search: '?' + params.toString()
+// });
+
 export const paramsResolver = (params, data) => {
     let processedParams = {};
     for(var key in params) {
@@ -15,7 +27,11 @@ export const paramsResolver = (params, data) => {
         processedParams[key] = data[dataKey];
     }
 
-    return qs.stringify(processedParams);
+    const paramsObject = Object.assign({}, processedParams);
+    paramsObject.get = () => processedParams;
+    paramsObject.toString = () => qs.stringify(processedParams);;
+
+    return paramsObject;
 }
 
 export const getValueByPath = ( obj, path ) =>

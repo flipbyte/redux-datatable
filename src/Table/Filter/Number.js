@@ -8,12 +8,10 @@ var valTo = null;
 const _applyFilter = (key, filterer, event) => {
     let filter = {};
 
-    console.log(event);
-
     if(key == 0) {
         valFrom = event.target.value;
     } else {
-        valTo = (event.target.value >= valFrom) ? event.target.value : null;
+        valTo = event.target.value;
     }
 
     if( valFrom || valTo ) {

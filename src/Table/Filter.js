@@ -21,9 +21,7 @@ const Filter = ( props ) => {
 }
 
 Filter.propTypes = {
-    tableName: PropTypes.string.isRequired,
-    url: PropTypes.string,
-    filterer: PropTypes.func.isRequired,
+    action: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired
 };
