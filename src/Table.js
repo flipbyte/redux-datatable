@@ -41,7 +41,7 @@ const Table = ( props ) =>
                                     massActions={ props.massActions }
                                     config={ props.config.toolbar } />
                             </div>
-                            <div className="col-sm-12 col-md-3 pull-right">
+                            <div className="col-sm-12 col-md-3">
                                 <Limiter
                                     setLimit={ props.setLimit }
                                     options={ props.limiterConfig.options } />
@@ -53,16 +53,19 @@ const Table = ( props ) =>
                                 <Header
                                     columns={ props.config.columns }
                                     query={ props.query }
+                                    data={ props.data }
                                     setSortOrder={ props.setSortOrder }
                                     setFilter={ props.setFilter }
-                                    setSelection={ props.setSelection } />
+                                    setSelection={ props.actions.setSelection } />
 
                                 <Body
                                     query={ props.query }
                                     data={ props.data }
+                                    selection={ props.selection }
                                     actions={ props.actions }
                                     columns={ props.config.columns } />
                             </table>
+                            <div className={'flutter-table-loader ' + (props.isFetching ? 'show': '')} />
                         </div>
 
                         <Pagination

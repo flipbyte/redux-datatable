@@ -3,32 +3,46 @@ import PropTypes from "prop-types";
 
 import Cell from './Cell';
 import Filter from './Filter';
+import Selection from './Selection';
 
-const Header = ({ query, columns, setSortOrder, setFilter, setSelection }) =>
+const _renderRowItems = ( props ) => {
+    const { key, type, filterer, selector, data } = props;
+
+    if(type == 'header') return <Cell { ...props } />
+    if(type == 'selection') return <Selection data={ data } selector={ selector } { ...props } />
+    if(type == 'actions') return <td key={ key } />
+
+    return <Filter filterer={ filterer } { ...props } />
+}
+
+const Header = ({ query, columns, data, setSortOrder, setFilter, setSelection }) =>
     <thead>
         <tr className="headers">
             { Object.keys(columns).map( (key) => (
-                <Cell
-                    key={ key }
-                    isHeader={ true }
-                    sortable={ columns[key].sortable ? true : false }
-                    sorter={ setSortOrder }
-                    name={ columns[key].name }
-                    label={ columns[key].label }
-                    query={ query }
-                    attributes={ columns[key].attributes } />
+                _renderRowItems({
+                    key: key,
+                    type: "header",
+                    isHeader: true,
+                    sortable: columns[key].sortable ? true : false,
+                    sorter: setSortOrder,
+                    name: columns[key].name,
+                    label: columns[key].label,
+                    attributes: columns[key].attributes,
+                    query: query
+                })
             ) ) }
         </tr>
         <tr className="filters">
             { Object.keys(columns).map( (key) => (
-                (columns[key].type != 'actions') ?
-                    <Filter
-                        key={ key }
-                        type={ columns[key].type }
-                        name={ columns[key].name }
-                        filterer={ setFilter }
-                        selector={ setSelection } /> :
-                    <td key={ key }></td>
+                _renderRowItems({
+                    key: key,
+                    type: columns[key].type,
+                    name: columns[key].name,
+                    selector: setSelection,
+                    filterer: setFilter,
+                    data: data,
+                    config: columns[key]
+                })
             ) ) }
         </tr>
     </thead>;

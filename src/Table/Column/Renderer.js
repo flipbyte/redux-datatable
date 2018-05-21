@@ -9,9 +9,9 @@ import Selection from './Renderer/Selection';
 const _render = (ComponentName, props) =>
     <ComponentName { ...props } />
 
-const Renderer = ({ query, index, data, renderer, config, actions }) => {
+const Renderer = ({ query, index, data, renderer, config, selection, actions }) => {
     if(renderer) {
-        return _render(renderer, {index, data, config, query, actions });
+        return _render(renderer, {index, data, config, query, selection, actions });
     } else {
         switch(config.type) {
             case 'date':
@@ -21,7 +21,7 @@ const Renderer = ({ query, index, data, renderer, config, actions }) => {
                 return _render(Actions, {query, data, config, actions});
 
             case 'selection':
-                return _render(Selection, {query, data, config});
+                return _render(Selection, {query, data, config, selection, setSelection: actions.setSelection});
 
             default:
                 return _render(Text, {index, data});

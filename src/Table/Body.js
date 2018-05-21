@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Renderer from './Column/Renderer';
 
-const Body = ({ query, columns, data, actions }) =>
+const Body = ({ query, columns, data, selection, actions }) =>
     <tbody>
         { data.map((item, index) => (
             <tr key={ index }>
@@ -14,7 +14,8 @@ const Body = ({ query, columns, data, actions }) =>
                         index={ columns[key].name }
                         data={ item }
                         renderer={ columns[key].renderer }
-                        config={ columns[key] } />
+                        config={ columns[key] }
+                        selection={ selection } />
                 )) }
             </tr>
         )) }

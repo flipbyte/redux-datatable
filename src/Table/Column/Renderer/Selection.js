@@ -1,21 +1,26 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import { paramsResolver } from '../../../utils';
+import { getParam } from '../../../utils';
 
-const Selection = ( props ) => {
-    const {
-        data,
-        config: {
-            children
-        },
-        ...rest
-    } = props;
-    return (<td>
+const _handleSelection = ({ data, config, setSelection }, event ) => {
+    let param = getParam(config.indexField, data);
+    setSelection(param)
+}
+
+const _isSelected = ({ data, selection, config }) => {
+    let param = getParam(config.indexField, data);
+    return (selection[param]) ? selection[param] : false;
+}
+
+const Selection = ( props ) =>
+    <td>
         <div className="col-12">
-            <input type="checkbox" id="exampleCheck1" />
+            <input
+                type="checkbox"
+                checked={ _isSelected(props) }
+                onChange={ (event) => _handleSelection(props, event) } />
         </div>
-    </td>)
-};
+    </td>
 
 Selection.contextTypes = {
     router: PropTypes.object

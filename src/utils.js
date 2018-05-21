@@ -12,19 +12,36 @@ export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
 //     search: '?' + params.toString()
 // });
 
-export const paramsResolver = (params, data) => {
+export const getConfigParam = ( param ) => {
+    if( !param.startsWith('@') ) {
+        return false;
+    }
+
+    return param.substr(1);
+}
+
+export const getParam = ( param, data ) => {
+    var dataKey = getConfigParam(param);
+    if( !dataKey ) {
+        return false;
+    }
+
+    if(!data[dataKey]) {
+        return false;
+    }
+
+    return data[dataKey];
+}
+
+export const paramsResolver = ( params, data ) => {
     let processedParams = {};
     for(var key in params) {
-        if( !params[key].startsWith('@') ) {
+        let resolvedParam = getParam(params[key], data);
+        if( false === resolvedParam ) {
             continue;
         }
 
-        let dataKey = params[key].substr(1);
-        if(!data[dataKey]) {
-            continue;
-        }
-
-        processedParams[key] = data[dataKey];
+        processedParams[key] = resolvedParam;
     }
 
     const paramsObject = Object.assign({}, processedParams);

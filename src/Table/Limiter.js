@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 const Limiter = ({ options, setLimit }) =>
-    <label className="limiter">
+    <label className="limiter pull-right">
         <select className="form-control input-sm" id="limiter" onChange={ (event) => setLimit(event.target.value) }>
             { options.map( (option, index) =>
                 <option key={ index }>{ option }</option>

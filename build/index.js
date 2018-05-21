@@ -89,7 +89,7 @@ module.exports = require("prop-types");
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = exports.getUrl = exports.defaultLimiterCongig = undefined;
+exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = exports.getParam = exports.getConfigParam = exports.getUrl = exports.defaultLimiterCongig = undefined;
 
 var _qs = __webpack_require__(5);
 
@@ -111,19 +111,36 @@ var getUrl = exports.getUrl = function getUrl(baseUrl, endpoint) {
 //     search: '?' + params.toString()
 // });
 
+var getConfigParam = exports.getConfigParam = function getConfigParam(param) {
+    if (!param.startsWith('@')) {
+        return false;
+    }
+
+    return param.substr(1);
+};
+
+var getParam = exports.getParam = function getParam(param, data) {
+    var dataKey = getConfigParam(param);
+    if (!dataKey) {
+        return false;
+    }
+
+    if (!data[dataKey]) {
+        return false;
+    }
+
+    return data[dataKey];
+};
+
 var paramsResolver = exports.paramsResolver = function paramsResolver(params, data) {
     var processedParams = {};
     for (var key in params) {
-        if (!params[key].startsWith('@')) {
+        var resolvedParam = getParam(params[key], data);
+        if (false === resolvedParam) {
             continue;
         }
 
-        var dataKey = params[key].substr(1);
-        if (!data[dataKey]) {
-            continue;
-        }
-
-        processedParams[key] = data[dataKey];
+        processedParams[key] = resolvedParam;
     }
 
     var paramsObject = Object.assign({}, processedParams);
@@ -182,7 +199,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _String = __webpack_require__(18);
+var _String = __webpack_require__(17);
 
 var _String2 = _interopRequireDefault(_String);
 
@@ -193,10 +210,6 @@ var _Number2 = _interopRequireDefault(_Number);
 var _Date = __webpack_require__(15);
 
 var _Date2 = _interopRequireDefault(_Date);
-
-var _Selection = __webpack_require__(17);
-
-var _Selection2 = _interopRequireDefault(_Selection);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -211,12 +224,11 @@ var Filter = function Filter(props) {
     if (props.type == 'number') return _react2.default.createElement(_Number2.default, props);
     if (props.type == 'string') return _react2.default.createElement(_String2.default, props);
     if (props.type == 'date') return _react2.default.createElement(_Date2.default, props);
-    if (props.type == 'selection') return _react2.default.createElement(_Selection2.default, props);
     return _react2.default.createElement(_String2.default, props);
 };
 
 Filter.propTypes = {
-    action: _propTypes2.default.func.isRequired,
+    filterer: _propTypes2.default.func.isRequired,
     type: _propTypes2.default.string.isRequired,
     name: _propTypes2.default.string.isRequired
 };
@@ -276,7 +288,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Header = __webpack_require__(19);
+var _Header = __webpack_require__(18);
 
 var _Header2 = _interopRequireDefault(_Header);
 
@@ -284,11 +296,11 @@ var _Body = __webpack_require__(8);
 
 var _Body2 = _interopRequireDefault(_Body);
 
-var _Pagination = __webpack_require__(21);
+var _Pagination = __webpack_require__(20);
 
 var _Pagination2 = _interopRequireDefault(_Pagination);
 
-var _Limiter = __webpack_require__(20);
+var _Limiter = __webpack_require__(19);
 
 var _Limiter2 = _interopRequireDefault(_Limiter);
 
@@ -352,7 +364,7 @@ var Table = function Table(props) {
                             ),
                             _react2.default.createElement(
                                 'div',
-                                { className: 'col-sm-12 col-md-3 pull-right' },
+                                { className: 'col-sm-12 col-md-3' },
                                 _react2.default.createElement(_Limiter2.default, {
                                     setLimit: props.setLimit,
                                     options: props.limiterConfig.options })
@@ -367,15 +379,18 @@ var Table = function Table(props) {
                                 _react2.default.createElement(_Header2.default, {
                                     columns: props.config.columns,
                                     query: props.query,
+                                    data: props.data,
                                     setSortOrder: props.setSortOrder,
                                     setFilter: props.setFilter,
-                                    setSelection: props.setSelection }),
+                                    setSelection: props.actions.setSelection }),
                                 _react2.default.createElement(_Body2.default, {
                                     query: props.query,
                                     data: props.data,
+                                    selection: props.selection,
                                     actions: props.actions,
                                     columns: props.config.columns })
-                            )
+                            ),
+                            _react2.default.createElement('div', { className: 'flutter-table-loader ' + (props.isFetching ? 'show' : '') })
                         ),
                         _react2.default.createElement(_Pagination2.default, _extends({
                             setPage: props.setPage
@@ -433,6 +448,8 @@ exports.default = Table;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -494,10 +511,10 @@ exports.default = function (props) {
                 key: 'componentWillMount',
                 value: function componentWillMount() {
                     var _props = this.props,
-                        onLoad = _props.onLoad,
+                        loadData = _props.loadData,
                         query = _props.query;
 
-                    onLoad();
+                    loadData();
                 }
             }, {
                 key: 'setValidPage',
@@ -567,6 +584,7 @@ exports.default = function (props) {
                     data.isFetching = false;
                     data.query.count = parseInt(payload.response.total);
                     data.items = payload.data.result;
+                    data.selection = {};
                     return Object.assign({}, state, data);
 
                 case actions.SET_PAGE:
@@ -590,10 +608,26 @@ exports.default = function (props) {
                     return Object.assign({}, state, data);
 
                 case actions.SET_SELECTION:
-                // data.query.selection[payload.key]
-                // if(payload.value == 0) {
-                //     data.query.selection[payload.key][] = ;
-                // }
+                    // data.query.selection[payload.key]
+                    // if(payload.value == 0) {
+                    //     data.query.selection[payload.key][] = ;
+                    // }
+                    console.log(_typeof(payload.key));
+                    console.log(payload);
+                    if (_typeof(payload.key) == 'object') {
+                        data.selection = {};
+                        payload.key.map(function (key) {
+                            return data.selection[key] = payload.value;
+                        });
+                    } else {
+                        if (!data.selection[payload.key]) {
+                            data.selection[payload.key] = true;
+                        } else {
+                            data.selection[payload.key] = false;
+                        }
+                    }
+
+                    return Object.assign({}, state, data);
 
                 default:
                     return state;
@@ -680,6 +714,7 @@ var Body = function Body(_ref) {
     var query = _ref.query,
         columns = _ref.columns,
         data = _ref.data,
+        selection = _ref.selection,
         actions = _ref.actions;
     return _react2.default.createElement(
         'tbody',
@@ -695,7 +730,8 @@ var Body = function Body(_ref) {
                         index: columns[key].name,
                         data: item,
                         renderer: columns[key].renderer,
-                        config: columns[key] });
+                        config: columns[key],
+                        selection: selection });
                 })
             );
         })
@@ -857,10 +893,11 @@ var Renderer = function Renderer(_ref) {
         data = _ref.data,
         renderer = _ref.renderer,
         config = _ref.config,
+        selection = _ref.selection,
         actions = _ref.actions;
 
     if (renderer) {
-        return _render(renderer, { index: index, data: data, config: config, query: query, actions: actions });
+        return _render(renderer, { index: index, data: data, config: config, query: query, selection: selection, actions: actions });
     } else {
         switch (config.type) {
             case 'date':
@@ -870,7 +907,7 @@ var Renderer = function Renderer(_ref) {
                 return _render(_Actions2.default, { query: query, data: data, config: config, actions: actions });
 
             case 'selection':
-                return _render(_Selection2.default, { query: query, data: data, config: config });
+                return _render(_Selection2.default, { query: query, data: data, config: config, selection: selection, setSelection: actions.setSelection });
 
             default:
                 return _render(_Text2.default, { index: index, data: data });
@@ -1032,20 +1069,37 @@ var _utils = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+var _handleSelection = function _handleSelection(_ref, event) {
+    var data = _ref.data,
+        config = _ref.config,
+        setSelection = _ref.setSelection;
+
+    var param = (0, _utils.getParam)(config.indexField, data);
+    setSelection(param);
+};
+
+var _isSelected = function _isSelected(_ref2) {
+    var data = _ref2.data,
+        selection = _ref2.selection,
+        config = _ref2.config;
+
+    var param = (0, _utils.getParam)(config.indexField, data);
+    return selection[param] ? selection[param] : false;
+};
 
 var Selection = function Selection(props) {
-    var data = props.data,
-        children = props.config.children,
-        rest = _objectWithoutProperties(props, ['data', 'config']);
-
     return _react2.default.createElement(
         'td',
         null,
         _react2.default.createElement(
             'div',
             { className: 'col-12' },
-            _react2.default.createElement('input', { type: 'checkbox', id: 'exampleCheck1' })
+            _react2.default.createElement('input', {
+                type: 'checkbox',
+                checked: _isSelected(props),
+                onChange: function onChange(event) {
+                    return _handleSelection(props, event);
+                } })
         )
     );
 };
@@ -1270,67 +1324,6 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _handleSelection = function _handleSelection(selector, event) {
-    // let filter = {};
-    // if(event.target.value) {
-    //     filter = {
-    //         operator: SEARCH_OPERATOR_CONTAINS,
-    //         field: event.target.name,
-    //         value: event.target.value,
-    //         logic: 'where',
-    //     };
-    // }
-    //
-    // filterer(event.target.name, filter);
-
-    selector(event.target.name, event.target.value);
-};
-
-var Selection = function Selection(_ref) {
-    var name = _ref.name,
-        selector = _ref.selector;
-    return _react2.default.createElement(
-        "td",
-        null,
-        _react2.default.createElement(
-            "div",
-            { className: "col-12" },
-            _react2.default.createElement("input", { type: "checkbox", name: name,
-                onChange: function onChange(event) {
-                    return _handleSelection(selector, event);
-                } })
-        )
-    );
-};
-
-Selection.propTypes = {
-    selector: _propTypes2.default.func.isRequired,
-    name: _propTypes2.default.string.isRequired
-};
-
-exports.default = Selection;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _react = __webpack_require__(0);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = __webpack_require__(1);
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
 var _Filter = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1372,7 +1365,7 @@ String.propTypes = {
 exports.default = String;
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1381,6 +1374,8 @@ exports.default = String;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _react = __webpack_require__(0);
 
@@ -1398,11 +1393,31 @@ var _Filter = __webpack_require__(3);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
+var _Selection = __webpack_require__(21);
+
+var _Selection2 = _interopRequireDefault(_Selection);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _renderRowItems = function _renderRowItems(props) {
+    var key = props.key,
+        type = props.type,
+        filterer = props.filterer,
+        selector = props.selector,
+        data = props.data;
+
+
+    if (type == 'header') return _react2.default.createElement(_Cell2.default, props);
+    if (type == 'selection') return _react2.default.createElement(_Selection2.default, _extends({ data: data, selector: selector }, props));
+    if (type == 'actions') return _react2.default.createElement('td', { key: key });
+
+    return _react2.default.createElement(_Filter2.default, _extends({ filterer: filterer }, props));
+};
 
 var Header = function Header(_ref) {
     var query = _ref.query,
         columns = _ref.columns,
+        data = _ref.data,
         setSortOrder = _ref.setSortOrder,
         setFilter = _ref.setFilter,
         setSelection = _ref.setSelection;
@@ -1413,27 +1428,32 @@ var Header = function Header(_ref) {
             'tr',
             { className: 'headers' },
             Object.keys(columns).map(function (key) {
-                return _react2.default.createElement(_Cell2.default, {
+                return _renderRowItems({
                     key: key,
+                    type: "header",
                     isHeader: true,
                     sortable: columns[key].sortable ? true : false,
                     sorter: setSortOrder,
                     name: columns[key].name,
                     label: columns[key].label,
-                    query: query,
-                    attributes: columns[key].attributes });
+                    attributes: columns[key].attributes,
+                    query: query
+                });
             })
         ),
         _react2.default.createElement(
             'tr',
             { className: 'filters' },
             Object.keys(columns).map(function (key) {
-                return columns[key].type != 'actions' ? _react2.default.createElement(_Filter2.default, {
+                return _renderRowItems({
                     key: key,
                     type: columns[key].type,
                     name: columns[key].name,
+                    selector: setSelection,
                     filterer: setFilter,
-                    selector: setSelection }) : _react2.default.createElement('td', { key: key });
+                    data: data,
+                    config: columns[key]
+                });
             })
         )
     );
@@ -1450,7 +1470,7 @@ Header.propTypes = {
 exports.default = Header;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1475,7 +1495,7 @@ var Limiter = function Limiter(_ref) {
         setLimit = _ref.setLimit;
     return _react2.default.createElement(
         "label",
-        { className: "limiter" },
+        { className: "limiter pull-right" },
         _react2.default.createElement(
             "select",
             { className: "form-control input-sm", id: "limiter", onChange: function onChange(event) {
@@ -1501,7 +1521,7 @@ Limiter.propTypes = {
 exports.default = Limiter;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1628,6 +1648,81 @@ Pagination.propTypes = {
 };
 
 exports.default = Pagination;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(1);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _utils = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _handleSelection = function _handleSelection(selector, data, config, event) {
+    var dataKey = (0, _utils.getConfigParam)(config.indexField);
+    if (!dataKey) {
+        return false;
+    }
+    var params = data.map(function (item) {
+        return item[dataKey];
+    });
+
+    // let param = params.push(getParam(config.indexField, data));
+
+    // let filter = {};
+    // if(event.target.value) {
+    //     filter = {
+    //         operator: SEARCH_OPERATOR_CONTAINS,
+    //         field: event.target.name,
+    //         value: event.target.value,
+    //         logic: 'where',
+    //     };
+    // }
+    //
+    // filterer(event.target.name, filter);
+    console.log(event.target);
+    selector(params, event.target.checked);
+};
+
+var Selection = function Selection(_ref) {
+    var name = _ref.name,
+        data = _ref.data,
+        config = _ref.config,
+        selector = _ref.selector;
+    return _react2.default.createElement(
+        'td',
+        null,
+        _react2.default.createElement(
+            'div',
+            { className: 'col-12' },
+            _react2.default.createElement('input', { type: 'checkbox', name: name,
+                onChange: function onChange(event) {
+                    return _handleSelection(selector, data, config, event);
+                } })
+        )
+    );
+};
+
+Selection.propTypes = {
+    selector: _propTypes2.default.func.isRequired,
+    name: _propTypes2.default.string.isRequired
+};
+
+exports.default = Selection;
 
 /***/ }),
 /* 22 */

@@ -21,8 +21,8 @@ export default ( props ) => Table => {
 
     class WrappedTable extends Component {
         componentWillMount() {
-            const { onLoad, query } = this.props;
-            onLoad();
+            const { loadData, query } = this.props;
+            loadData();
         }
 
         setValidPage(nextProps) {
@@ -83,6 +83,7 @@ export default ( props ) => Table => {
                 data.isFetching = false;
                 data.query.count = parseInt(payload.response.total);
                 data.items = payload.data.result;
+                data.selection = {};
                 return Object.assign({}, state, data);
 
             case actions.SET_PAGE:
@@ -106,10 +107,18 @@ export default ( props ) => Table => {
                 return Object.assign({}, state, data);
 
             case actions.SET_SELECTION:
-                // data.query.selection[payload.key]
-                // if(payload.value == 0) {
-                //     data.query.selection[payload.key][] = ;
-                // }
+                if( typeof payload.key == 'object') {
+                    data.selection = {}
+                    payload.key.map(key => data.selection[key] = payload.value)
+                } else {
+                    if(!data.selection[payload.key]) {
+                        data.selection[payload.key] = true;
+                    } else {
+                        data.selection[payload.key] = false;
+                    }
+                }
+
+                return Object.assign({}, state, data);
 
             default:
                 return state;
