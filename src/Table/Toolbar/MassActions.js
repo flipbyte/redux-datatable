@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import { paramsResolver } from '../../utils';
+import { getSelectedKeys, getConfigParam } from '../../utils';
 
 const _toggleDropdown = ( event ) => {
     event.preventDefault();
     event.target.parentElement.classList.toggle('open');
 }
 
-const _handleAction = ( action, data, event, massActions, context ) => {
-    let params = paramsResolver(action.params, data);
-    if( !params.toString() ) {
+const _handleAction = ( action, selection, event, massActions, context ) => {
+    let dataKey = getConfigParam(action.indexField);
+    let selectedItems = getSelectedKeys(selection, dataKey);
+
+    if( !selectedItems || !selectedItems[dataKey] || selectedItems[dataKey].length == 0 ) {
         alert("No item(s) selected");
         return false;
     }
@@ -19,42 +21,37 @@ const _handleAction = ( action, data, event, massActions, context ) => {
         case 'route':
             context.router.history.push({
                 pathname: action.route,
-                search: '?' + params.toString()
+                search: '?' + selectedItems.toString()
             });
             break;
 
         case 'action':
-            massActions[action.name](params.get());
+            massActions[action.name](selectedItems.get());
+            break;
+
+        default:
             break;
     }
 }
 
-const _renderAction = ( key, data, action, massActions, context ) => {
+const _renderItem = (key, action, selection, massActions, context) =>
+    <li key={ key } className="dropdown-item">
+        <a
+            className={ action.name }
+            href="#"
+            onClick={ (event) => _handleAction(action, selection, event, massActions, context) }>
+            { action.label }
+        </a>
+    </li>
+
+const _renderAction = ( key, selection, action, massActions, context ) => {
     switch( action.type ) {
         case 'route':
-            return (
-                <li key={ key } className="dropdown-item">
-                    <a
-                        className={ action.name }
-                        href="#"
-                        onClick={ (event) => _handleAction(action, data, event, massActions, context) }>
-                        { action.label }
-                    </a>
-                </li>
-            );
+            return _renderItem(key, action, selection, massActions, context);
 
         case 'action':
             if( !action.actions ) {
-                return (
-                    <li key={ key } className="dropdown-item">
-                        <a
-                            className={ action.name }
-                            href="#"
-                            onClick={ (event) => _handleAction(action, data, event, massActions, context) }>
-                            { action.label }
-                        </a>
-                    </li>
-                )
+                return _renderItem(key, action, selection, massActions, context);
             }
 
             return (
@@ -65,7 +62,7 @@ const _renderAction = ( key, data, action, massActions, context ) => {
                     </a>
                     <ul className="dropdown-menu">
                         { Object.keys(action.actions).map( (key) =>
-                            _renderAction( key, data, action.actions[key], massActions, context) ) }
+                            _renderAction( key, selection, action.actions[key], massActions, context) ) }
                     </ul>
                 </li>
             )
@@ -73,7 +70,7 @@ const _renderAction = ( key, data, action, massActions, context ) => {
     }
 }
 
-const MassActions = ({ data, query, config, massActions }, context) =>
+const MassActions = ({ selection, query, config, massActions }, context) =>
     <div className="dropdown">
         <button
             className="btn btn-default dropdown-toggle"
@@ -84,13 +81,13 @@ const MassActions = ({ data, query, config, massActions }, context) =>
                 <span className="caret"></span>
         </button>
         <ul className="dropdown-menu">
-            { Object.keys(config).map( (key) => _renderAction(key, data, config[key], massActions, context) ) }
+            { Object.keys(config).map( (key) => _renderAction(key, selection, config[key], massActions, context) ) }
         </ul>
     </div>
 
 
 MassActions.propTypes = {
-    data: PropTypes.object.isRequired,
+    selection: PropTypes.object.isRequired,
     query: PropTypes.object,
     config: PropTypes.object.isRequired,
 };

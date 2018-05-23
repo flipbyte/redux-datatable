@@ -9,13 +9,13 @@ const _renderToolbarItem = ( props ) => {
     return null;
 }
 
-const Toolbar = ({ data, query, config, massActions }) =>
+const Toolbar = ({ selection, query, config, massActions }) =>
     Object.keys(config).map( (key) =>
-        _renderToolbarItem({ key, data, query, config: config[key], massActions })
+        _renderToolbarItem({ key, selection, query, config: config[key], massActions })
     );
 
 Toolbar.propTypes = {
-    data: PropTypes.object.isRequired,
+    selection: PropTypes.object.isRequired,
     query: PropTypes.object,
     config: PropTypes.object.isRequired,
 };

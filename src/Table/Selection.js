@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import { paramsResolver, getConfigParam } from '../utils';
+import { getConfigParam } from '../utils';
 
 const _handleSelection = ( selector, data, config, event ) => {
     let dataKey = getConfigParam(config.indexField);
     if(!dataKey) {
         return false;
     }
+
     var params = data.map(item => item[dataKey]);
 
-    selector(params, event.target.checked);
+    selector(dataKey, params, event.target.checked);
 };
 
 const Selection = ({ name, data, config, selector }) =>

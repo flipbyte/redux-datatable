@@ -89,7 +89,7 @@ module.exports = require("prop-types");
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = exports.getParam = exports.getConfigParam = exports.getUrl = exports.defaultLimiterCongig = undefined;
+exports.createReducer = exports.createActionCreator = exports.getValueByPath = exports.paramsResolver = exports.getParam = exports.getConfigParam = exports.getSelectedKeys = exports.getUrl = exports.defaultLimiterCongig = undefined;
 
 var _qs = __webpack_require__(5);
 
@@ -102,6 +102,15 @@ var defaultLimiterCongig = exports.defaultLimiterCongig = {
     default: 10
 };
 
+// export const isSelectionEmpty = (obj)  => {
+//     for(var key in obj) {
+//         if(obj.hasOwnProperty(key))
+//             return false;
+//     }
+//
+//     return true;
+// }
+
 var getUrl = exports.getUrl = function getUrl(baseUrl, endpoint) {
     return baseUrl + endpoint;
 };
@@ -110,6 +119,26 @@ var getUrl = exports.getUrl = function getUrl(baseUrl, endpoint) {
 //     pathname: action.route,
 //     search: '?' + params.toString()
 // });
+
+var getSelectedKeys = exports.getSelectedKeys = function getSelectedKeys(data, dataKey) {
+    if (!data[dataKey]) {
+        return false;
+    }
+
+    var selectedItems = {};
+    selectedItems[dataKey] = Object.keys(data[dataKey]).filter(function (key) {
+        if (data[dataKey][key] == true) return key;
+    });
+
+    var paramsObject = Object.assign({}, selectedItems);
+    paramsObject.get = function () {
+        return selectedItems;
+    };
+    paramsObject.toString = function () {
+        return _qs2.default.stringify(selectedItems);
+    };
+    return paramsObject;
+};
 
 var getConfigParam = exports.getConfigParam = function getConfigParam(param) {
     if (!param.startsWith('@')) {
@@ -357,7 +386,7 @@ var Table = function Table(props) {
                                 'div',
                                 { className: 'col-sm-12 col-md-9' },
                                 _react2.default.createElement(_Toolbar2.default, {
-                                    data: props.selection,
+                                    selection: props.selection,
                                     query: props.query,
                                     massActions: props.massActions,
                                     config: props.config.toolbar })
@@ -510,9 +539,7 @@ exports.default = function (props) {
             _createClass(WrappedTable, [{
                 key: 'componentWillMount',
                 value: function componentWillMount() {
-                    var _props = this.props,
-                        loadData = _props.loadData,
-                        query = _props.query;
+                    var loadData = this.props.loadData;
 
                     loadData();
                 }
@@ -571,7 +598,7 @@ exports.default = function (props) {
             var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
             var action = arguments[1];
 
-            var data = initialState;
+            var data = {};
 
             var payload = _objectWithoutProperties(action.payload, []);
 
@@ -608,23 +635,17 @@ exports.default = function (props) {
                     return Object.assign({}, state, data);
 
                 case actions.SET_SELECTION:
-                    // data.query.selection[payload.key]
-                    // if(payload.value == 0) {
-                    //     data.query.selection[payload.key][] = ;
-                    // }
-                    console.log(_typeof(payload.key));
-                    console.log(payload);
+                    if (!data.selection[payload.paramKey]) {
+                        data.selection[payload.paramKey] = {};
+                    }
+
                     if (_typeof(payload.key) == 'object') {
-                        data.selection = {};
+                        data.selection[payload.paramKey] = {};
                         payload.key.map(function (key) {
-                            return data.selection[key] = payload.value;
+                            return data.selection[payload.paramKey][key] = payload.value;
                         });
                     } else {
-                        if (!data.selection[payload.key]) {
-                            data.selection[payload.key] = true;
-                        } else {
-                            data.selection[payload.key] = false;
-                        }
+                        data.selection[payload.paramKey][payload.key] = !data.selection[payload.paramKey][payload.key];
                     }
 
                     return Object.assign({}, state, data);
@@ -1074,8 +1095,9 @@ var _handleSelection = function _handleSelection(_ref, event) {
         config = _ref.config,
         setSelection = _ref.setSelection;
 
+    var dataKey = (0, _utils.getConfigParam)(config.indexField);
     var param = (0, _utils.getParam)(config.indexField, data);
-    setSelection(param);
+    setSelection(dataKey, param, event.target.checked);
 };
 
 var _isSelected = function _isSelected(_ref2) {
@@ -1083,8 +1105,9 @@ var _isSelected = function _isSelected(_ref2) {
         selection = _ref2.selection,
         config = _ref2.config;
 
+    var dataKey = (0, _utils.getConfigParam)(config.indexField);
     var param = (0, _utils.getParam)(config.indexField, data);
-    return selection[param] ? selection[param] : false;
+    return selection[dataKey] && selection[dataKey][param] ? selection[dataKey][param] : false;
 };
 
 var Selection = function Selection(props) {
@@ -1677,25 +1700,12 @@ var _handleSelection = function _handleSelection(selector, data, config, event) 
     if (!dataKey) {
         return false;
     }
+
     var params = data.map(function (item) {
         return item[dataKey];
     });
 
-    // let param = params.push(getParam(config.indexField, data));
-
-    // let filter = {};
-    // if(event.target.value) {
-    //     filter = {
-    //         operator: SEARCH_OPERATOR_CONTAINS,
-    //         field: event.target.name,
-    //         value: event.target.value,
-    //         logic: 'where',
-    //     };
-    // }
-    //
-    // filterer(event.target.name, filter);
-    console.log(event.target);
-    selector(params, event.target.checked);
+    selector(dataKey, params, event.target.checked);
 };
 
 var Selection = function Selection(_ref) {
@@ -1756,17 +1766,17 @@ var _renderToolbarItem = function _renderToolbarItem(props) {
 };
 
 var Toolbar = function Toolbar(_ref) {
-    var data = _ref.data,
+    var selection = _ref.selection,
         query = _ref.query,
         config = _ref.config,
         massActions = _ref.massActions;
     return Object.keys(config).map(function (key) {
-        return _renderToolbarItem({ key: key, data: data, query: query, config: config[key], massActions: massActions });
+        return _renderToolbarItem({ key: key, selection: selection, query: query, config: config[key], massActions: massActions });
     });
 };
 
 Toolbar.propTypes = {
-    data: _propTypes2.default.object.isRequired,
+    selection: _propTypes2.default.object.isRequired,
     query: _propTypes2.default.object,
     config: _propTypes2.default.object.isRequired
 };
@@ -1805,9 +1815,11 @@ var _toggleDropdown = function _toggleDropdown(event) {
     event.target.parentElement.classList.toggle('open');
 };
 
-var _handleAction = function _handleAction(action, data, event, massActions, context) {
-    var params = (0, _utils.paramsResolver)(action.params, data);
-    if (!params.toString()) {
+var _handleAction = function _handleAction(action, selection, event, massActions, context) {
+    var dataKey = (0, _utils.getConfigParam)(action.indexField);
+    var selectedItems = (0, _utils.getSelectedKeys)(selection, dataKey);
+
+    if (!selectedItems || !selectedItems[dataKey] || selectedItems[dataKey].length == 0) {
         alert("No item(s) selected");
         return false;
     }
@@ -1816,50 +1828,44 @@ var _handleAction = function _handleAction(action, data, event, massActions, con
         case 'route':
             context.router.history.push({
                 pathname: action.route,
-                search: '?' + params.toString()
+                search: '?' + selectedItems.toString()
             });
             break;
 
         case 'action':
-            massActions[action.name](params.get());
+            massActions[action.name](selectedItems.get());
+            break;
+
+        default:
             break;
     }
 };
 
-var _renderAction = function _renderAction(key, data, action, massActions, context) {
+var _renderItem = function _renderItem(key, action, selection, massActions, context) {
+    return _react2.default.createElement(
+        'li',
+        { key: key, className: 'dropdown-item' },
+        _react2.default.createElement(
+            'a',
+            {
+                className: action.name,
+                href: '#',
+                onClick: function onClick(event) {
+                    return _handleAction(action, selection, event, massActions, context);
+                } },
+            action.label
+        )
+    );
+};
+
+var _renderAction = function _renderAction(key, selection, action, massActions, context) {
     switch (action.type) {
         case 'route':
-            return _react2.default.createElement(
-                'li',
-                { key: key, className: 'dropdown-item' },
-                _react2.default.createElement(
-                    'a',
-                    {
-                        className: action.name,
-                        href: '#',
-                        onClick: function onClick(event) {
-                            return _handleAction(action, data, event, massActions, context);
-                        } },
-                    action.label
-                )
-            );
+            return _renderItem(key, action, selection, massActions, context);
 
         case 'action':
             if (!action.actions) {
-                return _react2.default.createElement(
-                    'li',
-                    { key: key, className: 'dropdown-item' },
-                    _react2.default.createElement(
-                        'a',
-                        {
-                            className: action.name,
-                            href: '#',
-                            onClick: function onClick(event) {
-                                return _handleAction(action, data, event, massActions, context);
-                            } },
-                        action.label
-                    )
-                );
+                return _renderItem(key, action, selection, massActions, context);
             }
 
             return _react2.default.createElement(
@@ -1877,7 +1883,7 @@ var _renderAction = function _renderAction(key, data, action, massActions, conte
                     'ul',
                     { className: 'dropdown-menu' },
                     Object.keys(action.actions).map(function (key) {
-                        return _renderAction(key, data, action.actions[key], massActions, context);
+                        return _renderAction(key, selection, action.actions[key], massActions, context);
                     })
                 )
             );
@@ -1886,7 +1892,7 @@ var _renderAction = function _renderAction(key, data, action, massActions, conte
 };
 
 var MassActions = function MassActions(_ref, context) {
-    var data = _ref.data,
+    var selection = _ref.selection,
         query = _ref.query,
         config = _ref.config,
         massActions = _ref.massActions;
@@ -1909,14 +1915,14 @@ var MassActions = function MassActions(_ref, context) {
             'ul',
             { className: 'dropdown-menu' },
             Object.keys(config).map(function (key) {
-                return _renderAction(key, data, config[key], massActions, context);
+                return _renderAction(key, selection, config[key], massActions, context);
             })
         )
     );
 };
 
 MassActions.propTypes = {
-    data: _propTypes2.default.object.isRequired,
+    selection: _propTypes2.default.object.isRequired,
     query: _propTypes2.default.object,
     config: _propTypes2.default.object.isRequired
 };

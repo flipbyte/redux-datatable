@@ -21,7 +21,7 @@ export default ( props ) => Table => {
 
     class WrappedTable extends Component {
         componentWillMount() {
-            const { loadData, query } = this.props;
+            const { loadData } = this.props;
             loadData();
         }
 
@@ -107,15 +107,15 @@ export default ( props ) => Table => {
                 return Object.assign({}, state, data);
 
             case actions.SET_SELECTION:
+                if(!data.selection[payload.paramKey]) {
+                    data.selection[payload.paramKey] = {}
+                }
+
                 if( typeof payload.key == 'object') {
-                    data.selection = {}
-                    payload.key.map(key => data.selection[key] = payload.value)
+                    data.selection[payload.paramKey] = {}
+                    payload.key.map(key => data.selection[payload.paramKey][key] = payload.value)
                 } else {
-                    if(!data.selection[payload.key]) {
-                        data.selection[payload.key] = true;
-                    } else {
-                        data.selection[payload.key] = false;
-                    }
+                    data.selection[payload.paramKey][payload.key] = !data.selection[payload.paramKey][payload.key]
                 }
 
                 return Object.assign({}, state, data);

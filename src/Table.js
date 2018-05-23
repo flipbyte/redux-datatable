@@ -36,7 +36,7 @@ const Table = ( props ) =>
                         <div className="row">
                             <div className="col-sm-12 col-md-9">
                                 <Toolbar
-                                    data={ props.selection }
+                                    selection={ props.selection }
                                     query={ props.query }
                                     massActions={ props.massActions }
                                     config={ props.config.toolbar } />

@@ -5,12 +5,38 @@ export const defaultLimiterCongig = {
     default: 10,
 };
 
+// export const isSelectionEmpty = (obj)  => {
+//     for(var key in obj) {
+//         if(obj.hasOwnProperty(key))
+//             return false;
+//     }
+//
+//     return true;
+// }
+
 export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
 
 // export const pushRoute = ( action, params, context ) => context.router.history.push({
 //     pathname: action.route,
 //     search: '?' + params.toString()
 // });
+
+export const getSelectedKeys = ( data, dataKey ) => {
+    if( !data[dataKey] ) {
+        return false;
+    }
+
+    let selectedItems = {};
+    selectedItems[dataKey] = Object.keys(data[dataKey])
+        .filter(key => {
+            if(data[dataKey][key] == true) return key
+        });
+
+    const paramsObject = Object.assign({}, selectedItems);
+    paramsObject.get = () => selectedItems;
+    paramsObject.toString = () => qs.stringify(selectedItems);
+    return paramsObject;
+}
 
 export const getConfigParam = ( param ) => {
     if( !param.startsWith('@') ) {
