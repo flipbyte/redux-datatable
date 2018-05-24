@@ -33,7 +33,7 @@ export default ( props ) => Table => {
             let totalEntries = parseInt(nextProps.query.count);
             let totalPages = Math.ceil(totalEntries / nextProps.query.limit);
             if(totalPages < this.props.query.page) {
-                this.props.setPage(name, url, totalPages);
+                this.props.setPage(totalPages);
                 return false
             }
 
@@ -72,53 +72,89 @@ export default ( props ) => Table => {
     }
 
     const tableReducer = (state = initialState, action) => {
-        let data = initialState;
         const { ...payload } = action.payload;
         switch (action.type) {
             case actions.REQUEST_DATA:
-                data.isFetching = true;
-                return Object.assign({}, state, data);
+                return {
+                    ...state,
+                    isFetching: true
+                }
 
             case actions.RECEIVE_DATA:
-                data.isFetching = false;
-                data.query.count = parseInt(payload.response.total);
-                data.items = payload.data.result;
-                data.selection = {};
-                return Object.assign({}, state, data);
+                return {
+                    ...state,
+                    isFetching: false,
+                    query: {
+                        ...state.query,
+                        count: parseInt(payload.response.total)
+                    },
+                    items: payload.data.result,
+                    selection: {}
+                }
 
             case actions.SET_PAGE:
-                data.query.page = payload.page;
-                data.query.offset = ( (data.query.page - 1) * data.query.limit );
-                data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
-                return Object.assign({}, state, data);
+                let offset =  ( (payload.page - 1) * state.query.limit );
+                offset = offset > 0 ? offset : 0;
+
+                return {
+                    ...state,
+                    query: {
+                        ...state.query,
+                        page: payload.page,
+                        offset: offset
+                    },
+                }
 
             case actions.SET_SORT:
-                data.query.sort = payload.sort;
-                data.query.dir = payload.dir;
-                return Object.assign({}, state, data);
+                return {
+                    ...state,
+                    query: {
+                        ...state.query,
+                        sort: payload.sort,
+                        dir: payload.dir
+                    },
+                }
 
             case actions.SET_LIMIT:
-                data.query.limit = parseInt(payload.limit);
-                data.query.offset = ( (data.query.page - 1) * data.query.limit );
-                return Object.assign({}, state, data);
+                return {
+                    ...state,
+                    query: {
+                        ...state.query,
+                        limit: parseInt(payload.limit),
+                        offset: (state.query.page - 1) * state.query.limit
+                    },
+                }
 
             case actions.SET_FILTER:
-                data.query.search[payload.key] = payload.filter;
-                return Object.assign({}, state, data);
+                return {
+                    ...state,
+                    query: {
+                        ...state.query,
+                        search: {
+                            ...state.query.search,
+                            [payload.key]: payload.filter
+                        }
+                    }
+                }
 
             case actions.SET_SELECTION:
-                if(!data.selection[payload.paramKey]) {
-                    data.selection[payload.paramKey] = {}
-                }
-
+                let selection = {};
                 if( typeof payload.key == 'object') {
-                    data.selection[payload.paramKey] = {}
-                    payload.key.map(key => data.selection[payload.paramKey][key] = payload.value)
+                    payload.key.map(key => selection[key] = payload.value)
                 } else {
-                    data.selection[payload.paramKey][payload.key] = !data.selection[payload.paramKey][payload.key]
+                    selection[payload.key] = payload.value;
                 }
 
-                return Object.assign({}, state, data);
+                return {
+                    ...state,
+                    selection: {
+                        ...state.selection,
+                        [payload.paramKey]: {
+                            ...state.selection[payload.paramKey],
+                            ...selection
+                        }
+                    }
+                }
 
             default:
                 return state;

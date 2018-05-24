@@ -23,64 +23,85 @@ const calculatePaginationProps = (page, limit, count, defaultLimit) => {
     }
 }
 
-const Table = ( props ) =>
-    <div className="animated fadeIn">
-        <div className="row">
-            <div className="col-12">
-                <div className="card">
-                {!!props.title  &&
-                    <div className="card-header">
-                        <i className="fa fa-align-justify"></i> { props.title }
-                    </div>}
-                    <div className="card-block">
-                        <div className="row">
-                            <div className="col-sm-12 col-md-9">
-                                <Toolbar
-                                    selection={ props.selection }
-                                    query={ props.query }
-                                    massActions={ props.massActions }
-                                    config={ props.config.toolbar } />
+const Table = ( props ) => {
+    const {
+        title,
+        name,
+        selection,
+        query,
+        toolbar,
+        limiterConfig,
+        config,
+        data,
+        isFetching,
+        setLimit,
+        setPage,
+        setFilter,
+        setSortOrder,
+        actions,
+        massActions,
+    } = props;
+
+    return (
+        <div className="animated fadeIn">
+            <div className="row">
+                <div className="col-12">
+                    <div className="card">
+                    {!!title  &&
+                        <div className="card-header">
+                            <i className="fa fa-align-justify"></i> { title }
+                        </div>}
+                        <div className="card-block">
+                            <div className="row">
+                                <div className="col-sm-12 col-md-9">
+                                    <Toolbar
+                                        selection={ selection }
+                                        query={ query }
+                                        massActions={ massActions }
+                                        config={ config.toolbar } />
+                                </div>
+                                <div className="col-sm-12 col-md-3">
+                                    <Limiter
+                                        setLimit={ setLimit }
+                                        options={ limiterConfig.options } />
+                                </div>
                             </div>
-                            <div className="col-sm-12 col-md-3">
-                                <Limiter
-                                    setLimit={ props.setLimit }
-                                    options={ props.limiterConfig.options } />
+
+                            <div id={ name } className="flutter-table-container table-responsive">
+                                <table className="table table-sm table-hover flutter-table">
+                                    <Header
+                                        columns={ config.columns }
+                                        query={ query }
+                                        data={ data }
+                                        setSortOrder={ setSortOrder }
+                                        setFilter={ setFilter }
+                                        setSelection={ actions.setSelection } />
+
+                                    <Body
+                                        query={ query }
+                                        data={ data }
+                                        selection={ selection }
+                                        actions={ actions }
+                                        columns={ config.columns } />
+                                </table>
+                                <div className={'flutter-table-loader ' + (isFetching ? 'show': '')} />
                             </div>
+
+                            <Pagination
+                                setPage={ setPage }
+                                { ...calculatePaginationProps(
+                                    query.page,
+                                    query.limit,
+                                    query.count,
+                                    limiterConfig.default
+                                ) } />
                         </div>
-
-                        <div id={ props.name } className="flutter-table-container table-responsive">
-                            <table className="table table-sm table-hover flutter-table">
-                                <Header
-                                    columns={ props.config.columns }
-                                    query={ props.query }
-                                    data={ props.data }
-                                    setSortOrder={ props.setSortOrder }
-                                    setFilter={ props.setFilter }
-                                    setSelection={ props.actions.setSelection } />
-
-                                <Body
-                                    query={ props.query }
-                                    data={ props.data }
-                                    selection={ props.selection }
-                                    actions={ props.actions }
-                                    columns={ props.config.columns } />
-                            </table>
-                            <div className={'flutter-table-loader ' + (props.isFetching ? 'show': '')} />
-                        </div>
-
-                        <Pagination
-                            setPage={ props.setPage }
-                            { ...calculatePaginationProps(
-                                props.query.page,
-                                props.query.limit,
-                                props.query.count,
-                                props.limiterConfig.default
-                            ) } />
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    );
+}
 
 Table.propTypes = {
     name: PropTypes.string.isRequired,

@@ -357,6 +357,23 @@ var calculatePaginationProps = function calculatePaginationProps(page, limit, co
 };
 
 var Table = function Table(props) {
+    var title = props.title,
+        name = props.name,
+        selection = props.selection,
+        query = props.query,
+        toolbar = props.toolbar,
+        limiterConfig = props.limiterConfig,
+        config = props.config,
+        data = props.data,
+        isFetching = props.isFetching,
+        setLimit = props.setLimit,
+        setPage = props.setPage,
+        setFilter = props.setFilter,
+        setSortOrder = props.setSortOrder,
+        actions = props.actions,
+        massActions = props.massActions;
+
+
     return _react2.default.createElement(
         'div',
         { className: 'animated fadeIn' },
@@ -369,12 +386,12 @@ var Table = function Table(props) {
                 _react2.default.createElement(
                     'div',
                     { className: 'card' },
-                    !!props.title && _react2.default.createElement(
+                    !!title && _react2.default.createElement(
                         'div',
                         { className: 'card-header' },
                         _react2.default.createElement('i', { className: 'fa fa-align-justify' }),
                         ' ',
-                        props.title
+                        title
                     ),
                     _react2.default.createElement(
                         'div',
@@ -386,44 +403,44 @@ var Table = function Table(props) {
                                 'div',
                                 { className: 'col-sm-12 col-md-9' },
                                 _react2.default.createElement(_Toolbar2.default, {
-                                    selection: props.selection,
-                                    query: props.query,
-                                    massActions: props.massActions,
-                                    config: props.config.toolbar })
+                                    selection: selection,
+                                    query: query,
+                                    massActions: massActions,
+                                    config: config.toolbar })
                             ),
                             _react2.default.createElement(
                                 'div',
                                 { className: 'col-sm-12 col-md-3' },
                                 _react2.default.createElement(_Limiter2.default, {
-                                    setLimit: props.setLimit,
-                                    options: props.limiterConfig.options })
+                                    setLimit: setLimit,
+                                    options: limiterConfig.options })
                             )
                         ),
                         _react2.default.createElement(
                             'div',
-                            { id: props.name, className: 'flutter-table-container table-responsive' },
+                            { id: name, className: 'flutter-table-container table-responsive' },
                             _react2.default.createElement(
                                 'table',
                                 { className: 'table table-sm table-hover flutter-table' },
                                 _react2.default.createElement(_Header2.default, {
-                                    columns: props.config.columns,
-                                    query: props.query,
-                                    data: props.data,
-                                    setSortOrder: props.setSortOrder,
-                                    setFilter: props.setFilter,
-                                    setSelection: props.actions.setSelection }),
+                                    columns: config.columns,
+                                    query: query,
+                                    data: data,
+                                    setSortOrder: setSortOrder,
+                                    setFilter: setFilter,
+                                    setSelection: actions.setSelection }),
                                 _react2.default.createElement(_Body2.default, {
-                                    query: props.query,
-                                    data: props.data,
-                                    selection: props.selection,
-                                    actions: props.actions,
-                                    columns: props.config.columns })
+                                    query: query,
+                                    data: data,
+                                    selection: selection,
+                                    actions: actions,
+                                    columns: config.columns })
                             ),
-                            _react2.default.createElement('div', { className: 'flutter-table-loader ' + (props.isFetching ? 'show' : '') })
+                            _react2.default.createElement('div', { className: 'flutter-table-loader ' + (isFetching ? 'show' : '') })
                         ),
                         _react2.default.createElement(_Pagination2.default, _extends({
-                            setPage: props.setPage
-                        }, calculatePaginationProps(props.query.page, props.query.limit, props.query.count, props.limiterConfig.default)))
+                            setPage: setPage
+                        }, calculatePaginationProps(query.page, query.limit, query.count, limiterConfig.default)))
                     )
                 )
             )
@@ -510,6 +527,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -553,7 +572,7 @@ exports.default = function (props) {
                     var totalEntries = parseInt(nextProps.query.count);
                     var totalPages = Math.ceil(totalEntries / nextProps.query.limit);
                     if (totalPages < this.props.query.page) {
-                        this.props.setPage(name, url, totalPages);
+                        this.props.setPage(totalPages);
                         return false;
                     }
 
@@ -598,57 +617,71 @@ exports.default = function (props) {
             var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
             var action = arguments[1];
 
-            var data = {};
-
             var payload = _objectWithoutProperties(action.payload, []);
 
             switch (action.type) {
                 case actions.REQUEST_DATA:
-                    data.isFetching = true;
-                    return Object.assign({}, state, data);
+                    return _extends({}, state, {
+                        isFetching: true
+                    });
 
                 case actions.RECEIVE_DATA:
-                    data.isFetching = false;
-                    data.query.count = parseInt(payload.response.total);
-                    data.items = payload.data.result;
-                    data.selection = {};
-                    return Object.assign({}, state, data);
+                    return _extends({}, state, {
+                        isFetching: false,
+                        query: _extends({}, state.query, {
+                            count: parseInt(payload.response.total)
+                        }),
+                        items: payload.data.result,
+                        selection: {}
+                    });
 
                 case actions.SET_PAGE:
-                    data.query.page = payload.page;
-                    data.query.offset = (data.query.page - 1) * data.query.limit;
-                    data.query.offset = data.query.offset > 0 ? data.query.offset : 0;
-                    return Object.assign({}, state, data);
+                    var offset = (payload.page - 1) * state.query.limit;
+                    offset = offset > 0 ? offset : 0;
+
+                    return _extends({}, state, {
+                        query: _extends({}, state.query, {
+                            page: payload.page,
+                            offset: offset
+                        })
+                    });
 
                 case actions.SET_SORT:
-                    data.query.sort = payload.sort;
-                    data.query.dir = payload.dir;
-                    return Object.assign({}, state, data);
+                    return _extends({}, state, {
+                        query: _extends({}, state.query, {
+                            sort: payload.sort,
+                            dir: payload.dir
+                        })
+                    });
 
                 case actions.SET_LIMIT:
-                    data.query.limit = parseInt(payload.limit);
-                    data.query.offset = (data.query.page - 1) * data.query.limit;
-                    return Object.assign({}, state, data);
+                    return _extends({}, state, {
+                        query: _extends({}, state.query, {
+                            limit: parseInt(payload.limit),
+                            offset: (state.query.page - 1) * state.query.limit
+                        })
+                    });
 
                 case actions.SET_FILTER:
-                    data.query.search[payload.key] = payload.filter;
-                    return Object.assign({}, state, data);
+                    return _extends({}, state, {
+                        query: _extends({}, state.query, {
+                            search: _extends({}, state.query.search, _defineProperty({}, payload.key, payload.filter))
+                        })
+                    });
 
                 case actions.SET_SELECTION:
-                    if (!data.selection[payload.paramKey]) {
-                        data.selection[payload.paramKey] = {};
-                    }
-
+                    var selection = {};
                     if (_typeof(payload.key) == 'object') {
-                        data.selection[payload.paramKey] = {};
                         payload.key.map(function (key) {
-                            return data.selection[payload.paramKey][key] = payload.value;
+                            return selection[key] = payload.value;
                         });
                     } else {
-                        data.selection[payload.paramKey][payload.key] = !data.selection[payload.paramKey][payload.key];
+                        selection[payload.key] = payload.value;
                     }
 
-                    return Object.assign({}, state, data);
+                    return _extends({}, state, {
+                        selection: _extends({}, state.selection, _defineProperty({}, payload.paramKey, _extends({}, state.selection[payload.paramKey], selection)))
+                    });
 
                 default:
                     return state;
