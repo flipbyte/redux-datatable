@@ -19,7 +19,7 @@ export default ( props ) => Table => {
         limiterConfig = defaultLimiterCongig
     } = props;
 
-    class WrappedTable extends Component {
+    class FlutterTable extends Component {
         componentWillMount() {
             const { loadData } = this.props;
             loadData();
@@ -211,7 +211,7 @@ export default ( props ) => Table => {
     const epics = tableEpics(name, url, stateKeys, actionCreators);
 
     return {
-        WrappedTable,
+        FlutterTable,
         reducer,
         epics,
         actionCreators

@@ -546,16 +546,16 @@ exports.default = function (props) {
             _props$limiterConfig = props.limiterConfig,
             limiterConfig = _props$limiterConfig === undefined ? _utils.defaultLimiterCongig : _props$limiterConfig;
 
-        var WrappedTable = function (_Component) {
-            _inherits(WrappedTable, _Component);
+        var FlutterTable = function (_Component) {
+            _inherits(FlutterTable, _Component);
 
-            function WrappedTable() {
-                _classCallCheck(this, WrappedTable);
+            function FlutterTable() {
+                _classCallCheck(this, FlutterTable);
 
-                return _possibleConstructorReturn(this, (WrappedTable.__proto__ || Object.getPrototypeOf(WrappedTable)).apply(this, arguments));
+                return _possibleConstructorReturn(this, (FlutterTable.__proto__ || Object.getPrototypeOf(FlutterTable)).apply(this, arguments));
             }
 
-            _createClass(WrappedTable, [{
+            _createClass(FlutterTable, [{
                 key: 'componentWillMount',
                 value: function componentWillMount() {
                     var loadData = this.props.loadData;
@@ -594,7 +594,7 @@ exports.default = function (props) {
                 }
             }]);
 
-            return WrappedTable;
+            return FlutterTable;
         }(_react.Component);
 
         var initialState = {
@@ -731,7 +731,7 @@ exports.default = function (props) {
         var epics = tableEpics(name, url, stateKeys, actionCreators);
 
         return {
-            WrappedTable: WrappedTable,
+            FlutterTable: FlutterTable,
             reducer: reducer,
             epics: epics,
             actionCreators: actionCreators
