@@ -43,62 +43,50 @@ const Table = ( props ) => {
     } = props;
 
     return (
-        <div className="animated fadeIn">
+        <div>
             <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                    {!!title  &&
-                        <div className="card-header">
-                            <i className="fa fa-align-justify"></i> { title }
-                        </div>}
-                        <div className="card-block">
-                            <div className="row">
-                                <div className="col-sm-12 col-md-9">
-                                    <Toolbar
-                                        selection={ selection }
-                                        query={ query }
-                                        massActions={ massActions }
-                                        config={ config.toolbar } />
-                                </div>
-                                <div className="col-sm-12 col-md-3">
-                                    <Limiter
-                                        setLimit={ setLimit }
-                                        options={ limiterConfig.options } />
-                                </div>
-                            </div>
-
-                            <div id={ name } className="flutter-table-container table-responsive">
-                                <table className="table table-sm table-hover flutter-table">
-                                    <Header
-                                        columns={ config.columns }
-                                        query={ query }
-                                        data={ data }
-                                        setSortOrder={ setSortOrder }
-                                        setFilter={ setFilter }
-                                        setSelection={ actions.setSelection } />
-
-                                    <Body
-                                        query={ query }
-                                        data={ data }
-                                        selection={ selection }
-                                        actions={ actions }
-                                        columns={ config.columns } />
-                                </table>
-                                <div className={'flutter-table-loader ' + (isFetching ? 'show': '')} />
-                            </div>
-
-                            <Pagination
-                                setPage={ setPage }
-                                { ...calculatePaginationProps(
-                                    query.page,
-                                    query.limit,
-                                    query.count,
-                                    limiterConfig.default
-                                ) } />
-                        </div>
-                    </div>
+                <div className="col-sm-12 col-md-9">
+                    <Toolbar
+                        selection={ selection }
+                        query={ query }
+                        massActions={ massActions }
+                        config={ config.toolbar } />
+                </div>
+                <div className="col-sm-12 col-md-3">
+                    <Limiter
+                        setLimit={ setLimit }
+                        options={ limiterConfig.options } />
                 </div>
             </div>
+
+            <div id={ name } className="flutter-table-container table-responsive">
+                <table className="table table-sm table-hover flutter-table">
+                    <Header
+                        columns={ config.columns }
+                        query={ query }
+                        data={ data }
+                        setSortOrder={ setSortOrder }
+                        setFilter={ setFilter }
+                        setSelection={ actions.setSelection } />
+
+                    <Body
+                        query={ query }
+                        data={ data }
+                        selection={ selection }
+                        actions={ actions }
+                        columns={ config.columns } />
+                </table>
+                <div className={'flutter-table-loader ' + (isFetching ? 'show': '')} />
+            </div>
+
+            <Pagination
+                setPage={ setPage }
+                { ...calculatePaginationProps(
+                    query.page,
+                    query.limit,
+                    query.count,
+                    limiterConfig.default
+                ) } />
         </div>
     );
 }
@@ -106,7 +94,6 @@ const Table = ( props ) => {
 Table.propTypes = {
     name: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
-    title: PropTypes.string,
     config: PropTypes.shape({
         toolbar: PropTypes.object,
         columns: PropTypes.object,

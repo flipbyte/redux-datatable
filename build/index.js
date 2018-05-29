@@ -376,82 +376,58 @@ var Table = function Table(props) {
 
     return _react2.default.createElement(
         'div',
-        { className: 'animated fadeIn' },
+        null,
         _react2.default.createElement(
             'div',
             { className: 'row' },
             _react2.default.createElement(
                 'div',
-                { className: 'col-12' },
-                _react2.default.createElement(
-                    'div',
-                    { className: 'card' },
-                    !!title && _react2.default.createElement(
-                        'div',
-                        { className: 'card-header' },
-                        _react2.default.createElement('i', { className: 'fa fa-align-justify' }),
-                        ' ',
-                        title
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'card-block' },
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'row' },
-                            _react2.default.createElement(
-                                'div',
-                                { className: 'col-sm-12 col-md-9' },
-                                _react2.default.createElement(_Toolbar2.default, {
-                                    selection: selection,
-                                    query: query,
-                                    massActions: massActions,
-                                    config: config.toolbar })
-                            ),
-                            _react2.default.createElement(
-                                'div',
-                                { className: 'col-sm-12 col-md-3' },
-                                _react2.default.createElement(_Limiter2.default, {
-                                    setLimit: setLimit,
-                                    options: limiterConfig.options })
-                            )
-                        ),
-                        _react2.default.createElement(
-                            'div',
-                            { id: name, className: 'flutter-table-container table-responsive' },
-                            _react2.default.createElement(
-                                'table',
-                                { className: 'table table-sm table-hover flutter-table' },
-                                _react2.default.createElement(_Header2.default, {
-                                    columns: config.columns,
-                                    query: query,
-                                    data: data,
-                                    setSortOrder: setSortOrder,
-                                    setFilter: setFilter,
-                                    setSelection: actions.setSelection }),
-                                _react2.default.createElement(_Body2.default, {
-                                    query: query,
-                                    data: data,
-                                    selection: selection,
-                                    actions: actions,
-                                    columns: config.columns })
-                            ),
-                            _react2.default.createElement('div', { className: 'flutter-table-loader ' + (isFetching ? 'show' : '') })
-                        ),
-                        _react2.default.createElement(_Pagination2.default, _extends({
-                            setPage: setPage
-                        }, calculatePaginationProps(query.page, query.limit, query.count, limiterConfig.default)))
-                    )
-                )
+                { className: 'col-sm-12 col-md-9' },
+                _react2.default.createElement(_Toolbar2.default, {
+                    selection: selection,
+                    query: query,
+                    massActions: massActions,
+                    config: config.toolbar })
+            ),
+            _react2.default.createElement(
+                'div',
+                { className: 'col-sm-12 col-md-3' },
+                _react2.default.createElement(_Limiter2.default, {
+                    setLimit: setLimit,
+                    options: limiterConfig.options })
             )
-        )
+        ),
+        _react2.default.createElement(
+            'div',
+            { id: name, className: 'flutter-table-container table-responsive' },
+            _react2.default.createElement(
+                'table',
+                { className: 'table table-sm table-hover flutter-table' },
+                _react2.default.createElement(_Header2.default, {
+                    columns: config.columns,
+                    query: query,
+                    data: data,
+                    setSortOrder: setSortOrder,
+                    setFilter: setFilter,
+                    setSelection: actions.setSelection }),
+                _react2.default.createElement(_Body2.default, {
+                    query: query,
+                    data: data,
+                    selection: selection,
+                    actions: actions,
+                    columns: config.columns })
+            ),
+            _react2.default.createElement('div', { className: 'flutter-table-loader ' + (isFetching ? 'show' : '') })
+        ),
+        _react2.default.createElement(_Pagination2.default, _extends({
+            setPage: setPage
+        }, calculatePaginationProps(query.page, query.limit, query.count, limiterConfig.default)))
     );
 };
 
 Table.propTypes = {
     name: _propTypes2.default.string.isRequired,
     url: _propTypes2.default.string.isRequired,
-    title: _propTypes2.default.string,
     config: _propTypes2.default.shape({
         toolbar: _propTypes2.default.object,
         columns: _propTypes2.default.object
@@ -507,11 +483,11 @@ var _react2 = _interopRequireDefault(_react);
 
 var _Observable = __webpack_require__(28);
 
-var _operator = __webpack_require__(25);
+var _operator = __webpack_require__(26);
 
 var _of = __webpack_require__(29);
 
-var _normalizr = __webpack_require__(26);
+var _normalizr = __webpack_require__(27);
 
 var _qs = __webpack_require__(5);
 
@@ -1082,7 +1058,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactPureTime = __webpack_require__(27);
+var _reactPureTime = __webpack_require__(25);
 
 var _reactPureTime2 = _interopRequireDefault(_reactPureTime);
 
@@ -2007,21 +1983,21 @@ exports.default = _createTable2.default;
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
+!function(e,t){if(true)module.exports=t(__webpack_require__(0));else if("function"==typeof define&&define.amd)define(["react"],t);else{var n=t("object"==typeof exports?require("react"):e.React);for(var r in n)("object"==typeof exports?exports:e)[r]=n[r]}}(this,function(e){return function(e){function t(r){if(n[r])return n[r].exports;var i=n[r]={exports:{},id:r,loaded:!1};return e[r].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}var n={};return t.m=e,t.c=n,t.p="",t(0)}([function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function u(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function o(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0}),t.format=void 0;var a=function(){function e(e,t){for(var n=0;t.length>n;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),s=n(2),c=r(s),l=n(1),f=r(l),h={second:1e3,minute:6e4,hour:36e5,day:864e5,week:6048e5},p=function(e){function t(e){i(this,t);var n=u(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e));return n.updateRelativeTime=n.updateRelativeTime.bind(n),n.checkForRelativeTimeProps=n.checkForRelativeTimeProps.bind(n),n.state={relativeTime:""},n.interval=null,n.currentUnit="",n}return o(t,e),a(t,[{key:"componentWillMount",value:function(){this.checkForRelativeTimeProps(this.props)}},{key:"componentWillReceiveProps",value:function(e){this.checkForRelativeTimeProps(e)}},{key:"getRelativeTimeString",value:function(e,t,n,r){var i=t%100===1||t%10===1?n:n+"s";return"second"===n&&0===e?"just now":"year"===n&&0===e?"this year":"year"===n&&1===e?"last year":(r?"will come in":"")+" "+t+" "+i+" "+(r?"":"ago")}},{key:"getRelativeTimeDiff",value:function(e){var t=e,n=new Date,r=t.getTime(),i=n.getTime(),u=i-r,o=n.getFullYear()-t.getFullYear(),a=Math[u>0?"floor":"ceil"];return{ms:u,seconds:a(u/h.second),minutes:a(u/h.minute),hours:a(u/h.hour),days:a(u/h.day),weeks:a(u/h.week),months:12*o+n.getMonth()-t.getMonth(),years:o}}},{key:"getInterval",value:function(){return this.currentUnit.length?h[this.currentUnit]?h[this.currentUnit]:h.week:10}},{key:"checkForRelativeTimeProps",value:function(e){var t=this;if(e.relativeTime&&this.isDate(e.value)){var n=new Date(e.value);this.updateRelativeTime(n,e.unit),this.interval&&window.clearInterval(this.interval),this.interval=setInterval(function(){return t.updateRelativeTime(n,e.unit)},this.getInterval())}}},{key:"updateRelativeTime",value:function(e,t){var n=this.getRelativeTimeDiff(e),r=this.currentUnit;if(this.currentUnit=t||this.bestFit(n),this.currentUnit!==r)return this.checkForRelativeTimeProps(this.props),!1;var i=n[this.currentUnit+"s"],u=Math.abs(i),o=0>i;if("second"===this.currentUnit){var a=45;45>u&&(a=20),20>u&&(a=5),5>u&&(a=0),0===u&&(a=0),i=o?-a:a,u=Math.abs(i)}return this.setState({relativeTime:this.getRelativeTimeString(i,u,this.currentUnit,o)}),!0}},{key:"bestFit",value:function(e){var t=Math.abs(e.seconds),n=Math.abs(e.minutes),r=Math.abs(e.hours),i=Math.abs(e.days),u=Math.abs(e.weeks),o=Math.abs(e.months),a=Math.abs(e.years);switch(!0){case a>0&&o>11:return"year";case o>0&&i>27:return"month";case u>0&&i>6:return"week";case i>0&&r>23:return"day";case r>0&&n>59:return"hour";case n>0&&t>59:return"minute";default:return"second"}}},{key:"isDate",value:function(e){var t=new Date(e);return"[object Date]"===Object.prototype.toString.call(t)&&!isNaN(t.getTime())}},{key:"render",value:function(){var e=this.props,t=e.value,n=e.format,r=e.placeholder,i=e.className,u=e.utc,o=e.relativeTime;return c.default.createElement("span",{className:i},this.isDate(t)?o?this.state.relativeTime:(0,f.default)(new Date(t),n,u):r)}}]),t}(s.Component);p.defaultProps={placeholder:"—",format:"d.m.Y H:i",utc:!1};t.format=f.default;t.default=p},function(e,t){"use strict";function n(e,t){var n=arguments.length>2&&void 0!==arguments[2]&&arguments[2],r=new Date(e),i=["Sun","Mon","Tues","Wednes","Thurs","Fri","Satur","January","February","March","April","May","June","July","August","September","October","November","December"],u={},o=/\\?(.?)/gi,a=function(e,t){return u[e]?u[e]():t},s=function(e,t){for(var n=e+"";t>n.length;)n="0"+n;return n};return u={d:function(){return s(u.j(),2)},D:function(){return u.l().slice(0,3)},j:function(){return n?r.getUTCDate():r.getDate()},l:function(){return i[u.w()]+"day"},N:function(){return u.w()||7},S:function(){var e=u.j(),t=e%10;return t>3||1!==parseInt(e%100/10,10)||(t=0),["st","nd","rd"][t-1]||"th"},w:function(){return n?r.getUTCDay():r.getDay()},z:function(){var e=new Date(u.Y(),u.n()-1,u.j()),t=new Date(u.Y(),0,1);return Math.round((e-t)/864e5)},W:function(){var e=new Date(u.Y(),u.n()-1,u.j()-u.N()+3),t=void 0;return t=n?new Date(e.getUTCFullYear(),0,4):new Date(e.getFullYear(),0,4),s(1+Math.round((e-t)/864e5/7),2)},F:function(){return i[6+u.n()]},m:function(){return s(u.n(),2)},M:function(){return u.F().slice(0,3)},n:function(){return n?r.getUTCMonth()+1:r.getMonth()+1},t:function(){return n?new Date(u.Y(),u.n(),0).getUTCDate():new Date(u.Y(),u.n(),0).getDate()},L:function(){var e=u.Y();return e%4===0&&e%100!==0||e%400===0?1:0},o:function(){var e=u.n(),t=parseInt(u.W(),10),n=u.Y();return n+(12===e&&9>t?1:1===e&&t>9?-1:0)},Y:function(){return n?r.getUTCFullYear():r.getFullYear()},y:function(){return(""+u.Y()).slice(-2)},a:function(){return n?r.getUTCHours()>11?"pm":"am":r.getHours()>11?"pm":"am"},A:function(){return u.a().toUpperCase()},B:function(){var e=3600*r.getUTCHours(),t=60*r.getUTCMinutes(),n=r.getUTCSeconds();return s(Math.floor((e+t+n+3600)/86.4)%1e3,3)},g:function(){return u.G()%12||12},G:function(){return n?r.getUTCHours():r.getHours()},h:function(){return s(u.g(),2)},H:function(){return s(u.G(),2)},i:function(){return n?s(r.getUTCMinutes(),2):s(r.getMinutes(),2)},s:function(){return n?s(r.getUTCSeconds(),2):s(r.getSeconds(),2)},u:function(){return n?s(1e3*r.getUTCMilliseconds(),6):s(1e3*r.getMilliseconds(),6)},e:function(){throw Error("Not supported\n        (see source code of date() for timezone on how to add support)")},I:function(){var e=new Date(u.Y(),0),t=Date.UTC(u.Y(),0),n=new Date(u.Y(),6),r=Date.UTC(u.Y(),6);return e-t!==n-r?1:0},O:function(){var e=r.getTimezoneOffset(),t=Math.abs(e);return(e>0?"-":"+")+s(100*Math.floor(t/60)+t%60,4)},P:function(){var e=u.O();return e.substr(0,3)+":"+e.substr(3,2)},T:function(){return n?"UTC":"LOCAL"},Z:function(){return 60*-r.getTimezoneOffset()},c:function(){return"Y-m-d\\TH:i:sP".replace(o,a)},r:function(){return"D, d M Y H:i:s O".replace(o,a)},U:function(){return r/1e3|0}},t.replace(o,a)}Object.defineProperty(t,"__esModule",{value:!0}),t.default=n},function(t,n){t.exports=e}])});
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 //# sourceMappingURL=Operator.js.map
 
 /***/ }),
-/* 26 */
-/***/ (function(module, exports) {
-
-module.exports = require("normalizr");
-
-/***/ }),
 /* 27 */
 /***/ (function(module, exports) {
 
-module.exports = require("react-pure-time");
+module.exports = require("normalizr");
 
 /***/ }),
 /* 28 */
