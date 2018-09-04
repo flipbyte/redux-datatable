@@ -29,7 +29,9 @@
     "prop-types": "*",
     "qs": "^6.5.2",
     "normalizr": "*",
-    "react-pure-time": "*"
+    "react-pure-time": "*",
+    "lodash": ">=4.17.10",
+    "functional-route-parser": "^1.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -41,12 +43,12 @@
     "react": ">=16.3.0",
     "react-dom": ">=16.3.0",
     "rxjs": "^5.5.8",
-    "prop-types": "*",
     "react-pure-time": "*",
     "qs": "^6.5.2",
     "normalizr": "*"
   },
   "dependencies": {
+    "path-parser": "^4.2.0",
     "webpack": "^2.6.1"
   }
 }

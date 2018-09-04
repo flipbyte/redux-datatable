@@ -1,4 +1,5 @@
 import qs from 'qs';
+import Path from 'path-parser';
 
 export const defaultLimiterCongig = {
     options: [10, 20, 50, 100, 200],
@@ -77,11 +78,11 @@ export const paramsResolver = ( params, data ) => {
     return paramsObject;
 }
 
-export const getValueByPath = ( obj, path ) =>
-    path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
+// export const getValueByPath = ( obj, path ) =>
+//     path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
 
-export const createActionCreator = ( name, url ) => ( type ) => ( payload ) => {
-    let action = ({ type: type, name, url, payload: payload });
+export const createActionCreator = ( name, url, routes ) => ( type ) => ( payload ) => {
+    let action = ({ type: type, name, url, routes, payload: payload });
     action.toString = () => type;
 
     return action;
@@ -89,3 +90,23 @@ export const createActionCreator = ( name, url ) => ( type ) => ( payload ) => {
 
 export const createReducer = (reducer, predicate) => (state, action) =>
     predicate(action) || state === undefined ? reducer(state, action) : state
+
+export const getRoute = (url, route, params) => {
+    var pathParser = new Path(route);
+    var formattedRoute = pathParser.build(params);
+    var routeParams = pathParser.test(formattedRoute);
+
+    for(var key in routeParams) {
+        if(!routeParams.hasOwnProperty(key)) {
+            continue;
+        }
+        delete params[key];
+    }
+
+    pathParser.getFormattedRoute = () => formattedRoute;
+    pathParser.getParams = () => routeParams;
+    pathParser.getUrlParams = () => params;
+    pathParser.getFormattedUrl = () => `${url}${formattedRoute}?${qs.stringify(params)}`;
+
+    return pathParser;
+}

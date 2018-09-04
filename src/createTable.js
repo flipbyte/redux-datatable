@@ -7,22 +7,28 @@ import { denormalize, normalize } from 'normalizr';
 
 import qs from 'qs';
 
-import { getValueByPath, createActionCreator, createReducer, defaultLimiterCongig } from './utils';
+import { createActionCreator, createReducer, defaultLimiterCongig, getRoute } from './utils';
 import * as actions from './actions';
+import get from 'lodash/get';
 
 export default ( props ) => Table => {
     const {
         name,
         url,
+        routes,
         config,
-        stateKeys,
+        statePath,
+        resultPath,
         limiterConfig = defaultLimiterCongig
     } = props;
 
     class FlutterTable extends Component {
         componentWillMount() {
-            const { loadData } = this.props;
-            loadData();
+            this.props.loadData();
+        }
+
+        componentWillUnmount() {
+            this.props.clearMessage();
         }
 
         setValidPage(nextProps) {
@@ -47,7 +53,6 @@ export default ( props ) => Table => {
         render() {
             return (
                 <Table name={ name }
-                    url={ url }
                     config={ config }
                     limiterConfig={ limiterConfig }
                     { ...this.props } />
@@ -68,6 +73,7 @@ export default ( props ) => Table => {
             count: 0,
             search: {}
         },
+        message: {},
         selection: {}
     }
 
@@ -88,7 +94,7 @@ export default ( props ) => Table => {
                         ...state.query,
                         count: parseInt(payload.response.total)
                     },
-                    items: payload.data.result,
+                    items: payload.data,
                     selection: {}
                 }
 
@@ -156,46 +162,73 @@ export default ( props ) => Table => {
                     }
                 }
 
+            case actions.SET_MESSAGE:
+                return {
+                    ...state,
+                    message: payload
+                };
+
             default:
                 return state;
         }
     }
 
 
-    const tableEpics = ( name, url, stateKeys, actionsCreators ) => {
+    const tableEpics = ( name, url, routes, statePath, resultPath, actionCreators ) => {
         const setParamsEpic = ( action$, store ) =>
             action$.ofType(
-                actionsCreators.setPage().toString(),
-                actionsCreators.setFilter().toString(),
-                actionsCreators.setLimit().toString(),
-                actionsCreators.setSort().toString()
+                actionCreators.setPage().toString(),
+                actionCreators.setFilter().toString(),
+                actionCreators.setLimit().toString(),
+                actionCreators.setSort().toString()
             ).concatMap( action =>
                 Observable.of(
-                    actionsCreators.cancelRequest({ name }),
-                    actionsCreators.requestData({ query: getValueByPath(store.getState(), stateKeys).query })
+                    actionCreators.cancelRequest({ name }),
+                    actionCreators.requestData({ query: get(store.getState(), statePath).query })
                 )
             );
 
-        const fetchDataEpic = ( action$, store, { getJSONSecure, schemas } ) =>
-            action$.ofType(actionsCreators.requestData().toString()).switchMap( action =>
-                getJSONSecure(`${url}?${qs.stringify(action.payload.query)}`)
-                    .map(response => {
-                        const data = normalize(response.data, [schemas[name]])
-                        return actionsCreators.receiveData({ response, data })
-                    })
-                    .takeUntil(
-                        action$.ofType(actionsCreators.cancelRequest().toString())
-                            .filter(cancelAction => cancelAction.payload.name == name)
-                    )
+        const fetchDataEpic = ( action$, store, { api, schemas } ) =>
+            action$.ofType(actionCreators.requestData().toString()).switchMap( action =>
+                api(
+                    getRoute(url, routes.fetch.route, Object.assign({}, routes.fetch.params, action.payload.query))
+                        .getFormattedUrl()
+                ).map(response => {
+                    const requestResponse = get(response, resultPath.fetch.response, null);
+                    const result = get(response, resultPath.fetch.data, null);
+                    const data = schemas && schemas[name] ? normalize(result, [schemas[name]]) : result;
+                    return actionCreators.receiveData({ response: requestResponse, data })
+                })
+                .takeUntil(
+                    action$.ofType(actionCreators.cancelRequest().toString())
+                        .filter(cancelAction => cancelAction.payload.name == name)
+                )
             );
 
-        return { setParamsEpic, fetchDataEpic };
+        const deleteDataEpic = ( action$, store, { api, schemas } ) =>
+            action$.ofType(actionCreators.deleteData().toString()).switchMap( action =>
+                api(getRoute(url, routes.delete.route, action.payload).getFormattedUrl(), { method: 'delete' })
+                    .concatMap(response => {
+                        const result = get(response, resultPath.delete, null);
+                        if(result.success) {
+                            return Observable.of(
+                                actionCreators.setMessage({ type: 'success', message: result.result }),
+                                actionCreators.cancelRequest({ name }),
+                                actionCreators.requestData({ query: get(store.getState(), statePath).query })
+                            );
+                        }
+
+                        return actionCreators.setMessage({ type: 'danger', message: result.result })
+                    })
+            );
+
+        return { setParamsEpic, fetchDataEpic, deleteDataEpic };
     }
 
 
     const reducer = createReducer(tableReducer, action => action.name === name);
 
-    const actionCreator = createActionCreator(name, url);
+    const actionCreator = createActionCreator(name, url, routes);
     const actionCreators =  {
         cancelRequest: actionCreator(actions.REQUEST_DATA_CANCEL),
         requestData: actionCreator(actions.REQUEST_DATA),
@@ -206,9 +239,10 @@ export default ( props ) => Table => {
         setFilter: actionCreator(actions.SET_FILTER),
         setSelection: actionCreator(actions.SET_SELECTION),
         deleteData: actionCreator(actions.DELETE_DATA),
+        setMessage: actionCreator(actions.SET_MESSAGE)
     }
 
-    const epics = tableEpics(name, url, stateKeys, actionCreators);
+    const epics = tableEpics(name, url, routes, statePath, resultPath, actionCreators);
 
     return {
         FlutterTable,

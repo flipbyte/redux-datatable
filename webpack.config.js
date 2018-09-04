@@ -31,6 +31,7 @@ module.exports = {
             // 'react-pure-time': path.resolve(__dirname, './node_modules/react-pure-time'),
             'qs': path.resolve(__dirname, './node_modules/qs'),
             'normalizr': path.resolve(__dirname, './node_modules/normalizr'),
+            'lodash': path.resolve(__dirname, './node_modules/lodash'),
             // 'mergeMap': path.resolve(__dirname, './node_modules/rxjs/operator/mergeMap'),
             // 'of': path.resolve(__dirname, './node_modules/rxjs/observable/of')
         }
@@ -41,6 +42,12 @@ module.exports = {
     'prop-types': 'commonjs prop-types',
     // 'react-pure-time': 'commonjs react-pure-time',
     'qs': 'commonjs qs',
+    // 'lodash': {
+    //   commonjs: 'lodash',
+    //   amd: 'lodash',
+    //   root: '_' // indicates global variable
+    // },
+    'lodash/get': 'commonjs lodash/get',
     'normalizr': 'commonjs normalizr',
     'rxjs': 'commonjs rxjs',
     'rxjs/Observable': 'commonjs rxjs/Observable',

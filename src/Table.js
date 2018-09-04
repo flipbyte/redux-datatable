@@ -5,6 +5,7 @@ import Body from './Table/Body';
 import Pagination from './Table/Pagination';
 import Limiter from './Table/Limiter';
 import Toolbar from './Table/Toolbar';
+import Message from './Table/Message';
 
 const calculatePaginationProps = (page, limit, count, defaultLimit) => {
     page = page > 1 ? page : 1
@@ -26,6 +27,7 @@ const calculatePaginationProps = (page, limit, count, defaultLimit) => {
 const Table = ( props ) => {
     const {
         title,
+        message,
         name,
         selection,
         query,
@@ -44,6 +46,7 @@ const Table = ( props ) => {
 
     return (
         <div>
+            { !!message.type && <Message message={ message } /> }
             <div className="row">
                 <div className="col-sm-12 col-md-9">
                     <Toolbar
@@ -93,7 +96,6 @@ const Table = ( props ) => {
 
 Table.propTypes = {
     name: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
     config: PropTypes.shape({
         toolbar: PropTypes.object,
         columns: PropTypes.object,

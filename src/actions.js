@@ -9,3 +9,5 @@ export const SET_LIMIT = 'SET_LIMIT';
 export const SET_SELECTION = 'SET_SELECTION';
 
 export const DELETE_DATA = 'DELETE_DATA';
+
+export const SET_MESSAGE = 'SET_MESSAGE';
