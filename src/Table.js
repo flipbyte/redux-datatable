@@ -13,7 +13,7 @@ const calculatePaginationProps = (page, limit, count, defaultLimit) => {
 
     let start = (page - 1) * limit
     let end = start + limit - 1
-
+    
     return {
         page: page,
         start: start,

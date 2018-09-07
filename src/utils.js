@@ -81,8 +81,9 @@ export const paramsResolver = ( params, data ) => {
 // export const getValueByPath = ( obj, path ) =>
 //     path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
 
-export const createActionCreator = ( name, url, routes ) => ( type ) => ( payload ) => {
-    let action = ({ type: type, name, url, routes, payload: payload });
+export const createActionCreator = ( type ) => ( data ) => {
+    const { name, url, reducerName, resultPath, routes, payload } = data;
+    let action = ({ type, name, url, routes, reducerName, resultPath, payload });
     action.toString = () => type;
 
     return action;

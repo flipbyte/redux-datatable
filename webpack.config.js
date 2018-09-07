@@ -31,7 +31,9 @@ module.exports = {
             // 'react-pure-time': path.resolve(__dirname, './node_modules/react-pure-time'),
             'qs': path.resolve(__dirname, './node_modules/qs'),
             'normalizr': path.resolve(__dirname, './node_modules/normalizr'),
-            'lodash': path.resolve(__dirname, './node_modules/lodash'),
+            // 'lodash': path.resolve(__dirname, './node_modules/lodash'),
+            'react-redux': path.resolve(__dirname, './node_modules/react-redux'),
+            // 'object-assign-deep': path.resolve(__dirname, './node_modules/object-assign-deep'),
             // 'mergeMap': path.resolve(__dirname, './node_modules/rxjs/operator/mergeMap'),
             // 'of': path.resolve(__dirname, './node_modules/rxjs/observable/of')
         }
@@ -47,6 +49,13 @@ module.exports = {
     //   amd: 'lodash',
     //   root: '_' // indicates global variable
     // },
+    // 'object-assign-deep': {
+    //     commonjs: 'object-assign-deep',
+    //     commonjs2: "object-assign-deep",
+    //     amd: "ObjectAssignDeep",
+    //     root: "ObjectAssignDeep"
+    // },
+    'react-redux': 'commonjs react-redux',
     'lodash/get': 'commonjs lodash/get',
     'normalizr': 'commonjs normalizr',
     'rxjs': 'commonjs rxjs',

@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 26);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -91,11 +91,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getRoute = exports.createReducer = exports.createActionCreator = exports.paramsResolver = exports.getParam = exports.getConfigParam = exports.getSelectedKeys = exports.getUrl = exports.defaultLimiterCongig = undefined;
 
-var _qs = __webpack_require__(6);
+var _qs = __webpack_require__(34);
 
 var _qs2 = _interopRequireDefault(_qs);
 
-var _pathParser = __webpack_require__(27);
+var _pathParser = __webpack_require__(30);
 
 var _pathParser2 = _interopRequireDefault(_pathParser);
 
@@ -190,16 +190,21 @@ var paramsResolver = exports.paramsResolver = function paramsResolver(params, da
 // export const getValueByPath = ( obj, path ) =>
 //     path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
 
-var createActionCreator = exports.createActionCreator = function createActionCreator(name, url, routes) {
-    return function (type) {
-        return function (payload) {
-            var action = { type: type, name: name, url: url, routes: routes, payload: payload };
-            action.toString = function () {
-                return type;
-            };
+var createActionCreator = exports.createActionCreator = function createActionCreator(type) {
+    return function (data) {
+        var name = data.name,
+            url = data.url,
+            reducerName = data.reducerName,
+            resultPath = data.resultPath,
+            routes = data.routes,
+            payload = data.payload;
 
-            return action;
+        var action = { type: type, name: name, url: url, routes: routes, reducerName: reducerName, resultPath: resultPath, payload: payload };
+        action.toString = function () {
+            return type;
         };
+
+        return action;
     };
 };
 
@@ -247,6 +252,46 @@ var getRoute = exports.getRoute = function getRoute(url, route, params) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.actionCreators = exports.DELETE_DATA = exports.SET_MESSAGE = exports.SET_SELECTION = exports.SET_LIMIT = exports.SET_SORT = exports.SET_FILTER = exports.SET_PAGE = exports.REQUEST_DATA_CANCEL = exports.RECEIVE_DATA = exports.REQUEST_DATA = undefined;
+
+var _utils = __webpack_require__(2);
+
+var REQUEST_DATA = exports.REQUEST_DATA = 'REQUEST_DATA';
+var RECEIVE_DATA = exports.RECEIVE_DATA = 'RECEIVE_DATA';
+var REQUEST_DATA_CANCEL = exports.REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
+
+var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
+var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
+var SET_SORT = exports.SET_SORT = 'SET_SORT';
+var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
+var SET_SELECTION = exports.SET_SELECTION = 'SET_SELECTION';
+var SET_MESSAGE = exports.SET_MESSAGE = 'SET_MESSAGE';
+
+var DELETE_DATA = exports.DELETE_DATA = 'DELETE_DATA';
+
+var actionCreators = exports.actionCreators = {
+    cancelRequest: (0, _utils.createActionCreator)(REQUEST_DATA_CANCEL),
+    requestData: (0, _utils.createActionCreator)(REQUEST_DATA),
+    receiveData: (0, _utils.createActionCreator)(RECEIVE_DATA),
+    setPage: (0, _utils.createActionCreator)(SET_PAGE),
+    setSort: (0, _utils.createActionCreator)(SET_SORT),
+    setLimit: (0, _utils.createActionCreator)(SET_LIMIT),
+    setFilter: (0, _utils.createActionCreator)(SET_FILTER),
+    setSelection: (0, _utils.createActionCreator)(SET_SELECTION),
+    deleteData: (0, _utils.createActionCreator)(DELETE_DATA),
+    setMessage: (0, _utils.createActionCreator)(SET_MESSAGE)
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.SEARCH_TYPE_DATE = exports.SEARCH_OPERATOR_NOT_IN = exports.SEARCH_OPERATOR_IN = exports.SEARCH_OPERATOR_IS = exports.SEARCH_OPERATOR_BETWEEN = exports.SEARCH_OPERATOR_CONTAINS = undefined;
 
 var _react = __webpack_require__(0);
@@ -257,15 +302,15 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _String = __webpack_require__(18);
+var _String = __webpack_require__(20);
 
 var _String2 = _interopRequireDefault(_String);
 
-var _Number = __webpack_require__(17);
+var _Number = __webpack_require__(19);
 
 var _Number2 = _interopRequireDefault(_Number);
 
-var _Date = __webpack_require__(16);
+var _Date = __webpack_require__(18);
 
 var _Date2 = _interopRequireDefault(_Date);
 
@@ -298,30 +343,6 @@ Filter.defaultProps = {
 exports.default = Filter;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var REQUEST_DATA = exports.REQUEST_DATA = 'REQUEST_DATA';
-var RECEIVE_DATA = exports.RECEIVE_DATA = 'RECEIVE_DATA';
-var REQUEST_DATA_CANCEL = exports.REQUEST_DATA_CANCEL = 'REQUEST_DATA_CANCEL';
-
-var SET_PAGE = exports.SET_PAGE = 'SET_PAGE';
-var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
-var SET_SORT = exports.SET_SORT = 'SET_SORT';
-var SET_LIMIT = exports.SET_LIMIT = 'SET_LIMIT';
-var SET_SELECTION = exports.SET_SELECTION = 'SET_SELECTION';
-
-var DELETE_DATA = exports.DELETE_DATA = 'DELETE_DATA';
-
-var SET_MESSAGE = exports.SET_MESSAGE = 'SET_MESSAGE';
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
@@ -329,12 +350,6 @@ module.exports = require("lodash/get");
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
-
-module.exports = require("qs");
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -354,27 +369,27 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Header = __webpack_require__(19);
+var _Header = __webpack_require__(21);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Body = __webpack_require__(9);
+var _Body = __webpack_require__(11);
 
 var _Body2 = _interopRequireDefault(_Body);
 
-var _Pagination = __webpack_require__(22);
+var _Pagination = __webpack_require__(24);
 
 var _Pagination2 = _interopRequireDefault(_Pagination);
 
-var _Limiter = __webpack_require__(20);
+var _Limiter = __webpack_require__(22);
 
 var _Limiter2 = _interopRequireDefault(_Limiter);
 
-var _Toolbar = __webpack_require__(24);
+var _Toolbar = __webpack_require__(26);
 
 var _Toolbar2 = _interopRequireDefault(_Toolbar);
 
-var _Message = __webpack_require__(21);
+var _Message = __webpack_require__(23);
 
 var _Message2 = _interopRequireDefault(_Message);
 
@@ -503,7 +518,337 @@ Table.defaultProps = {
 exports.default = Table;
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.TableConsumer = undefined;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ConfigContext = _react2.default.createContext({});
+
+var TableProvider = function TableProvider(_ref) {
+    var config = _ref.config,
+        children = _ref.children;
+
+    return _react2.default.createElement(
+        ConfigContext.Provider,
+        { value: config },
+        children
+    );
+};
+
+var TableConsumer = exports.TableConsumer = function TableConsumer(_ref2) {
+    var children = _ref2.children;
+    return _react2.default.createElement(
+        ConfigContext.Consumer,
+        null,
+        function (config) {
+            return children({ config: config });
+        }
+    );
+};
+
+exports.default = TableProvider;
+
+/***/ }),
 /* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(35);
+
+var _get = __webpack_require__(5);
+
+var _get2 = _interopRequireDefault(_get);
+
+var _actions = __webpack_require__(3);
+
+var _Table = __webpack_require__(6);
+
+var _Table2 = _interopRequireDefault(_Table);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// import { createActionCreator, createReducer, defaultLimiterCongig, getRoute } from './utils';
+// import * as actions from './actions';
+
+
+var FlutterTable = function (_Component) {
+    _inherits(FlutterTable, _Component);
+
+    function FlutterTable() {
+        _classCallCheck(this, FlutterTable);
+
+        return _possibleConstructorReturn(this, (FlutterTable.__proto__ || Object.getPrototypeOf(FlutterTable)).apply(this, arguments));
+    }
+
+    _createClass(FlutterTable, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            this.props.loadData();
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            this.props.clearMessage();
+        }
+    }, {
+        key: 'setValidPage',
+        value: function setValidPage(nextProps) {
+            if (!nextProps.query || nextProps.query.count <= 0) {
+                return true;
+            }
+
+            var totalEntries = parseInt(nextProps.query.count);
+            var totalPages = Math.ceil(totalEntries / nextProps.query.limit);
+            if (totalPages < this.props.query.page) {
+                this.props.setPage(totalPages);
+                return false;
+            }
+
+            return true;
+        }
+    }, {
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate(nextProps, nextState) {
+            return this.setValidPage(nextProps);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                name = _props.name,
+                config = _props.config,
+                tablesData = _props.tablesData;
+
+
+            if (!name || !tablesData || !tablesData[name]) {
+                return _react2.default.createElement(
+                    'div',
+                    { className: 'status_message offline' },
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        'The table failed to initialise. Please check you are connected to the internet and try again.'
+                    )
+                );
+            }
+
+            var tableData = tablesData[name];
+            var tableProps = {
+                isFetching: tableData.isFetching,
+                data: tableData.items,
+                query: tableData.query,
+                selection: tableData.selection,
+                message: tableData.message
+            };
+
+            return _react2.default.createElement(_Table2.default, _extends({ name: name,
+                config: config,
+                limiterConfig: config.limiterConfig
+            }, tableProps, this.props));
+        }
+    }]);
+
+    return FlutterTable;
+}(_react.Component);
+
+var requestData = _actions.actionCreators.requestData,
+    _setPage = _actions.actionCreators.setPage,
+    setSort = _actions.actionCreators.setSort,
+    _setLimit = _actions.actionCreators.setLimit,
+    _setFilter = _actions.actionCreators.setFilter,
+    _setSelection = _actions.actionCreators.setSelection,
+    deleteData = _actions.actionCreators.deleteData,
+    setMessage = _actions.actionCreators.setMessage;
+
+
+var prepareActionPayload = function prepareActionPayload(ownProps) {
+    return function (payload) {
+        var url = ownProps.url,
+            name = ownProps.name,
+            reducerName = ownProps.reducerName,
+            _ownProps$config = ownProps.config,
+            resultPath = _ownProps$config.resultPath,
+            routes = _ownProps$config.routes;
+
+
+        return { name: name, url: url, reducerName: reducerName, routes: routes, resultPath: resultPath, payload: payload };
+    };
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+    return {
+        tablesData: state.flutterTable
+    };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+    var preparePayload = prepareActionPayload(ownProps);
+    return {
+        loadData: function loadData() {
+            dispatch(_setPage(preparePayload({ page: 1 })));
+            dispatch(_setLimit(preparePayload({ limit: 10 })));
+        },
+        clearMessage: function clearMessage() {
+            dispatch(setMessage(preparePayload({})));
+        },
+        setPage: function setPage(page) {
+            return dispatch(_setPage(preparePayload({ page: page })));
+        },
+        setSortOrder: function setSortOrder(sort, dir) {
+            return dispatch(setSort(preparePayload({ sort: sort, dir: dir })));
+        },
+        setLimit: function setLimit(limit) {
+            return dispatch(_setLimit(preparePayload({ limit: limit })));
+        },
+        setFilter: function setFilter(key, filter) {
+            return dispatch(_setFilter(preparePayload({ key: key, filter: filter })));
+        },
+        actions: {
+            setSelection: function setSelection(paramKey, key, value) {
+                return dispatch(_setSelection(preparePayload({ paramKey: paramKey, key: key, value: value })));
+            },
+            delete: function _delete(params) {
+                return confirm("Are your sure you want to delete this page?") ? dispatch(deleteData(preparePayload({ params: params }))) : false;
+            }
+        },
+        massActions: {
+            delete: function _delete(params) {
+                return confirm("Are your sure you want to delete these page(s)?") ? dispatch(deleteData(preparePayload({ params: params }))) : false;
+            }
+        }
+    };
+};
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(FlutterTable);
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.deleteDataEpic = exports.fetchDataEpic = exports.setParamsEpic = undefined;
+
+var _Observable = __webpack_require__(36);
+
+var _get = __webpack_require__(5);
+
+var _get2 = _interopRequireDefault(_get);
+
+var _operator = __webpack_require__(32);
+
+var _of = __webpack_require__(37);
+
+var _utils = __webpack_require__(2);
+
+var _actions = __webpack_require__(3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import { denormalize, normalize } from 'normalizr';
+var setParamsEpic = exports.setParamsEpic = function setParamsEpic(action$, store) {
+    return action$.ofType(_actions.SET_PAGE, _actions.SET_FILTER, _actions.SET_SORT, _actions.SET_LIMIT).concatMap(function (action) {
+        var name = action.name,
+            url = action.url,
+            routes = action.routes,
+            resultPath = action.resultPath,
+            reducerName = action.reducerName;
+
+
+        return _Observable.Observable.of(_actions.actionCreators.cancelRequest({ name: name }), _actions.actionCreators.requestData({
+            name: name, url: url, routes: routes, resultPath: resultPath, reducerName: reducerName, payload: { query: (0, _get2.default)(store.getState(), [reducerName, name]).query }
+        }));
+    });
+};
+
+var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
+    var api = _ref.api,
+        schemas = _ref.schemas;
+    return action$.ofType(_actions.REQUEST_DATA).switchMap(function (action) {
+        var name = action.name,
+            url = action.url,
+            routes = action.routes,
+            resultPath = action.resultPath,
+            payload = action.payload;
+
+
+        return api((0, _utils.getRoute)(url, routes.fetch.route, Object.assign({}, routes.fetch.params, payload.query)).getFormattedUrl()).map(function (response) {
+            var requestResponse = (0, _get2.default)(response, resultPath.fetch.response, null);
+            var data = (0, _get2.default)(response, resultPath.fetch.data, null);
+            // const data = schemas && schemas[name] ? normalize(result, [schemas[name]]) : result;
+            var payload = { response: requestResponse, data: data };
+
+            return _actions.actionCreators.receiveData({ name: name, payload: payload });
+        }).takeUntil(action$.ofType(_actions.REQUEST_DATA_CANCEL).filter(function (cancelAction) {
+            return cancelAction.name == name;
+        }));
+    });
+};
+
+var deleteDataEpic = exports.deleteDataEpic = function deleteDataEpic(action$, store, _ref2) {
+    var api = _ref2.api,
+        schemas = _ref2.schemas;
+    return action$.ofType(_actions.DELETE_DATA).switchMap(function (action) {
+        var name = action.name,
+            url = action.url,
+            routes = action.routes,
+            resultPath = action.resultPath,
+            reducerName = action.reducerName,
+            payload = action.payload;
+
+
+        return api((0, _utils.getRoute)(url, routes.delete.route, payload.params).getFormattedUrl(), { method: 'delete' }).concatMap(function (response) {
+            var result = (0, _get2.default)(response, resultPath.delete, null);
+            if (result.success) {
+                return _Observable.Observable.of(_actions.actionCreators.setMessage({ type: 'success', message: result.result }), _actions.actionCreators.cancelRequest({ name: name }), _actions.actionCreators.requestData({
+                    name: name, url: url, routes: routes, resultPath: resultPath, reducerName: reducerName,
+                    payload: { query: (0, _get2.default)(store.getState(), [reducerName, name]).query }
+                }));
+            }
+
+            return _actions.actionCreators.setMessage({ type: 'danger', message: result.result });
+        });
+    });
+};
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -517,33 +862,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.default = reducer;
 
-var _react = __webpack_require__(0);
+var _objectAssignDeep = __webpack_require__(29);
 
-var _react2 = _interopRequireDefault(_react);
+var _objectAssignDeep2 = _interopRequireDefault(_objectAssignDeep);
 
-var _Observable = __webpack_require__(32);
-
-var _operator = __webpack_require__(29);
-
-var _of = __webpack_require__(33);
-
-var _normalizr = __webpack_require__(31);
-
-var _qs = __webpack_require__(6);
-
-var _qs2 = _interopRequireDefault(_qs);
-
-var _utils = __webpack_require__(2);
-
-var _actions = __webpack_require__(4);
+var _actions = __webpack_require__(3);
 
 var actions = _interopRequireWildcard(_actions);
-
-var _get = __webpack_require__(5);
-
-var _get2 = _interopRequireDefault(_get);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -551,246 +878,130 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+var initialTableState = {
+    isFetching: false,
+    title: "",
+    name: '',
+    items: [],
+    query: {
+        dir: 'desc',
+        sort: null,
+        page: 0,
+        limit: 20,
+        offset: 0,
+        count: 0,
+        search: {}
+    },
+    message: {},
+    selection: {}
+};
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-exports.default = function (props) {
-    return function (Table) {
-        var name = props.name,
-            url = props.url,
-            routes = props.routes,
-            config = props.config,
-            statePath = props.statePath,
-            resultPath = props.resultPath,
-            _props$limiterConfig = props.limiterConfig,
-            limiterConfig = _props$limiterConfig === undefined ? _utils.defaultLimiterCongig : _props$limiterConfig;
-
-        var FlutterTable = function (_Component) {
-            _inherits(FlutterTable, _Component);
-
-            function FlutterTable() {
-                _classCallCheck(this, FlutterTable);
-
-                return _possibleConstructorReturn(this, (FlutterTable.__proto__ || Object.getPrototypeOf(FlutterTable)).apply(this, arguments));
-            }
-
-            _createClass(FlutterTable, [{
-                key: 'componentWillMount',
-                value: function componentWillMount() {
-                    this.props.loadData();
-                }
-            }, {
-                key: 'componentWillUnmount',
-                value: function componentWillUnmount() {
-                    this.props.clearMessage();
-                }
-            }, {
-                key: 'setValidPage',
-                value: function setValidPage(nextProps) {
-                    if (nextProps.query.count <= 0) {
-                        return true;
-                    }
-
-                    var totalEntries = parseInt(nextProps.query.count);
-                    var totalPages = Math.ceil(totalEntries / nextProps.query.limit);
-                    if (totalPages < this.props.query.page) {
-                        this.props.setPage(totalPages);
-                        return false;
-                    }
-
-                    return true;
-                }
-            }, {
-                key: 'shouldComponentUpdate',
-                value: function shouldComponentUpdate(nextProps, nextState) {
-                    return this.setValidPage(nextProps);
-                }
-            }, {
-                key: 'render',
-                value: function render() {
-                    return _react2.default.createElement(Table, _extends({ name: name,
-                        config: config,
-                        limiterConfig: limiterConfig
-                    }, this.props));
-                }
-            }]);
-
-            return FlutterTable;
-        }(_react.Component);
-
-        var initialState = {
-            isFetching: false,
-            title: "",
-            items: [],
-            query: {
-                dir: 'desc',
-                sort: null,
-                page: 0,
-                limit: 20,
-                offset: 0,
-                count: 0,
-                search: {}
-            },
-            message: {},
-            selection: {}
-        };
-
-        var tableReducer = function tableReducer() {
-            var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
-            var action = arguments[1];
-
-            var payload = _objectWithoutProperties(action.payload, []);
-
-            switch (action.type) {
-                case actions.REQUEST_DATA:
-                    return _extends({}, state, {
-                        isFetching: true
-                    });
-
-                case actions.RECEIVE_DATA:
-                    return _extends({}, state, {
-                        isFetching: false,
-                        query: _extends({}, state.query, {
-                            count: parseInt(payload.response.total)
-                        }),
-                        items: payload.data,
-                        selection: {}
-                    });
-
-                case actions.SET_PAGE:
-                    var offset = (payload.page - 1) * state.query.limit;
-                    offset = offset > 0 ? offset : 0;
-
-                    return _extends({}, state, {
-                        query: _extends({}, state.query, {
-                            page: payload.page,
-                            offset: offset
-                        })
-                    });
-
-                case actions.SET_SORT:
-                    return _extends({}, state, {
-                        query: _extends({}, state.query, {
-                            sort: payload.sort,
-                            dir: payload.dir
-                        })
-                    });
-
-                case actions.SET_LIMIT:
-                    return _extends({}, state, {
-                        query: _extends({}, state.query, {
-                            limit: parseInt(payload.limit),
-                            offset: (state.query.page - 1) * state.query.limit
-                        })
-                    });
-
-                case actions.SET_FILTER:
-                    return _extends({}, state, {
-                        query: _extends({}, state.query, {
-                            search: _extends({}, state.query.search, _defineProperty({}, payload.key, payload.filter))
-                        })
-                    });
-
-                case actions.SET_SELECTION:
-                    var selection = {};
-                    if (_typeof(payload.key) == 'object') {
-                        payload.key.map(function (key) {
-                            return selection[key] = payload.value;
-                        });
-                    } else {
-                        selection[payload.key] = payload.value;
-                    }
-
-                    return _extends({}, state, {
-                        selection: _extends({}, state.selection, _defineProperty({}, payload.paramKey, _extends({}, state.selection[payload.paramKey], selection)))
-                    });
-
-                case actions.SET_MESSAGE:
-                    return _extends({}, state, {
-                        message: payload
-                    });
-
-                default:
-                    return state;
-            }
-        };
-
-        var tableEpics = function tableEpics(name, url, routes, statePath, resultPath, actionCreators) {
-            var setParamsEpic = function setParamsEpic(action$, store) {
-                return action$.ofType(actionCreators.setPage().toString(), actionCreators.setFilter().toString(), actionCreators.setLimit().toString(), actionCreators.setSort().toString()).concatMap(function (action) {
-                    return _Observable.Observable.of(actionCreators.cancelRequest({ name: name }), actionCreators.requestData({ query: (0, _get2.default)(store.getState(), statePath).query }));
-                });
-            };
-
-            var fetchDataEpic = function fetchDataEpic(action$, store, _ref) {
-                var api = _ref.api,
-                    schemas = _ref.schemas;
-                return action$.ofType(actionCreators.requestData().toString()).switchMap(function (action) {
-                    return api((0, _utils.getRoute)(url, routes.fetch.route, Object.assign({}, routes.fetch.params, action.payload.query)).getFormattedUrl()).map(function (response) {
-                        var requestResponse = (0, _get2.default)(response, resultPath.fetch.response, null);
-                        var result = (0, _get2.default)(response, resultPath.fetch.data, null);
-                        var data = schemas && schemas[name] ? (0, _normalizr.normalize)(result, [schemas[name]]) : result;
-                        return actionCreators.receiveData({ response: requestResponse, data: data });
-                    }).takeUntil(action$.ofType(actionCreators.cancelRequest().toString()).filter(function (cancelAction) {
-                        return cancelAction.payload.name == name;
-                    }));
-                });
-            };
-
-            var deleteDataEpic = function deleteDataEpic(action$, store, _ref2) {
-                var api = _ref2.api,
-                    schemas = _ref2.schemas;
-                return action$.ofType(actionCreators.deleteData().toString()).switchMap(function (action) {
-                    return api((0, _utils.getRoute)(url, routes.delete.route, action.payload).getFormattedUrl(), { method: 'delete' }).concatMap(function (response) {
-                        var result = (0, _get2.default)(response, resultPath.delete, null);
-                        if (result.success) {
-                            return _Observable.Observable.of(actionCreators.setMessage({ type: 'success', message: result.result }), actionCreators.cancelRequest({ name: name }), actionCreators.requestData({ query: (0, _get2.default)(store.getState(), statePath).query }));
-                        }
-
-                        return actionCreators.setMessage({ type: 'danger', message: result.result });
-                    });
-                });
-            };
-
-            return { setParamsEpic: setParamsEpic, fetchDataEpic: fetchDataEpic, deleteDataEpic: deleteDataEpic };
-        };
-
-        var reducer = (0, _utils.createReducer)(tableReducer, function (action) {
-            return action.name === name;
-        });
-
-        var actionCreator = (0, _utils.createActionCreator)(name, url, routes);
-        var actionCreators = {
-            cancelRequest: actionCreator(actions.REQUEST_DATA_CANCEL),
-            requestData: actionCreator(actions.REQUEST_DATA),
-            receiveData: actionCreator(actions.RECEIVE_DATA),
-            setPage: actionCreator(actions.SET_PAGE),
-            setSort: actionCreator(actions.SET_SORT),
-            setLimit: actionCreator(actions.SET_LIMIT),
-            setFilter: actionCreator(actions.SET_FILTER),
-            setSelection: actionCreator(actions.SET_SELECTION),
-            deleteData: actionCreator(actions.DELETE_DATA),
-            setMessage: actionCreator(actions.SET_MESSAGE)
-        };
-
-        var epics = tableEpics(name, url, routes, statePath, resultPath, actionCreators);
-
-        return {
-            FlutterTable: FlutterTable,
-            reducer: reducer,
-            epics: epics,
-            actionCreators: actionCreators
-        };
+var updateState = function updateState(state, tableName) {
+    return function (newState) {
+        var updatedState = (0, _objectAssignDeep2.default)({}, initialTableState, state[tableName], newState);
+        return _extends({}, state, _defineProperty({}, tableName, _extends({}, state[tableName], updatedState)));
     };
 };
 
+var getTableState = function getTableState(name) {
+    return function (state) {
+        return state[name] ? state[name] : initialTableState;
+    };
+};
+
+function reducer() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var action = arguments[1];
+    var payload = action.payload,
+        name = action.name;
+
+    var tableState = getTableState(name);
+    var stateUpdater = updateState(state, name);
+
+    switch (action.type) {
+        case actions.REQUEST_DATA:
+            return stateUpdater({ isFetching: true });
+
+        case actions.RECEIVE_DATA:
+            return stateUpdater({
+                isFetching: false,
+                query: {
+                    count: parseInt(payload.response.total)
+                },
+                items: payload.data,
+                selection: {}
+            });
+
+        case actions.SET_PAGE:
+            var offset = (payload.page - 1) * tableState(state).query.limit;
+            offset = offset > 0 ? offset : 0;
+
+            return stateUpdater({
+                query: {
+                    page: payload.page,
+                    offset: offset
+                }
+            });
+
+        case actions.SET_SORT:
+            return stateUpdater({
+                query: {
+                    sort: payload.sort,
+                    dir: payload.dir
+                }
+            });
+
+        case actions.SET_LIMIT:
+            return stateUpdater({
+                query: {
+                    limit: parseInt(payload.limit),
+                    offset: (tableState(state).query.page - 1) * tableState(state).query.limit
+                }
+            });
+
+        case actions.SET_FILTER:
+            return stateUpdater({
+                query: {
+                    search: _defineProperty({}, payload.key, payload.filter)
+                }
+            });
+
+        case actions.SET_SELECTION:
+            var selection = {};
+            if (_typeof(payload.key) == 'object') {
+                payload.key.map(function (key) {
+                    return selection[key] = payload.value;
+                });
+            } else {
+                selection[payload.key] = payload.value;
+            }
+
+            return stateUpdater({
+                selection: _defineProperty({}, payload.paramKey, _extends({}, selection))
+            });
+        // return {
+        //     ...state,
+        //     selection: {
+        //         ...state.selection,
+        //         [payload.paramKey]: {
+        //             ...state.selection[payload.paramKey],
+        //             ...selection
+        //         }
+        //     }
+        // }
+
+        case actions.SET_MESSAGE:
+            return stateUpdater({
+                message: payload
+            });
+
+        default:
+            return state;
+    }
+}
+
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -808,7 +1019,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Renderer = __webpack_require__(11);
+var _Renderer = __webpack_require__(13);
 
 var _Renderer2 = _interopRequireDefault(_Renderer);
 
@@ -856,7 +1067,7 @@ Body.defaultProps = {
 exports.default = Body;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -951,7 +1162,7 @@ Cell.defaultProps = {
 exports.default = Cell;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -969,19 +1180,19 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Text = __webpack_require__(15);
+var _Text = __webpack_require__(17);
 
 var _Text2 = _interopRequireDefault(_Text);
 
-var _Date = __webpack_require__(13);
+var _Date = __webpack_require__(15);
 
 var _Date2 = _interopRequireDefault(_Date);
 
-var _Actions = __webpack_require__(12);
+var _Actions = __webpack_require__(14);
 
 var _Actions2 = _interopRequireDefault(_Actions);
 
-var _Selection = __webpack_require__(14);
+var _Selection = __webpack_require__(16);
 
 var _Selection2 = _interopRequireDefault(_Selection);
 
@@ -1031,7 +1242,7 @@ Renderer.propTypes = {
 exports.default = Renderer;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1114,7 +1325,7 @@ Actions.contextTypes = {
 exports.default = Actions;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1132,9 +1343,13 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactPureTime = __webpack_require__(28);
+var _reactPureTime = __webpack_require__(31);
 
 var _reactPureTime2 = _interopRequireDefault(_reactPureTime);
+
+var _get = __webpack_require__(5);
+
+var _get2 = _interopRequireDefault(_get);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1144,14 +1359,14 @@ var Date = function Date(_ref) {
     return _react2.default.createElement(
         'td',
         null,
-        _react2.default.createElement(_reactPureTime2.default, { value: data[index], format: 'F j, Y, g:i a' })
+        _react2.default.createElement(_reactPureTime2.default, { value: (0, _get2.default)(data, index, ''), format: 'F j, Y, g:i a' })
     );
 };
 
 exports.default = Date;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1217,7 +1432,7 @@ Selection.contextTypes = {
 exports.default = Selection;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1256,7 +1471,7 @@ var Text = function Text(_ref) {
 exports.default = Text;
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1274,7 +1489,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Filter = __webpack_require__(3);
+var _Filter = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1336,7 +1551,7 @@ Date.propTypes = {
 exports.default = Date;
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1354,7 +1569,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Filter = __webpack_require__(3);
+var _Filter = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1416,7 +1631,7 @@ Number.propTypes = {
 exports.default = Number;
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1434,7 +1649,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Filter = __webpack_require__(3);
+var _Filter = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1475,7 +1690,7 @@ String.propTypes = {
 exports.default = String;
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1495,15 +1710,15 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _Cell = __webpack_require__(10);
+var _Cell = __webpack_require__(12);
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
-var _Filter = __webpack_require__(3);
+var _Filter = __webpack_require__(4);
 
 var _Filter2 = _interopRequireDefault(_Filter);
 
-var _Selection = __webpack_require__(23);
+var _Selection = __webpack_require__(25);
 
 var _Selection2 = _interopRequireDefault(_Selection);
 
@@ -1580,7 +1795,7 @@ Header.propTypes = {
 exports.default = Header;
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1631,7 +1846,7 @@ Limiter.propTypes = {
 exports.default = Limiter;
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1667,7 +1882,7 @@ Message.propTypes = {
 exports.default = Message;
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1796,7 +2011,7 @@ Pagination.propTypes = {
 exports.default = Pagination;
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1858,7 +2073,7 @@ Selection.propTypes = {
 exports.default = Selection;
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1876,7 +2091,7 @@ var _propTypes = __webpack_require__(1);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _MassActions = __webpack_require__(25);
+var _MassActions = __webpack_require__(27);
 
 var _MassActions2 = _interopRequireDefault(_MassActions);
 
@@ -1911,7 +2126,7 @@ Toolbar.defaultProps = {
 exports.default = Toolbar;
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2057,7 +2272,7 @@ MassActions.contextTypes = {
 exports.default = MassActions;
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2066,17 +2281,29 @@ exports.default = MassActions;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.utils = exports.actions = exports.Table = undefined;
+exports.epics = exports.reducer = exports.utils = exports.actions = exports.Table = exports.TableConsumer = exports.TableProvider = undefined;
 
 var _createTable = __webpack_require__(8);
 
 var _createTable2 = _interopRequireDefault(_createTable);
 
-var _Table = __webpack_require__(7);
+var _Table = __webpack_require__(6);
 
 var _Table2 = _interopRequireDefault(_Table);
 
-var _actions = __webpack_require__(4);
+var _reducer = __webpack_require__(10);
+
+var _reducer2 = _interopRequireDefault(_reducer);
+
+var _epics = __webpack_require__(9);
+
+var epics = _interopRequireWildcard(_epics);
+
+var _TableProvider = __webpack_require__(7);
+
+var _TableProvider2 = _interopRequireDefault(_TableProvider);
+
+var _actions = __webpack_require__(3);
 
 var actions = _interopRequireWildcard(_actions);
 
@@ -2088,19 +2315,180 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.TableProvider = _TableProvider2.default;
+exports.TableConsumer = _TableProvider.TableConsumer;
 exports.Table = _Table2.default;
 exports.actions = actions;
 exports.utils = utils;
+exports.reducer = _reducer2.default;
+exports.epics = epics;
 exports.default = _createTable2.default;
 
 /***/ }),
-/* 27 */
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*
+ * OBJECT ASSIGN DEEP
+ * Allows deep cloning of plain objects that contain primitives, nested plain objects, or nested plain arrays.
+ */
+
+/*
+ * A unified way of returning a string that describes the type of the given variable.
+ */
+function getTypeOf (input) {
+
+	if (input === null) {
+		return 'null';
+	}
+
+	else if (typeof input === 'undefined') {
+		return 'undefined';
+	}
+
+	else if (typeof input === 'object') {
+		return (Array.isArray(input) ? 'array' : 'object');
+	}
+
+	return typeof input;
+
+}
+
+/*
+ * Branching logic which calls the correct function to clone the given value base on its type.
+ */
+function cloneValue (value) {
+
+	// The value is an object so lets clone it.
+	if (getTypeOf(value) === 'object') {
+		return quickCloneObject(value);
+	}
+
+	// The value is an array so lets clone it.
+	else if (getTypeOf(value) === 'array') {
+		return quickCloneArray(value);
+	}
+
+	// Any other value can just be copied.
+	return value;
+
+}
+
+/*
+ * Enumerates the given array and returns a new array, with each of its values cloned (i.e. references broken).
+ */
+function quickCloneArray (input) {
+	return input.map(cloneValue);
+}
+
+/*
+ * Enumerates the properties of the given object (ignoring the prototype chain) and returns a new object, with each of
+ * its values cloned (i.e. references broken).
+ */
+function quickCloneObject (input) {
+
+	const output = {};
+
+	for (const key in input) {
+		if (!input.hasOwnProperty(key)) { continue; }
+
+		output[key] = cloneValue(input[key]);
+	}
+
+	return output;
+
+}
+
+/*
+ * Does the actual deep merging.
+ */
+function executeDeepMerge (target, _objects = [], _options = {}) {
+
+	const options = {
+		arrayBehaviour: _options.arrayBehaviour || 'replace',  // Can be "merge" or "replace".
+	};
+
+	// Ensure we have actual objects for each.
+	const objects = _objects.map(object => object || {});
+	const output = target || {};
+
+	// Enumerate the objects and their keys.
+	for (let oindex = 0; oindex < objects.length; oindex++) {
+		const object = objects[oindex];
+		const keys = Object.keys(object);
+
+		for (let kindex = 0; kindex < keys.length; kindex++) {
+			const key = keys[kindex];
+			const value = object[key];
+			const type = getTypeOf(value);
+			const existingValueType = getTypeOf(output[key]);
+
+			if (type === 'object') {
+				if (existingValueType !== 'undefined') {
+					const existingValue = (existingValueType === 'object' ? output[key] : {});
+					output[key] = executeDeepMerge({}, [existingValue, quickCloneObject(value)], options);
+				}
+				else {
+					output[key] = quickCloneObject(value);
+				}
+			}
+
+			else if (type === 'array') {
+				if (existingValueType === 'array') {
+					const newValue = quickCloneArray(value);
+					output[key] = (options.arrayBehaviour === 'merge' ? output[key].concat(newValue) : newValue);
+				}
+				else {
+					output[key] = quickCloneArray(value);
+				}
+			}
+
+			else {
+				output[key] = value;
+			}
+
+		}
+	}
+
+	return output;
+
+}
+
+/*
+ * Merge all the supplied objects into the target object, breaking all references, including those of nested objects
+ * and arrays, and even objects nested inside arrays. The first parameter is not mutated unlike Object.assign().
+ * Properties in later objects will always overwrite.
+ */
+module.exports = function objectAssignDeep (target, ...objects) {
+	return executeDeepMerge(target, objects);
+};
+
+/*
+ * Same as objectAssignDeep() except it doesn't mutate the target object and returns an entirely new object.
+ */
+module.exports.noMutate = function objectAssignDeepInto (...objects) {
+	return executeDeepMerge({}, objects);
+};
+
+/*
+ * Allows an options object to be passed in to customise the behaviour of the function.
+ */
+module.exports.withOptions = function objectAssignDeepInto (target, objects, options) {
+	return executeDeepMerge(target, objects, options);
+};
+
+
+/***/ }),
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Path", function() { return Path; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_search_params__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_search_params__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_search_params___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_search_params__);
 
 
@@ -2406,13 +2794,13 @@ var Path = /** @class */ (function () {
 
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(e,t){if(true)module.exports=t(__webpack_require__(0));else if("function"==typeof define&&define.amd)define(["react"],t);else{var n=t("object"==typeof exports?require("react"):e.React);for(var r in n)("object"==typeof exports?exports:e)[r]=n[r]}}(this,function(e){return function(e){function t(r){if(n[r])return n[r].exports;var i=n[r]={exports:{},id:r,loaded:!1};return e[r].call(i.exports,i,i.exports,t),i.loaded=!0,i.exports}var n={};return t.m=e,t.c=n,t.p="",t(0)}([function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function u(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function o(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0}),t.format=void 0;var a=function(){function e(e,t){for(var n=0;t.length>n;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),s=n(2),c=r(s),l=n(1),f=r(l),h={second:1e3,minute:6e4,hour:36e5,day:864e5,week:6048e5},p=function(e){function t(e){i(this,t);var n=u(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e));return n.updateRelativeTime=n.updateRelativeTime.bind(n),n.checkForRelativeTimeProps=n.checkForRelativeTimeProps.bind(n),n.state={relativeTime:""},n.interval=null,n.currentUnit="",n}return o(t,e),a(t,[{key:"componentWillMount",value:function(){this.checkForRelativeTimeProps(this.props)}},{key:"componentWillReceiveProps",value:function(e){this.checkForRelativeTimeProps(e)}},{key:"getRelativeTimeString",value:function(e,t,n,r){var i=t%100===1||t%10===1?n:n+"s";return"second"===n&&0===e?"just now":"year"===n&&0===e?"this year":"year"===n&&1===e?"last year":(r?"will come in":"")+" "+t+" "+i+" "+(r?"":"ago")}},{key:"getRelativeTimeDiff",value:function(e){var t=e,n=new Date,r=t.getTime(),i=n.getTime(),u=i-r,o=n.getFullYear()-t.getFullYear(),a=Math[u>0?"floor":"ceil"];return{ms:u,seconds:a(u/h.second),minutes:a(u/h.minute),hours:a(u/h.hour),days:a(u/h.day),weeks:a(u/h.week),months:12*o+n.getMonth()-t.getMonth(),years:o}}},{key:"getInterval",value:function(){return this.currentUnit.length?h[this.currentUnit]?h[this.currentUnit]:h.week:10}},{key:"checkForRelativeTimeProps",value:function(e){var t=this;if(e.relativeTime&&this.isDate(e.value)){var n=new Date(e.value);this.updateRelativeTime(n,e.unit),this.interval&&window.clearInterval(this.interval),this.interval=setInterval(function(){return t.updateRelativeTime(n,e.unit)},this.getInterval())}}},{key:"updateRelativeTime",value:function(e,t){var n=this.getRelativeTimeDiff(e),r=this.currentUnit;if(this.currentUnit=t||this.bestFit(n),this.currentUnit!==r)return this.checkForRelativeTimeProps(this.props),!1;var i=n[this.currentUnit+"s"],u=Math.abs(i),o=0>i;if("second"===this.currentUnit){var a=45;45>u&&(a=20),20>u&&(a=5),5>u&&(a=0),0===u&&(a=0),i=o?-a:a,u=Math.abs(i)}return this.setState({relativeTime:this.getRelativeTimeString(i,u,this.currentUnit,o)}),!0}},{key:"bestFit",value:function(e){var t=Math.abs(e.seconds),n=Math.abs(e.minutes),r=Math.abs(e.hours),i=Math.abs(e.days),u=Math.abs(e.weeks),o=Math.abs(e.months),a=Math.abs(e.years);switch(!0){case a>0&&o>11:return"year";case o>0&&i>27:return"month";case u>0&&i>6:return"week";case i>0&&r>23:return"day";case r>0&&n>59:return"hour";case n>0&&t>59:return"minute";default:return"second"}}},{key:"isDate",value:function(e){var t=new Date(e);return"[object Date]"===Object.prototype.toString.call(t)&&!isNaN(t.getTime())}},{key:"render",value:function(){var e=this.props,t=e.value,n=e.format,r=e.placeholder,i=e.className,u=e.utc,o=e.relativeTime;return c.default.createElement("span",{className:i},this.isDate(t)?o?this.state.relativeTime:(0,f.default)(new Date(t),n,u):r)}}]),t}(s.Component);p.defaultProps={placeholder:"—",format:"d.m.Y H:i",utc:!1};t.format=f.default;t.default=p},function(e,t){"use strict";function n(e,t){var n=arguments.length>2&&void 0!==arguments[2]&&arguments[2],r=new Date(e),i=["Sun","Mon","Tues","Wednes","Thurs","Fri","Satur","January","February","March","April","May","June","July","August","September","October","November","December"],u={},o=/\\?(.?)/gi,a=function(e,t){return u[e]?u[e]():t},s=function(e,t){for(var n=e+"";t>n.length;)n="0"+n;return n};return u={d:function(){return s(u.j(),2)},D:function(){return u.l().slice(0,3)},j:function(){return n?r.getUTCDate():r.getDate()},l:function(){return i[u.w()]+"day"},N:function(){return u.w()||7},S:function(){var e=u.j(),t=e%10;return t>3||1!==parseInt(e%100/10,10)||(t=0),["st","nd","rd"][t-1]||"th"},w:function(){return n?r.getUTCDay():r.getDay()},z:function(){var e=new Date(u.Y(),u.n()-1,u.j()),t=new Date(u.Y(),0,1);return Math.round((e-t)/864e5)},W:function(){var e=new Date(u.Y(),u.n()-1,u.j()-u.N()+3),t=void 0;return t=n?new Date(e.getUTCFullYear(),0,4):new Date(e.getFullYear(),0,4),s(1+Math.round((e-t)/864e5/7),2)},F:function(){return i[6+u.n()]},m:function(){return s(u.n(),2)},M:function(){return u.F().slice(0,3)},n:function(){return n?r.getUTCMonth()+1:r.getMonth()+1},t:function(){return n?new Date(u.Y(),u.n(),0).getUTCDate():new Date(u.Y(),u.n(),0).getDate()},L:function(){var e=u.Y();return e%4===0&&e%100!==0||e%400===0?1:0},o:function(){var e=u.n(),t=parseInt(u.W(),10),n=u.Y();return n+(12===e&&9>t?1:1===e&&t>9?-1:0)},Y:function(){return n?r.getUTCFullYear():r.getFullYear()},y:function(){return(""+u.Y()).slice(-2)},a:function(){return n?r.getUTCHours()>11?"pm":"am":r.getHours()>11?"pm":"am"},A:function(){return u.a().toUpperCase()},B:function(){var e=3600*r.getUTCHours(),t=60*r.getUTCMinutes(),n=r.getUTCSeconds();return s(Math.floor((e+t+n+3600)/86.4)%1e3,3)},g:function(){return u.G()%12||12},G:function(){return n?r.getUTCHours():r.getHours()},h:function(){return s(u.g(),2)},H:function(){return s(u.G(),2)},i:function(){return n?s(r.getUTCMinutes(),2):s(r.getMinutes(),2)},s:function(){return n?s(r.getUTCSeconds(),2):s(r.getSeconds(),2)},u:function(){return n?s(1e3*r.getUTCMilliseconds(),6):s(1e3*r.getMilliseconds(),6)},e:function(){throw Error("Not supported\n        (see source code of date() for timezone on how to add support)")},I:function(){var e=new Date(u.Y(),0),t=Date.UTC(u.Y(),0),n=new Date(u.Y(),6),r=Date.UTC(u.Y(),6);return e-t!==n-r?1:0},O:function(){var e=r.getTimezoneOffset(),t=Math.abs(e);return(e>0?"-":"+")+s(100*Math.floor(t/60)+t%60,4)},P:function(){var e=u.O();return e.substr(0,3)+":"+e.substr(3,2)},T:function(){return n?"UTC":"LOCAL"},Z:function(){return 60*-r.getTimezoneOffset()},c:function(){return"Y-m-d\\TH:i:sP".replace(o,a)},r:function(){return"D, d M Y H:i:s O".replace(o,a)},U:function(){return r/1e3|0}},t.replace(o,a)}Object.defineProperty(t,"__esModule",{value:!0}),t.default=n},function(t,n){t.exports=e}])});
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2420,7 +2808,7 @@ var Path = /** @class */ (function () {
 //# sourceMappingURL=Operator.js.map
 
 /***/ }),
-/* 30 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2622,19 +3010,25 @@ exports.keep = keep;
 
 
 /***/ }),
-/* 31 */
+/* 34 */
 /***/ (function(module, exports) {
 
-module.exports = require("normalizr");
+module.exports = require("qs");
 
 /***/ }),
-/* 32 */
+/* 35 */
+/***/ (function(module, exports) {
+
+module.exports = require("react-redux");
+
+/***/ }),
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/Observable");
 
 /***/ }),
-/* 33 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs/observable/of");
