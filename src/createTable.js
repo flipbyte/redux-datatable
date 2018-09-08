@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-
-// import { createActionCreator, createReducer, defaultLimiterCongig, getRoute } from './utils';
-// import * as actions from './actions';
 import get from 'lodash/get';
 import { actionCreators } from './actions';
 

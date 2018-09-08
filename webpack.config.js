@@ -29,7 +29,7 @@ module.exports = {
             'rxjs': path.resolve(__dirname, './node_modules/rxjs'),
             'prop-types': path.resolve(__dirname, './node_modules/prop-types'),
             // 'react-pure-time': path.resolve(__dirname, './node_modules/react-pure-time'),
-            'qs': path.resolve(__dirname, './node_modules/qs'),
+            // 'query-string': path.resolve(__dirname, './node_modules/query-string'),
             'normalizr': path.resolve(__dirname, './node_modules/normalizr'),
             // 'lodash': path.resolve(__dirname, './node_modules/lodash'),
             'react-redux': path.resolve(__dirname, './node_modules/react-redux'),
@@ -43,7 +43,7 @@ module.exports = {
     'react-dom': 'commonjs react-dom',
     'prop-types': 'commonjs prop-types',
     // 'react-pure-time': 'commonjs react-pure-time',
-    'qs': 'commonjs qs',
+    // 'query-string': 'commonjs query-string',
     // 'lodash': {
     //   commonjs: 'lodash',
     //   amd: 'lodash',

@@ -1,5 +1,4 @@
-import qs from 'qs';
-import Path from 'path-parser';
+import qs from 'query-string';
 
 export const defaultLimiterCongig = {
     options: [10, 20, 50, 100, 200],
@@ -91,23 +90,3 @@ export const createActionCreator = ( type ) => ( data ) => {
 
 export const createReducer = (reducer, predicate) => (state, action) =>
     predicate(action) || state === undefined ? reducer(state, action) : state
-
-export const getRoute = (url, route, params) => {
-    var pathParser = new Path(route);
-    var formattedRoute = pathParser.build(params);
-    var routeParams = pathParser.test(formattedRoute);
-
-    for(var key in routeParams) {
-        if(!routeParams.hasOwnProperty(key)) {
-            continue;
-        }
-        delete params[key];
-    }
-
-    pathParser.getFormattedRoute = () => formattedRoute;
-    pathParser.getParams = () => routeParams;
-    pathParser.getUrlParams = () => params;
-    pathParser.getFormattedUrl = () => `${url}${formattedRoute}?${qs.stringify(params)}`;
-
-    return pathParser;
-}
