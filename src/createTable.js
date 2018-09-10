@@ -78,11 +78,11 @@ const {
 
 
 const prepareActionPayload = ( ownProps ) => ( payload ) => {
-    const { url, name, reducerName, config: {
-        resultPath, routes
+    const { name, reducerName, config: {
+        routes
     }} = ownProps;
 
-    return { name, url, reducerName, routes, resultPath, payload };
+    return { name, reducerName, routes, payload };
 };
 
 const mapStateToProps = ( state ) => {

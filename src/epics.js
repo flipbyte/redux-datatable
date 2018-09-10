@@ -1,6 +1,6 @@
 import { Observable  } from 'rxjs/Observable';
 import get from 'lodash/get';
-import { concatMap, switchMap, map, takeUntil, filter } from 'rxjs/Operator';
+import { concatMap, switchMap, map, takeUntil, filter } from 'rxjs/operator';
 import { of } from 'rxjs/observable/of';
 import {
     actionCreators,
@@ -16,15 +16,31 @@ import {
     DELETE_DATA
 } from './actions';
 
+export const setParamsEpic = ( action$, store ) =>
+    action$.ofType(
+        SET_PAGE,
+        SET_FILTER,
+        SET_SORT,
+        SET_LIMIT,
+    ).concatMap( action => {
+        const { name, routes, reducerName } = action;
+
+        return Observable.of(
+            actionCreators.cancelRequest({ name }),
+            actionCreators.requestData({
+                name, routes, reducerName, payload: { query: get(store.getState(), [reducerName, name]).query }
+            })
+        )
+    });
 
 export const fetchDataEpic = ( action$, store, { apiGet, schemas } ) =>
     action$.ofType(REQUEST_DATA).switchMap( action => {
-        const { route, resultPath, params } = action;
+        const { name, routes, resultPath, payload } = action;
 
-        return apiGet(route, params).execute()
+        return apiGet(routes.get.route, Object.assign({}, routes.get.params, payload.query)).execute()
             .map(response => {
-                const requestResponse = get(response, resultPath.fetch.response, null);
-                const data = get(response, resultPath.fetch.data, null);
+                const requestResponse = get(response, routes.get.resultPath.response, null);
+                const data = get(response, routes.get.resultPath.data, null);
                 const payload = { response: requestResponse, data };
 
                 return actionCreators.receiveData({ name, payload })
@@ -36,16 +52,16 @@ export const fetchDataEpic = ( action$, store, { apiGet, schemas } ) =>
 
 export const deleteDataEpic = ( action$, store, { apiDelete, schemas } ) =>
     action$.ofType(DELETE_DATA).switchMap( action => {
-        const { name, url, routes, resultPath, reducerName, payload } = action;
+        const { name, routes, reducerName, payload } = action;
 
         return apiDelete(routes.delete.route, payload.params).execute().concatMap(response => {
-            const result = get(response, resultPath.delete, null);
+            const result = get(response, routes.delete.resultPath, null);
             if(result.success) {
                 return Observable.of(
                     actionCreators.setMessage({ type: 'success', message: result.result }),
                     actionCreators.cancelRequest({ name }),
                     actionCreators.requestData({
-                        name, url, routes, resultPath, reducerName,
+                        name, routes, reducerName,
                         payload: { query: get(store.getState(), [reducerName, name]).query }
                     })
                 );

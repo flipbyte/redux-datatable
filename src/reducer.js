@@ -30,7 +30,7 @@ const updateState = ( state, tableName ) => ( newState ) => {
     }
 }
 
-const getTableState = (name) => ( state ) => {
+const getTableState = ( name ) => ( state ) => {
     return state[name] ? state[name] : initialTableState;
 }
 
