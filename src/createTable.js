@@ -97,6 +97,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })))
             dispatch(setLimit(preparePayload({ limit: 10 })))
+            dispatch(setSort(preparePayload({ sort: 'pageId', dir: 'desc' })))
         },
         clearMessage: ( ) => {
             dispatch(setMessage(preparePayload({})))
@@ -107,6 +108,10 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
         setFilter: ( key, filter ) => dispatch(setFilter(preparePayload({ key, filter }))),
         actions: {
             setSelection: ( paramKey, key, value ) => dispatch(setSelection(preparePayload({ paramKey, key, value }))),
+            route: ( payload, type ) => dispatch({
+                type: type,
+                payload: payload
+            }),
             delete: ( params ) =>
                 confirm("Are your sure you want to delete this page?") ? dispatch(deleteData(preparePayload({ params }))) : false,
         },

@@ -35,7 +35,11 @@ const getTableState = ( name ) => ( state ) => {
 }
 
 export default function reducer(state = {}, action) {
-    const { payload, name } = action;
+    if(!action.meta) {
+        return state;
+    }
+
+    const { payload, meta: { name } } = action;
     const tableState = getTableState(name);
     const stateUpdater = updateState(state, name);
 

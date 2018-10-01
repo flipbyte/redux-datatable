@@ -82,7 +82,7 @@ export const paramsResolver = ( params, data ) => {
 
 export const createActionCreator = ( type ) => ( data ) => {
     const { name, url, reducerName, resultPath, routes, payload } = data;
-    let action = ({ type, name, url, routes, reducerName, resultPath, payload });
+    let action = ({ type, meta: { name, routes, reducerName }, payload });
     action.toString = () => type;
 
     return action;

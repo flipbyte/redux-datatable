@@ -195,7 +195,7 @@ var createActionCreator = exports.createActionCreator = function createActionCre
             routes = data.routes,
             payload = data.payload;
 
-        var action = { type: type, name: name, url: url, routes: routes, reducerName: reducerName, resultPath: resultPath, payload: payload };
+        var action = { type: type, meta: { name: name, routes: routes, reducerName: reducerName }, payload: payload };
         action.toString = function () {
             return type;
         };
@@ -687,6 +687,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         loadData: function loadData() {
             dispatch(_setPage(preparePayload({ page: 1 })));
             dispatch(_setLimit(preparePayload({ limit: 10 })));
+            dispatch(setSort(preparePayload({ sort: 'pageId', dir: 'desc' })));
         },
         clearMessage: function clearMessage() {
             dispatch(setMessage(preparePayload({})));
@@ -706,6 +707,12 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
         actions: {
             setSelection: function setSelection(paramKey, key, value) {
                 return dispatch(_setSelection(preparePayload({ paramKey: paramKey, key: key, value: value })));
+            },
+            route: function route(payload, type) {
+                return dispatch({
+                    type: type,
+                    payload: payload
+                });
             },
             delete: function _delete(params) {
                 return confirm("Are your sure you want to delete this page?") ? dispatch(deleteData(preparePayload({ params: params }))) : false;
@@ -748,9 +755,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var setParamsEpic = exports.setParamsEpic = function setParamsEpic(action$, store) {
     return action$.ofType(_actions.SET_PAGE, _actions.SET_FILTER, _actions.SET_SORT, _actions.SET_LIMIT).concatMap(function (action) {
-        var name = action.name,
-            routes = action.routes,
-            reducerName = action.reducerName;
+        var _action$meta = action.meta,
+            name = _action$meta.name,
+            routes = _action$meta.routes,
+            reducerName = _action$meta.reducerName;
 
 
         return _Observable.Observable.of(_actions.actionCreators.cancelRequest({ name: name }), _actions.actionCreators.requestData({
@@ -763,9 +771,9 @@ var fetchDataEpic = exports.fetchDataEpic = function fetchDataEpic(action$, stor
     var apiGet = _ref.apiGet,
         schemas = _ref.schemas;
     return action$.ofType(_actions.REQUEST_DATA).switchMap(function (action) {
-        var name = action.name,
-            routes = action.routes,
-            resultPath = action.resultPath,
+        var _action$meta2 = action.meta,
+            name = _action$meta2.name,
+            routes = _action$meta2.routes,
             payload = action.payload;
 
 
@@ -785,9 +793,10 @@ var deleteDataEpic = exports.deleteDataEpic = function deleteDataEpic(action$, s
     var apiDelete = _ref2.apiDelete,
         schemas = _ref2.schemas;
     return action$.ofType(_actions.DELETE_DATA).switchMap(function (action) {
-        var name = action.name,
-            routes = action.routes,
-            reducerName = action.reducerName,
+        var _action$meta3 = action.meta,
+            name = _action$meta3.name,
+            routes = _action$meta3.routes,
+            reducerName = _action$meta3.reducerName,
             payload = action.payload;
 
 
@@ -870,8 +879,13 @@ var getTableState = function getTableState(name) {
 function reducer() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var action = arguments[1];
+
+    if (!action.meta) {
+        return state;
+    }
+
     var payload = action.payload,
-        name = action.name;
+        name = action.meta.name;
 
     var tableState = getTableState(name);
     var stateUpdater = updateState(state, name);
@@ -1233,39 +1247,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-var _handleAction = function _handleAction(event, data, action, props, context) {
+var _handleAction = function _handleAction(event, data, action, props) {
+    // console.log(data, action, props);
     var params = (0, _utils.paramsResolver)(action.params, data);
-    switch (action.type) {
-        case 'route':
-            context.router.history.push({
-                pathname: action.route,
-                search: '?' + params.toString()
-            });
-            break;
-
-        case 'action':
-            props.actions[action.name](params.get());
-            break;
-
-        default:
-            break;
-    }
+    props.actions[action.name](params.get(), action.action);
 };
 
-var _renderBtn = function _renderBtn(key, data, action, props, context) {
+var _renderBtn = function _renderBtn(key, data, action, props) {
     return _react2.default.createElement(
         'button',
         { key: key,
             type: 'button',
             className: action.btnClass,
             onClick: function onClick(event) {
-                return _handleAction(event, data, action, props, context);
+                return _handleAction(event, data, action, props);
             } },
         action.label
     );
 };
 
-var Actions = function Actions(props, context) {
+var Actions = function Actions(props) {
     var data = props.data,
         children = props.config.children,
         rest = _objectWithoutProperties(props, ['data', 'config']);
@@ -1277,14 +1278,10 @@ var Actions = function Actions(props, context) {
             'div',
             { className: 'btn-group-sm' },
             Object.keys(children).map(function (key) {
-                return _renderBtn(key, data, children[key], _extends({}, rest), context);
+                return _renderBtn(key, data, children[key], _extends({}, rest));
             })
         )
     );
-};
-
-Actions.contextTypes = {
-    router: _propTypes2.default.object
 };
 
 exports.default = Actions;

@@ -23,7 +23,7 @@ export const setParamsEpic = ( action$, store ) =>
         SET_SORT,
         SET_LIMIT,
     ).concatMap( action => {
-        const { name, routes, reducerName } = action;
+        const { name, routes, reducerName } = action.meta;
 
         return Observable.of(
             actionCreators.cancelRequest({ name }),
@@ -35,7 +35,10 @@ export const setParamsEpic = ( action$, store ) =>
 
 export const fetchDataEpic = ( action$, store, { apiGet, schemas } ) =>
     action$.ofType(REQUEST_DATA).switchMap( action => {
-        const { name, routes, resultPath, payload } = action;
+        const {
+            meta: { name, routes },
+            payload
+        } = action;
 
         return apiGet(routes.get.route, Object.assign({}, routes.get.params, payload.query)).execute()
             .map(response => {
@@ -52,7 +55,10 @@ export const fetchDataEpic = ( action$, store, { apiGet, schemas } ) =>
 
 export const deleteDataEpic = ( action$, store, { apiDelete, schemas } ) =>
     action$.ofType(DELETE_DATA).switchMap( action => {
-        const { name, routes, reducerName, payload } = action;
+        const {
+            meta: { name, routes, reducerName },
+            payload
+        } = action;
 
         return apiDelete(routes.delete.route, payload.params).execute().concatMap(response => {
             const result = get(response, routes.delete.resultPath, null);
