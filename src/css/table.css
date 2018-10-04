@@ -1,0 +1,147 @@
+/*
+  flutter-react-data-table
+*/
+
+label.limiter {
+    display: inline-flex;
+    line-height: 30px;
+}
+
+label.limiter select {
+    width: 50%;
+    margin-right: 10px;
+}
+.flutter-table-loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.7;
+    background: #fff;
+    display: none;
+}
+
+.flutter-table-loader.show {
+    display: block;
+}
+
+.flutter-table-container {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 20px 0;
+  overflow: auto;
+  border: 0;
+}
+
+.flutter-table {
+  width: 100%;
+  max-width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+/*.flutter-table-container {
+    height: 100%;
+}*/
+
+.flutter-table th,
+.flutter-table td {
+  height: 20px;
+  max-width: 250px;
+  padding: 4px 5px;
+  overflow: hidden;
+  line-height: 20px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.flutter-table th {
+  font-weight: bold;
+  text-align: center;
+  border-bottom: none !important;
+  cursor: pointer;
+  color: #167495;
+  border-top: none;
+}
+
+.flutter-table th.sortable a {
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.flutter-table thead th {
+  vertical-align: bottom;
+  background-color: #f9f9f9;
+}
+
+.flutter-table thead th button {
+  display: block;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.flutter-table.table-striped tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
+.flutter-table .sort-caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.3em;
+  border: 0;
+  content: "";
+}
+
+.flutter-table .asc .sort-caret {
+  vertical-align: baseline;
+  border-top: none;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #000000;
+  border-left: 4px solid transparent;
+}
+
+.flutter-table .desc .sort-caret {
+  vertical-align: super;
+  border-top: 4px solid #000000;
+  border-right: 4px solid transparent;
+  border-bottom: none;
+  border-left: 4px solid transparent;
+}
+
+.flutter-table .string-cell,
+.flutter-table .uri-cell,
+.flutter-table .email-cell {
+  text-align: left;
+}
+
+.flutter-table .date-cell,
+.flutter-table .time-cell,
+.flutter-table .datetime-cell,
+.flutter-table .number-cell,
+.flutter-table .integer-cell,
+.flutter-table .percent-cell {
+  text-align: right;
+}
+
+.flutter-table .boolean-cell {
+  text-align: center;
+}
+
+.flutter-table .select-cell {
+  text-align: center;
+}
+
+.flutter-table tbody td .badge {
+    width: 100%
+}

@@ -5,6 +5,7 @@ import * as epics from './epics';
 import TableProvider, { TableConsumer } from './TableProvider';
 import * as actions from './actions';
 import * as utils from './utils';
+import './css/table.css';
 
 export { TableProvider, TableConsumer, Table, actions, utils, reducer, epics }
 export default FlutterTable;
