@@ -97,7 +97,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })))
             dispatch(setLimit(preparePayload({ limit: 10 })))
-            dispatch(setSort(preparePayload({ sort: 'pageId', dir: 'desc' })))
+            dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
         clearMessage: ( ) => {
             dispatch(setMessage(preparePayload({})))
