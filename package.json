@@ -23,8 +23,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/flipbyte/flutter-react-data-table#readme",
   "peerDependencies": {
-    "react": ">=16.3.0",
-    "react-dom": ">=16.3.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "rxjs": "^5.5.8",
     "prop-types": "*",
     "normalizr": "*",
@@ -40,8 +40,8 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.5.1",
     "normalizr": "*",
-    "react": ">=16.3.0",
-    "react-dom": ">=16.3.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "react-pure-time": "*",
     "rxjs": "^5.5.8",
     "webpack-cli": "^3.1.2"
