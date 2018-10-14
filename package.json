@@ -25,12 +25,13 @@
   "peerDependencies": {
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "rxjs": "^5.5.8",
+    "rxjs": "^6.3.3",
     "prop-types": "*",
     "normalizr": "*",
     "react-pure-time": "*",
     "lodash": ">=4.17.10",
-    "react-redux": "^5.0.7"
+    "react-redux": "^5.0.7",
+    "redux-observable": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -43,8 +44,9 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-pure-time": "*",
-    "rxjs": "^5.5.8",
-    "webpack-cli": "^3.1.2"
+    "rxjs": "^6.3.3",
+    "webpack-cli": "^3.1.2",
+    "redux-observable": "^1.0.0"
   },
   "dependencies": {
     "css-loader": "^1.0.0",
