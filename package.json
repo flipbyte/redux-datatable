@@ -31,7 +31,8 @@
     "react-pure-time": "*",
     "lodash": ">=4.17.10",
     "react-redux": "^5.0.7",
-    "redux-observable": "^1.0.0"
+    "redux-observable": "^1.0.0",
+    "react-redux-notify": "^4.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -46,7 +47,8 @@
     "react-pure-time": "*",
     "rxjs": "^6.3.3",
     "webpack-cli": "^3.1.2",
-    "redux-observable": "^1.0.0"
+    "redux-observable": "^1.0.0",
+    "react-redux-notify": "^4.1.0"
   },
   "dependencies": {
     "css-loader": "^1.0.0",

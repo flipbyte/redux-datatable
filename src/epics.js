@@ -1,7 +1,8 @@
 import get from 'lodash/get';
 import { ofType } from 'redux-observable';
 import { Observable, of, pipe } from 'rxjs';
-import { concatMap, switchMap, map, takeUntil, filter } from 'rxjs/operators';
+import { concatMap, switchMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
+import { createNotification, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_ERROR } from 'react-redux-notify';
 import {
     actionCreators,
     REQUEST_DATA,
@@ -44,6 +45,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 const payload = { response, data };
                 return actionCreators.receiveData({ name, payload })
             }),
+            catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
                 filter(cancelAction => cancelAction.name == name)
@@ -63,18 +65,19 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
         return api.delete(routes.delete.route, { params: payload.params }).pipe(
             concatMap(response => {
                 if(!response.success) {
-                    return of(actionCreators.setMessage({ type: 'danger', message: response.result }))
+                    return of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: response.result }));
                 }
 
                 return of(
-                    actionCreators.setMessage({ type: 'success', message: response.result }),
+                    createNotification({ type: NOTIFICATION_TYPE_SUCCESS, message: response.result }),
                     actionCreators.cancelRequest({ name }),
                     actionCreators.requestData({
                         name, routes, reducerName,
                         payload: { query: get(state$.value, [reducerName, name]).query }
                     })
                 );
-            })
+            }),
+            catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })))
         )
     })
 )
