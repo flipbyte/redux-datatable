@@ -1,5 +1,10 @@
 import React from 'react';
+import get from 'lodash/get';
 import PropTypes from "prop-types";
+import { connect } from 'react-redux';
+import { setPage } from '../actions';
+import { prepareActionPayload } from '../utils'
+import { withTableConfig } from '../TableProvider';
 
 const NUM_LINKS = 5;
 
@@ -22,10 +27,29 @@ const getPages = ( currentPage, total ) => {
 const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
 const upperLimit = ( page, limit, count ) =>  (page * limit) > count ? count : page * limit;
 
-const Pagination = ({
-    start, end, page, total, count, limit, setPage
-}) =>
-    <div className="row">
+const calculatePaginationProps = ( { page, limit, count }, defaultLimit ) => {
+    page = page > 1 ? page : 1
+    limit = limit != 0 ? limit : count;
+
+    let start = (page - 1) * limit
+    let end = start + limit - 1
+
+    return {
+        page: page,
+        start: start,
+        end: (count > end) ? end : count,
+        count: count,
+        limit: limit,
+        total: Math.ceil(count / limit)
+    }
+}
+
+const Pagination = ({ config: { defaultLimit }, query, setPage }) => {
+    const {
+        page, start, end, count, limit, total
+    } = calculatePaginationProps(query, defaultLimit ? defaultLimit : 10);
+
+    return <React.Fragment>
         <div className="col-sm-12 col-md-6">
             {!!count > 0 &&
                 <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
@@ -47,15 +71,20 @@ const Pagination = ({
                 </li>
             </ul>
         </div>
-    </div>
-
-Pagination.propTypes = {
-    start: PropTypes.number.isRequired,
-    end: PropTypes.number.isRequired,
-    page: PropTypes.number.isRequired,
-    total: PropTypes.number.isRequired,
-    count: PropTypes.number.isRequired,
-    setPage: PropTypes.func
+    </React.Fragment>;
 }
 
-export default Pagination;
+const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+    query: get(state, [reducerName, name, 'query'], {})
+});
+
+const mapDispatchToProps = ( dispatch, { config } ) => ({
+    setPage: ( page ) => dispatch(setPage(prepareActionPayload(config)({ page }))),
+});
+
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+    defaultLimit: 'limiterConfig.default',
+    routes: 'routes'
+})(connect(mapStateToProps, mapDispatchToProps)(Pagination));

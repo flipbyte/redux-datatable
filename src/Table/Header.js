@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from "prop-types";
 
@@ -5,54 +6,45 @@ import Cell from './Cell';
 import Filter from './Filter';
 import Selection from './Selection';
 
+import { withTableConfig } from '../TableProvider';
+
 const _renderRowItems = ( props ) => {
-    const { key, type, filterer, selector, data } = props;
+    const { key, type } = props;
 
     if(type == 'header') return <Cell { ...props } />
-    if(type == 'selection') return <Selection data={ data } selector={ selector } { ...props } />
+    if(type == 'selection') return <Selection { ...props } />
     if(type == 'actions') return <td key={ key } />
 
-    return <Filter filterer={ filterer } { ...props } />
+    return <Filter { ...props } />
 }
 
-const Header = ({ query, columns, data, setSortOrder, setFilter, setSelection }) =>
+const Header = ({ config: { columns } }) =>
     <thead>
         <tr className="headers">
-            { Object.keys(columns).map( (key) => (
+            { _.map(columns, ({ sortable, name, label, attributes }, key) => (
                 _renderRowItems({
                     key: key,
                     type: "header",
                     isHeader: true,
-                    sortable: columns[key].sortable ? true : false,
-                    sorter: setSortOrder,
-                    name: columns[key].name,
-                    label: columns[key].label,
-                    attributes: columns[key].attributes,
-                    query: query
+                    sortable: sortable ? true : false,
+                    colName: name,
+                    label: label,
+                    attributes: attributes
                 })
             ) ) }
         </tr>
         <tr className="filters">
-            { Object.keys(columns).map( (key) => (
+            { _.map(columns, ( column, key) => (
                 _renderRowItems({
                     key: key,
-                    type: columns[key].type,
-                    name: columns[key].name,
-                    selector: setSelection,
-                    filterer: setFilter,
-                    data: data,
-                    config: columns[key]
+                    type: column.type,
+                    colName: column.name,
+                    columnConfig: column
                 })
             ) ) }
         </tr>
     </thead>;
 
-Header.propTypes = {
-    columns: PropTypes.object.isRequired,
-    selection: PropTypes.object,
-    setSortOrder: PropTypes.func,
-    setFilter: PropTypes.func,
-    setSelection: PropTypes.func
-};
-
-export default Header;
+export default withTableConfig({
+    columns: 'columns'
+})(Header);

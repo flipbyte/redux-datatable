@@ -1,16 +1,20 @@
 import React from 'react';
+import get from 'lodash/get';
 import PropTypes from "prop-types";
-import { getParam, getConfigParam } from '../../../utils';
+import { connect } from 'react-redux';
+import { setSelection } from '../../../actions';
+import { withTableConfig } from '../../../TableProvider';
+import { getParam, getConfigParam, prepareActionPayload } from '../../../utils';
 
-const _handleSelection = ({ data, config, setSelection }, event ) => {
-    let dataKey = getConfigParam(config.indexField);
-    let param = getParam(config.indexField, data);
+const _handleSelection = ({ data, colConfig, setSelection }, event ) => {
+    let dataKey = getConfigParam(colConfig.indexField);
+    let param = getParam(colConfig.indexField, data);
     setSelection(dataKey, param, event.target.checked)
 }
 
-const _isSelected = ({ data, selection, config }) => {
-    let dataKey = getConfigParam(config.indexField);
-    let param = getParam(config.indexField, data);
+const _isSelected = ({ data, selection, colConfig }) => {
+    let dataKey = getConfigParam(colConfig.indexField);
+    let param = getParam(colConfig.indexField, data);
     return (selection[dataKey] && selection[dataKey][param]) ? selection[dataKey][param] : false;
 }
 
@@ -24,8 +28,17 @@ const Selection = ( props ) =>
         </div>
     </td>
 
-Selection.contextTypes = {
-    router: PropTypes.object
-};
+const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+    selection: get(state, [reducerName, name, 'selection'], {})
+});
 
-export default Selection;
+const mapDispatchToProps = ( dispatch, { config } ) => ({
+    setSelection: ( paramKey, key, value ) =>
+        dispatch(setSelection(prepareActionPayload(config)({ paramKey, key, value }))),
+});
+
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+    routes: 'routes'
+})(connect(mapStateToProps, mapDispatchToProps)(Selection));

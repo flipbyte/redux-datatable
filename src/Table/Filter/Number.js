@@ -27,25 +27,25 @@ const _applyFilter = (key, filterer, event) => {
     filterer(event.target.name, filter);
 };
 
-const Number = ({ name, filterer }) =>
+const Number = ({ colName, filterer }) =>
     <td>
         <input
             className="form-control"
             type="number"
-            name={ name }
+            name={ colName }
             onChange={ (event) => _applyFilter(0, filterer, event) }
             placeholder="From" />
         <input
             className="form-control"
             type="number"
-            name={ name }
+            name={ colName }
             onChange={ (event) => _applyFilter(1, filterer, event) }
             placeholder="To" />
     </td>
 
 Number.propTypes = {
     filterer: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired
+    colName: PropTypes.string.isRequired
 };
 
 export default Number;

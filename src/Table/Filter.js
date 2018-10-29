@@ -4,6 +4,11 @@ import String from './Filter/String';
 import Number from './Filter/Number';
 import Date from './Filter/Date';
 
+import { connect } from 'react-redux';
+import { setFilter } from '../actions';
+import { prepareActionPayload } from '../utils'
+import { withTableConfig } from '../TableProvider';
+
 export const SEARCH_OPERATOR_CONTAINS = 'contains';
 export const SEARCH_OPERATOR_BETWEEN = 'between';
 export const SEARCH_OPERATOR_IS = 'is';
@@ -18,14 +23,12 @@ const Filter = ( props ) => {
     return <String { ...props } />
 }
 
-Filter.propTypes = {
-    filterer: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
-};
+const mapDispatchToProps = ( dispatch, { config } ) => ({
+    filterer: ( key, filter ) => dispatch(setFilter(prepareActionPayload(config)({ key, filter }))),
+});
 
-Filter.defaultProps = {
-    type: "string"
-};
-
-export default Filter;
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+    routes: 'routes'
+})(connect(null, mapDispatchToProps)(Filter));

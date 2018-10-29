@@ -1,35 +1,32 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from "prop-types";
-
+import { connect } from 'react-redux';
 import Renderer from './Column/Renderer';
+import { withTableConfig } from '../TableProvider';
 
-const Body = ({ query, columns, data, selection, actions }) =>
+const Body = ({ config: { columns }, data, actions }) =>
     <tbody>
         { data.map((item, index) => (
             <tr key={ index }>
-                { Object.keys(columns).map( (key) => (
+                { _.map(columns, ( column, key) => (
                     <Renderer key={ key }
-                        query={ query }
                         actions={ actions }
-                        index={ columns[key].name }
+                        index={ column.name }
                         data={ item }
-                        renderer={ columns[key].renderer }
-                        config={ columns[key] }
-                        selection={ selection } />
+                        renderer={ column.renderer }
+                        colConfig={ column } />
                 )) }
             </tr>
         )) }
     </tbody>
 
-Body.propTypes = {
-    columns: PropTypes.object.isRequired,
-    data: PropTypes.array.isRequired,
-    actions: PropTypes.object
-};
+const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+    data: _.get(state, [reducerName, name, 'items'], {})
+});
 
-Body.defaultProps = {
-    columns: {},
-    data: {}
-};
-
-export default Body;
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+    columns: 'columns',
+})(connect(mapStateToProps)(Body));

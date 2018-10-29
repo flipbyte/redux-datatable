@@ -4,7 +4,9 @@ import { Observable, of, pipe } from 'rxjs';
 import { concatMap, switchMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
 import { createNotification, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_ERROR } from 'react-redux-notify';
 import {
-    actionCreators,
+    receiveData,
+    cancelRequest,
+    requestData,
     REQUEST_DATA,
     RECEIVE_DATA,
     REQUEST_DATA_CANCEL,
@@ -12,7 +14,6 @@ import {
     SET_FILTER,
     SET_SORT,
     SET_LIMIT,
-    SET_MESSAGE,
     SET_SELECTION,
     DELETE_DATA
 } from './actions';
@@ -23,8 +24,8 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
         const { meta: { name, routes, reducerName } } = action;
 
         return of(
-            actionCreators.cancelRequest({ name }),
-            actionCreators.requestData({
+            cancelRequest({ name }),
+            requestData({
                 name, routes, reducerName, payload: { query: get(state$.value, [reducerName, name]).query }
             })
         )
@@ -43,7 +44,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
             map(response => {
                 const data = get(response, routes.get.resultPath.data, {});
                 const payload = { response, data };
-                return actionCreators.receiveData({ name, payload })
+                return receiveData({ name, payload })
             }),
             catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
             takeUntil(action$.pipe(
@@ -70,8 +71,8 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
 
                 return of(
                     createNotification({ type: NOTIFICATION_TYPE_SUCCESS, message: response.result }),
-                    actionCreators.cancelRequest({ name }),
-                    actionCreators.requestData({
+                    cancelRequest({ name }),
+                    requestData({
                         name, routes, reducerName,
                         payload: { query: get(state$.value, [reducerName, name]).query }
                     })

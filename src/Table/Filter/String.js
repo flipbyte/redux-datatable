@@ -16,17 +16,17 @@ const _applyFilter = (filterer, event) => {
     filterer(event.target.name, filter);
 };
 
-const String = ({ name, filterer }) =>
+const String = ({ colName, filterer }) =>
     <td>
         <input
             className="form-control"
-            name={ name }
+            name={ colName }
             onChange={ (event) => _applyFilter(filterer, event) } />
     </td>
 
 String.propTypes = {
     filterer: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired
+    colName: PropTypes.string.isRequired
 };
 
 export default String;

@@ -1,6 +1,10 @@
 import React from 'react';
+import get from 'lodash/get';
 import PropTypes from "prop-types";
-import { getConfigParam } from '../utils';
+import { connect } from 'react-redux';
+import { setSelection } from '../actions';
+import { withTableConfig } from '../TableProvider';
+import { getConfigParam, prepareActionPayload } from '../utils';
 
 const _handleSelection = ( selector, data, config, event ) => {
     let dataKey = getConfigParam(config.indexField);
@@ -13,17 +17,25 @@ const _handleSelection = ( selector, data, config, event ) => {
     selector(dataKey, params, event.target.checked);
 };
 
-const Selection = ({ name, data, config, selector }) =>
+const Selection = ({ data, columnConfig, selector }) =>
     <td>
         <div className="col-12">
-            <input type="checkbox" name={ name }
-                onChange={ (event) => _handleSelection(selector, data, config, event) }/>
+            <input type="checkbox" name={ columnConfig.name }
+                onChange={ (event) => _handleSelection(selector, data, columnConfig, event) }/>
         </div>
     </td>
 
-Selection.propTypes = {
-    selector: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired
-};
+const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+    data: get(state, [reducerName, name, 'items'], [])
+});
 
-export default Selection;
+const mapDispatchToProps = ( dispatch, { config } ) => ({
+    selector: ( paramKey, key, value ) =>
+        dispatch(setSelection(prepareActionPayload(config)({ paramKey, key, value })))
+});
+
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+    routes: 'routes'
+})(connect(mapStateToProps, mapDispatchToProps)(Selection));

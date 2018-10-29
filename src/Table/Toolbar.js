@@ -1,27 +1,21 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from "prop-types";
-
 import MassActions from './Toolbar/MassActions';
+import { withTableConfig } from '../TableProvider';
 
-const _renderToolbarItem = ( props ) => {
-    if( props.key == 'massActions' ) return <MassActions { ...props } />
+const _renderToolbarItem = ({ key, item }) => {
+    if( item.renderer ) {
+        let Renderer = item.renderer;
+        return <Renderer key={ key} />;
+    }
 
-    return null;
+    return <MassActions key={ key } />
 }
 
-const Toolbar = ({ selection, query, config, massActions }) =>
-    Object.keys(config).map( (key) =>
-        _renderToolbarItem({ key, selection, query, config: config[key], massActions })
-    );
+const Toolbar = ({ config: { toolbar } }) =>
+    _.map(toolbar, ( item, key ) => _renderToolbarItem({ key, item }))
 
-Toolbar.propTypes = {
-    selection: PropTypes.object.isRequired,
-    query: PropTypes.object,
-    config: PropTypes.object.isRequired,
-};
-
-Toolbar.defaultProps = {
-    data: {}
-}
-
-export default Toolbar;
+export default withTableConfig({
+    toolbar: 'toolbar',
+})(Toolbar);

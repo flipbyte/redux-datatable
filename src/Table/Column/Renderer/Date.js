@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from "prop-types";
 import Time from 'react-pure-time';
 import get from 'lodash/get';
 
-const Date = ({ index, data, config }) => {
-    const { textAlign, format } = config;
+const Date = ({ index, data, colConfig }) => {
+    const { textAlign, format } = colConfig;
     return (
         <td className={ textAlign ? textAlign : '' }>
             <Time value={ get(data, index, '') } format={ format ? format : 'F j, Y, g:i a' } />

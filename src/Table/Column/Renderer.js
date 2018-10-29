@@ -10,25 +10,25 @@ import Selection from './Renderer/Selection';
 const _render = (ComponentName, props) =>
     <ComponentName { ...props } />
 
-const Renderer = ({ query, index, data, renderer, config, selection, actions }) => {
+const Renderer = ({ index, data, renderer, colConfig }) => {
     if(renderer) {
-        return _render(renderer, {index, data, config, query, selection, actions });
+        return _render(renderer, {index, data, colConfig });
     } else {
-        switch(config.type) {
+        switch(colConfig.type) {
             case 'date':
-                return _render(Date, { index, data, config });
+                return _render(Date, { index, data, colConfig });
 
             case 'actions':
-                return _render(Actions, { query, data, config, actions });
+                return _render(Actions, { data, colConfig });
 
             case 'selection':
-                return _render(Selection, { query, data, config, selection, setSelection: actions.setSelection });
+                return _render(Selection, { data, colConfig });
 
             case 'options':
-                return _render(Options, { index, data, config });
+                return _render(Options, { index, data, colConfig });
 
             default:
-                return _render(Text, { index, data, config });
+                return _render(Text, { index, data, colConfig });
 
         }
     }
@@ -38,8 +38,7 @@ Renderer.propTypes = {
     index: PropTypes.string,
     data: PropTypes.object.isRequired,
     renderer: PropTypes.func,
-    config: PropTypes.object,
-    actions: PropTypes.object,
+    colConfig: PropTypes.object,
 };
 
 export default Renderer;

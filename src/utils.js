@@ -81,7 +81,7 @@ export const paramsResolver = ( params, data ) => {
 //     path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
 
 export const createActionCreator = ( type ) => ( data ) => {
-    const { name, url, reducerName, resultPath, routes, payload } = data;
+    const { name, reducerName, routes, payload } = data;
     let action = ({ type, meta: { name, routes, reducerName }, payload });
     action.toString = () => type;
 
@@ -90,3 +90,7 @@ export const createActionCreator = ( type ) => ( data ) => {
 
 export const createReducer = (reducer, predicate) => (state, action) =>
     predicate(action) || state === undefined ? reducer(state, action) : state
+
+export const prepareActionPayload = ({ name, reducerName, routes }) => ( payload = {} ) => ({
+    name, reducerName, routes, payload
+})

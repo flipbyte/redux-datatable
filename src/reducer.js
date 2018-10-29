@@ -1,5 +1,5 @@
-import objectAssignDeep from 'object-assign-deep';
 import * as actions from './actions';
+import objectAssignDeep from 'object-assign-deep';
 
 let initialTableState = {
     isFetching: false,
@@ -15,7 +15,6 @@ let initialTableState = {
         count: 0,
         search: {}
     },
-    message: {},
     selection: {}
 }
 
@@ -119,10 +118,20 @@ export default function reducer(state = {}, action) {
             //     }
             // }
 
-        case actions.SET_MESSAGE:
-            return stateUpdater({
-                message: payload
-            });
+        case action.CLEAR_FILTER:
+            return {
+                ...state,
+                [name]: {
+                    ...state[name],
+                    query: {
+                        ...state[name].query,
+                        search: {
+                            ...state[name].query.search,
+                            ...{}
+                        }
+                    }
+                }
+            }
 
         default:
             return state;

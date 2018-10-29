@@ -1,52 +1,58 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import get from 'lodash/get';
+import { connect } from 'react-redux';
+import { setSort } from '../actions';
+import { prepareActionPayload } from '../utils'
+import { withTableConfig } from '../TableProvider';
 
-const changeSortOrder = ({ query, name, sorter }, event) => {
+const changeSortOrder = ({ query, colName, sorter }, event) => {
     let dir = null;
-    if( query.sort != name ) {
+    if( query.sort != colName ) {
         dir = 'asc';
     } else {
         if(query.dir == 'asc') {
             dir = 'desc';
         } else if(query.dir == 'desc') {
-            name = '';
+            colName = '';
             dir = '';
         } else {
             dir = 'asc';
         }
     }
 
-    sorter(name, dir);
+    sorter(colName, dir);
 }
 
-const _prepareHeader = ( props ) =>
+const _prepareHeader = ( props ) => (
     ( props.sortable ) ?
         <th
-            className={ 'sortable ' + props.name + ' ' + ( props.name == props.query.sort ? props.query.dir : '' ) }
+            className={ 'sortable ' + props.colName + ' ' + ( props.colName == props.query.sort ? props.query.dir : '' ) }
+            scope="col"
             onClick={ (event) => changeSortOrder(props, event) }
             { ...props.attributes } >
 
             { props.label } <b className="sort-caret"></b>
         </th> :
         <th>{ props.label }</th>
+);
 
-const Cell = ({ name, query, label, isHeader, sortable, sorter, attributes }) =>
+const Cell = ({ colName, query, label, isHeader, sortable, sorter, attributes }) => (
     ( isHeader ) ?
-        _prepareHeader( { name, query, label, isHeader, sortable, sorter, attributes } ) :
-        <td { ...attributes }>{ label }</td> ;
+        _prepareHeader({ colName, query, label, isHeader, sortable, sorter, attributes }) :
+        <td { ...attributes }>{ label }</td>
+);
 
-Cell.propTypes = {
-    name: PropTypes.string.isRequired,
-    isHeader: PropTypes.bool.isRequired,
-    sortable: PropTypes.bool.isRequired,
-    sorter: PropTypes.func,
-    label: PropTypes.string,
-    attributes: PropTypes.object
-};
+const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+    query: get(state, [reducerName, name, 'query'], {})
+});
 
-Cell.defaultProps = {
-    isHeader: false,
-    attributes: {}
-};
+const mapDispatchToProps = ( dispatch, { config } ) => ({
+    sorter: ( sort, dir ) => dispatch(setSort(prepareActionPayload(config)({ sort, dir }))),
+});
 
-export default Cell;
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+    routes: 'routes'
+})(connect(mapStateToProps, mapDispatchToProps)(Cell));
