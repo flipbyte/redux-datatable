@@ -1,6 +1,9 @@
 import React from 'react';
+import get from 'lodash/get';
 import PropTypes from "prop-types";
 import { SEARCH_OPERATOR_BETWEEN } from '../Filter';
+import { connect } from 'react-redux';
+import { withTableConfig } from '../../TableProvider';
 
 var valFrom = null;
 var valTo = null;
@@ -27,18 +30,20 @@ const _applyFilter = (key, filterer, event) => {
     filterer(event.target.name, filter);
 };
 
-const Number = ({ colName, filterer }) =>
+const Number = ({ colName, value, filterer }) =>
     <td>
         <input
             className="form-control"
             type="number"
             name={ colName }
             onChange={ (event) => _applyFilter(0, filterer, event) }
+            value={ value[0] ? value[0] : '' }
             placeholder="From" />
         <input
             className="form-control"
             type="number"
             name={ colName }
+            value={ value[1] ? value[1] : ''}
             onChange={ (event) => _applyFilter(1, filterer, event) }
             placeholder="To" />
     </td>
@@ -48,4 +53,11 @@ Number.propTypes = {
     colName: PropTypes.string.isRequired
 };
 
-export default Number;
+const mapStateToProps = ( state, { config: { reducerName, name }, colName } ) => ({
+    value: get(state, [reducerName, name, 'query', 'search', colName, 'value'], [])
+});
+
+export default withTableConfig({
+    name: 'name',
+    reducerName: 'reducerName',
+})(connect(mapStateToProps)(Number));

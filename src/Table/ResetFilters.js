@@ -2,7 +2,7 @@ import React from 'react';
 import get from 'lodash/get';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
-import { clearFilter } from '../actions';
+import { setFilter } from '../actions';
 import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
 
@@ -15,7 +15,7 @@ const ResetFilters = ({ clearFilter }) =>
     </button>
 
 const mapDispatchToProps = ( dispatch, { config } ) => ({
-    clearFilter: ( ) => dispatch(clearFilter(prepareActionPayload(config)()))
+    clearFilter: ( ) => dispatch(setFilter(prepareActionPayload(config)({ clear: true })))
 });
 
 export default withTableConfig({

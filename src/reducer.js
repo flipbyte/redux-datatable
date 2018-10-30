@@ -84,13 +84,26 @@ export default function reducer(state = {}, action) {
             });
 
         case actions.SET_FILTER:
-            return stateUpdater({
-                query: {
-                    search: {
-                        [payload.key]: payload.filter
+            var updatedFilters = {};
+            if(!payload.clear) {
+                updatedFilters = {
+                    ...state[name].query.search,
+                    [payload.key]: payload.filter
+                };
+            }
+
+            return {
+                ...state,
+                [name]: {
+                    ...state[name],
+                    query: {
+                        ...state[name].query,
+                        search: {
+                            ...updatedFilters
+                        }
                     }
                 }
-            });
+            };
 
         case actions.SET_SELECTION:
             let selection = {};
@@ -117,21 +130,6 @@ export default function reducer(state = {}, action) {
             //         }
             //     }
             // }
-
-        case action.CLEAR_FILTER:
-            return {
-                ...state,
-                [name]: {
-                    ...state[name],
-                    query: {
-                        ...state[name].query,
-                        search: {
-                            ...state[name].query.search,
-                            ...{}
-                        }
-                    }
-                }
-            }
 
         default:
             return state;
