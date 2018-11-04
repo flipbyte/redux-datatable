@@ -1,4 +1,4 @@
-import get from 'lodash/get';
+import _ from 'lodash';
 import { connect } from "react-redux";
 import React, { Component } from 'react'
 
@@ -8,11 +8,16 @@ import { setPage, setLimit, setSort } from './actions';
 
 class FlutterTable extends Component {
     componentWillMount() {
-        this.props.loadData();
+        const { tableData, loadData } = this.props;
+        if(!_.isEmpty(tableData) && !_.isEmpty(tableData.items)) {
+            return;
+        }
+
+        loadData();
     }
 
     setValidPage(nextProps) {
-        var nextQuery = nextProps.tablesData.query;
+        var nextQuery = nextProps.tableData.query;
         if(!nextQuery || nextQuery.count <= 0) {
             return true;
         }
@@ -20,7 +25,7 @@ class FlutterTable extends Component {
         let totalEntries = parseInt(nextQuery.count);
         let limit = nextQuery.limit != 0 ? nextQuery.limit : totalEntries;
         let totalPages = Math.ceil(totalEntries / limit);
-        if(totalPages < this.props.tablesData.query.page) {
+        if(totalPages < this.props.tableData.query.page) {
             this.props.setPage(totalPages);
             return false
         }
@@ -33,9 +38,9 @@ class FlutterTable extends Component {
     }
 
     render() {
-        const { name, config, tablesData, reducerName } = this.props;
+        const { name, config, tableData, reducerName } = this.props;
 
-        if(!tablesData) {
+        if(!tableData) {
             return (
                 <div className="status_message offline">
                     <p>
@@ -47,17 +52,17 @@ class FlutterTable extends Component {
 
         return (
             <TableProvider config={ { reducerName, ...config } }>
-                <Table name={ name } />
+                <Table name={ name } isFetching={ tableData.isFetching } />
             </TableProvider>
         )
     }
 }
 
-const prepareActionPayload = ({ name, reducerName, config: { routes }}) =>
-    ( payload = {} ) => ({ name, reducerName, routes, payload })
+const prepareActionPayload = ({ name, reducerName, config: { routes, entity }}) =>
+    ( payload = {} ) => ({ name, reducerName, routes, entity, payload })
 
 const mapStateToProps = ( state, { reducerName, name } ) => ({
-    tablesData: state[reducerName][name]
+    tableData: state[reducerName][name]
 });
 
 const mapDispatchToProps = ( dispatch, ownProps ) => {
@@ -65,7 +70,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
     return {
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })))
-            dispatch(setLimit(preparePayload({ limit: get(ownProps.config, 'limiterConfig.default', 10) })))
+            dispatch(setLimit(preparePayload({ limit: _.get(ownProps.config, 'limiterConfig.default', 10) })))
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
         setPage: ( page ) => dispatch(setPage(preparePayload({ page }))),

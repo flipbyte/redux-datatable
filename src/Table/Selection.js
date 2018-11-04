@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import get from 'lodash/get';
 import PropTypes from "prop-types";
@@ -8,13 +9,11 @@ import { getConfigParam, prepareActionPayload } from '../utils';
 
 const _handleSelection = ( selector, data, config, event ) => {
     let dataKey = getConfigParam(config.indexField);
-    if(!dataKey) {
-        return false;
-    }
+    let params = event.target.checked
+        ? _.mapValues(_.invert(_.assign({}, data)), () => event.target.checked)
+        : {};
 
-    var params = data.map(item => item[dataKey]);
-
-    selector(dataKey, params, event.target.checked);
+    selector(dataKey, params);
 };
 
 const Selection = ({ data, columnConfig, selector }) =>
@@ -25,7 +24,7 @@ const Selection = ({ data, columnConfig, selector }) =>
         </div>
     </td>
 
-const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+const mapStateToProps = ( _, { config: { reducerName, name } } ) => ( state ) => ({
     data: get(state, [reducerName, name, 'items'], [])
 });
 
@@ -37,5 +36,6 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(mapStateToProps, mapDispatchToProps)(Selection));

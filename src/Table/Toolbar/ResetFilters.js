@@ -1,17 +1,17 @@
 import React from 'react';
-import get from 'lodash/get';
+import _ from 'lodash';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
-import { setFilter } from '../actions';
-import { prepareActionPayload } from '../utils'
-import { withTableConfig } from '../TableProvider';
+import { setFilter } from '../../actions';
+import { prepareActionPayload } from '../../utils'
+import { withTableConfig } from '../../TableProvider';
 
-const ResetFilters = ({ clearFilter }) =>
+const ResetFilters = ({ itemConfig, clearFilter }) =>
     <button
         type="button"
-        className="btn btn-primary"
+        className={ _.get(itemConfig, 'htmlClass', 'btn btn-default') }
         onClick={ clearFilter.bind(this) }>
-        Reset Filters
+        { _.get(itemConfig, 'label', 'Reset Filters') }
     </button>
 
 const mapDispatchToProps = ( dispatch, { config } ) => ({
@@ -21,5 +21,6 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity',
 })(connect(null, mapDispatchToProps)(ResetFilters));

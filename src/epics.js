@@ -1,4 +1,6 @@
 import get from 'lodash/get';
+import _ from 'lodash';
+import { normalize } from 'normalizr';
 import { ofType } from 'redux-observable';
 import { Observable, of, pipe } from 'rxjs';
 import { concatMap, switchMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
@@ -21,12 +23,12 @@ import {
 export const setParamsEpic = ( action$, state$ ) => action$.pipe(
     ofType(SET_PAGE, SET_FILTER, SET_SORT, SET_LIMIT),
     concatMap(action => {
-        const { meta: { name, routes, reducerName } } = action;
+        const { meta: { name, routes, reducerName, entity } } = action;
 
         return of(
             cancelRequest({ name }),
             requestData({
-                name, routes, reducerName, payload: { query: get(state$.value, [reducerName, name]).query }
+                name, routes, reducerName, entity, payload: { query: get(state$.value, [reducerName, name]).query }
             })
         )
     })
@@ -36,16 +38,24 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(REQUEST_DATA),
     switchMap(action => {
         const {
-            meta: { name, routes },
+            meta: { name, routes, entity },
             payload
         } = action;
 
         return api.get(routes.get.route, { params: Object.assign({}, routes.get.params, payload.query) }).pipe(
             map(response => {
+                if(entity) {
+                    const normalizedData = normalize(response, entity.responseSchema);
+                    if(!_.isEmpty(normalizedData.entities)) {
+                        const data = get(normalizedData.result, routes.get.resultPath.data, {});
+                        return { response, data, ...normalizedData };
+                    }
+                }
+
                 const data = get(response, routes.get.resultPath.data, {});
-                const payload = { response, data };
-                return receiveData({ name, payload })
+                return { response, data };
             }),
+            map(payload => receiveData({ name, payload })),
             catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
@@ -59,7 +69,7 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(DELETE_DATA),
     switchMap(action => {
         const {
-            meta: { name, routes, reducerName },
+            meta: { name, routes, reducerName, entity },
             payload
         } = action;
 
@@ -73,7 +83,7 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                     createNotification({ type: NOTIFICATION_TYPE_SUCCESS, message: response.result }),
                     cancelRequest({ name }),
                     requestData({
-                        name, routes, reducerName,
+                        name, routes, reducerName, entity,
                         payload: { query: get(state$.value, [reducerName, name]).query }
                     })
                 );

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setPage } from '../actions';
 import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
+import Limiter from './Limiter';
 
 const NUM_LINKS = 5;
 
@@ -50,24 +51,35 @@ const Pagination = ({ config: { defaultLimit }, query, setPage }) => {
     } = calculatePaginationProps(query, defaultLimit ? defaultLimit : 10);
 
     return <React.Fragment>
-        <div className="col-sm-12 col-md-6">
+        <div className="col-sm-12 col-md-3">
+            <Limiter />
+        </div>
+        <div className="col-sm-12 col-md-4 text-center">
             {!!count > 0 &&
                 <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
         </div>
-        <div className="col-sm-12 col-md-6">
+        <div className="col-sm-12 col-md-5">
             <ul className="pagination justify-content-end">
                 <li className={"page-item " + (page < 2 ? 'disabled': '')}>
-                    <a className="page-link" href="#" onClick={ (event) => setPage( page - 1 ) }>Previous</a>
+                    <a className="page-link" href="#" onClick={ setPage.bind(this, page - 1) }>Previous</a>
                 </li>
 
+                { page != 1 && <li className={ "page-item " + (page == 1 ? 'disabled': '') }>
+                    <a className="page-link" href="#" onClick={ setPage.bind(this, 1) }>First</a>
+                </li> }
+
                 { getPages(page, total).map( (link, index) =>
-                    <li key={ index } className={"page-item " + (link == page ? 'active' : '')}>
-                        <a className="page-link" href="#" onClick={ (event) => setPage( link ) }>{ link }</a>
+                    <li key={ index } className={ "page-item " + (link == page ? 'active' : '') }>
+                        <a className="page-link" href="#" onClick={ setPage.bind(this, link) }>{ link }</a>
                     </li>
                 ) }
 
-                <li className={"page-item " + (page >= total ? 'disabled': '')}>
-                    <a className="page-link" href="#" onClick={ (event) => setPage( page + 1 ) }>Next</a>
+                { page != total && <li className={ "page-item " + (page == total ? 'disabled': '') }>
+                    <a className="page-link" href="#" onClick={ setPage.bind(this, total) }>Last</a>
+                </li> }
+
+                <li className={ "page-item " + (page >= total ? 'disabled': '') }>
+                    <a className="page-link" href="#" onClick={ setPage.bind(this, page + 1) }>Next</a>
                 </li>
             </ul>
         </div>
@@ -86,5 +98,6 @@ export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
     defaultLimit: 'limiterConfig.default',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(mapStateToProps, mapDispatchToProps)(Pagination));

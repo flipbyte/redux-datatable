@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React from 'react';
+import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
 import { deleteData } from '../../actions';
@@ -7,91 +8,115 @@ import { prepareActionPayload } from '../../utils'
 import { withTableConfig } from '../../TableProvider';
 import { getSelectedKeys, getConfigParam } from '../../utils';
 
-const _toggleDropdown = ( event ) => {
-    event.preventDefault();
-    event.target.parentElement.classList.toggle('open');
-}
+class MassActions extends Component {
+    constructor( props ) {
+        super(props);
+        this.state = { open: false };
 
-const _handleAction = ( action, selection, event, massActions ) => {
-    let dataKey = getConfigParam(action.indexField);
-    let selectedItems = getSelectedKeys(selection, dataKey);
-
-    if( !selectedItems || !selectedItems[dataKey] || selectedItems[dataKey].length == 0 ) {
-        alert("No item(s) selected");
-        return false;
+        this.toggle = this.toggle.bind(this);
+        this.manageEvents = this.manageEvents.bind(this);
+        this.handleDocumentClick = this.handleDocumentClick.bind(this);
     }
 
-    switch( action.type ) {
-        // case 'route':
-        //     context.router.history.push({
-        //         pathname: action.route,
-        //         search: '?' + selectedItems.toString()
-        //     });
-        //     break;
-
-        case 'action':
-            massActions[action.name](selectedItems.get());
-            break;
-
-        default:
-            break;
+    componentWillUnmount() {
+        this.manageEvents(true);
     }
-}
 
-const _renderItem = ( key, action, selection, massActions ) =>
-    <li key={ key } className="dropdown-item">
-        <a
-            className={ action.name }
-            href="#"
-            onClick={ (event) => _handleAction(action, selection, event, massActions) }>
-            { action.label }
-        </a>
-    </li>
+    toggle( e ) {
+        let isOpen = !this.state.open;
+        if(isOpen) {
+            this.manageEvents();
+        } else {
+            this.manageEvents(true);
+        }
 
-const _renderAction = ( key, selection, action, massActions ) => {
-    switch( action.type ) {
-        case 'route':
-            return _renderItem(key, action, selection, massActions);
+        this.setState({ open: isOpen })
+    }
 
-        case 'action':
-            if( !action.actions ) {
-                return _renderItem(key, action, selection, massActions);
-            }
+    manageEvents(remove = false) {
+        var eventUpdater = document.addEventListener;
+        if(remove) {
+            eventUpdater = document.removeEventListener;
+        }
 
-            return (
-                <li key={ key } className="dropdown-item dropdown-submenu dropdown-menu-right">
-                    <a className={ action.name } href="#" onClick={ _toggleDropdown.bind(this) }>
-                        { action.label }
+        ['click', 'touchstart', 'keyup'].forEach( event =>
+            eventUpdater(event, this.handleDocumentClick, true)
+        );
+    }
+
+    handleDocumentClick(e) {
+        if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== keyCodes.tab))) {
+            return;
+        }
+
+        const container = ReactDOM.findDOMNode(this);
+        if (container.contains(e.target) && container !== e.target
+            && (e.type !== 'keyup' || e.which === keyCodes.tab)
+        ) {
+            return;
+        }
+
+        this.toggle(e);
+    }
+
+    handleAction( action, event ) {
+        const { selection, massActions } = this.props;
+
+        let dataKey = getConfigParam(action.indexField);
+        let selectedItems = getSelectedKeys(selection, dataKey);
+
+        if( !selectedItems || !selectedItems[dataKey] || selectedItems[dataKey].length == 0 ) {
+            alert("No item(s) selected");
+            return false;
+        }
+
+        switch( action.type ) {
+            // case 'route':
+            //     context.router.history.push({
+            //         pathname: action.route,
+            //         search: '?' + selectedItems.toString()
+            //     });
+            //     break;
+
+            case 'action':
+                massActions[action.name](selectedItems.get());
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    renderItem( key, action ) {
+        return <li key={ key } className="dropdown-item">
+            <a
+                className={ action.name }
+                href="#"
+                onClick={ (event) => this.handleAction(action, event) }>
+                { action.label }
+            </a>
+        </li>
+    }
+
+    render() {
+        const { label, ...actions } = this.props.itemConfig;
+        return (
+            <div className={ 'dropdown ' + (this.state.open ? 'open': '') }>
+                <button
+                    className="btn btn-default dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    onClick={ this.toggle }>
+                        { label }
                         <span className="caret"></span>
-                    </a>
-                    <ul className="dropdown-menu">
-                        { _.map(action.actions, ( actionItem, key) =>
-                            _renderAction( key, selection, actionItem, massActions)
-                        ) }
-                    </ul>
-                </li>
-            )
-
+                </button>
+                <ul className={ 'dropdown-menu ' + (this.state.open ? 'show': '') }>
+                    { _.map(actions, ( action, key ) => this.renderItem(key, action) ) }
+                </ul>
+            </div>
+        )
     }
 }
-
-const MassActions = ({ selection, config: { massActionsConfig }, massActions }) =>
-    <div className="dropdown">
-        <button
-            className="btn btn-default dropdown-toggle"
-            type="button"
-            data-toggle="dropdown"
-            onClick={ (event) => _toggleDropdown(event) }>
-                Actions
-                <span className="caret"></span>
-        </button>
-        <ul className="dropdown-menu">
-            { _.map(massActionsConfig, ( massActionItem, key ) =>
-                _renderAction(key, selection, massActionItem, massActions)
-            ) }
-        </ul>
-    </div>
-
 
 const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
     selection: _.get(state, [reducerName, name, 'selection'], {}),
@@ -110,6 +135,6 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
-    massActionsConfig: 'toolbar.massActions',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(mapStateToProps, mapDispatchToProps)(MassActions));

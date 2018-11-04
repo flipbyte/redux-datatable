@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import Date from './Filter/Date';
 import String from './Filter/String';
 import Number from './Filter/Number';
-import Date from './Filter/Date';
 
 import { connect } from 'react-redux';
 import { setFilter } from '../actions';
 import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
 
-export const SEARCH_OPERATOR_CONTAINS = 'contains';
-export const SEARCH_OPERATOR_BETWEEN = 'between';
 export const SEARCH_OPERATOR_IS = 'is';
 export const SEARCH_OPERATOR_IN = 'in';
-export const SEARCH_OPERATOR_NOT_IN = 'not in';
 export const SEARCH_TYPE_DATE = 'date';
+export const SEARCH_OPERATOR_NOT_IN = 'not in';
+export const SEARCH_OPERATOR_BETWEEN = 'between';
+export const SEARCH_OPERATOR_CONTAINS = 'contains';
 
 const Filter = ( props ) => {
     if( props.type == 'number') return <Number { ...props } />
@@ -30,5 +30,6 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(null, mapDispatchToProps)(Filter));

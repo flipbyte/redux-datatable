@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import { SEARCH_OPERATOR_CONTAINS } from '../Filter';
 import get from 'lodash/get';
 import { connect } from 'react-redux';
+import { SEARCH_OPERATOR_CONTAINS } from '../Filter';
 import { withTableConfig } from '../../TableProvider';
 
 const _applyFilter = (filterer, event) => {

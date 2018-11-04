@@ -7,11 +7,11 @@ import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
 
 const Limiter = ({ config: { options }, selectedOption, setLimit }) =>
-    <label className="limiter d-flex justify-content-end">
+    <label className="limiter d-flex">
         <select
             className="form-control input-sm"
             id="limiter"
-            defaultValue={ selectedOption }
+            value={ selectedOption }
             onChange={ ( event ) => setLimit(event.target.value) }>
             { options.map( (option, index) =>
                 <option key={ index } value={ option }>{ option !== 0 ? option : 'All' }</option>
@@ -19,7 +19,7 @@ const Limiter = ({ config: { options }, selectedOption, setLimit }) =>
         </select> per page
     </label>
 
-const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
+const mapStateToProps = ( _, { config: { reducerName, name } } ) => ( state ) => ({
     selectedOption: get(state, [reducerName, name, 'query', 'limit'], 10)
 });
 
@@ -31,5 +31,6 @@ export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
     options: 'limiterConfig.options',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(mapStateToProps, mapDispatchToProps)(Limiter));

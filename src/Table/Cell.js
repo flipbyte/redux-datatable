@@ -54,5 +54,6 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(mapStateToProps, mapDispatchToProps)(Cell));

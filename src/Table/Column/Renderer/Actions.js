@@ -1,43 +1,42 @@
 import _ from 'lodash';
-import React from 'react';
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { deleteData } from '../../../actions';
 import { withTableConfig } from '../../../TableProvider';
 import { paramsResolver, prepareActionPayload } from '../../../utils'
 
-const _handleAction = ( event, data, action, { actions } ) => {
-    let params = paramsResolver(action.params, data);
-    actions[action.name](params.get(), action.action);
-};
+class Actions extends Component {
+    constructor( props ) {
+        super(props);
 
-const _renderBtn = ( key, data, action, props ) =>
-    <button key ={ key }
-        type="button"
-        className={ action.btnClass }
-        onClick={ (event) => _handleAction(event, data, action, props) }>
-        { action.label }
-    </button>
+        this.handleAction = this.handleAction.bind(this);
+    }
 
+    handleAction( action ) {
+        const { data, actions } = this.props;
+        const params = paramsResolver(action.params, data);
+        actions[action.name](params.get(), action.action);
+    }
 
-const Actions = ( props ) => {
-    const {
-        data,
-        colConfig: {
-            children
-        },
-        ...rest
-    } = props;
-    return (
-        <td>
-            <div className="btn-group-sm">
-                { _.map(children, ( action, key ) =>
-                    _renderBtn( key, data, action, { ...rest })
-                ) }
-            </div>
-        </td>
-    )
-};
+    render() {
+        const { children } = this.props.colConfig;
+
+        return (
+            <td>
+                <div className="btn-group-sm">
+                    { _.map(children, ( action, key ) =>
+                        <button key ={ key }
+                            type="button"
+                            className={ action.btnClass }
+                            onClick={ this.handleAction.bind(null, action) }>
+                            { action.label }
+                        </button>
+                    ) }
+                </div>
+            </td>
+        )
+    }
+}
 
 const mapDispatchToProps = ( dispatch, { config } ) => ({
     actions: {
@@ -55,5 +54,6 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 export default withTableConfig({
     name: 'name',
     reducerName: 'reducerName',
-    routes: 'routes'
+    routes: 'routes',
+    entity: 'entity'
 })(connect(null, mapDispatchToProps)(Actions));

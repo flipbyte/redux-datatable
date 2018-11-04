@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import objectAssignDeep from 'object-assign-deep';
+import _ from 'lodash';
 
 let initialTableState = {
     isFetching: false,
@@ -46,6 +47,9 @@ export default function reducer(state = {}, action) {
         case actions.REQUEST_DATA:
             return stateUpdater({ isFetching: true });
 
+        case actions.REQUEST_DATA_CANCEL:
+            return stateUpdater({ isFetching: false });
+
         case actions.RECEIVE_DATA:
             return stateUpdater({
                 isFetching: false,
@@ -61,6 +65,7 @@ export default function reducer(state = {}, action) {
             offset = offset > 0 ? offset : 0;
 
             return stateUpdater({
+                isFetching: true,
                 query: {
                     page: payload.page,
                     offset: offset
@@ -69,6 +74,7 @@ export default function reducer(state = {}, action) {
 
         case actions.SET_SORT:
             return stateUpdater({
+                isFetching: true,
                 query: {
                     sort: payload.sort,
                     dir: payload.dir
@@ -77,6 +83,7 @@ export default function reducer(state = {}, action) {
 
         case actions.SET_LIMIT:
             return stateUpdater({
+                isFetching: true,
                 query: {
                     limit: parseInt(payload.limit),
                     offset: (tableState(state).query.page - 1) * tableState(state).query.limit
@@ -101,25 +108,41 @@ export default function reducer(state = {}, action) {
                         search: {
                             ...updatedFilters
                         }
-                    }
+                    },
+                    isFetching: true
                 }
             };
 
         case actions.SET_SELECTION:
             let selection = {};
             if( typeof payload.key == 'object') {
-                payload.key.map(key => selection[key] = payload.value)
+                selection[payload.paramKey] = payload.key;
             } else {
-                selection[payload.key] = payload.value;
+                selection = _.get(tableState(state), 'selection', {});
+                if(_.isEmpty(selection[payload.paramKey])) {
+                    selection[payload.paramKey] = {}
+                }
+                selection[payload.paramKey][payload.key] = payload.value;
             }
 
-            return stateUpdater({
-                selection: {
-                    [payload.paramKey]: {
+            return {
+                ...state,
+                [name]: {
+                    ...state[name],
+                    selection: {
+                        ...state[name].selection,
                         ...selection
                     }
                 }
-            });
+            }
+
+            // return stateUpdater({
+            //     selection: {
+            //         [payload.paramKey]: {
+            //             ...selection
+            //         }
+            //     }
+            // });
             // return {
             //     ...state,
             //     selection: {
