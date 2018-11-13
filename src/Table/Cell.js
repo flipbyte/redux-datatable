@@ -6,7 +6,7 @@ import { setSort } from '../actions';
 import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
 
-const changeSortOrder = ({ query, colName, sorter }, event) => {
+const changeSortOrder = ( query, colName, sorter ) => {
     let dir = null;
     if( query.sort != colName ) {
         dir = 'asc';
@@ -24,24 +24,21 @@ const changeSortOrder = ({ query, colName, sorter }, event) => {
     sorter(colName, dir);
 }
 
-const _prepareHeader = ( props ) => (
-    ( props.sortable ) ?
+const _prepareHeader = ({ sortable, colName, query, width, attributes, label, sorter }) =>
+    ( sortable ) ?
         <th
-            className={ 'sortable ' + props.colName + ' ' + ( props.colName == props.query.sort ? props.query.dir : '' ) }
+            className={ 'sortable ' + colName + ' ' + ( colName == query.sort ? query.dir : '' ) }
             scope="col"
-            onClick={ (event) => changeSortOrder(props, event) }
-            { ...props.attributes } >
-
-            { props.label } <b className="sort-caret"></b>
+            style={{ width: width }}
+            onClick={ changeSortOrder.bind(this, query, colName, sorter) }
+            { ...attributes } >
+            { label } <b className="sort-caret"></b>
         </th> :
-        <th>{ props.label }</th>
-);
+        <th style={{ width: width }}>{ label }</th>;
 
-const Cell = ({ colName, query, label, isHeader, sortable, sorter, attributes }) => (
-    ( isHeader ) ?
-        _prepareHeader({ colName, query, label, isHeader, sortable, sorter, attributes }) :
-        <td { ...attributes }>{ label }</td>
-);
+
+const Cell = ( props ) =>
+    props.isHeader ? _prepareHeader(props) : <td { ...props.attributes }>{ props.label }</td>;
 
 const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
     query: get(state, [reducerName, name, 'query'], {})

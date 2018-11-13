@@ -17,12 +17,15 @@ const _renderToolbarItem = (key, item) => {
     return <MassActions key={ key } itemConfig={ item } />
 }
 
+const renderToolbarGroup = ( groupKey, { htmlClass, ...items } ) =>
+    <div key={ groupKey } className={ 'btn-group ' + htmlClass }>
+        { _.map(items, (item, key) => _renderToolbarItem(key, item)) }
+    </div>
+
 const Toolbar = ({ config: { toolbar } }) =>
-    _.map(toolbar, ( item, key ) =>
-        <div className="btn-group" key={ key }>
-            { _renderToolbarItem(key, item) }
-        </div>
-    );
+    <div className="btn-toolbar">
+        { _.map(toolbar, (group, key) => renderToolbarGroup(key, group)) }
+    </div>
 
 export default withTableConfig({
     toolbar: 'toolbar',

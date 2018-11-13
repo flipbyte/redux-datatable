@@ -18,31 +18,34 @@ const _renderRowItems = ( props ) => {
     return <Filter { ...props } />
 }
 
-const Header = ({ config: { columns } }) =>
+const Header = ({ isHead, config: { columns } }) =>
     <thead>
         <tr className="headers">
-            { _.map(columns, ({ sortable, name, label, attributes }, key) => (
+            { _.map(columns, ({ sortable, name, label, width, attributes }, key) => (
                 _renderRowItems({
                     key: key,
                     type: "header",
                     isHeader: true,
                     sortable: sortable ? true : false,
+                    width: width,
                     colName: name,
                     label: label,
                     attributes: attributes
                 })
             ) ) }
         </tr>
-        <tr className="filters">
-            { _.map(columns, ( column, key) => (
-                _renderRowItems({
-                    key: key,
-                    type: column.type,
-                    colName: column.name,
-                    columnConfig: column
-                })
-            ) ) }
-        </tr>
+        { !!isHead &&
+            <tr className="filters">
+                { _.map(columns, ( column, key) => (
+                    _renderRowItems({
+                        key: key,
+                        type: column.type,
+                        colName: column.name,
+                        columnConfig: column
+                    })
+                ) ) }
+            </tr>
+        }
     </thead>;
 
 export default withTableConfig({

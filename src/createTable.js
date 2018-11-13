@@ -51,8 +51,8 @@ class FlutterTable extends Component {
         }
 
         return (
-            <TableProvider config={ { reducerName, ...config } }>
-                <Table name={ name } isFetching={ tableData.isFetching } />
+            <TableProvider config={{ reducerName, ...config }}>
+                <Table name={ name } isFetching={ tableData.isFetching } height={ config.height } />
             </TableProvider>
         )
     }

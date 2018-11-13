@@ -30,12 +30,12 @@ label.limiter select {
   position: relative;
   display: block;
   width: 100%;
-  padding: 20px 0;
   overflow: auto;
   border: 0;
 }
 
 .flutter-table {
+  table-layout: fixed;
   width: 100%;
   max-width: 100%;
   background-color: transparent;
@@ -145,4 +145,28 @@ label.limiter select {
 .flutter-table tbody td .badge {
     width: 100%
 }
+
+.flutter-table td > input {
+    min-width: 100px;
+}
+
+.flutter-table-body thead .headers {
+    visibility: collapse;
+}
+
+.flutter-table-body {
+    overflow-y: scroll;
+}
+
+.flutter-table-body-inner {
+    position: relative;
+}
+
+.flutter-table-body-inner > table {
+    position: absolute;
+}
+
+/*.flutter-table-body-inner > table > tbody > tr:nth-child(even) {
+    background-color: #ebebeb;
+}*/
 
