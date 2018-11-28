@@ -5,16 +5,19 @@ import Renderer from './Column/Renderer';
 import { withTableConfig } from '../TableProvider';
 import { denormalize } from 'normalizr';
 
-const Row = ({ key, data, config: { columns } }) =>
-    <tr>
-        { _.map(columns, ( column, key ) => (
-            <Renderer key={ key }
-                index={ column.name }
-                data={ data }
-                renderer={ column.renderer }
-                colConfig={ column } />
-        )) }
-    </tr>
+const Row = ({ index, width, data, top, isScrolling, config: { columns } }) =>
+    <div className={ 'flutter-table-body-row ' + (index % 2 == 0 ? 'even' : 'odd') }
+        style={{ top: top + 'px', width: width + 'px' }}>
+        { !isScrolling && _.map(columns, ( column, key ) =>
+            <div className="flutter-table-row-item" key={ key }  style={{ width: column.width }}>
+                <Renderer
+                    index={ column.name }
+                    data={ data }
+                    renderer={ column.renderer }
+                    colConfig={ column } />
+            </div>
+        ) }
+    </div>
 
 const mapStateToProps = ( state, { itemIndex, config: { reducerName, name, entity } } ) => {
     var normalizedData = _.get(state, [ entity.state, itemIndex ], {});

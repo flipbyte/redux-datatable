@@ -1,8 +1,8 @@
+import _ from 'lodash';
 import React from 'react';
-import PropTypes from "prop-types";
-import get from 'lodash/get';
-import { connect } from 'react-redux';
 import { setSort } from '../actions';
+import PropTypes from "prop-types";
+import { connect } from 'react-redux';
 import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
 
@@ -26,22 +26,22 @@ const changeSortOrder = ( query, colName, sorter ) => {
 
 const _prepareHeader = ({ sortable, colName, query, width, attributes, label, sorter }) =>
     ( sortable ) ?
-        <th
-            className={ 'sortable ' + colName + ' ' + ( colName == query.sort ? query.dir : '' ) }
+        <div
+            className={ 'flutter-table-header-item sortable ' + colName + ' ' + ( colName == query.sort ? query.dir : '' ) }
             scope="col"
             style={{ width: width }}
             onClick={ changeSortOrder.bind(this, query, colName, sorter) }
             { ...attributes } >
             { label } <b className="sort-caret"></b>
-        </th> :
-        <th style={{ width: width }}>{ label }</th>;
+        </div> :
+        <div className="flutter-table-header-item">{ label }</div>;
 
 
-const Cell = ( props ) =>
-    props.isHeader ? _prepareHeader(props) : <td { ...props.attributes }>{ props.label }</td>;
+const Cell = ({ isHeader, ...rest }) =>
+    isHeader ? _prepareHeader(rest) : <Fragment>{ props.label }</Fragment>
 
 const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
-    query: get(state, [reducerName, name, 'query'], {})
+    query: _.get(state, [reducerName, name, 'query'], {})
 });
 
 const mapDispatchToProps = ( dispatch, { config } ) => ({

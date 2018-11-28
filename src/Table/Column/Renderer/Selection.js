@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import React, { Component } from 'react';
-import get from 'lodash/get';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { setSelection } from '../../../actions';
 import { withTableConfig } from '../../../TableProvider';
 import { getParam, getConfigParam, prepareActionPayload } from '../../../utils';
@@ -24,14 +23,14 @@ class Selection extends Component {
 
     render() {
         const { selection, ...rest } = this.props;
-        return <td>
+        return (
             <div className="col-12">
                 <input
                     type="checkbox"
                     checked={ selection }
                     onChange={ handleSelection.bind(this, rest) } />
             </div>
-        </td>
+        );
     }
 }
 
@@ -41,10 +40,10 @@ const mapStateToProps = ( state, {
     colConfig: { indexField }
 }) => {
     let dataKey = getConfigParam(indexField);
-    var key = get(data, dataKey);
+    var key = _.get(data, dataKey);
 
     return {
-        selection: get(state, [reducerName, name, 'selection', dataKey, key], false)
+        selection: _.get(state, [reducerName, name, 'selection', dataKey, key], false)
     }
 }
 

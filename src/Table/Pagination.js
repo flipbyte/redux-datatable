@@ -1,5 +1,5 @@
 import React from 'react';
-import get from 'lodash/get';
+import _ from 'lodash';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
 import { setPage } from '../actions';
@@ -87,7 +87,7 @@ const Pagination = ({ config: { defaultLimit }, query, setPage }) => {
 }
 
 const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
-    query: get(state, [reducerName, name, 'query'], {})
+    query: _.get(state, [reducerName, name, 'query'], {})
 });
 
 const mapDispatchToProps = ( dispatch, { config } ) => ({

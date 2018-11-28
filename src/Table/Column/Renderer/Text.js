@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import get from 'lodash/get';
+import _ from 'lodash';
 import { shouldUpdate } from '../../../utils';
+import React, { Fragment, Component } from 'react';
 
 class Text extends Component {
     shouldComponentUpdate( nextProps ) {
@@ -9,7 +9,7 @@ class Text extends Component {
 
     render() {
         const { data, index, colConfig: { textAlign } } = this.props;
-        return <td className={ textAlign ? textAlign : '' }> { get(data, index, '') } </td>
+        return <Fragment>{ _.get(data, index, '') }</Fragment>
     }
 }
 

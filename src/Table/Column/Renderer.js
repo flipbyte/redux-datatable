@@ -7,31 +7,21 @@ import Actions from './Renderer/Actions';
 import Options from './Renderer/Options';
 import Selection from './Renderer/Selection';
 
-const _render = (ComponentName, props) =>
-    <ComponentName { ...props } />
+const _render = ( ComponentName, props ) => <ComponentName { ...props } />
 
 const Renderer = ({ index, data, renderer, colConfig }) => {
-    if(renderer) {
-        return _render(renderer, {index, data, colConfig });
-    } else {
-        switch(colConfig.type) {
-            case 'date':
-                return _render(Date, { index, data, colConfig });
+    var types = {
+        date: Date,
+        actions: Actions,
+        selection: Selection,
+        options:  Options,
+        default: Text
+    };
 
-            case 'actions':
-                return _render(Actions, { data, colConfig });
-
-            case 'selection':
-                return _render(Selection, { data, colConfig });
-
-            case 'options':
-                return _render(Options, { index, data, colConfig });
-
-            default:
-                return _render(Text, { index, data, colConfig });
-
-        }
-    }
+    return _render(
+        renderer || types[colConfig.type] || types['default'],
+        { index, data, colConfig }
+    )
 };
 
 Renderer.propTypes = {

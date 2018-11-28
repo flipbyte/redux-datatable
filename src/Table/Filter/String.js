@@ -1,11 +1,11 @@
-import React from 'react';
+import _ from 'lodash';
 import PropTypes from "prop-types";
-import get from 'lodash/get';
 import { connect } from 'react-redux';
+import React, { Fragment } from 'react';
 import { SEARCH_OPERATOR_CONTAINS } from '../Filter';
 import { withTableConfig } from '../../TableProvider';
 
-const _applyFilter = (filterer, event) => {
+const applyFilter = ( filterer, event ) => {
     let filter = {};
     if(event.target.value) {
         filter = {
@@ -20,21 +20,16 @@ const _applyFilter = (filterer, event) => {
 };
 
 const String = ({ colName, value, filterer }) =>
-    <td>
+    <Fragment>
         <input
             className="form-control"
             name={ colName }
             value={ value }
-            onChange={ (event) => _applyFilter(filterer, event) } />
-    </td>
-
-String.propTypes = {
-    filterer: PropTypes.func.isRequired,
-    colName: PropTypes.string.isRequired
-};
+            onChange={ applyFilter.bind(this, filterer) } />
+    </Fragment>
 
 const mapStateToProps = ( state, { config: { reducerName, name }, colName } ) => ({
-    value: get(state, [reducerName, name, 'query', 'search', colName, 'value'], '')
+    value: _.get(state, [reducerName, name, 'query', 'search', colName, 'value'], '')
 });
 
 export default withTableConfig({

@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { deleteData } from '../../../actions';
 import { withTableConfig } from '../../../TableProvider';
 import { paramsResolver, prepareActionPayload } from '../../../utils'
@@ -20,20 +20,17 @@ class Actions extends Component {
 
     render() {
         const { children } = this.props.colConfig;
-
         return (
-            <td>
-                <div className="btn-group-sm">
-                    { _.map(children, ( action, key ) =>
-                        <button key ={ key }
-                            type="button"
-                            className={ action.btnClass }
-                            onClick={ this.handleAction.bind(null, action) }>
-                            { action.label }
-                        </button>
-                    ) }
-                </div>
-            </td>
+            <div className="btn-group-sm">
+                { _.map(children, ( action, key ) =>
+                    <button key ={ key }
+                        type="button"
+                        className={ action.btnClass }
+                        onClick={ this.handleAction.bind(null, action) }>
+                        { action.label }
+                    </button>
+                ) }
+            </div>
         )
     }
 }

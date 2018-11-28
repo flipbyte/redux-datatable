@@ -34,10 +34,13 @@ label.limiter select {
   border: 0;
 }
 
+
+/**** new table css ******/
 .flutter-table {
+    overflow: hidden;
   table-layout: fixed;
   width: 100%;
-  max-width: 100%;
+  /* max-width: 100%; */
   background-color: transparent;
   border-collapse: collapse;
   -webkit-border-radius: 4px;
@@ -45,24 +48,44 @@ label.limiter select {
           border-radius: 4px;
 }
 
-/*.flutter-table-container {
-    height: 100%;
-}*/
-
-.flutter-table th,
-.flutter-table td {
-  height: 20px;
-  max-width: 250px;
-  padding: 4px 5px;
-  overflow: hidden;
-  line-height: 20px;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: middle;
+.flutter-table-head-container {
+    overflow: hidden;
 }
 
-.flutter-table th {
+.flutter-table-body-container {
+    overflow: auto;
+    position: relative;
+}
+
+.flutter-table-head-row,
+.flutter-table-body-row,
+.flutter-table-body-container.col-xs-12 {
+    clear: both;
+}
+
+.flutter-table-body-row {
+    position: absolute;
+    left: 0;
+    height: 39px;
+}
+
+.flutter-table-row-item {
+    float: left;
+    min-height: 20px;
+    padding: 4px 5px;
+    overflow: hidden;
+    line-height: 30px;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.flutter-table-body-row .flutter-table-row-item {
+    height: 40px;
+}
+
+.flutter-table-head-row.headers .flutter-table-row-item {
   font-weight: bold;
   text-align: center;
   border-bottom: none !important;
@@ -71,28 +94,27 @@ label.limiter select {
   border-top: none;
 }
 
-.flutter-table th.sortable a {
+.flutter-table-header-item.sortable a {
   white-space: nowrap;
   cursor: pointer;
   text-decoration: none;
 }
 
-.flutter-table thead th {
+.flutter-table-head-row.headers .flutter-table-row-item {
   vertical-align: bottom;
   background-color: #f9f9f9;
 }
 
-.flutter-table thead th button {
+.flutter-table-head-row.headers .flutter-table-row-item button {
   display: block;
   border: none;
   background: none;
   padding: 0;
 }
 
-.flutter-table.table-striped tbody tr:nth-child(even) {
+.flutter-table.table-striped .flutter-table-body-row.odd {
   background-color: #f9f9f9;
 }
-
 
 .flutter-table .sort-caret {
   display: inline-block;
@@ -101,22 +123,20 @@ label.limiter select {
   margin-left: 0.3em;
   border: 0;
   content: "";
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
 }
 
 .flutter-table .asc .sort-caret {
   vertical-align: baseline;
   border-top: none;
-  border-right: 4px solid transparent;
   border-bottom: 4px solid #000000;
-  border-left: 4px solid transparent;
 }
 
 .flutter-table .desc .sort-caret {
   vertical-align: super;
   border-top: 4px solid #000000;
-  border-right: 4px solid transparent;
   border-bottom: none;
-  border-left: 4px solid transparent;
 }
 
 .flutter-table .string-cell,
@@ -142,11 +162,11 @@ label.limiter select {
   text-align: center;
 }
 
-.flutter-table tbody td .badge {
+.flutter-table .flutter-table-body-row .flutter-table-row-item .badge {
     width: 100%
 }
 
-.flutter-table td > input {
+.flutter-table .flutter-table-row-item > input {
     min-width: 100px;
 }
 
@@ -154,9 +174,9 @@ label.limiter select {
     visibility: collapse;
 }
 
-.flutter-table-body {
+/* .flutter-table-body {
     overflow-y: scroll;
-}
+} */
 
 .flutter-table-body-inner {
     position: relative;
@@ -165,7 +185,3 @@ label.limiter select {
 .flutter-table-body-inner > table {
     position: absolute;
 }
-
-/*.flutter-table-body-inner > table > tbody > tr:nth-child(even) {
-    background-color: #ebebeb;
-}*/

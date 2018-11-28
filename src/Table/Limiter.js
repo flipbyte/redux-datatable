@@ -1,5 +1,5 @@
+import _ from 'lodash';
 import React from 'react';
-import get from 'lodash/get';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
 import { setLimit } from '../actions';
@@ -19,8 +19,8 @@ const Limiter = ({ config: { options }, selectedOption, setLimit }) =>
         </select> per page
     </label>
 
-const mapStateToProps = ( _, { config: { reducerName, name } } ) => ( state ) => ({
-    selectedOption: get(state, [reducerName, name, 'query', 'limit'], 10)
+const mapStateToProps = ( initialState, { config: { reducerName, name } } ) => ( state ) => ({
+    selectedOption: _.get(state, [reducerName, name, 'query', 'limit'], 10)
 });
 
 const mapDispatchToProps = ( dispatch, { config } ) => ({

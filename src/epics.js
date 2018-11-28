@@ -1,4 +1,3 @@
-import get from 'lodash/get';
 import _ from 'lodash';
 import { normalize } from 'normalizr';
 import { ofType } from 'redux-observable';
@@ -28,7 +27,7 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
         return of(
             cancelRequest({ name }),
             requestData({
-                name, routes, reducerName, entity, payload: { query: get(state$.value, [reducerName, name]).query }
+                name, routes, reducerName, entity, payload: { query: _.get(state$.value, [reducerName, name]).query }
             })
         )
     })
@@ -47,12 +46,12 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 if(entity) {
                     const normalizedData = normalize(response, entity.responseSchema);
                     if(!_.isEmpty(normalizedData.entities)) {
-                        const data = get(normalizedData.result, routes.get.resultPath.data, {});
+                        const data = _.get(normalizedData.result, routes.get.resultPath.data, {});
                         return { response, data, ...normalizedData };
                     }
                 }
 
-                const data = get(response, routes.get.resultPath.data, {});
+                const data = _.get(response, routes.get.resultPath.data, {});
                 return { response, data };
             }),
             map(payload => receiveData({ name, payload })),
@@ -84,7 +83,7 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                     cancelRequest({ name }),
                     requestData({
                         name, routes, reducerName, entity,
-                        payload: { query: get(state$.value, [reducerName, name]).query }
+                        payload: { query: _.get(state$.value, [reducerName, name]).query }
                     })
                 );
             }),

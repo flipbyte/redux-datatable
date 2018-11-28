@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import _ from 'lodash';
 import Time from 'react-pure-time';
-import get from 'lodash/get';
 import { shouldUpdate } from '../../../utils';
+import React, { Fragment, Component } from 'react';
 
 class Options extends Component {
     shouldComponentUpdate( nextProps ) {
@@ -10,18 +10,16 @@ class Options extends Component {
 
     render() {
         const { data, index, colConfig: { options, textAlign } } = this.props;
-        const value = get(data, index);
+        const value = _.get(data, index);
 
         if(!options || !options[value]) {
-            return <td>{ value }</td>
+            return <Fragment>{ value }</Fragment>
         }
 
         return (
-            <td className={ textAlign ? textAlign : '' }>
-                <span className={ (options[value].badge ? 'badge ' + options[value].badge : '') }>
-                    { options[value].value }
-                </span>
-            </td>
+            <span className={ (options[value].badge ? 'badge ' + options[value].badge : '') }>
+                { options[value].value }
+            </span>
         );
     }
 }

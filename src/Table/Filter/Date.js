@@ -1,14 +1,14 @@
-import React from 'react';
+import _ from 'lodash';
 import PropTypes from "prop-types";
-import get from 'lodash/get';
 import { connect } from 'react-redux';
+import React, { Fragment } from 'react';
 import { SEARCH_OPERATOR_BETWEEN } from '../Filter';
 import { withTableConfig } from '../../TableProvider';
 
 var dateFrom = null;
 var dateTo = null;
 
-const _applyFilter = (key, filterer, event) => {
+const applyFilter = ( key, filterer, event ) => {
     let filter = {};
 
     if(key == 0) {
@@ -31,22 +31,22 @@ const _applyFilter = (key, filterer, event) => {
 };
 
 const Date = ({ colName, value, filterer }) =>
-    <td>
+    <Fragment>
         <input
             className="form-control"
             type="date"
             name={ colName }
             value={ value[0] ? value[0] : '' }
-            onChange={ (event) => _applyFilter(0, filterer, event) }
+            onChange={ applyFilter.bind(this, 0, filterer) }
             placeholder="From" />
         <input
             className="form-control"
             type="date"
             name={ colName }
             value={ value[1] ? value[1] : ''}
-            onChange={ (event) => _applyFilter(1, filterer, event) }
+            onChange={ applyFilter.bind(this, 1, filterer) }
             placeholder="To" />
-    </td>
+    </Fragment>
 
 
 // import React, { Component } from 'react';
@@ -128,13 +128,8 @@ const Date = ({ colName, value, filterer }) =>
 //     }
 // }
 
-Date.propTypes = {
-    filterer: PropTypes.func.isRequired,
-    colName: PropTypes.string.isRequired
-};
-
 const mapStateToProps = ( state, { config: { reducerName, name }, colName } ) => ({
-    value: get(state, [reducerName, name, 'query', 'search', colName, 'value'], [])
+    value: _.get(state, [reducerName, name, 'query', 'search', colName, 'value'], [])
 });
 
 export default withTableConfig({
