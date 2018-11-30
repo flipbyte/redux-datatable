@@ -1,23 +1,43 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Renderer from './Column/Renderer';
 import { withTableConfig } from '../TableProvider';
 import { denormalize } from 'normalizr';
 
-const Row = ({ index, width, data, top, config: { columns } }) =>
-    <div className={ 'flutter-table-body-row ' + (index % 2 == 0 ? 'even' : 'odd') }
-        style={{ top: top + 'px', width: width + 'px' }}>
-        { _.map(columns, ( column, key ) =>
-            <div className="flutter-table-row-item" key={ key }  style={{ width: column.width }}>
-                <Renderer
-                    index={ column.name }
-                    data={ data }
-                    renderer={ column.renderer }
-                    colConfig={ column } />
-            </div>
-        ) }
-    </div>
+class Row extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { show: false };
+    }
+
+    componentDidMount() {
+        var self = this;
+        if (!this.state.show) {
+            setTimeout(function() {
+                self.setState({ show: true });
+            }, 50);
+        }
+    }
+
+    render() {
+        const { index, width, data, top, config: { columns } } = this.props;
+
+        return <div className={ 'flutter-table-body-row ' + (index % 2 == 0 ? 'even' : 'odd') }
+            style={{ top: top + 'px', width: width + 'px' }}>
+            { this.state.show && _.map(columns, ( column, key ) =>
+                <div className="flutter-table-row-item" key={ key }  style={{ width: column.width }}>
+                    <Renderer
+                        index={ column.name }
+                        data={ data }
+                        renderer={ column.renderer }
+                        colConfig={ column } />
+                </div>
+            ) }
+        </div>;
+    }
+}
 
 const mapStateToProps = ( state, { itemIndex, config: { reducerName, name, entity } } ) => {
     var normalizedData = _.get(state, [ entity.state, itemIndex ], {});
