@@ -15,19 +15,11 @@ class Table extends Component {
     constructor(props) {
         super(props);
 
-        this.canUpdate = true;
-        this.latestScrollY = 0;
-        this.containerHeight = null;
         this.width = _.map(this.props.config.columns, 'width').reduce(( sum, num ) => sum + num, 0);
-
         this.rowHeight = this.props.rowHeight || 39;
-        this.state = {
-            top: 0,
-        };
-
+        this.state = { top: 0 };
         this.handleScroll = this.handleScroll.bind(this);
         this.scrollEnded = _.debounce(this.scrollEnded, 150);
-        this.scrollBetween = _.throttle(this.scrollBetween, 150);
     }
 
     get height() {
@@ -35,31 +27,20 @@ class Table extends Component {
     }
 
     scrollEnded() {
-        this.setState({
-            pointerEvents: '',
-            // isScrolling: false
-        })
+        this.setState({ pointerEvents: '' })
     }
 
     scrollUpdate() {
         this.tableHeader.scrollLeft = this.tableBody.scrollLeft;
         this.setState({
             pointerEvents: 'none',
-            top: this.tableBody.scrollTop,
-            isScrolling: true
-        })
-    }
-
-    scrollBetween() {
-        this.setState({
-            isScrolling: false
+            top: this.tableBody.scrollTop
         })
     }
 
     handleScroll() {
         this.scrollEnded();
         this.scrollUpdate();
-        this.scrollBetween();
     }
 
     componentDidMount() {
@@ -70,13 +51,9 @@ class Table extends Component {
         this.tableBody.removeEventListener('scroll', this.handleScroll, true);
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return nextState.top !== this.state.top && nextState.isScrolling !== this.state.isScrolling;
-    // }
-
     render() {
         const { name, isFetching, height, data } = this.props;
-        const { pointerEvents, top, isScrolling } = this.state;
+        const { pointerEvents, top } = this.state;
 
         return (
             <div className="flutter-table-outer-container">
@@ -113,7 +90,6 @@ class Table extends Component {
                                                     index={ index }
                                                     itemIndex={ item }
                                                     width={ this.width }
-                                                    isScrolling={ isScrolling }
                                                     top={ top } />
                                             )} />
                                     </div>

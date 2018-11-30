@@ -45,44 +45,53 @@ const calculatePaginationProps = ( { page, limit, count }, defaultLimit ) => {
     }
 }
 
-const Pagination = ({ config: { defaultLimit }, query, setPage }) => {
+const Pagination = ({
+    config: { defaultLimit, showPagination = true, showNumberOfResults = true, showLimiter = true },
+    query, setPage
+}) => {
     const {
         page, start, end, count, limit, total
-    } = calculatePaginationProps(query, defaultLimit ? defaultLimit : 10);
+    } = calculatePaginationProps(query, defaultLimit || 10);
 
     return <React.Fragment>
-        <div className="col-sm-12 col-md-3">
-            <Limiter />
-        </div>
-        <div className="col-sm-12 col-md-4 text-center">
-            {!!count > 0 &&
-                <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
-        </div>
-        <div className="col-sm-12 col-md-5">
-            <ul className="pagination justify-content-end">
-                <li className={"page-item " + (page < 2 ? 'disabled': '')}>
-                    <a className="page-link" href="#" onClick={ setPage.bind(this, page - 1) }>Previous</a>
-                </li>
-
-                { page != 1 && <li className={ "page-item " + (page == 1 ? 'disabled': '') }>
-                    <a className="page-link" href="#" onClick={ setPage.bind(this, 1) }>First</a>
-                </li> }
-
-                { getPages(page, total).map( (link, index) =>
-                    <li key={ index } className={ "page-item " + (link == page ? 'active' : '') }>
-                        <a className="page-link" href="#" onClick={ setPage.bind(this, link) }>{ link }</a>
+        { showLimiter &&
+            <div className="col-sm-12 col-md-3">
+                <Limiter />
+            </div>
+        }
+        { showNumberOfResults &&
+            <div className="col-sm-12 col-md-4 text-center">
+                {!!count > 0 &&
+                    <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
+            </div>
+        }
+        { showPagination &&
+            <div className="col-sm-12 col-md-5">
+                <ul className="pagination justify-content-end">
+                    <li className={"page-item " + (page < 2 ? 'disabled': '')}>
+                        <a className="page-link" href="#" onClick={ setPage.bind(this, page - 1) }>Previous</a>
                     </li>
-                ) }
 
-                { page != total && <li className={ "page-item " + (page == total ? 'disabled': '') }>
-                    <a className="page-link" href="#" onClick={ setPage.bind(this, total) }>Last</a>
-                </li> }
+                    { page != 1 && <li className={ "page-item " + (page == 1 ? 'disabled': '') }>
+                        <a className="page-link" href="#" onClick={ setPage.bind(this, 1) }>First</a>
+                    </li> }
 
-                <li className={ "page-item " + (page >= total ? 'disabled': '') }>
-                    <a className="page-link" href="#" onClick={ setPage.bind(this, page + 1) }>Next</a>
-                </li>
-            </ul>
-        </div>
+                    { getPages(page, total).map( (link, index) =>
+                        <li key={ index } className={ "page-item " + (link == page ? 'active' : '') }>
+                            <a className="page-link" href="#" onClick={ setPage.bind(this, link) }>{ link }</a>
+                        </li>
+                    ) }
+
+                    { page != total && <li className={ "page-item " + (page == total ? 'disabled': '') }>
+                        <a className="page-link" href="#" onClick={ setPage.bind(this, total) }>Last</a>
+                    </li> }
+
+                    <li className={ "page-item " + (page >= total ? 'disabled': '') }>
+                        <a className="page-link" href="#" onClick={ setPage.bind(this, page + 1) }>Next</a>
+                    </li>
+                </ul>
+            </div>
+        }
     </React.Fragment>;
 }
 
@@ -99,5 +108,8 @@ export default withTableConfig({
     reducerName: 'reducerName',
     defaultLimit: 'limiterConfig.default',
     routes: 'routes',
-    entity: 'entity'
+    entity: 'entity',
+    showPagination: 'showPagination',
+    showNumberOfResults: 'showNumberOfResults',
+    showLimiter: 'showLimiter'
 })(connect(mapStateToProps, mapDispatchToProps)(Pagination));
