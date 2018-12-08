@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Header from './Table/Header';
 import Limiter from './Table/Limiter';
 import Toolbar from './Table/Toolbar';
+import Columns from './Table/Columns';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Pagination from './Table/Pagination';
@@ -59,6 +60,7 @@ class Table extends Component {
             <div className="flutter-table-outer-container">
                 <div className="row toolbar-top mb-3">
                     <Toolbar />
+                    <Columns />
                 </div>
                 <div className="row pagination-top">
                     <Pagination />

@@ -1,6 +1,5 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// const css = new ExtractTextPlugin("styles.css");
 
 module.exports = {
     mode: 'development',
@@ -25,16 +24,9 @@ module.exports = {
             test: /\.css$/,
             include: path.resolve(__dirname, 'src'),
             exclude: /(node_modules|bower_components|build)/,
-            // use: css.extract({
-            //   use: ["css-loader"]
-            // }),
-            // loaders: ['style', 'css'],
-            // include: __dirname + '/src'
             use: [{
                     loader: MiniCssExtractPlugin.loader,
                     options: {
-                        // you can specify a publicPath here
-                        // by default it use publicPath in webpackOptions.output
                         publicPath: './build'
                     }
                 },
@@ -44,10 +36,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // both options are optional
             filename: "[name].css",
-            //   chunkFilename: "[id].css"
         })
     ],
     resolve: {

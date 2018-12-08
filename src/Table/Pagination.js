@@ -53,20 +53,20 @@ const Pagination = ({
         page, start, end, count, limit, total
     } = calculatePaginationProps(query, defaultLimit || 10);
 
-    return <React.Fragment>
+    return <div className="col-sm-12 d-flex justify-content-between">
         { showLimiter &&
-            <div className="col-sm-12 col-md-3">
+            <div>
                 <Limiter />
             </div>
         }
         { showNumberOfResults &&
-            <div className="col-sm-12 col-md-4 text-center">
+            <div className="p-2 align-self-center">
                 {!!count > 0 &&
                     <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
             </div>
         }
         { showPagination &&
-            <div className="col-sm-12 col-md-5">
+            <div>
                 <ul className="pagination justify-content-end">
                     <li className={"page-item " + (page < 2 ? 'disabled': '')}>
                         <a className="page-link" href="#" onClick={ setPage.bind(this, page - 1) }>Previous</a>
@@ -92,7 +92,7 @@ const Pagination = ({
                 </ul>
             </div>
         }
-    </React.Fragment>;
+    </div>;
 }
 
 const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({

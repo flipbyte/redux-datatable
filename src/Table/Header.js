@@ -18,12 +18,18 @@ const _renderRowItems = ( props ) => {
 }
 
 class Header extends Component {
-    shouldComponentUpdate() {
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log(nextProps, this.props);
+        if(nextProps.config.columns !== this.props.config.columns) {
+            return true;
+        }
+
         return false;
     }
 
     render() {
-        const { columns, hasFilters = true } = this.props.config;
+        console.log('Header', this.props.config);
+        const { columns, showFilters = true } = this.props.config;
 
         return (
             <Fragment>
@@ -42,7 +48,7 @@ class Header extends Component {
                         </div>
                     ) }
                 </div>
-                { hasFilters &&
+                { showFilters &&
                     <div className="flutter-table-head-row filter">
                     { _.map(columns, ( column, key ) =>
                         <div className="flutter-table-row-item" key={ key }  style={{ width: column.width + 'px' }}>
@@ -63,5 +69,5 @@ class Header extends Component {
 
 export default withTableConfig({
     columns: 'columns',
-    hasFilters: 'hasFilters',
+    showFilters: 'showFilters',
 })(Header);

@@ -17,7 +17,7 @@ class Row extends Component {
         if (!this.state.show) {
             setTimeout(function() {
                 self.setState({ show: true });
-            }, 50);
+            }, 10);
         }
     }
 

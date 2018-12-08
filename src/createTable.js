@@ -7,6 +7,17 @@ import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
 
 class FlutterTable extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { columns: this.props.config.columns };
+        this.updateState = this.updateState.bind(this);
+    }
+
+    updateState(key, value) {
+        this.setState({ [key]: value });
+    }
+
     componentWillMount() {
         const { tableData, loadData } = this.props;
         if(!_.isEmpty(tableData) && !_.isEmpty(tableData.items)) {
@@ -39,6 +50,15 @@ class FlutterTable extends Component {
 
     render() {
         const { name, config, tableData, reducerName } = this.props;
+        const { columns: allColumns, ...otherConfig } = config;
+        const tableConfig = {
+            ...otherConfig,
+            allColumns,
+            columns: this.state.columns,
+            updateTableState: this.updateState
+        };
+
+        console.log('createTable', this.state);
 
         if(!tableData) {
             return (
@@ -51,7 +71,10 @@ class FlutterTable extends Component {
         }
 
         return (
-            <TableProvider config={{ reducerName, ...config }}>
+            <TableProvider config={{
+                reducerName,
+                ...tableConfig
+            }}>
                 <Table name={ name } isFetching={ tableData.isFetching } height={ config.height } />
             </TableProvider>
         )
