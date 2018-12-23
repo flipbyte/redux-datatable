@@ -58,8 +58,6 @@ class FlutterTable extends Component {
             updateTableState: this.updateState
         };
 
-        console.log('createTable', this.state);
-
         if(!tableData) {
             return (
                 <div className="status_message offline">

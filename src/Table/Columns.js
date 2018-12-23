@@ -23,8 +23,7 @@ class Columns extends Component {
             activeColumns = rest;
         }
 
-        console.log(activeColumns, allColumns, _.pick(allColumns, _.keys(activeColumns)));
-        stateUpdater('columns', _.pick(allColumns, _.keys(activeColumns)));
+        stateUpdater('columns', _.pick(allColumns, _.intersection(_.keys(allColumns), _.keys(activeColumns))));
     }
 
     componentWillUnmount() {
@@ -72,7 +71,7 @@ class Columns extends Component {
         const { config: { allColumns, columns, stateUpdater }} = this.props;
 
         return (
-            <div className={ 'dropdown ' + (this.state.open ? 'open': '') }>
+            <div className={ 'active-columns dropdown ' + (this.state.open ? 'open': '') }>
                 <button
                     className="btn btn-default dropdown-toggle"
                     type="button"
@@ -82,7 +81,7 @@ class Columns extends Component {
                 </button>
                 <ul className={ 'dropdown-menu ' + (this.state.open ? 'show': '') }>
                     { _.map(allColumns, ( column, key ) =>
-                        <li key={ key }>
+                        <li key={ key } className="dropdown-item">
                             <input name={ key } defaultChecked={ _.has(columns, key) } type="checkbox" onChange={ this.updateColumns.bind(null, stateUpdater, allColumns, columns, column) } />
                             <label htmlFor={ key }>{ column.label }</label>
                         </li>

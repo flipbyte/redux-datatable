@@ -19,7 +19,6 @@ const _renderRowItems = ( props ) => {
 
 class Header extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        console.log(nextProps, this.props);
         if(nextProps.config.columns !== this.props.config.columns) {
             return true;
         }
@@ -28,7 +27,6 @@ class Header extends Component {
     }
 
     render() {
-        console.log('Header', this.props.config);
         const { columns, showFilters = true } = this.props.config;
 
         return (

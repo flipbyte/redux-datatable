@@ -186,3 +186,11 @@ label.limiter select {
     position: absolute;
 }
 
+.flutter-table-outer-container .active-columns .dropdown-menu .dropdown-item {
+    padding: 5px 10px;
+}
+
+.flutter-table-outer-container .active-columns .dropdown-menu .dropdown-item > input {
+    margin-right: 10px;
+}
+
