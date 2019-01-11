@@ -7,7 +7,7 @@ import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
 
 const Limiter = ({ config: { options }, selectedOption, setLimit }) =>
-    <label className="limiter d-flex">
+    <label className="limiter d-flex text-nowrap">
         <select
             className="form-control input-sm"
             id="limiter"
