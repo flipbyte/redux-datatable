@@ -23,7 +23,7 @@ class Columns extends Component {
             activeColumns = rest;
         }
 
-        stateUpdater('columns', _.pick(allColumns, _.intersection(_.keys(allColumns), _.keys(activeColumns))));
+        stateUpdater({ columns: _.pick(allColumns, _.intersection(_.keys(allColumns), _.keys(activeColumns)))});
     }
 
     componentWillUnmount() {
@@ -82,7 +82,10 @@ class Columns extends Component {
                 <ul className={ 'dropdown-menu ' + (this.state.open ? 'show': '') }>
                     { _.map(allColumns, ( column, key ) =>
                         <li key={ key } className="dropdown-item">
-                            <input name={ key } defaultChecked={ _.has(columns, key) } type="checkbox" onChange={ this.updateColumns.bind(null, stateUpdater, allColumns, columns, column) } />
+                            <input name={ key }
+                                type="checkbox"
+                                defaultChecked={ _.has(columns, key) }
+                                onChange={ this.updateColumns.bind(null, stateUpdater, allColumns, columns, column) } />
                             <label htmlFor={ key }>{ column.label }</label>
                         </li>
                     ) }

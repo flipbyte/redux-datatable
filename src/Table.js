@@ -16,10 +16,12 @@ class Table extends Component {
     constructor(props) {
         super(props);
 
-        this.width = _.map(this.props.config.columns, 'width').reduce(( sum, num ) => sum + num, 0);
+        this.width = this.calculateWidth(this.props.config.columns);
+        this.minWidth = this.width;
         this.rowHeight = this.props.rowHeight || 39;
         this.state = { top: 0 };
         this.handleScroll = this.handleScroll.bind(this);
+        this.updateTableDimensions = this.updateTableDimensions.bind(this);
         this.scrollEnded = _.debounce(this.scrollEnded, 150);
     }
 
@@ -44,12 +46,50 @@ class Table extends Component {
         this.scrollUpdate();
     }
 
+    calculateWidth(data) {
+        return _.map(data, 'width').reduce(( sum, num ) => sum + num, 0);
+    }
+
+    updateTableDimensions() {
+        this.computedTableWidth = this.minWidth > this.tableBody.clientWidth
+            ? this.minWidth : this.tableBody.clientWidth;
+
+        const { columns, allColumns, stateUpdater } = this.props.config;
+        const totalColumnsWidth = this.calculateWidth(_.pick(allColumns, _.keys(columns)));
+        const percentage = this.computedTableWidth / totalColumnsWidth;
+
+        let updatedColumns = _.transform(columns, function(result, value, key) {
+            result[key] = {
+                ...value,
+                width: Math.round(percentage * allColumns[key].width)
+            };
+        }, {});
+
+        this.width = this.calculateWidth(updatedColumns);
+        stateUpdater({ columns: { ...updatedColumns } });
+    }
+
+    updateTableOnColumnVisibilityChange(prevColumns, currentColumns) {
+        let prevKeys = _.keys(prevColumns);
+        let currentKeys = _.keys(currentColumns);
+        if(!_.isEqual(prevKeys, currentKeys)) {
+            this.updateTableDimensions();
+        }
+    }
+
     componentDidMount() {
+        this.updateTableDimensions();
         this.tableBody.addEventListener('scroll', this.handleScroll, true);
+        window.addEventListener('resize', this.updateTableDimensions);
+    }
+
+    componentDidUpdate(prevProps) {
+        this.updateTableOnColumnVisibilityChange(prevProps.config.columns, this.props.config.columns)
     }
 
     componentWillUnmount() {
         this.tableBody.removeEventListener('scroll', this.handleScroll, true);
+        window.removeEventListener('resize', this.updateTableDimensions);
     }
 
     render() {
@@ -72,15 +112,15 @@ class Table extends Component {
                         <div className="flutter-table table-striped">
                             <div ref={ elem => this.tableHeader = elem } className="flutter-table-head-container">
                                 <div className="flutter-table-head-container-inner"
-                                    style={{ width: this.width + 'px' }}>
+                                    style={{ width: this.width }}>
                                     <Header />
                                 </div>
                             </div>
                             <div ref={ elem => this.tableBody = elem }
                                 className="flutter-table-body-container col-xs-12"
-                                style={{ height: height  + 'px' }}>
+                                style={{ height: height }}>
                                 <div className="flutter-table-body-container-inner"
-                                    style={{ width: this.width + 'px', height: this.height + 'px' }}>
+                                    style={{ width: this.width, height: this.height }}>
                                     <div className="flutter-table-body">
                                         <Body data={ data }
                                             startTop={ top }
@@ -115,7 +155,10 @@ const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
 
 export default withTableConfig({
     name: 'name',
-    reducerName: 'reducerName',
+    columns: 'columns',
+    minWidth: 'minWidth',
     rowHeight: 'rowHeight',
-    columns: 'columns'
+    allColumns: 'allColumns',
+    reducerName: 'reducerName',
+    stateUpdater: 'updateTableState'
 })(connect(mapStateToProps)(Table));

@@ -10,12 +10,12 @@ class FlutterTable extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { columns: this.props.config.columns };
+        this.state = { columns: null };
         this.updateState = this.updateState.bind(this);
     }
 
-    updateState(key, value) {
-        this.setState({ [key]: value });
+    updateState(updatedObj) {
+        this.setState(updatedObj);
     }
 
     componentWillMount() {
@@ -54,7 +54,7 @@ class FlutterTable extends Component {
         const tableConfig = {
             ...otherConfig,
             allColumns,
-            columns: this.state.columns,
+            columns: this.state.columns || { ...allColumns },
             updateTableState: this.updateState
         };
 
