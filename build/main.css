@@ -76,7 +76,7 @@ label.limiter select {
 
 .flutter-table-row-item {
     float: left;
-    padding: 4px 5px;
+    padding: 10px 5px;
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;
