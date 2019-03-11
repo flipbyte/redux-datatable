@@ -1,16 +1,54 @@
 {
-    "name": "flutter-react-data-table",
-    "version": "1.0.0",
+    "name": "@flipbyte/redux-datatable",
+    "version": "0.1.0",
     "description": "React-Redux data table",
-    "main": "build/index.js",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "files": [
+        "css",
+        "es",
+        "lib",
+        "umd"
+    ],
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "webpack --watch",
-        "build": "webpack"
+        "build": "nwb build-react-component",
+        "clean": "nwb clean-module && nwb clean-demo",
+        "prepublishOnly": "npm run build",
+        "start": "nwb serve-react-demo",
+        "test": "nwb test-react",
+        "test:coverage": "nwb test-react --coverage",
+        "test:watch": "nwb test-react --server"
     },
+    "peerDependencies": {
+        "react": "^16.8.4",
+        "react-dom": "^16.8.4",
+        "rxjs": "^6.3.3",
+        "prop-types": "^15.6.2",
+        "react-redux": "^6.0.1",
+        "redux": "^4.0.1"
+    },
+    "dependencies": {
+        "lodash": ">=4.17.10",
+        "normalizr": "^3.3.0",
+        "object-assign-deep": "^0.4.0",
+        "query-string": "^6.1.0",
+        "react-pure-time": "^0.2.2",
+        "react-redux-notify": "^4.1.0",
+        "redux-observable": "^1.0.0"
+    },
+    "devDependencies": {
+        "nwb": "0.23.x",
+        "react": "^16.8.4",
+        "react-dom": "^16.8.4",
+        "react-redux": "^6.0.1",
+        "redux": "^4.0.1"
+    },
+    "author": "",
+    "homepage": "",
+    "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@bitbucket.org/flipbyte/flutter-react-data-table.git"
+        "url": "https://github.com/flipbyte/redux-datatable.git"
     },
     "keywords": [
         "data-table",
@@ -18,46 +56,5 @@
         "react-table",
         "redux-table",
         "react-redux-data-table"
-    ],
-    "author": "“Eon <“eons@yahoo.com”> (http:/www.fluttercms.com)",
-    "license": "ISC",
-    "homepage": "https://bitbucket.org/flipbyte/flutter-react-data-table#readme",
-    "peerDependencies": {
-        "react": "^16.5.2",
-        "react-dom": "^16.5.2",
-        "rxjs": "^6.3.3",
-        "prop-types": "*",
-        "normalizr": "*",
-        "react-pure-time": "*",
-        "lodash": ">=4.17.10",
-        "react-redux": "^5.0.7",
-        "redux-observable": "^1.0.0",
-        "react-redux-notify": "^4.1.0"
-    },
-    "devDependencies": {
-        "babel-cli": "^6.24.1",
-        "babel-core": "^6.24.1",
-        "babel-loader": "^7.1.5",
-        "babel-plugin-transform-object-rest-spread": "^6.23.0",
-        "babel-plugin-transform-react-jsx": "^6.24.1",
-        "babel-preset-env": "^1.5.1",
-        "normalizr": "*",
-        "react": "^16.5.2",
-        "react-dom": "^16.5.2",
-        "react-pure-time": "*",
-        "rxjs": "^6.3.3",
-        "webpack": "^4.20.2",
-        "webpack-cli": "^3.1.2",
-        "redux-observable": "^1.0.0",
-        "css-loader": "^1.0.0",
-        "style-loader": "^0.23.0",
-        "extract-text-webpack-plugin": "^3.0.2",
-        "mini-css-extract-plugin": "^0.4.3",
-        "postcss-loader": "^3.0.0",
-        "react-redux-notify": "^4.1.0"
-    },
-    "dependencies": {
-        "object-assign-deep": "^0.4.0",
-        "query-string": "^6.1.0"
-    }
+    ]
 }
