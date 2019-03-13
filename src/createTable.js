@@ -6,7 +6,7 @@ import Table from './Table';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
 
-class FlutterTable extends Component {
+class ReduxDatatable extends Component {
     constructor(props) {
         super(props);
 
@@ -69,10 +69,7 @@ class FlutterTable extends Component {
         }
 
         return (
-            <TableProvider config={{
-                reducerName,
-                ...tableConfig
-            }}>
+            <TableProvider config={{ reducerName, ...tableConfig }}>
                 <Table name={ name } isFetching={ tableData.isFetching } height={ config.height } />
             </TableProvider>
         )
@@ -98,4 +95,4 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FlutterTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ReduxDatatable);
