@@ -28,9 +28,9 @@ const getPages = ( currentPage, total ) => {
 const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
 const upperLimit = ( page, limit, count ) =>  (page * limit) > count ? count : page * limit;
 
-const calculatePaginationProps = ( { page, limit, count }, defaultLimit ) => {
+const calculatePaginationProps = ( { page, limit = 0, count = 0 }, defaultLimit = 10 ) => {
     page = page > 1 ? page : 1
-    limit = limit != 0 ? limit : count;
+    limit = limit != 0 ? limit : defaultLimit;
 
     let start = (page - 1) * limit
     let end = start + limit - 1
@@ -38,7 +38,7 @@ const calculatePaginationProps = ( { page, limit, count }, defaultLimit ) => {
     return {
         page: page,
         start: start,
-        end: (count > end) ? end : count,
+        end: (count > end && end >= 0) ? end : count,
         count: count,
         limit: limit,
         total: Math.ceil(count / limit)
@@ -51,7 +51,9 @@ const Pagination = ({
 }) => {
     const {
         page, start, end, count, limit, total
-    } = calculatePaginationProps(query, defaultLimit || 10);
+    } = calculatePaginationProps(query, defaultLimit);
+
+    console.log(page, start, end, count, limit, total);
 
     return <div className="col-sm-12 d-flex justify-content-between">
         { showLimiter &&
@@ -82,7 +84,7 @@ const Pagination = ({
                         </li>
                     ) }
 
-                    { page != total && <li className={ "page-item " + (page == total ? 'disabled': '') }>
+                    { total > 0 && page != total && <li className={ "page-item " + (page == total ? 'disabled': '') }>
                         <a className="page-link" href="#" onClick={ setPage.bind(this, total) }>Last</a>
                     </li> }
 
