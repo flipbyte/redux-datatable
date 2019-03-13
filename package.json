@@ -22,7 +22,7 @@
     "peerDependencies": {
         "react": "^16.8.4",
         "react-dom": "^16.8.4",
-        "rxjs": "^6.3.3",
+        "rxjs": "^6.4.0",
         "prop-types": "^15.6.2",
         "react-redux": "^6.0.1",
         "redux": "^4.0.1"
@@ -37,11 +37,16 @@
         "redux-observable": "^1.0.0"
     },
     "devDependencies": {
+        "axios": "^0.18.0",
+        "axios-observable": "^1.0.7",
+        "bootstrap": "^4.3.1",
         "nwb": "0.23.x",
+        "path-to-regexp": "^3.0.0",
         "react": "^16.8.4",
         "react-dom": "^16.8.4",
         "react-redux": "^6.0.1",
-        "redux": "^4.0.1"
+        "redux": "^4.0.1",
+        "rxjs": "^6.4.0"
     },
     "author": "",
     "homepage": "",
