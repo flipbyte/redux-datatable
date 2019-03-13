@@ -1,0 +1,42 @@
+.is-invalid {
+    border: 1px solid red
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+.form-container {
+    margin-bottom: 50px;
+}
+
+div.scrollmenu {
+    background-color: #f8f9fa;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    color: #000;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+    background-color: #ccc;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 11
+}
+
+@media (min-width: 768px) {
+    div.scrollmenu {
+        display: none;
+    }
+}

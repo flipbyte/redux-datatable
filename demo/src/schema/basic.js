@@ -1,5 +1,4 @@
 export default {
-    name: 'pages',
     height: 400,
     limiterConfig: {
         options: [10, 20, 50],
@@ -7,15 +6,15 @@ export default {
     },
     routes: {
         get: {
-            route: '/page',
-            sort: 'pageId',
+            route: '/posts',
+            sort: 'id',
             dir: 'asc',
             resultPath: {
                 data: 'data'
             }
         },
         delete: {
-            route: '/page/:id'
+            route: '/posts/:id'
         }
     },
     toolbar: {
