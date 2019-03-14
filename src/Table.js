@@ -18,7 +18,7 @@ class Table extends Component {
 
         this.width = this.calculateWidth(this.props.config.columns);
         this.minWidth = this.width;
-        this.rowHeight = this.props.rowHeight || 39;
+        this.rowHeight = this.props.config.rowHeight || 39;
         this.state = { top: 0 };
         this.handleScroll = this.handleScroll.bind(this);
         this.updateTableDimensions = this.updateTableDimensions.bind(this);
@@ -93,7 +93,7 @@ class Table extends Component {
     }
 
     render() {
-        const { name, isFetching, height, data } = this.props;
+        const { name, isFetching, data, config: { height, rowHeight } } = this.props;
         const { pointerEvents, top } = this.state;
 
         return (
@@ -118,7 +118,7 @@ class Table extends Component {
                             </div>
                             <div ref={ elem => this.tableBody = elem }
                                 className="flutter-table-body-container col-xs-12"
-                                style={{ height: height }}>
+                                style={{ height: this.height > height ? height : this.height }}>
                                 <div className="flutter-table-body-container-inner"
                                     style={{ width: this.width, height: this.height }}>
                                     <div className="flutter-table-body">
@@ -130,8 +130,9 @@ class Table extends Component {
                                                 <Row
                                                     key={ index }
                                                     index={ index }
-                                                    itemIndex={ item }
+                                                    item={ item }
                                                     width={ this.width }
+                                                    height={ rowHeight }
                                                     top={ top } />
                                             )} />
                                     </div>
@@ -155,6 +156,7 @@ const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
 
 export default withTableConfig({
     name: 'name',
+    height: 'height',
     columns: 'columns',
     minWidth: 'minWidth',
     rowHeight: 'rowHeight',

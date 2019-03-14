@@ -53,8 +53,6 @@ const Pagination = ({
         page, start, end, count, limit, total
     } = calculatePaginationProps(query, defaultLimit);
 
-    console.log(page, start, end, count, limit, total);
-
     return <div className="col-sm-12 d-flex justify-content-between">
         { showLimiter &&
             <div>

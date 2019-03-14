@@ -70,16 +70,16 @@ class ReduxDatatable extends Component {
 
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
-                <Table name={ name } isFetching={ tableData.isFetching } height={ config.height } />
+                <Table isFetching={ tableData.isFetching } />
             </TableProvider>
         )
     }
 }
 
-const prepareActionPayload = ({ name, reducerName, config: { routes, entity }}) =>
+const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) =>
     ( payload = {} ) => ({ name, reducerName, routes, entity, payload })
 
-const mapStateToProps = ( state, { reducerName, name } ) => ({
+const mapStateToProps = ( state, { reducerName, config: { name } } ) => ({
     tableData: state[reducerName][name]
 });
 

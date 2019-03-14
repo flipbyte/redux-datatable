@@ -22,10 +22,10 @@ class Row extends Component {
     }
 
     render() {
-        const { index, width, data, top, config: { columns } } = this.props;
+        const { index, width, height, data, top, config: { columns } } = this.props;
 
         return <div className={ 'flutter-table-body-row ' + (index % 2 == 0 ? 'even' : 'odd') }
-            style={{ top: top + 'px', width: width + 'px' }}>
+            style={{ top, width, height }}>
             { this.state.show && _.map(columns, ( column, key ) =>
                 <div className="flutter-table-row-item" key={ key }  style={{ width: column.width }}>
                     <Renderer
@@ -39,8 +39,12 @@ class Row extends Component {
     }
 }
 
-const mapStateToProps = ( state, { itemIndex, config: { reducerName, name, entity } } ) => {
-    var normalizedData = _.get(state, [ entity.state, itemIndex ], {});
+const mapStateToProps = ( state, { item, config: { reducerName, name, entity } } ) => {
+    if (!entity) {
+        return { data: item }
+    }
+
+    var normalizedData = _.get(state, [ entity.state, item ], {});
     var relatedEntities = _.get(entity, 'relatedEntities', {});
     var entities = _.reduce(relatedEntities, (entities, path, key) => {
         entities[key] = _.get(state, path, {});
