@@ -33,7 +33,7 @@ const create = ( config = {} ) => {
     return instance;
 }
 
-export const api = create({ baseURL: 'https://my-json-server.typicode.com/flipbyte/redux-datatable-db' });
+export const api = create({ baseURL: 'https://reqres.in/api' });
 export const request = create();
 
 export default create;

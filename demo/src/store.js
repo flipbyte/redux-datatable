@@ -5,6 +5,7 @@ import { filter, map, reduce } from 'rxjs/operators';
 import { api, request } from './request-handlers';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
+import { createLogger } from 'redux-logger';
 
 const requestHandlers = { api, request };
 
@@ -36,9 +37,11 @@ const prepareEpics = ( epics ) => {
 const configureStore = ( config ) => {
     let middlewares = [];
 
+    const logger = createLogger({ diff: true, duration: true, collapsed: true });
+    middlewares.push(logger);
+
     const { rootEpic, dependencies } = prepareEpics(config.epics);
     const epicMiddleware = createEpicMiddleware({ dependencies: dependencies ? dependencies : {} });
-
     if(rootEpic) {
         middlewares.push(epicMiddleware);
     }

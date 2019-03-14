@@ -15,7 +15,7 @@ const store = configureStore(config);
 const Demo = () =>
     <div className="d-flex" id="wrapper">
         <div className="bg-light border-right sidenav" id="sidebar-wrapper">
-            <div className="sidebar-heading"><strong>formik-json</strong></div>
+            <div className="sidebar-heading"><strong>redux-datatable</strong></div>
             <div className="list-group list-group-flush">
                 { tables.map(({ id, title }, index) =>
                     <a key={ index } href={ `#${id}` }

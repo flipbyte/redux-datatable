@@ -1,20 +1,23 @@
 export default {
+    name: 'posts',
     height: 400,
+    rowHeight: 50,
     limiterConfig: {
         options: [10, 20, 50],
         default: 20
     },
     routes: {
         get: {
-            route: '/posts',
+            route: '/users',
             sort: 'id',
             dir: 'asc',
             resultPath: {
-                data: 'data'
+                data: 'data',
+                total: 'total'
             }
         },
         delete: {
-            route: '/posts/:id'
+            route: '/users/:id'
         }
     },
     toolbar: {
@@ -25,7 +28,7 @@ export default {
                     type: 'action',
                     name: 'delete',
                     label: 'Delete',
-                    indexField: '@pageId'
+                    indexField: '@id'
                 }
             }
         },
@@ -39,49 +42,31 @@ export default {
             label: '',
             sortable: false,
             type: 'selection',
-            indexField: '@pageId',
-            width: 30,
+            indexField: '@id',
+            width: 50,
         },
         id: {
             label: 'ID',
             type: 'number',
-            name: 'pageId',
+            name: 'id',
             sortable: true,
             width: 150
         },
-        title: {
-            label: 'Title',
+        first_name: {
+            label: 'First Name',
             type: 'string',
-            name: 'title',
+            name: 'first_name',
             sortable: true,
             textAlign: 'text-left',
-            width: 500
+            width: 200
         },
-        status: {
-            label: 'Status',
-            type: 'options',
-            name: 'status',
-            textAlign: 'text-center',
-            width: 150,
-            options: {
-                active: {
-                    badge: 'bage-success',
-                    value: 'Active',
-                },
-                inactive: {
-                    badge: 'badge-danger',
-                    value: 'Inactive'
-                }
-            }
-        },
-        createdAt: {
-            label: 'Created',
-            type: 'date',
-            name: 'createdAt',
+        last_name: {
+            label: 'Last Name',
+            type: 'string',
+            name: 'last_name',
             sortable: true,
-            textAlign: 'text-center',
-            format: 'F j, Y',
-            width: 150
+            textAlign: 'text-left',
+            width: 200
         },
         actions: {
             label: 'Actions',
@@ -97,7 +82,7 @@ export default {
                     btnClass: 'btn btn-secondary',
                     icon: 'edit',
                     params: {
-                        id: '@pageId',
+                        id: '@id',
                     }
                 },
                 delete: {
@@ -108,7 +93,7 @@ export default {
                     btnClass: 'btn btn-danger',
                     icon: 'trash-alt',
                     params: {
-                        id: '@pageId'
+                        id: '@id'
                     }
                 }
             }
