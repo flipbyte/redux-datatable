@@ -3,8 +3,11 @@ import { connect } from "react-redux";
 import React, { Component } from 'react'
 
 import Table from './Table';
+import Pagination from './Table/Pagination';
+import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
+import { isArray } from './utils';
 
 class ReduxDatatable extends Component {
     constructor(props) {
@@ -51,6 +54,7 @@ class ReduxDatatable extends Component {
     render() {
         const { name, config, tableData, reducerName } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
+        const { toolbar } = config;
         const tableConfig = {
             ...otherConfig,
             allColumns,
@@ -70,7 +74,16 @@ class ReduxDatatable extends Component {
 
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
-                <Table isFetching={ tableData.isFetching } />
+                <Datatable.Container>
+                    <Datatable.Toolbar>
+                        { toolbar.map((items, index) =>
+                            <Datatable.ToolbarRow key={ index } items={ items } />
+                        )}
+                    </Datatable.Toolbar>
+                    <Pagination />
+                    <Table />
+                    <Pagination />
+                </Datatable.Container>
             </TableProvider>
         )
     }

@@ -20,22 +20,116 @@ export default {
             route: '/users/:id'
         }
     },
-    toolbar: {
-        left: {
-            massActions: {
-                label: 'Actions',
-                delete: {
-                    type: 'action',
-                    name: 'delete',
-                    label: 'Delete',
-                    indexField: '@id'
-                }
+    toolbar: [
+        [{
+            label: 'Actions',
+            id: 'massActions',
+            delete: {
+                type: 'action',
+                name: 'delete',
+                label: 'Delete',
+                indexField: '@id'
+            },
+            visible: true,
+            style: {
+                right: false,
+                width: '100px'
             }
-        },
-        right: {
-            columns: true,
-        }
-    },
+        }, {
+            type: 'columns',
+            label: 'Columns',
+            visible: true,
+            style: {
+                right: true
+            }
+        }/*, {
+            label: 'NACTIONS',
+            id: 'massActions',
+            delete: {
+                type: 'action',
+                name: 'delete',
+                label: 'Delete',
+                indexField: '@id'
+            },
+            visible: true,
+            style: {
+                right: false,
+                width: '200px'
+            }
+        }, {
+            label: '2Actions',
+            id: 'massActions',
+            delete: {
+                type: 'action',
+                name: 'delete',
+                label: 'Delete',
+                indexField: '@id'
+            },
+            visible: true,
+            style: {
+                right: true,
+                width: '100px'
+            }
+        }*/],
+        // [{
+        //     label: 'Actions',
+        //     id: 'massActions',
+        //     delete: {
+        //         type: 'action',
+        //         name: 'delete',
+        //         label: 'Delete',
+        //         indexField: '@id'
+        //     },
+        //     visible: true,
+        //     style: {
+        //         right: false,
+        //         width: '200px'
+        //     }
+        // }, {
+        //     type: 'columns',
+        //     label: 'Columns',
+        //     visible: true,
+        // }, {
+        //     label: 'NACTIONS',
+        //     id: 'massActions',
+        //     delete: {
+        //         type: 'action',
+        //         name: 'delete',
+        //         label: 'Delete',
+        //         indexField: '@id'
+        //     },
+        //     visible: true,
+        //     style: {
+        //         width: '200px'
+        //     }
+        // }, {
+        //     label: '2Actions',
+        //     id: 'massActions',
+        //     delete: {
+        //         type: 'action',
+        //         name: 'delete',
+        //         label: 'Delete',
+        //         indexField: '@id'
+        //     },
+        //     visible: true,
+        //     style: {
+        //         right: true,
+        //         width: '100px'
+        //     }
+        // }]
+    ],
+    // toolbar: {
+    //     massActions: {
+    //         label: 'Actions',
+    //         delete: {
+    //             type: 'action',
+    //             name: 'delete',
+    //             label: 'Delete',
+    //             indexField: '@id'
+    //         }
+    //     },
+    //     columns: true
+    // },
     columns: {
         ids: {
             name: 'ids',

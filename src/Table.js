@@ -5,11 +5,9 @@ import ReactDOM from 'react-dom';
 import PropTypes from "prop-types";
 import Header from './Table/Header';
 import Limiter from './Table/Limiter';
-import Toolbar from './Table/Toolbar';
 import Columns from './Table/Columns';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import Pagination from './Table/Pagination';
 import { withTableConfig } from './TableProvider';
 
 class Table extends Component {
@@ -93,19 +91,14 @@ class Table extends Component {
     }
 
     render() {
-        const { name, isFetching, data, config: { height, rowHeight } } = this.props;
+        const { name, data, config: { height, rowHeight } } = this.props;
         const { pointerEvents, top } = this.state;
 
         return (
             <div className="flutter-table-outer-container">
                 <div className="row toolbar-top mb-3">
-                    <Toolbar />
                     <Columns />
                 </div>
-                <div className="row pagination-top">
-                    <Pagination />
-                </div>
-
                 <div className="row">
                     <div id={ name }
                         className="flutter-table-container table-responsive">
@@ -140,10 +133,6 @@ class Table extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="row pagination-bottom mt-3">
-                    <Pagination />
                 </div>
             </div>
         );
