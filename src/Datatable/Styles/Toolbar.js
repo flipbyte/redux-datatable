@@ -9,7 +9,8 @@ export const ToolbarRow = styled.div `
 export const ToolbarItem = styled.div `
     display: block;
     width: ${props => props.width || '100px'};
-    float: ${props => props.right ? 'right' : 'left'}
+    float: ${props => props.right ? 'right' : 'left'};
+    font-size: ${props => props.fontSize || '14px'};
 `
 
 const Toolbar = styled.div `

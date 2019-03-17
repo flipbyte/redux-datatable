@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
-import { withTableConfig } from '../TableProvider';
+import { withTableConfig } from '../../TableProvider';
 import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
 import { Button } from 'styled-button-component';
 
@@ -75,7 +75,7 @@ class Columns extends Component {
 
         return (
             <Dropdown>
-                <Button secondary noRadius dropdownToggle onClick={ this.toggle }>
+                <Button outline noRadius dropdownToggle onClick={ this.toggle }>
                     Columns
                 </Button>
                 <DropdownMenu hidden={ !open }>

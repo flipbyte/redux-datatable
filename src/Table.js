@@ -96,9 +96,6 @@ class Table extends Component {
 
         return (
             <div className="flutter-table-outer-container">
-                <div className="row toolbar-top mb-3">
-                    <Columns />
-                </div>
                 <div className="row">
                     <div id={ name }
                         className="flutter-table-container table-responsive">

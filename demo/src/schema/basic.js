@@ -23,18 +23,27 @@ export default {
     toolbar: [
         [{
             label: 'Actions',
-            id: 'massActions',
-            delete: {
+            id: 'dropdown',
+            options: [{
                 type: 'action',
                 name: 'delete',
                 label: 'Delete',
                 indexField: '@id'
-            },
+            }, {
+                type: 'action',
+                name: 'edit',
+                label: 'Edit this field',
+                indexField: '@id'
+            }],
             visible: true,
             style: {
                 right: false,
                 width: '100px'
             }
+        }, {
+            type: 'reset-filters',
+            label: 'Reset Filters',
+            visible: true
         }, {
             type: 'columns',
             label: 'Columns',

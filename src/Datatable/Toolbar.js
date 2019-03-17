@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import MassActions from '../Table/Toolbar/MassActions';
-import ResetFilters from '../Table/Toolbar/ResetFilters';
+import MassActions from './Toolbar/MassActions';
+import ResetFilters from './Toolbar/ResetFilters';
+import Columns from './Toolbar/Columns';
 import Styles from './Styles'
 
 const getRenderer = ( type ) => {
     const renderers = {
         'reset-filters': ResetFilters,
-        // 'columns': Columns,
+        'columns': Columns,
         'default': MassActions
     }
 

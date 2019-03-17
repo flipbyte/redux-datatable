@@ -53,9 +53,7 @@ const Pagination = ({
     const {
         page, start, end, count, limit, total
     } = calculatePaginationProps(query, defaultLimit);
-
-    console.log(setPage);
-
+    
     return <Styles.Pagination>
         { showLimiter &&
             <Styles.PaginationItem>
