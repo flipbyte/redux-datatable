@@ -35,7 +35,9 @@
         "react-pure-time": "^0.2.2",
         "react-redux-notify": "^4.1.0",
         "redux-observable": "^1.0.0",
-        "styled-components": "^4.1.3"
+        "styled-button-component": "^3.0.1",
+        "styled-components": "^4.1.3",
+        "styled-dropdown-component": "^3.0.1"
     },
     "devDependencies": {
         "axios": "^0.18.0",
