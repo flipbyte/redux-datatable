@@ -80,9 +80,9 @@ class ReduxDatatable extends Component {
                             <Datatable.ToolbarRow key={ index } items={ items } />
                         )}
                     </Datatable.Toolbar>
-                    <Pagination />
+                    <Datatable.Pagination />
                     <Table />
-                    <Pagination />
+                    <Datatable.Pagination />
                 </Datatable.Container>
             </TableProvider>
         )
