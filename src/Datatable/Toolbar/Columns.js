@@ -16,16 +16,21 @@ class Columns extends Component {
         this.handleDocumentClick = this.handleDocumentClick.bind(this);
     }
 
-    updateColumns( stateUpdater, allColumns, columns, column, event ) {
-        var activeColumns = {};
+    updateColumns( stateUpdater, allColumns, checkedColumns, index, event ) {
+        var activeColumns = [];
         if(event.target.checked) {
-            activeColumns = { ...columns, [event.target.name]: column }
+            activeColumns = [ ...checkedColumns, index ];
         } else {
-            const { [event.target.name]: removedColumn, ...rest } = columns;
-            activeColumns = rest;
+            itemIndex = checkedColumns.indexOf(index);
+            activeColumns = [ ...checkedColumns ];
+            activeColumns.splice(itemIndex, 1);
         }
 
-        stateUpdater({ columns: _.pick(allColumns, _.intersection(_.keys(allColumns), _.keys(activeColumns)))});
+        const columns = activeColumns.reduce((result, currentIndex) => (
+            result.push(allColumns[currentIndex])
+        ), []);
+
+        stateUpdater({ columns });
     }
 
     componentWillUnmount() {
@@ -70,7 +75,7 @@ class Columns extends Component {
     }
 
     render() {
-        const { config: { allColumns, columns, stateUpdater }} = this.props;
+        const { config: { allColumns, columns, checkedColumns, stateUpdater }} = this.props;
         const { open } = this.state;
 
         return (
@@ -79,15 +84,15 @@ class Columns extends Component {
                     Columns
                 </Button>
                 <DropdownMenu hidden={ !open }>
-                    { _.map(allColumns, ( column, key ) =>
-                        <DropdownItem key={ key }>
-                            <input name={ key }
+                    { allColumns.map(({ name, label }, index) =>
+                        <DropdownItem key={ index }>
+                            <input name={ name }
                                 type="checkbox"
-                                defaultChecked={ _.has(columns, key) }
-                                onChange={ this.updateColumns.bind(null, stateUpdater, allColumns, columns, column) } />
-                            <label htmlFor={ key }>{ column.label }</label>
+                                defaultChecked={ -1 !== checkedColumns.indexOf(index) }
+                                onChange={ this.updateColumns.bind(null, stateUpdater, allColumns, checkedColumns, index) } />
+                            <label htmlFor={ name }>{ label }</label>
                         </DropdownItem>
-                    ) }
+                    )}
                 </DropdownMenu>
             </Dropdown>
         );
@@ -97,5 +102,6 @@ class Columns extends Component {
 export default withTableConfig({
     stateUpdater: 'updateTableState',
     allColumns: 'allColumns',
+    checkedColumns: 'checkedColumns',
     columns: 'columns'
 })(Columns);

@@ -13,7 +13,7 @@ class ReduxDatatable extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { columns: null };
+        this.state = { columns: null, checkedColumns: null };
         this.updateState = this.updateState.bind(this);
     }
 
@@ -58,7 +58,8 @@ class ReduxDatatable extends Component {
         const tableConfig = {
             ...otherConfig,
             allColumns,
-            columns: this.state.columns || { ...allColumns },
+            columns: this.state.columns || [ ...allColumns ],
+            checkedColumns: this.state.checkedColumns || [ ...Array(allColumns.length).keys() ],
             updateTableState: this.updateState
         };
 
@@ -81,7 +82,7 @@ class ReduxDatatable extends Component {
                         )}
                     </Datatable.Toolbar>
                     <Datatable.Pagination />
-                    <Table />
+                    <Datatable.Table />
                     <Datatable.Pagination />
                 </Datatable.Container>
             </TableProvider>
