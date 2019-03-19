@@ -5,29 +5,10 @@ import { connect } from 'react-redux';
 import { setPage } from '../actions';
 import { prepareActionPayload } from '../utils'
 import { withTableConfig } from '../TableProvider';
-import Limiter from '../Table/Limiter';
+import Limiter from './Pagination/Limiter';
+import ResultCount from './Pagination/ResultCount';
+import Pages from './Pagination/Pages';
 import Styles from './Styles';
-
-const NUM_LINKS = 5;
-
-const fillRange = ( start, end ) => {
-    return Array(end - start + 1).fill().map((item, index) => start + index);
-};
-
-const getPages = ( currentPage, total ) => {
-    var padding = Math.floor(NUM_LINKS / 2);
-    var left = (currentPage - padding < padding) ? 1 : currentPage - padding;
-    var right = (left + NUM_LINKS - 1 > total) ? total : left + NUM_LINKS - 1;
-
-    left = (right == total) ?
-        (right - NUM_LINKS < 1) ? 1 : right - NUM_LINKS + 1
-        : left;
-
-    return fillRange(left, right);
-}
-
-const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
-const upperLimit = ( page, limit, count ) =>  (page * limit) > count ? count : page * limit;
 
 const calculatePaginationProps = ( { page, limit = 0, count = 0 }, defaultLimit = 10 ) => {
     page = page > 1 ? page : 1
@@ -46,62 +27,53 @@ const calculatePaginationProps = ( { page, limit = 0, count = 0 }, defaultLimit 
     }
 }
 
+const renderers = {
+    limiter: Limiter,
+    resultCount: ResultCount,
+    pages: Pages
+}
+
+const PaginationItemRenderer = ({ type, ...rest }) => {
+    const Renderer = renderer[type];
+    return <Renderer { ...rest } />
+}
+
 const Pagination = ({
-    config: { defaultLimit, showPagination = true, showNumberOfResults = true, showLimiter = true },
-    query, setPage
+    query,
+    setPage,
+    defaultLimit,
+    showPages = true,
+    showResultCount = true,
+    showLimiter = true,
+    pagination
 }) => {
     const {
         page, start, end, count, limit, total
     } = calculatePaginationProps(query, defaultLimit);
-    
+
+    pagination.map((item, index) =>
+        <Styles.PaginationItem key={ index }>
+            <PaginationItemRenderer { ...item } />
+        </Styles.PaginationItem>
+    )
+
     return <Styles.Pagination>
         { showLimiter &&
             <Styles.PaginationItem>
-                <Limiter />
+                <Limiter limit={ query.limit } />
             </Styles.PaginationItem>
         }
-        { showNumberOfResults &&
+        { showResultCount &&
             <Styles.PaginationItem width="400px" textAlign="center">
-                {!!count > 0 &&
-                    <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>}
+                <ResultCount page={ page } limit={ limit } count={ count } />
             </Styles.PaginationItem>
         }
-        { showPagination &&
+        { showPages &&
             <Styles.PaginationItem right>
-                <Styles.PaginationList>
-                    <Styles.PaginationListItem onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 }>Previous</Styles.PaginationListItem>
-                    <Styles.PaginationListItem onClick={ setPage.bind(this, 1) } disabled={ page == 1 }>First</Styles.PaginationListItem>
-                    { getPages(page, total).map( (link, index) =>
-                        <Styles.PaginationListItem
-                            key={ index }
-                            onClick={ setPage.bind(this, link) }
-                            active={ page === link }
-                            disabled={ page === link }
-                        >{ link }</Styles.PaginationListItem>
-                    ) }
-                    <Styles.PaginationListItem onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.PaginationListItem>
-                    <Styles.PaginationListItem onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.PaginationListItem>
-                </Styles.PaginationList>
+                <Pages setPage={ setPage } page={ page } total={ total } />
             </Styles.PaginationItem>
         }
     </Styles.Pagination>;
 }
 
-const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
-    query: _.get(state, [reducerName, name, 'query'], {})
-});
-
-const mapDispatchToProps = ( dispatch, { config } ) => ({
-    setPage: ( page ) => dispatch(setPage(prepareActionPayload(config)({ page }))),
-});
-
-export default withTableConfig({
-    name: 'name',
-    reducerName: 'reducerName',
-    defaultLimit: 'limiterConfig.default',
-    routes: 'routes',
-    entity: 'entity',
-    showPagination: 'showPagination',
-    showNumberOfResults: 'showNumberOfResults',
-    showLimiter: 'showLimiter'
-})(connect(mapStateToProps, mapDispatchToProps)(Pagination));
+export default Pagination;

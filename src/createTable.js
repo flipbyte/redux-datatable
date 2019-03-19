@@ -51,8 +51,17 @@ class ReduxDatatable extends Component {
         return this.setValidPage(nextProps);
     }
 
+    getPaginationProps(props) {
+        const {
+            tableData: { query },
+            config: { pagination }
+        } = props;
+
+        return { query, setPage, pagination };
+    }
+
     render() {
-        const { name, config, tableData, reducerName } = this.props;
+        const { name, config, tableData, reducerName, setPage } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
         const { toolbar } = config;
         const tableConfig = {
@@ -73,6 +82,8 @@ class ReduxDatatable extends Component {
             );
         }
 
+        const paginationProps = this.getPaginationProps(this.props);
+
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
                 <Datatable.Container>
@@ -81,9 +92,9 @@ class ReduxDatatable extends Component {
                             <Datatable.ToolbarRow key={ index } items={ items } />
                         )}
                     </Datatable.Toolbar>
-                    <Datatable.Pagination />
+                    <Datatable.Pagination { ...paginationProps } />
                     <Datatable.Table />
-                    <Datatable.Pagination />
+                    <Datatable.Pagination { ...paginationProps } />
                 </Datatable.Container>
             </TableProvider>
         )

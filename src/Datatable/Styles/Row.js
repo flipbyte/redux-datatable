@@ -8,6 +8,7 @@ const Row = styled.div `
     flex-direction: row;
     flex-wrap: wrap;
     padding: ${props => props.padding || 0};
+    height: ${props => props.height || 'auto'};
 `
 
 export default Row;

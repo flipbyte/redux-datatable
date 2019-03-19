@@ -76,7 +76,7 @@ class Columns extends Component {
     }
 
     render() {
-        const { config: { allColumns, columns, checkedColumns, stateUpdater }} = this.props;
+        const { config: { allColumns, checkedColumns, stateUpdater }} = this.props;
         const { open } = this.state;
 
         return (
@@ -103,6 +103,5 @@ class Columns extends Component {
 export default withTableConfig({
     stateUpdater: 'updateTableState',
     allColumns: 'allColumns',
-    checkedColumns: 'checkedColumns',
-    columns: 'columns'
+    checkedColumns: 'checkedColumns'
 })(Columns);

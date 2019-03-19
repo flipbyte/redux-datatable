@@ -2,8 +2,7 @@ import React from 'react';
 import Styles from './Styles';
 import Filter from './Renderer/Filter';
 import Header from './Renderer/Header';
-
-const Body = ( props ) => null;
+import Body from './Renderer/Body';
 
 const getRenderer = (ofType) => {
     const renderers = {

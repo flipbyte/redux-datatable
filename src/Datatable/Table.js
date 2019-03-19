@@ -51,15 +51,16 @@ class Table extends Component {
     }
 
     updateTableDimensions() {
-        this.computedTableWidth = this.minWidth > this.tableBody.clientWidth
+        const tableBodyEl = this.tableBody.current;
+        this.computedTableWidth = this.minWidth > tableBodyEl.clientWidth
             ? this.minWidth
-            : this.tableBody.clientWidth;
+            : tableBodyEl.clientWidth;
 
         const { columns, allColumns, checkedColumns, stateUpdater } = this.props.config;
         const totalColumnsWidth = checkedColumns.reduce((result, columnIndex) => (
             result + (allColumns[columnIndex].width || 0)
         ), 0);
-        const percentage = (this.computedTableWidth /*remove this*/|| 800) / totalColumnsWidth;
+        const percentage = this.computedTableWidth / totalColumnsWidth;
 
         let updatedColumns = checkedColumns.reduce((result, columnIndex) => (
             result.concat([{
@@ -82,7 +83,7 @@ class Table extends Component {
 
     componentDidMount() {
         this.updateTableDimensions();
-        // this.tableBody.addEventListener('scroll', this.handleScroll, true);
+        this.tableBody.current.addEventListener('scroll', this.handleScroll, true);
         window.addEventListener('resize', this.updateTableDimensions);
     }
 
@@ -91,18 +92,18 @@ class Table extends Component {
     }
 
     componentWillUnmount() {
-        // this.tableBody.removeEventListener('scroll', this.handleScroll, true);
+        this.tableBody.removeEventListener('scroll', this.handleScroll, true);
         window.removeEventListener('resize', this.updateTableDimensions);
     }
 
     render() {
-        const { children, config: { columns }} = this.props;
+        const { children, config: { columns, height }, data } = this.props;
         const { pointerEvents, top } = this.state;
 
         return (
             <Styles.Container>
                 <Styles.Table>
-                    <TableHeader ref={ elem => this.tableHeader = elem } width={ `${this.width}px` }>
+                    <TableHeader ref={ this.tableHeader } width={ `${this.width}px` }>
                         <Styles.Row>
                             { columns.map((column, index) =>
                                 <Renderer key={ index } ofType="header" width={ `${column.width}px` } { ...column } />
@@ -115,17 +116,20 @@ class Table extends Component {
                         </Styles.Row>
                     </TableHeader>
                     <TableBody
-                        ref={ elem => this.tableBody = elem }
+                        ref={ this.tableBody }
                         width={ this.width }
                         height={ this.height }
+                        data={ data }
+                        startTop={ top }
+                        visibleHeight={ height }
                         rowHeight={ this.rowHeight }
-                        renderItem={
-                            <Styles.Row>
+                        renderItem={ ({ index, item, top }) => (
+                            <Styles.Row key={ index } height={ `${this.rowHeight}px` }>
                                 { columns.map((column, index) =>
-                                    <Renderer key={ index } ofType="body" { ...column } />
+                                    <Renderer key={ index } ofType="body" item={ item } { ...column } />
                                 )}
                             </Styles.Row>
-                        }
+                        )}
                     />
                 </Styles.Table>
             </Styles.Container>
