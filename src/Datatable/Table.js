@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { withTableConfig } from '../TableProvider';
 import TableHeader from './Table/Header';
+import TableBody from './Table/Body';
 import Styles from './Styles';
+import Renderer from './Renderer';
 
 class Table extends Component {
     constructor(props) {
@@ -44,27 +46,30 @@ class Table extends Component {
         this.scrollUpdate();
     }
 
-    calculateWidth(data) {
-        return _.map(data, 'width').reduce(( sum, num ) => sum + num, 0);
+    calculateWidth(columns) {
+        return columns.reduce((result, column) => result + (column.width || 0), 0);
     }
 
     updateTableDimensions() {
         this.computedTableWidth = this.minWidth > this.tableBody.clientWidth
-            ? this.minWidth : this.tableBody.clientWidth;
+            ? this.minWidth
+            : this.tableBody.clientWidth;
 
-        const { columns, allColumns, stateUpdater } = this.props.config;
-        const totalColumnsWidth = this.calculateWidth(_.pick(allColumns, _.keys(columns)));
-        const percentage = this.computedTableWidth / totalColumnsWidth;
+        const { columns, allColumns, checkedColumns, stateUpdater } = this.props.config;
+        const totalColumnsWidth = checkedColumns.reduce((result, columnIndex) => (
+            result + (allColumns[columnIndex].width || 0)
+        ), 0);
+        const percentage = (this.computedTableWidth /*remove this*/|| 800) / totalColumnsWidth;
 
-        let updatedColumns = _.transform(columns, function(result, value, key) {
-            result[key] = {
-                ...value,
-                width: Math.round(percentage * allColumns[key].width)
-            };
-        }, {});
+        let updatedColumns = checkedColumns.reduce((result, columnIndex) => (
+            result.concat([{
+                ...allColumns[columnIndex],
+                width: Math.round(percentage * allColumns[columnIndex].width)
+            }])
+        ), [])
 
         this.width = this.calculateWidth(updatedColumns);
-        stateUpdater({ columns: { ...updatedColumns } });
+        stateUpdater({ columns: [ ...updatedColumns ] });
     }
 
     updateTableOnColumnVisibilityChange(prevColumns, currentColumns) {
@@ -91,25 +96,39 @@ class Table extends Component {
     }
 
     render() {
-        console.log(this.props.config.columns, this.props.config.allColumns);
         const { children, config: { columns }} = this.props;
         const { pointerEvents, top } = this.state;
 
         return (
-            <Styles.TableContainer>
+            <Styles.Container>
                 <Styles.Table>
-                    <TableHeader innerRef={ elem => this.tableHeader = elem } width={ this.width }>
+                    <TableHeader ref={ elem => this.tableHeader = elem } width={ `${this.width}px` }>
                         <Styles.Row>
                             { columns.map((column, index) =>
-                                <Styles.TableCell key={ index }>
-                                    <Renderer for="header" { ...column } />
-                                    <Renderer for="filter" { ...column } />
-                                </Styles.TableCell>
+                                <Renderer key={ index } ofType="header" width={ `${column.width}px` } { ...column } />
+                            )}
+                        </Styles.Row>
+                        <Styles.Row>
+                            { columns.map((column, index) =>
+                                <Renderer key={ index } ofType="filter" width={ `${column.width}px` } { ...column } />
                             )}
                         </Styles.Row>
                     </TableHeader>
+                    <TableBody
+                        ref={ elem => this.tableBody = elem }
+                        width={ this.width }
+                        height={ this.height }
+                        rowHeight={ this.rowHeight }
+                        renderItem={
+                            <Styles.Row>
+                                { columns.map((column, index) =>
+                                    <Renderer key={ index } ofType="body" { ...column } />
+                                )}
+                            </Styles.Row>
+                        }
+                    />
                 </Styles.Table>
-            </Styles.TableContainer>
+            </Styles.Container>
         );
     }
 }
@@ -125,6 +144,7 @@ export default withTableConfig({
     minWidth: 'minWidth',
     rowHeight: 'rowHeight',
     allColumns: 'allColumns',
+    checkedColumns: 'checkedColumns',
     reducerName: 'reducerName',
     stateUpdater: 'updateTableState'
 })(connect(mapStateToProps)(Table));

@@ -4,6 +4,7 @@ import Toolbar, { ToolbarRow, ToolbarItem } from './Toolbar';
 import Pagination, { PaginationItem, PaginationList, PaginationListItem } from './Pagination';
 import Table from './Table';
 import TableHeader, { TableHeaderInner } from './Table/Header';
+import TableBody, { TableBodyInner } from './Table/Body';
 import TableCell from './Table/Cell';
 
 export default {
@@ -19,5 +20,7 @@ export default {
     Table,
     TableHeader,
     TableHeaderInner,
-    TableCell
+    TableCell,
+    TableBody,
+    TableBodyInner
 }

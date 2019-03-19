@@ -114,7 +114,7 @@ class MassActions extends Component {
                 <Button outline noRadius dropdownToggle onClick={ this.toggle }>
                     { label }
                 </Button>
-                <DropdownMenu hidden={ !open }>
+                <DropdownMenu hidden={ !open } noRadius>
                     { options.map((option, index) =>
                         <DropdownItem key={ index } onClick={ this.handleAction.bind(this, option) }>
                             { option.label }

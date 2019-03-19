@@ -21,16 +21,17 @@ class Columns extends Component {
         if(event.target.checked) {
             activeColumns = [ ...checkedColumns, index ];
         } else {
-            itemIndex = checkedColumns.indexOf(index);
+            const itemIndex = checkedColumns.indexOf(index);
             activeColumns = [ ...checkedColumns ];
             activeColumns.splice(itemIndex, 1);
         }
+        activeColumns.sort();
 
         const columns = activeColumns.reduce((result, currentIndex) => (
-            result.push(allColumns[currentIndex])
+            result.concat([allColumns[currentIndex]])
         ), []);
 
-        stateUpdater({ columns });
+        stateUpdater({ columns, checkedColumns: activeColumns });
     }
 
     componentWillUnmount() {
@@ -83,7 +84,7 @@ class Columns extends Component {
                 <Button outline noRadius dropdownToggle onClick={ this.toggle }>
                     Columns
                 </Button>
-                <DropdownMenu hidden={ !open }>
+                <DropdownMenu hidden={ !open } noRadius>
                     { allColumns.map(({ name, label }, index) =>
                         <DropdownItem key={ index }>
                             <input name={ name }

@@ -59,7 +59,7 @@ class ReduxDatatable extends Component {
             ...otherConfig,
             allColumns,
             columns: this.state.columns || [ ...allColumns ],
-            checkedColumns: this.state.checkedColumns || [ ...Array(allColumns.length).keys() ],
+            checkedColumns: this.state.checkedColumns || _.range(allColumns.length),
             updateTableState: this.updateState
         };
 
