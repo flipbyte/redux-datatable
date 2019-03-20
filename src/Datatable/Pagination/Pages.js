@@ -1,5 +1,6 @@
 import React from 'react';
 import Styles from '../Styles';
+import { SET_PAGE } from '../../actions';
 
 const NUM_LINKS = 5;
 
@@ -19,20 +20,28 @@ const getPages = ( currentPage, total ) => {
     return fillRange(left, right);
 }
 
-const Pages = ({ page, total, setPage }) =>
-    <Styles.PaginationList>
-        <Styles.PaginationListItem onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 }>Previous</Styles.PaginationListItem>
-        <Styles.PaginationListItem onClick={ setPage.bind(this, 1) } disabled={ page == 1 }>First</Styles.PaginationListItem>
-        { getPages(page, total).map( (link, index) =>
+const Pages = ({ page, total, action }) => {
+    const setPage = ( page ) =>  action(SET_PAGE)({ page });
+    return (
+        <Styles.PaginationList>
             <Styles.PaginationListItem
-                key={ index }
-                onClick={ setPage.bind(this, link) }
-                active={ page === link }
-                disabled={ page === link }
-            >{ link }</Styles.PaginationListItem>
-        ) }
-        <Styles.PaginationListItem onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.PaginationListItem>
-        <Styles.PaginationListItem onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.PaginationListItem>
-    </Styles.PaginationList>
+                onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Styles.PaginationListItem>
+            <Styles.PaginationListItem
+                onClick={ setPage.bind(this, 1) } disabled={ page == 1 } >First</Styles.PaginationListItem>
+            { getPages(page, total).map( (link, index) =>
+                <Styles.PaginationListItem
+                    key={ index }
+                    onClick={ setPage.bind(this, link) }
+                    active={ page === link }
+                    disabled={ page === link }
+                >{ link }</Styles.PaginationListItem>
+            ) }
+            <Styles.PaginationListItem
+                onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.PaginationListItem>
+            <Styles.PaginationListItem
+                onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.PaginationListItem>
+        </Styles.PaginationList>
+    );
+}
 
 export default Pages

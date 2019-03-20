@@ -7,7 +7,7 @@ import Pagination from './Table/Pagination';
 import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
-import { isArray, calculatePaginationProps } from './utils';
+import { isArray, calculatePaginationProps, createActionCreator } from './utils';
 import Limiter from './Datatable/Pagination/Limiter';
 import ResultCount from './Datatable/Pagination/ResultCount';
 import Pages from './Datatable/Pagination/Pages';
@@ -56,8 +56,7 @@ class ReduxDatatable extends Component {
 
     getPaginationComponent() {
         const {
-            setPage,
-            setLimit,
+            action,
             tableData: { query },
             config: {
                 pagination: { limiter, pages, resultCount }
@@ -67,15 +66,15 @@ class ReduxDatatable extends Component {
 
         return (
             <Datatable.Pagination>
-                <Limiter setLimit={ setLimit } limit={ limit } { ...limiter } />
+                <Limiter action={ action } limit={ limit } { ...limiter } />
                 <ResultCount page={ page } limit={ limit } count={ count } { ...resultCount } />
-                <Pages setPage={ setPage } page={ page } total={ total } { ...pages } />
+                <Pages action={ action } page={ page } total={ total } { ...pages } />
             </Datatable.Pagination>
         );
     }
 
     render() {
-        const { name, config, tableData, reducerName, setPage } = this.props;
+        const { name, config, tableData, reducerName, action } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
         const { toolbar } = config;
         const tableConfig = {
@@ -101,11 +100,9 @@ class ReduxDatatable extends Component {
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
                 <Datatable.Container>
-                    <Datatable.Toolbar>
-                        { toolbar.map((items, index) =>
-                            <Datatable.ToolbarRow key={ index } items={ items } />
-                        )}
-                    </Datatable.Toolbar>
+                    <Datatable.Toolbar items={ toolbar } render={(item, index) =>
+                        <Datatable.ToolbarItem key={ index } config={ tableConfig } item={ item } action={ action } />
+                    } />
                     { Pagination }
                     <Datatable.Table />
                     { Pagination }
@@ -130,8 +127,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
             dispatch(setLimit(preparePayload({ limit: _.get(ownProps.config, 'pagination.limiter.default', 10) })))
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
-        setPage: ( page ) => dispatch(setPage(preparePayload({ page }))),
-        setLimit: ( limit ) => dispatch(setLimit(preparePayload({ limit })))
+        action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
     };
 };
 

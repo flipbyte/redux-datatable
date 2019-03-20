@@ -140,9 +140,4 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 
 });
 
-export default withTableConfig({
-    name: 'name',
-    reducerName: 'reducerName',
-    routes: 'routes',
-    entity: 'entity'
-})(connect(mapStateToProps, mapDispatchToProps)(MassActions));
+export default connect(mapStateToProps, mapDispatchToProps)(MassActions)

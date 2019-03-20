@@ -2,16 +2,13 @@ export default {
     name: 'posts',
     height: 400,
     rowHeight: 50,
-    limiterConfig: {
-        options: [10, 20, 50],
-        default: 20
-    },
+    filterable: false,
     pagination: {
         limiter: {
             visible: true,
             position: 10,
             options: [10, 20, 50],
-            default: 20,
+            default: 10,
             style: {
                 right: false,
             }
@@ -52,6 +49,7 @@ export default {
             id: 'dropdown',
             options: [{
                 type: 'action',
+                action: '',
                 name: 'delete',
                 label: 'Delete',
                 indexField: '@id'

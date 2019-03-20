@@ -15,24 +15,23 @@ const getRenderer = ( type ) => {
     return (renderers[type] || renderers['default']);
 }
 
-export const ToolbarItem = ({ item }) => {
-    const { style, ...rest } = item;
-    const Renderer = getRenderer(item.type);
+export const ToolbarItem = ({ config, item, action }) => {
+    const { style, type } = item;
+    const Renderer = getRenderer(type);
     return (
         <Styles.ToolbarItem { ...style }>
-            <Renderer itemConfig={ rest } />
+            <Renderer config={ config } itemConfig={ item } action={ action } />
         </Styles.ToolbarItem>
     );
 }
 
-export const ToolbarRow = ({ items }) =>
-    <Styles.ToolbarRow>
-        { items.map((item, index) =>
-            <ToolbarItem key={ index } item={ item } />
+const Toolbar = ({ items, render }) =>
+    <Styles.Toolbar>
+        { items.map((row, rowIndex) =>
+            <Styles.ToolbarRow key={ rowIndex }>
+                { row.map((item, itemIndex) => render(item, itemIndex) )}
+            </Styles.ToolbarRow>
         )}
-    </Styles.ToolbarRow>
-
-const Toolbar = ({ children }) =>
-    <Styles.Toolbar>{ children }</Styles.Toolbar>
+    </Styles.Toolbar>
 
 export default Toolbar;
