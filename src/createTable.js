@@ -7,7 +7,10 @@ import Pagination from './Table/Pagination';
 import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
-import { isArray } from './utils';
+import { isArray, calculatePaginationProps } from './utils';
+import Limiter from './Datatable/Pagination/Limiter';
+import ResultCount from './Datatable/Pagination/ResultCount';
+import Pages from './Datatable/Pagination/Pages';
 
 class ReduxDatatable extends Component {
     constructor(props) {
@@ -51,13 +54,32 @@ class ReduxDatatable extends Component {
         return this.setValidPage(nextProps);
     }
 
-    getPaginationProps(props) {
+    getPaginationProps() {
         const {
             tableData: { query },
             config: { pagination }
-        } = props;
+        } = this.props;
 
         return { query, setPage, pagination };
+    }
+
+    getPaginationComponent() {
+        const paginationProps = this.getPaginationProps();
+        const {
+            setPage,
+            query,
+            pagination: { limiter, pages, resultCount }
+        } = paginationProps;
+        const { page, start, end, count, limit, total } = calculatePaginationProps(query, limiter.default);
+
+
+        return (
+            <Datatable.Pagination>
+                <Limiter setLimit={ setLimit } limit={ limit } { ...limiter } />
+                <ResultCount page={ page } limit={ limit } count={ count } { ...resultCount } />
+                <Pages setPage={ setPage } page={ page } total={ total } { ...pages } />
+            </Datatable.Pagination>
+        );
     }
 
     render() {
@@ -82,7 +104,7 @@ class ReduxDatatable extends Component {
             );
         }
 
-        const paginationProps = this.getPaginationProps(this.props);
+        const Pagination = this.getPaginationComponent();
 
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
@@ -92,9 +114,9 @@ class ReduxDatatable extends Component {
                             <Datatable.ToolbarRow key={ index } items={ items } />
                         )}
                     </Datatable.Toolbar>
-                    <Datatable.Pagination { ...paginationProps } />
+                    { Pagination }
                     <Datatable.Table />
-                    <Datatable.Pagination { ...paginationProps } />
+                    { Pagination }
                 </Datatable.Container>
             </TableProvider>
         )

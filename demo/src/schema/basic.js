@@ -6,7 +6,32 @@ export default {
         options: [10, 20, 50],
         default: 20
     },
-    pagination: [{
+    pagination: {
+        limiter: {
+            visible: true,
+            position: 10,
+            options: [10, 20, 50],
+            default: 20,
+            style: {
+                right: false,
+            }
+        },
+        pages: {
+            visible: true,
+            position: 20,
+            style: {
+                right: true,
+            }
+        },
+        resultCount: {
+            visible: true,
+            position: 30,
+            style: {
+                width: '400px',
+                textAlign: 'center',
+            }
+        }
+    },/*[{
         type: 'limiter',
         visible: true,
         right: false,
@@ -21,7 +46,7 @@ export default {
         visible: true,
         width: 400,
         textAlign: 'center',
-    }],
+    }],*/
     routes: {
         get: {
             route: '/users',

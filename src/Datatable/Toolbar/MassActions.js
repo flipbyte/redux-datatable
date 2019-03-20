@@ -51,13 +51,13 @@ class MassActions extends Component {
     }
 
     handleDocumentClick(e) {
-        if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== keyCodes.tab))) {
+        if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== 9))) {
             return;
         }
 
         const container = ReactDOM.findDOMNode(this);
         if (container.contains(e.target) && container !== e.target
-            && (e.type !== 'keyup' || e.which === keyCodes.tab)
+            && (e.type !== 'keyup' || e.which === 9)
         ) {
             return;
         }

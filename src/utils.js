@@ -6,6 +6,27 @@ export const defaultLimiterCongig = {
     default: 10,
 };
 
+export const calculatePaginationProps = (
+    { page, limit = 0, count = 0 }, 
+    defaultLimit = 10
+) => {
+    page = page > 1 ? page : 1
+    limit = limit != 0 ? limit : defaultLimit;
+
+    let start = (page - 1) * limit
+    let end = start + limit - 1
+
+    return {
+        page: page,
+        start: start,
+        end: (count > end && end >= 0) ? end : count,
+        count: count,
+        limit: limit,
+        total: Math.ceil(count / limit)
+    }
+}
+
+
 // export const isSelectionEmpty = (obj)  => {
 //     for(var key in obj) {
 //         if(obj.hasOwnProperty(key))
