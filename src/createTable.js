@@ -127,7 +127,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
     return {
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })))
-            dispatch(setLimit(preparePayload({ limit: _.get(ownProps.config, 'limiterConfig.default', 10) })))
+            dispatch(setLimit(preparePayload({ limit: _.get(ownProps.config, 'pagination.limiter.default', 10) })))
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
         setPage: ( page ) => dispatch(setPage(preparePayload({ page }))),
