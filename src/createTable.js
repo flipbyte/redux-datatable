@@ -24,7 +24,7 @@ class ReduxDatatable extends Component {
         this.setState(updatedObj);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const { tableData, loadData } = this.props;
         if(!_.isEmpty(tableData) && !_.isEmpty(tableData.items)) {
             return;
@@ -71,7 +71,6 @@ class ReduxDatatable extends Component {
             pagination: { limiter, pages, resultCount }
         } = paginationProps;
         const { page, start, end, count, limit, total } = calculatePaginationProps(query, limiter.default);
-
 
         return (
             <Datatable.Pagination>
@@ -139,6 +138,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
         setPage: ( page ) => dispatch(setPage(preparePayload({ page }))),
+        setLimit: ( limit ) => dispatch(setLimit(preparePayload({ limit })))
     };
 };
 

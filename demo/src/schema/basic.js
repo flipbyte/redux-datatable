@@ -31,22 +31,7 @@ export default {
                 textAlign: 'center',
             }
         }
-    },/*[{
-        type: 'limiter',
-        visible: true,
-        right: false,
-        options: [10, 20, 50],
-        default: 20
-    }, {
-        type: 'pages',
-        visible: true,
-        right: true
-    }, {
-        type: 'result-count',
-        visible: true,
-        width: 400,
-        textAlign: 'center',
-    }],*/
+    },
     routes: {
         get: {
             route: '/users',
