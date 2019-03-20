@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import { shouldUpdate } from '../../../utils';
 
 class Date extends Component {
-    shouldComponentUpdate( nextProps ) {
-        return shouldUpdate(this.props.data, nextProps.data, this.props.index);
+    shouldComponentUpdate({ data, colConfig: { name } }) {
+        return shouldUpdate(this.props.data, data, name);
     }
 
     render() {

@@ -3,8 +3,8 @@ import { shouldUpdate } from '../../../utils';
 import React, { Fragment, Component } from 'react';
 
 class Image extends Component {
-    shouldComponentUpdate( nextProps ) {
-        return shouldUpdate(this.props.data, nextProps.data, this.props.index);
+    shouldComponentUpdate({ data, colConfig: { name } }) {
+        return shouldUpdate(this.props.data, data, name);
     }
 
     render() {
