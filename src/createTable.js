@@ -54,22 +54,15 @@ class ReduxDatatable extends Component {
         return this.setValidPage(nextProps);
     }
 
-    getPaginationProps() {
-        const {
-            tableData: { query },
-            config: { pagination }
-        } = this.props;
-
-        return { query, setPage, pagination };
-    }
-
     getPaginationComponent() {
-        const paginationProps = this.getPaginationProps();
         const {
             setPage,
-            query,
-            pagination: { limiter, pages, resultCount }
-        } = paginationProps;
+            setLimit,
+            tableData: { query },
+            config: {
+                pagination: { limiter, pages, resultCount }
+            }
+        } = this.props;
         const { page, start, end, count, limit, total } = calculatePaginationProps(query, limiter.default);
 
         return (
