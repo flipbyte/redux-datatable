@@ -54,12 +54,15 @@ export const PaginationListItem = styled.button `
         background: ${props => props.activeBackground || '#007bff'};
         color: ${props => props.activeColor || '#fff'};
         font-weight: ${props => props.activeFontWeight || 'normal'}
-    `}    
+    `}
 `
 
 const Pagination = styled.div `
     display: block;
     width: 100%;
+    ${props => props.margin && css `
+        margin: ${props.margin}
+    `}
 `
 
 export default Pagination;

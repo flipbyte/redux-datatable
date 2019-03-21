@@ -51,7 +51,11 @@ export default {
             id: 'dropdown',
             options: [{
                 type: 'action',
-                action: '',
+                onClick: (params, action) => (
+                    confirm("Are your sure you want to delete these item(s)?")
+                        ? dispatch(action('DELETE_DATA')(params))
+                        : false
+                ),
                 name: 'delete',
                 label: 'Delete',
                 indexField: '@id'
@@ -69,11 +73,13 @@ export default {
         }, {
             type: 'reset-filters',
             label: 'Reset Filters',
-            visible: true
+            visible: true,
+            state: false,
         }, {
             type: 'columns',
             label: 'Columns',
             visible: true,
+            state: false,
             style: {
                 right: true
             }

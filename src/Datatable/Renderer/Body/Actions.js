@@ -27,6 +27,7 @@ class Actions extends Component {
                     <Button
                         key={ key }
                         noRadius
+                        sm
                         onClick={ this.handleAction.bind(null, action) }
                     >
                         { action.label }

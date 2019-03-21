@@ -37,23 +37,24 @@ class Columns extends Component {
         this.manageEvents(true);
     }
 
-    toggle( e ) {
-        let isOpen = !this.state.open;
-        if(isOpen) {
-            this.manageEvents();
-        } else {
-            this.manageEvents(true);
-        }
+    componentDidMount() {
+        this.manageEvents();
+    }
 
-        this.setState({ open: isOpen })
+    toggle( e ) {
+        const { open } = this.state;
+        // if(isOpen) {
+        //     this.manageEvents();
+        // } else {
+        //     this.manageEvents(true);
+        // }
+        //
+        this.setState({ open: !open })
     }
 
     manageEvents(remove = false) {
-        var eventUpdater = document.addEventListener;
-        if(remove) {
-            eventUpdater = document.removeEventListener;
-        }
-
+        var eventUpdater = remove ? document.removeEventListener : document.addEventListener;
+        
         ['click', 'touchstart', 'keyup'].forEach( event =>
             eventUpdater(event, this.handleDocumentClick, true)
         );
@@ -71,7 +72,9 @@ class Columns extends Component {
             return;
         }
 
-        this.toggle(e);
+        if (this.state.open) {
+            this.toggle(e);
+        }
     }
 
     render() {

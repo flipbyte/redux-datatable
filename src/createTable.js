@@ -70,6 +70,14 @@ class ReduxDatatable extends Component {
         );
     }
 
+    getPropsWithState(props, addState) {
+        if(addState !== false) {
+            return { ...props, data: this.props.tableData }
+        }
+
+        return props;
+    }
+
     render() {
         const { name, config, tableData, reducerName, action } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
@@ -96,8 +104,8 @@ class ReduxDatatable extends Component {
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
                 <Datatable.Container>
-                    <Datatable.Toolbar items={ toolbar } render={(ToolbarItem, item) =>
-                        <ToolbarItem config={ tableConfig } itemConfig={ item } action={ action } />
+                    <Datatable.Toolbar items={ toolbar } render={(ToolbarItem, { state, ...itemConfig }) =>
+                        <ToolbarItem { ...this.getPropsWithState({ config: tableConfig, itemConfig, action }, state) } />
                     } />
                     <Datatable.Pagination
                         position="top"

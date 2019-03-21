@@ -30,20 +30,11 @@ class MassActions extends Component {
 
     toggle( e ) {
         const { open } = this.state;
-        // if(!open) {
-        //     this.manageEvents();
-        // } else {
-        //     this.manageEvents(true);
-        // }
-        //
         this.setState({ open: !open })
     }
 
     manageEvents(remove = false) {
-        var eventUpdater = document.addEventListener;
-        if(remove) {
-            eventUpdater = document.removeEventListener;
-        }
+        var eventUpdater = remove ? document.removeEventListener : document.addEventListener;
 
         ['click', 'touchstart', 'keyup'].forEach( event =>
             eventUpdater(event, this.handleDocumentClick, true)
@@ -68,7 +59,10 @@ class MassActions extends Component {
     }
 
     handleAction( action, event ) {
-        const { selection, massActions } = this.props;
+        const {
+            data: { selection },
+            massActions
+        } = this.props;
 
         let dataKey = getConfigParam(action.indexField);
         let selectedItems = getSelectedKeys(selection, dataKey);
@@ -95,17 +89,6 @@ class MassActions extends Component {
         }
     }
 
-    renderItem( key, action ) {
-        return <li key={ key } className="dropdown-item">
-            <a
-                className={ action.name }
-                href="#"
-                onClick={ (event) => this.handleAction(action, event) }>
-                { action.label }
-            </a>
-        </li>
-    }
-
     render() {
         const { label, options } = this.props.itemConfig;
         const { open } = this.state;
@@ -126,10 +109,6 @@ class MassActions extends Component {
     }
 }
 
-const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
-    selection: _.get(state, [reducerName, name, 'selection'], {}),
-});
-
 const mapDispatchToProps = ( dispatch, { config } ) => ({
     massActions: {
         delete: ( params ) =>
@@ -140,4 +119,4 @@ const mapDispatchToProps = ( dispatch, { config } ) => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MassActions)
+export default connect(null, mapDispatchToProps)(MassActions)
