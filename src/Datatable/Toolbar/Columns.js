@@ -1,9 +1,6 @@
-import _ from 'lodash';
-import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
-import { withTableConfig } from '../../TableProvider';
-import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
 import { Button } from 'styled-button-component';
+import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
 
 class Columns extends Component {
     constructor(props) {

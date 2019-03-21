@@ -4,6 +4,6 @@ import Styles from '../Styles';
 const TableCell = ({ children }) =>
     <Styles.TableCell>
         { children }
-    </Styles.TableHeader>
+    </Styles.TableCell>
 
 export default TableCell;
