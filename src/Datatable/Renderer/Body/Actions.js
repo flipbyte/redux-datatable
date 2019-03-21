@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { deleteData } from '../../../actions';
 import { withTableConfig } from '../../../TableProvider';
 import { paramsResolver, prepareActionPayload } from '../../../utils'
+import { Button } from 'styled-button-component';
 
 class Actions extends Component {
     constructor( props ) {
@@ -23,12 +24,13 @@ class Actions extends Component {
         return (
             <div className="btn-group-sm">
                 { _.map(children, ( action, key ) =>
-                    <button key ={ key }
-                        type="button"
-                        className={ action.btnClass }
-                        onClick={ this.handleAction.bind(null, action) }>
+                    <Button
+                        key={ key }
+                        noRadius
+                        onClick={ this.handleAction.bind(null, action) }
+                    >
                         { action.label }
-                    </button>
+                    </Button>
                 ) }
             </div>
         )

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from "prop-types";
 import { SET_LIMIT } from '../../actions';
 
+export const TYPE_LIMITER = 'limiter';
+
 const Limiter = ({ options, limit, action, default: defaultLimit }) => {
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (

@@ -5,22 +5,18 @@ import ResetFilters from './Toolbar/ResetFilters';
 import Columns from './Toolbar/Columns';
 import Styles from './Styles'
 
-const getRenderer = ( type ) => {
-    const renderers = {
-        'reset-filters': ResetFilters,
-        'columns': Columns,
-        'default': MassActions
-    }
-
-    return (renderers[type] || renderers['default']);
+const renderers = {
+    'reset-filters': ResetFilters,
+    'columns': Columns,
+    'default': MassActions
 }
 
-export const ToolbarItem = ({ config, item, action }) => {
+const getRenderer = ( type ) => renderers[type] || renderers['default']
+export const toolbarItem = ( render, item, index ) => {
     const { style, type } = item;
-    const Renderer = getRenderer(type);
     return (
-        <Styles.ToolbarItem { ...style }>
-            <Renderer config={ config } itemConfig={ item } action={ action } />
+        <Styles.ToolbarItem key={ index } { ...style }>
+            { render(getRenderer(item.type), item, index)  }
         </Styles.ToolbarItem>
     );
 }
@@ -29,7 +25,7 @@ const Toolbar = ({ items, render }) =>
     <Styles.Toolbar>
         { items.map((row, rowIndex) =>
             <Styles.ToolbarRow key={ rowIndex }>
-                { row.map((item, itemIndex) => render(item, itemIndex) )}
+                { row.map((item, itemIndex) => toolbarItem(render, item, itemIndex) )}
             </Styles.ToolbarRow>
         )}
     </Styles.Toolbar>

@@ -7,10 +7,7 @@ import Pagination from './Table/Pagination';
 import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
-import { isArray, calculatePaginationProps, createActionCreator } from './utils';
-import Limiter from './Datatable/Pagination/Limiter';
-import ResultCount from './Datatable/Pagination/ResultCount';
-import Pages from './Datatable/Pagination/Pages';
+import { createActionCreator } from './utils';
 
 class ReduxDatatable extends Component {
     constructor(props) {
@@ -76,7 +73,7 @@ class ReduxDatatable extends Component {
     render() {
         const { name, config, tableData, reducerName, action } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
-        const { toolbar } = config;
+        const { toolbar, pagination } = config;
         const tableConfig = {
             ...otherConfig,
             allColumns,
@@ -95,17 +92,30 @@ class ReduxDatatable extends Component {
             );
         }
 
-        const Pagination = this.getPaginationComponent();
-
+        const { query } = tableData;
         return (
             <TableProvider config={{ reducerName, ...tableConfig }}>
                 <Datatable.Container>
-                    <Datatable.Toolbar items={ toolbar } render={(item, index) =>
-                        <Datatable.ToolbarItem key={ index } config={ tableConfig } item={ item } action={ action } />
+                    <Datatable.Toolbar items={ toolbar } render={(ToolbarItem, item) =>
+                        <ToolbarItem config={ tableConfig } itemConfig={ item } action={ action } />
                     } />
-                    { Pagination }
+                    <Datatable.Pagination
+                        position="top"
+                        componentConfig={ pagination }
+                        query={ query }
+                        render={(PaginationItem, config, paginationProps) =>
+                            <PaginationItem action={ action } { ...config } { ...paginationProps } />
+                        }
+                    />
                     <Datatable.Table />
-                    { Pagination }
+                    <Datatable.Pagination
+                        position="bottom"
+                        componentConfig={ pagination }
+                        query={ query }
+                        render={(PaginationItem, config, paginationProps) =>
+                            <PaginationItem action={ action } { ...config } { ...paginationProps } />
+                        }
+                    />
                 </Datatable.Container>
             </TableProvider>
         )

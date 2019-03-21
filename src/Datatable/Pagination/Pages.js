@@ -25,9 +25,9 @@ const Pages = ({ page, total, action }) => {
     return (
         <Styles.PaginationList>
             <Styles.PaginationListItem
-                onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Styles.PaginationListItem>
-            <Styles.PaginationListItem
                 onClick={ setPage.bind(this, 1) } disabled={ page == 1 } >First</Styles.PaginationListItem>
+            <Styles.PaginationListItem
+                onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Styles.PaginationListItem>
             { getPages(page, total).map( (link, index) =>
                 <Styles.PaginationListItem
                     key={ index }
@@ -37,9 +37,9 @@ const Pages = ({ page, total, action }) => {
                 >{ link }</Styles.PaginationListItem>
             ) }
             <Styles.PaginationListItem
-                onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.PaginationListItem>
-            <Styles.PaginationListItem
                 onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.PaginationListItem>
+            <Styles.PaginationListItem
+                onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.PaginationListItem>
         </Styles.PaginationList>
     );
 }

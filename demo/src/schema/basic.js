@@ -4,7 +4,9 @@ export default {
     rowHeight: 50,
     filterable: false,
     pagination: {
-        limiter: {
+        // visible: true, // or an object { top: true, bottom: false } default visible
+        items: [{
+            type: 'limiter',
             visible: true,
             position: 10,
             options: [10, 20, 50],
@@ -12,22 +14,22 @@ export default {
             style: {
                 right: false,
             }
-        },
-        pages: {
+        }, {
+            type: 'pages',
             visible: true,
             position: 20,
             style: {
                 right: true,
             }
-        },
-        resultCount: {
+        }, {
+            type: 'resultCount',
             visible: true,
             position: 30,
             style: {
                 width: '400px',
                 textAlign: 'center',
             }
-        }
+        }]
     },
     routes: {
         get: {
