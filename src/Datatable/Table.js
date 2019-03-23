@@ -92,7 +92,7 @@ class Table extends Component {
     }
 
     componentWillUnmount() {
-        this.tableBody.removeEventListener('scroll', this.handleScroll, true);
+        this.tableBody.current.removeEventListener('scroll', this.handleScroll, true);
         window.removeEventListener('resize', this.updateTableDimensions);
     }
 

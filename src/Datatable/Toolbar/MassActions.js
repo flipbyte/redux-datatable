@@ -1,11 +1,9 @@
-import _ from 'lodash';
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
 import { deleteData } from '../../actions';
 import { prepareActionPayload } from '../../utils'
-import { withTableConfig } from '../../TableProvider';
 import { getSelectedKeys, getConfigParam } from '../../utils';
 import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
 import { Button } from 'styled-button-component';

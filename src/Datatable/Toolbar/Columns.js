@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Button } from 'styled-button-component';
 import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
 
