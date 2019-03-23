@@ -2,8 +2,6 @@ import _ from 'lodash';
 import { connect } from "react-redux";
 import React, { Component } from 'react'
 
-import Table from './Table';
-import Pagination from './Table/Pagination';
 import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
@@ -49,25 +47,6 @@ class ReduxDatatable extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.setValidPage(nextProps);
-    }
-
-    getPaginationComponent() {
-        const {
-            action,
-            tableData: { query },
-            config: {
-                pagination: { limiter, pages, resultCount }
-            }
-        } = this.props;
-        const { page, start, end, count, limit, total } = calculatePaginationProps(query, limiter.default);
-
-        return (
-            <Datatable.Pagination>
-                <Limiter action={ action } limit={ limit } { ...limiter } />
-                <ResultCount page={ page } limit={ limit } count={ count } { ...resultCount } />
-                <Pages action={ action } page={ page } total={ total } { ...pages } />
-            </Datatable.Pagination>
-        );
     }
 
     getPropsWithState(props, addState) {
