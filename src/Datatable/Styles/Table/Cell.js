@@ -28,7 +28,7 @@ const TableCell = styled.div `
             color: ${props => props.inputColor || '#495057'};
             border: ${props => props.inputBorder || '1px solid #ebebeb'};
             padding: ${props => props.inputPadding || '10px 14px'};
-            max-width: 100%;
+            width: ${props => props.inputWidth || '100%'};
 
             &:focus {
                 box-shadow: ${props => props.inputFocusShadow || 'none'};
