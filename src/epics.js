@@ -45,7 +45,12 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
             payload
         } = action;
 
-        return api.get(routes.get.route, { params: Object.assign({}, routes.get.params, payload.query) }).pipe(
+        return api.get(routes.get.route, {
+            params: {
+                ...routes.get.params,
+                ...payload.query
+            }
+        }).pipe(
             map(response => {
                 if(entity) {
                     const normalizedData = normalize(response, entity.responseSchema);
