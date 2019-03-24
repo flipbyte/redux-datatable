@@ -124,7 +124,14 @@ class Table extends Component {
                         visibleHeight={ height }
                         rowHeight={ this.rowHeight }
                         renderItem={ ({ index, item, top }) => (
-                            <Styles.Row key={ index } position="absolute" top={ `${top}px` } height={ `${this.rowHeight}px` }>
+                            <Styles.Row
+                                key={ index }
+                                position="absolute"
+                                top={ `${top}px` }
+                                height={ `${this.rowHeight}px` }
+                                evenBackground="#f9fafb"
+                                even={ index % 2 === 0 }
+                            >
                                 { columns.map((column, index) =>
                                     <Renderer key={ index } ofType="body" top={ top } item={ item } { ...column } />
                                 )}
