@@ -33,7 +33,7 @@ const applyFilter = ( key, filterer, event ) => {
 
 const Date = ({ colName, value, filterer }) =>
     <Fragment>
-        <Styles.Row>
+        <Styles.Row padding="0 0 5px">
             <input
                 type="date"
                 name={ colName }
