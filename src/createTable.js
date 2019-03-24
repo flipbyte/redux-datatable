@@ -95,7 +95,7 @@ class ReduxDatatable extends Component {
                             <PaginationItem action={ action } { ...config } { ...paginationProps } />
                         }
                     />
-                    <Datatable.Table />
+                    <Datatable.Table data={ tableData } action={ action } />
                     <Datatable.Pagination
                         position="bottom"
                         margin="10px 0 0"

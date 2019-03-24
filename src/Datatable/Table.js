@@ -26,7 +26,7 @@ class Table extends Component {
     }
 
     get height() {
-        return this.props.data.length * this.rowHeight
+        return this.props.data.items.length * this.rowHeight
     }
 
     scrollEnded() {
@@ -97,7 +97,12 @@ class Table extends Component {
     }
 
     render() {
-        const { children, config: { columns, height }, data } = this.props;
+        const {
+            children,
+            action,
+            config: { columns, height },
+            data: { items = [], query = {} }
+        } = this.props;
         const { pointerEvents, top } = this.state;
 
         return (
@@ -106,7 +111,14 @@ class Table extends Component {
                     <TableHeader ref={ this.tableHeader } width={ `${this.width}px` }>
                         <Styles.Row>
                             { columns.map((column, index) =>
-                                <Renderer key={ index } ofType="header" width={ `${column.width}px` } { ...column } />
+                                <Renderer
+                                    key={ index }
+                                    ofType="header"
+                                    width={ `${column.width}px` }
+                                    query={ query }
+                                    action={ action }
+                                    { ...column }
+                                />
                             )}
                         </Styles.Row>
                         <Styles.Row>
@@ -119,7 +131,7 @@ class Table extends Component {
                         ref={ this.tableBody }
                         width={ this.width }
                         height={ this.height }
-                        data={ data }
+                        data={ items }
                         startTop={ top }
                         visibleHeight={ height }
                         rowHeight={ this.rowHeight }
@@ -144,10 +156,6 @@ class Table extends Component {
     }
 }
 
-const mapStateToProps = ( state, { config: { reducerName, name } } ) => ({
-    data: _.get(state, [reducerName, name, 'items'], [])
-})
-
 export default withTableConfig({
     name: 'name',
     height: 'height',
@@ -158,4 +166,4 @@ export default withTableConfig({
     checkedColumns: 'checkedColumns',
     reducerName: 'reducerName',
     stateUpdater: 'updateTableState'
-})(connect(mapStateToProps)(Table));
+})(Table);
