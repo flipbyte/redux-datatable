@@ -23,7 +23,7 @@ const ColumnRenderer = ( props ) => {
     return <Component { ...props } />
 };
 
-const Body = ({ index, item, ...column }) =>
+const Body = ({ index, item, top, ...column }) =>
     <Styles.TableCell body width={ `${column.width}px` } textAlign={ column.textAlign }>
         <ColumnRenderer data={ item } colConfig={ column } />
     </Styles.TableCell>

@@ -34,10 +34,10 @@ class Table extends Component {
     }
 
     scrollUpdate() {
-        this.tableHeader.scrollLeft = this.tableBody.scrollLeft;
+        this.tableHeader.current.scrollLeft = this.tableBody.current.scrollLeft;
         this.setState({
             pointerEvents: 'none',
-            top: this.tableBody.scrollTop
+            top: this.tableBody.current.scrollTop
         })
     }
 
@@ -124,9 +124,9 @@ class Table extends Component {
                         visibleHeight={ height }
                         rowHeight={ this.rowHeight }
                         renderItem={ ({ index, item, top }) => (
-                            <Styles.Row key={ index } height={ `${this.rowHeight}px` }>
+                            <Styles.Row key={ index } position="absolute" top={ `${top}px` } height={ `${this.rowHeight}px` }>
                                 { columns.map((column, index) =>
-                                    <Renderer key={ index } ofType="body" item={ item } { ...column } />
+                                    <Renderer key={ index } ofType="body" top={ top } item={ item } { ...column } />
                                 )}
                             </Styles.Row>
                         )}

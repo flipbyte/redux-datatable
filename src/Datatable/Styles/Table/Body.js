@@ -12,6 +12,7 @@ const TableBody = styled.div `
 `
 
 export const TableBodyInner = styled.div `
+    position: relative;
     width: ${props => props.width || '100%'};
     border-bottom: ${props => props.borderBottom || '1px solid #ddd'};
     ${props => props.height && css `
