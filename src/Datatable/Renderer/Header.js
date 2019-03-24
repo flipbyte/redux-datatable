@@ -1,7 +1,7 @@
 import React from 'react';
 import Styles from '../Styles';
 
-const Header = ({ name, label, sortable, sorter, sort, dir, width }) =>
+const Header = ({ name, label, sortable, sorter, sort, dir, width, textAlign }) =>
     sortable ?
         <Styles.TableCell
             sortable
@@ -9,9 +9,10 @@ const Header = ({ name, label, sortable, sorter, sort, dir, width }) =>
             width={ `${width}px` }
             isSorted={ name === sort }
             dir={ dir }
+            textAlign={ textAlign }
         >
             { label }
         </Styles.TableCell> :
-        <Styles.TableCell header width={ `${width}px` }>{ label }</Styles.TableCell>
+        <Styles.TableCell header width={ `${width}px` } textAlign={ textAlign }>{ label }</Styles.TableCell>
 
 export default Header;

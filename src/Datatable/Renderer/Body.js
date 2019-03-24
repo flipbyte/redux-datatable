@@ -24,7 +24,7 @@ const ColumnRenderer = ( props ) => {
 };
 
 const Body = ({ index, item, ...column }) =>
-    <Styles.TableCell body width={ `${column.width}px` }>
+    <Styles.TableCell body width={ `${column.width}px` } textAlign={ column.textAlign }>
         <ColumnRenderer data={ item } colConfig={ column } />
     </Styles.TableCell>
 

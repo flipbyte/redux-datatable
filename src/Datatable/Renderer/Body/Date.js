@@ -9,8 +9,12 @@ class Date extends Component {
     }
 
     render() {
-        const { data, index, colConfig: { textAlign, format } } = this.props;
-        return <Time value={ _.get(data, index, '') } format={ format ? format : 'F j, Y, g:i a' } />
+        const {
+            data,
+            index,
+            colConfig: { name, textAlign, format }
+        } = this.props;
+        return <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } />
     }
 }
 
