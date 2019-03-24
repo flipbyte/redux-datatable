@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
-import { createActionCreator } from './utils';
+import { createActionCreator, getLimiter } from './utils';
 
 class ReduxDatatable extends Component {
     constructor(props) {
@@ -88,6 +88,7 @@ class ReduxDatatable extends Component {
                     } />
                     <Datatable.Pagination
                         position="top"
+                        margin="0 0 10px"
                         componentConfig={ pagination }
                         query={ query }
                         render={(PaginationItem, config, paginationProps) =>
@@ -97,6 +98,7 @@ class ReduxDatatable extends Component {
                     <Datatable.Table />
                     <Datatable.Pagination
                         position="bottom"
+                        margin="10px 0 0"
                         componentConfig={ pagination }
                         query={ query }
                         render={(PaginationItem, config, paginationProps) =>
@@ -121,7 +123,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
     return {
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })))
-            dispatch(setLimit(preparePayload({ limit: _.get(ownProps.config, 'pagination.limiter.default', 10) })))
+            dispatch(setLimit(preparePayload({ limit: getLimiter(ownProps.config.pagination.items).default || 10 })))
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
         action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),

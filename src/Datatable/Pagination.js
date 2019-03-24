@@ -4,7 +4,7 @@ import Styles from './Styles';
 import Limiter, { TYPE_LIMITER } from './Pagination/Limiter';
 import ResultCount from './Pagination/ResultCount';
 import Pages from './Pagination/Pages';
-import { calculatePaginationProps } from '../utils';
+import { calculatePaginationProps, getLimiter } from '../utils';
 
 const renderers = {
     'limiter': Limiter,
@@ -17,11 +17,11 @@ const isVisible = (visible, position) => visible === true
         && (visible[position] === true || visible[position] === undefined));
 
 const getRenderer = ( type ) => renderers[type];
-const getLimiter = ( items ) => items.find(({ type }) => type === TYPE_LIMITER);
 const Pagination = ({
     query,
     render,
     position,
+    margin,
     componentConfig: {
         items,
         visible = true
@@ -31,7 +31,7 @@ const Pagination = ({
     const defaultLimit = limiter.default || 10;
     const paginationProps = calculatePaginationProps(query, defaultLimit);
     return(
-        isVisible(visible, position) && <Styles.Pagination>
+        isVisible(visible, position) && <Styles.Pagination margin={ margin }>
             { items.map((item, index) => {
                 const { visible: itemVisible, style, type } = item;
                 return (

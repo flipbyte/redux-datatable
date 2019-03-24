@@ -1,10 +1,13 @@
 import qs from 'query-string';
 import _ from 'lodash';
+import { TYPE_LIMITER } from './Datatable/Pagination/Limiter';
 
 export const defaultLimiterCongig = {
     options: [10, 20, 50, 100, 200],
     default: 10,
 };
+
+export const getLimiter = ( items ) => items.find(({ type }) => type === TYPE_LIMITER);
 
 export const calculatePaginationProps = (
     { page, limit = 0, count = 0 },
