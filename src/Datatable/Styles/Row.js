@@ -12,6 +12,11 @@ const Row = styled.div.attrs(({ top }) => ({
     padding: ${props => props.padding || 0};
     height: ${props => props.height || 'auto'};
     position: ${props => props.position || 'relative'};
+    background: ${props => props.background || 'none'};
+
+    ${props => props.even && css `
+        background: ${props.evenBackground || 'none'};
+    `}
 `
 
 export default Row;
