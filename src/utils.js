@@ -7,6 +7,8 @@ export const defaultLimiterCongig = {
     default: 10,
 };
 
+export const isArray = (value) => Array.isArray(value);
+
 export const getLimiter = ( items ) => items.find(({ type }) => type === TYPE_LIMITER);
 
 export const calculatePaginationProps = (
