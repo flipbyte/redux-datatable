@@ -23,9 +23,9 @@ const ColumnRenderer = ( props ) => {
     return <Component { ...props } />
 };
 
-const Body = ({ index, item, top, ...column }) =>
+const Body = ({ index, item, top, action, extra, ...column }) =>
     <Styles.TableCell body width={ `${column.width}px` } textAlign={ column.textAlign }>
-        <ColumnRenderer data={ item } colConfig={ column } />
+        <ColumnRenderer data={ item } colConfig={ column } extraData={ extra } action={ action } />
     </Styles.TableCell>
 
 export default Body;

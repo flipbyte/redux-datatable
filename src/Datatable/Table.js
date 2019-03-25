@@ -8,6 +8,7 @@ import TableHeader from './Table/Header';
 import TableBody from './Table/Body';
 import Styles from './Styles';
 import Renderer from './Renderer';
+import { isArray } from '../utils';
 
 class Table extends Component {
     constructor(props) {
@@ -96,14 +97,39 @@ class Table extends Component {
         window.removeEventListener('resize', this.updateTableDimensions);
     }
 
+    getExtraBodyRowProps() {
+        const {
+            data,
+            config: { columns }
+        } = this.props;
+        return columns.reduce((result = {}, { name, extraData }) => {
+            result[name] = extraData
+                ? isArray(extraData)
+                    ? extraData.reduce((edResult, dataKey) => {
+                        if(isArray(dataKey)) {
+                            edResult[dataKey[1] || dataKey[0]] = _.get(data, dataKey[0]);
+                        } else {
+                            edResult[dataKey] = _.get(data, dataKey);
+                        }
+
+                        return edResult;
+                    }, {})
+                    : { [extraData]: _.get(data, extraData) }
+                : {}
+            return result;
+        }, {})
+    }
+
     render() {
         const {
             children,
             action,
+            data,
             config: { columns, height },
-            data: { items = [], query = {} }
         } = this.props;
+        const { items = [], query = {} } = data;
         const { pointerEvents, top } = this.state;
+        const bodyExtraData = this.getExtraBodyRowProps();
 
         return (
             <Styles.Container>
@@ -151,9 +177,15 @@ class Table extends Component {
                                 evenBackground="#f9fafb"
                                 even={ index % 2 === 0 }
                             >
-                                { columns.map((column, index) =>
-                                    <Renderer key={ index } ofType="body" top={ top } item={ item } { ...column } />
-                                )}
+                                { columns.map((column, index) => {
+                                    const props = {
+                                        key: index,
+                                        ofType: 'body',
+                                        extra: bodyExtraData[column.name],
+                                        top, item, action, ...column
+                                    };
+                                    return <Renderer { ...props } />
+                                })}
                             </Styles.Row>
                         )}
                     />
