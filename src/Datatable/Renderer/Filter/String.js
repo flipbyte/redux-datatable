@@ -19,19 +19,11 @@ const applyFilter = ( filterer, event ) => {
     filterer(event.target.name, filter);
 };
 
-const String = ({ colName, value, filterer }) =>
-    <Fragment>
-        <input
-            name={ colName }
-            value={ value }
-            onChange={ applyFilter.bind(this, filterer) } />
-    </Fragment>
+const String = ({ name, value = '', filterer }) =>
+    <input
+        name={ name }
+        value={ value }
+        onChange={ applyFilter.bind(this, filterer) } />
 
-const mapStateToProps = ( state, { config: { reducerName, name }, colName } ) => ({
-    value: _.get(state, [reducerName, name, 'query', 'search', colName, 'value'], '')
-});
 
-export default withTableConfig({
-    name: 'name',
-    reducerName: 'reducerName',
-})(connect(mapStateToProps)(String));
+export default String;

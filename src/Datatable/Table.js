@@ -123,7 +123,14 @@ class Table extends Component {
                         </Styles.Row>
                         <Styles.Row>
                             { columns.map((column, index) =>
-                                <Renderer key={ index } ofType="filter" width={ `${column.width}px` } { ...column } />
+                                <Renderer
+                                    key={ index }
+                                    ofType="filter"
+                                    width={ `${column.width}px` }
+                                    query={ query }
+                                    action={ action }
+                                    { ...column }
+                                />
                             )}
                         </Styles.Row>
                     </TableHeader>

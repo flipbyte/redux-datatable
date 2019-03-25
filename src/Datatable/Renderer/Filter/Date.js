@@ -31,32 +31,24 @@ const applyFilter = ( key, filterer, event ) => {
     filterer(event.target.name, filter);
 };
 
-const Date = ({ colName, value, filterer }) =>
+const Date = ({ name, value = [], filterer }) =>
     <Fragment>
         <Styles.Row padding="0 0 5px">
             <input
                 type="date"
-                name={ colName }
-                value={ value[0] ? value[0] : '' }
+                name={ name }
+                value={ value[0] || '' }
                 onChange={ applyFilter.bind(this, 0, filterer) }
                 placeholder="From" />
         </Styles.Row>
         <Styles.Row>
             <input
                 type="date"
-                name={ colName }
-                value={ value[1] ? value[1] : ''}
+                name={ name }
+                value={ value[1] || '' }
                 onChange={ applyFilter.bind(this, 1, filterer) }
                 placeholder="To" />
         </Styles.Row>
-    </Fragment>
+    </Fragment>;
 
-
-const mapStateToProps = ( state, { config: { reducerName, name }, colName } ) => ({
-    value: _.get(state, [reducerName, name, 'query', 'search', colName, 'value'], [])
-});
-
-export default withTableConfig({
-    name: 'name',
-    reducerName: 'reducerName',
-})(connect(mapStateToProps)(Date));
+export default Date;

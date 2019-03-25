@@ -1,5 +1,7 @@
+import _ from 'lodash';
 import React from 'react';
 import Styles from '../Styles';
+import { SET_FILTER } from '../../actions';
 
 import Date from './Filter/Date';
 import String from './Filter/String';
@@ -25,12 +27,19 @@ const filterers = {
 
 const Filterer = ( props ) => {
     const Component = filterers[props.type] || filterers['default'];
-    return <Component />
+    return <Component { ...props } />
 };
 
-const Filter = ({ filterable, width, ...rest }) =>
-    <Styles.TableCell search width={ `${width}px` }>
-        { filterable && <Filterer { ...rest } />}
-    </Styles.TableCell>
+const Filter = ({ filterable, query, width, action, ...rest }) => {
+    const { name } = rest;
+    const filterer = ( key, filter ) => action(SET_FILTER)({ key, filter });
+    const value = _.get(query, ['search', name, 'value']);
+
+    return (
+        <Styles.TableCell search width={ `${width}px` }>
+            { filterable && <Filterer value={ value } filterer={ filterer } { ...rest } />}
+        </Styles.TableCell>
+    )
+}
 
 export default Filter;
