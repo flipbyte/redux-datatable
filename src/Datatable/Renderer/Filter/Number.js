@@ -1,9 +1,6 @@
-import _ from 'lodash';
 import PropTypes from "prop-types";
-import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
 import { OPERATOR } from '../Filter';
-import { withTableConfig } from '../../../TableProvider';
 import Styles from '../../Styles';
 
 var valFrom = null;
@@ -38,14 +35,14 @@ const Number = ({ name, value = [], filterer }) =>
                 type="number"
                 name={ name }
                 onChange={ applyFilter.bind(this, 0, filterer) }
-                value={ value[0] ? value[0] : '' }
+                value={ value[0] || '' }
                 placeholder="From" />
         </Styles.Row>
         <Styles.Row>
             <input
                 type="number"
                 name={ name }
-                value={ value[1] ? value[1] : ''}
+                value={ value[1] || ''}
                 onChange={ applyFilter.bind(this, 1, filterer) }
                 placeholder="To" />
         </Styles.Row>

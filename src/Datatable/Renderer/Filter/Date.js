@@ -1,9 +1,6 @@
-import _ from 'lodash';
 import PropTypes from "prop-types";
-import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
 import { OPERATOR } from '../Filter';
-import { withTableConfig } from '../../../TableProvider';
 import Styles from '../../Styles';
 
 var dateFrom = null;
