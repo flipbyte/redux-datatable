@@ -19,6 +19,10 @@ import {
     DELETE_DATA
 } from './actions';
 
+const getResult = (response, resultPath) => resultPath
+    ? _.get(response, resultPath, [])
+    : response || [];
+
 export const setParamsEpic = ( action$, state$ ) => action$.pipe(
     ofType(SET_PAGE, SET_FILTER, SET_SORT, SET_LIMIT),
     concatMap(action => {
@@ -41,17 +45,22 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
             payload
         } = action;
 
-        return api.get(routes.get.route, { params: Object.assign({}, routes.get.params, payload.query) }).pipe(
+        return api.get(routes.get.route, {
+            params: {
+                ...routes.get.params,
+                ...payload.query
+            }
+        }).pipe(
             map(response => {
                 if(entity) {
                     const normalizedData = normalize(response, entity.responseSchema);
                     if(!_.isEmpty(normalizedData.entities)) {
-                        const data = _.get(normalizedData.result, routes.get.resultPath.data, {});
+                        const data = getResult(normalizedData.result, _.get(routes, 'get.resultPath.data', null));
                         return { response, data, ...normalizedData };
                     }
                 }
 
-                const data = _.get(response, routes.get.resultPath.data, {});
+                const data = getResult(response, _.get(routes, 'get.resultPath.data', null));
                 return { response, data };
             }),
             map(payload => receiveData({ name, payload })),

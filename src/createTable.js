@@ -2,15 +2,16 @@ import _ from 'lodash';
 import { connect } from "react-redux";
 import React, { Component } from 'react'
 
-import Table from './Table';
+import Datatable from './Datatable';
 import TableProvider from './TableProvider';
 import { setPage, setLimit, setSort } from './actions';
+import { createActionCreator, getLimiter } from './utils';
 
-class FlutterTable extends Component {
+class ReduxDatatable extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { columns: null };
+        this.state = { columns: null, checkedColumns: null };
         this.updateState = this.updateState.bind(this);
     }
 
@@ -18,7 +19,7 @@ class FlutterTable extends Component {
         this.setState(updatedObj);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const { tableData, loadData } = this.props;
         if(!_.isEmpty(tableData) && !_.isEmpty(tableData.items)) {
             return;
@@ -48,13 +49,23 @@ class FlutterTable extends Component {
         return this.setValidPage(nextProps);
     }
 
+    getPropsWithState(props, addState) {
+        if(addState !== false) {
+            return { ...props, data: this.props.tableData }
+        }
+
+        return props;
+    }
+
     render() {
-        const { name, config, tableData, reducerName } = this.props;
+        const { name, config, tableData, reducerName, action, thunk } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
+        const { toolbar, pagination } = config;
         const tableConfig = {
             ...otherConfig,
             allColumns,
-            columns: this.state.columns || { ...allColumns },
+            columns: this.state.columns || [ ...allColumns ],
+            checkedColumns: this.state.checkedColumns || _.range(allColumns.length),
             updateTableState: this.updateState
         };
 
@@ -68,21 +79,42 @@ class FlutterTable extends Component {
             );
         }
 
+        const { query } = tableData;
         return (
-            <TableProvider config={{
-                reducerName,
-                ...tableConfig
-            }}>
-                <Table name={ name } isFetching={ tableData.isFetching } height={ config.height } />
+            <TableProvider config={{ reducerName, ...tableConfig }}>
+                <Datatable.Container>
+                    <Datatable.Toolbar items={ toolbar } render={(ToolbarItem, { state, ...itemConfig }) =>
+                        <ToolbarItem { ...this.getPropsWithState({ config: tableConfig, itemConfig, action, thunk }, state) } />
+                    } />
+                    <Datatable.Pagination
+                        position="top"
+                        margin="0 0 10px"
+                        componentConfig={ pagination }
+                        query={ query }
+                        render={(PaginationItem, config, paginationProps) =>
+                            <PaginationItem action={ action } { ...config } { ...paginationProps } />
+                        }
+                    />
+                    <Datatable.Table data={ tableData } action={ action } thunk={ thunk } />
+                    <Datatable.Pagination
+                        position="bottom"
+                        margin="10px 0 0"
+                        componentConfig={ pagination }
+                        query={ query }
+                        render={(PaginationItem, config, paginationProps) =>
+                            <PaginationItem action={ action } { ...config } { ...paginationProps } />
+                        }
+                    />
+                </Datatable.Container>
             </TableProvider>
         )
     }
 }
 
-const prepareActionPayload = ({ name, reducerName, config: { routes, entity }}) =>
+const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) =>
     ( payload = {} ) => ({ name, reducerName, routes, entity, payload })
 
-const mapStateToProps = ( state, { reducerName, name } ) => ({
+const mapStateToProps = ( state, { reducerName, config: { name } } ) => ({
     tableData: state[reducerName][name]
 });
 
@@ -91,11 +123,12 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
     return {
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })))
-            dispatch(setLimit(preparePayload({ limit: _.get(ownProps.config, 'limiterConfig.default', 10) })))
+            dispatch(setLimit(preparePayload({ limit: getLimiter(ownProps.config.pagination.items).default || 10 })))
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
-        setPage: ( page ) => dispatch(setPage(preparePayload({ page }))),
+        action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
+        thunk: ( thunk, payload ) => dispatch(thunk(preparePayload(payload)))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FlutterTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ReduxDatatable);

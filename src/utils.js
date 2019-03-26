@@ -1,10 +1,35 @@
 import qs from 'query-string';
 import _ from 'lodash';
+import { TYPE_LIMITER } from './Datatable/Pagination/Limiter';
 
 export const defaultLimiterCongig = {
     options: [10, 20, 50, 100, 200],
     default: 10,
 };
+
+export const isArray = (value) => Array.isArray(value);
+
+export const getLimiter = ( items ) => items.find(({ type }) => type === TYPE_LIMITER);
+
+export const calculatePaginationProps = (
+    { page, limit = 0, count = 0 },
+    defaultLimit = 10
+) => {
+    page = page > 1 ? page : 1
+    limit = limit != 0 ? limit : defaultLimit;
+
+    let start = (page - 1) * limit
+    let end = start + limit - 1
+
+    return {
+        page: page,
+        start: start,
+        end: (count > end && end >= 0) ? end : count,
+        count: count,
+        limit: limit,
+        total: Math.ceil(count / limit)
+    }
+}
 
 // export const isSelectionEmpty = (obj)  => {
 //     for(var key in obj) {

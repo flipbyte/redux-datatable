@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 let initialTableState = {
     isFetching: false,
-    title: "",
+    title: '',
     name: '',
     items: [],
     query: {
