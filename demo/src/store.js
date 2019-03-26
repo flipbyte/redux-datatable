@@ -6,6 +6,7 @@ import { api, request } from './request-handlers';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import { createLogger } from 'redux-logger';
+import thunk from 'redux-thunk';
 
 const requestHandlers = { api, request };
 
@@ -35,7 +36,7 @@ const prepareEpics = ( epics ) => {
 }
 
 const configureStore = ( config ) => {
-    let middlewares = [];
+    let middlewares = [thunk];
 
     const logger = createLogger({ diff: true, duration: true, collapsed: true });
     middlewares.push(logger);

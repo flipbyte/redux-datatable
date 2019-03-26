@@ -9,8 +9,8 @@ export default {
             type: 'limiter',
             visible: true,
             position: 10,
-            options: [10, 20, 50],
-            default: 10,
+            options: [10, 20, 50, 200, 2000],
+            default: 200,
             style: {
                 right: false,
             }
@@ -26,19 +26,18 @@ export default {
             visible: true,
             position: 30,
             style: {
-                width: '400px',
+                width: '350px',
                 textAlign: 'center',
             }
         }]
     },
     routes: {
         get: {
-            route: '/users',
+            route: '/page',
             sort: 'id',
             dir: 'asc',
             resultPath: {
-                data: 'data',
-                total: 'total'
+                data: 'data'
             }
         },
         delete: {
@@ -51,14 +50,15 @@ export default {
             id: 'dropdown',
             options: [{
                 type: 'action',
-                onClick: (params, action) => (
-                    confirm("Are your sure you want to delete these item(s)?")
-                        ? dispatch(action('DELETE_DATA')(params))
-                        : false
-                ),
                 name: 'delete',
                 label: 'Delete',
-                indexField: '@id'
+                indexField: '@id',
+                thunk: ( payload ) => ( dispatch, getState ) => {
+                    confirm("Are your sure you want to delete the selected items?")
+                        ? console.log('delete items', getState())
+                        : console.log(false);
+
+                }
             }, {
                 type: 'action',
                 name: 'edit',
@@ -176,18 +176,18 @@ export default {
         label: '',
         sortable: false,
         type: 'selection',
-        indexField: '@id',
+        indexField: '@pageId',
         width: 50,
-        selection: true,
+        extraData: 'selection'
     }, {
         label: 'ID',
         type: 'number',
-        name: 'id',
+        name: 'pageId',
         sortable: true,
         width: 150,
         filterable: true,
         sortable: true,
-    }, {
+    }, /*{
         label: 'Avatar',
         type: 'image',
         name: 'avatar',
@@ -212,34 +212,45 @@ export default {
         textAlign: 'text-left',
         width: 200,
         filterable: true,
+    },*/{
+        label: 'Created at',
+        type: 'date',
+        name: 'createdAt',
+        sortable: true,
+        textAlign: 'left',
+        width: 200,
+        filterable: true,
     }, {
         label: 'Actions',
         type: 'actions',
         name: 'actions',
         width: 100,
-        children: {
-            edit: {
-                type: 'action',
-                name: 'route',
-                action: 'EDIT_PAGE',
-                label: 'Edit',
-                btnClass: 'btn btn-secondary',
-                icon: 'edit',
-                params: {
-                    id: '@id',
-                }
+        items: [{
+            type: 'action',
+            name: 'edit',
+            label: 'Edit',
+            btnClass: 'btn btn-secondary',
+            icon: 'edit',
+            params: {
+                id: '@id',
             },
-            delete: {
-                type: 'action',
-                name: 'delete',
-                label: 'Delete',
-                action: 'DATA_DELETE',
-                btnClass: 'btn btn-danger',
-                icon: 'trash-alt',
-                params: {
-                    id: '@id'
-                }
+            thunk: ( payload ) => ( dispatch, getState ) => {
+                console.log('edit', payload, getState());
             }
-        }
+        }, {
+            type: 'action',
+            name: 'delete',
+            label: 'Delete',
+            icon: 'trash-alt',
+            params: {
+                id: '@id'
+            },
+            thunk: ( payload ) => ( dispatch, getState ) => {
+                confirm("Are your sure you want to delete this page?")
+                    ? console.log('delete', getState())
+                    : console.log(false);
+
+            }
+        }]
     }]
 }

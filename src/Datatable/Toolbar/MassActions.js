@@ -56,42 +56,11 @@ class MassActions extends Component {
         }
     }
 
-    handleAction( action, event ) {
-        const {
-            data: { selection },
-            massActions
-        } = this.props;
-
-        let dataKey = getConfigParam(action.indexField);
-        let selectedItems = getSelectedKeys(selection, dataKey);
-
-        if( !selectedItems || !selectedItems[dataKey] || selectedItems[dataKey].length == 0 ) {
-            alert("No item(s) selected");
-            return false;
-        }
-
-        switch( action.type ) {
-            // case 'route':
-            //     context.router.history.push({
-            //         pathname: action.route,
-            //         search: '?' + selectedItems.toString()
-            //     });
-            //     break;
-
-            case 'action':
-                massActions[action.name](selectedItems.get());
-                break;
-
-            default:
-                break;
-        }
-    }
-
     render() {
         const { itemConfig, thunk } = this.props;
         const { label, options } = itemConfig;
         const { open } = this.state;
-        console.log('thunk', thunk);
+
         return (
             <Dropdown>
                 <Button outline noRadius dropdownToggle onClick={ this.toggle }>
@@ -99,7 +68,7 @@ class MassActions extends Component {
                 </Button>
                 <DropdownMenu hidden={ !open } noRadius>
                     { options.map(({ thunk: cb, ...option }, index) =>
-                        <DropdownItem key={ index } onClick={ thunk && thunk.bind(this, cb, { option }) }>
+                        <DropdownItem key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
                             { option.label }
                         </DropdownItem>
                     )}
