@@ -124,6 +124,7 @@ class Table extends Component {
         const {
             children,
             action,
+            thunk,
             data,
             config: { columns, height },
         } = this.props;
@@ -182,7 +183,11 @@ class Table extends Component {
                                         key: index,
                                         ofType: 'body',
                                         extra: bodyExtraData[column.name],
-                                        top, item, action, ...column
+                                        action,
+                                        thunk,
+                                        top,
+                                        item,
+                                        ...column
                                     };
                                     return <Renderer { ...props } />
                                 })}

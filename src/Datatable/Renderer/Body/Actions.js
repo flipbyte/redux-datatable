@@ -20,40 +20,26 @@ class Actions extends Component {
     }
 
     render() {
-        const { children } = this.props.colConfig;
+        const {
+            colConfig: { items },
+            extra,
+            thunk
+        } = this.props;
         return (
             <div className="btn-group-sm">
-                { _.map(children, ( action, key ) =>
+                { items.map((item, index) =>
                     <Button
-                        key={ key }
+                        key={ index }
                         noRadius
                         sm
-                        onClick={ this.handleAction.bind(null, action) }
+                        onClick={ thunk && thunk.bind(this, item.thunk, { item, extra }) }
                     >
-                        { action.label }
+                        { item.label }
                     </Button>
-                ) }
+                )}
             </div>
         )
     }
 }
 
-const mapDispatchToProps = ( dispatch, { config } ) => ({
-    actions: {
-        route: ( payload, type ) => dispatch({
-            type: type,
-            payload: payload
-        }),
-        delete: ( params ) =>
-            confirm("Are your sure you want to delete this page?")
-                ? dispatch(deleteData(prepareActionPayload(config)({ params })))
-                : false,
-    }
-});
-
-export default withTableConfig({
-    name: 'name',
-    reducerName: 'reducerName',
-    routes: 'routes',
-    entity: 'entity'
-})(connect(null, mapDispatchToProps)(Actions));
+export default Actions;

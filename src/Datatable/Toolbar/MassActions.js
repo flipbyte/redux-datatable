@@ -88,16 +88,18 @@ class MassActions extends Component {
     }
 
     render() {
-        const { label, options } = this.props.itemConfig;
+        const { itemConfig, thunk } = this.props;
+        const { label, options } = itemConfig;
         const { open } = this.state;
+        console.log('thunk', thunk);
         return (
             <Dropdown>
                 <Button outline noRadius dropdownToggle onClick={ this.toggle }>
                     { label }
                 </Button>
                 <DropdownMenu hidden={ !open } noRadius>
-                    { options.map((option, index) =>
-                        <DropdownItem key={ index } onClick={ this.handleAction.bind(this, option) }>
+                    { options.map(({ thunk: cb, ...option }, index) =>
+                        <DropdownItem key={ index } onClick={ thunk && thunk.bind(this, cb, { option }) }>
                             { option.label }
                         </DropdownItem>
                     )}
@@ -107,14 +109,4 @@ class MassActions extends Component {
     }
 }
 
-const mapDispatchToProps = ( dispatch, { config } ) => ({
-    massActions: {
-        delete: ( params ) =>
-            confirm("Are your sure you want to delete these item(s)?")
-                ? dispatch(deleteData(prepareActionPayload(config)({ params })))
-                : false,
-    }
-
-});
-
-export default connect(null, mapDispatchToProps)(MassActions)
+export default MassActions

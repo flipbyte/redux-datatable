@@ -58,7 +58,7 @@ class ReduxDatatable extends Component {
     }
 
     render() {
-        const { name, config, tableData, reducerName, action } = this.props;
+        const { name, config, tableData, reducerName, action, thunk } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
         const { toolbar, pagination } = config;
         const tableConfig = {
@@ -84,7 +84,7 @@ class ReduxDatatable extends Component {
             <TableProvider config={{ reducerName, ...tableConfig }}>
                 <Datatable.Container>
                     <Datatable.Toolbar items={ toolbar } render={(ToolbarItem, { state, ...itemConfig }) =>
-                        <ToolbarItem { ...this.getPropsWithState({ config: tableConfig, itemConfig, action }, state) } />
+                        <ToolbarItem { ...this.getPropsWithState({ config: tableConfig, itemConfig, action, thunk }, state) } />
                     } />
                     <Datatable.Pagination
                         position="top"
@@ -95,7 +95,7 @@ class ReduxDatatable extends Component {
                             <PaginationItem action={ action } { ...config } { ...paginationProps } />
                         }
                     />
-                    <Datatable.Table data={ tableData } action={ action } />
+                    <Datatable.Table data={ tableData } action={ action } thunk={ thunk } />
                     <Datatable.Pagination
                         position="bottom"
                         margin="10px 0 0"
@@ -127,6 +127,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
             dispatch(setSort(preparePayload({ dir: 'desc' })))
         },
         action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
+        thunk: ( thunk, payload ) => dispatch(thunk(preparePayload(payload)))
     };
 };
 
