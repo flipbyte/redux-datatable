@@ -271,7 +271,7 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | textAlign | string | false | left | Text alignment in the column |
 | **type: actions** |  |  |  |  |
 | items | array | true | - | array of item configuration object |
-| **- item configuration object ** |  |  |  |  |
+| **- item configuration object** |  |  |  |  |
 | name  | string | true | - | Unique name for the action |
 | label | string | true | - | Label for the action |
 | thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
