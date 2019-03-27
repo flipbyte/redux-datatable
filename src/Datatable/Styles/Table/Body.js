@@ -11,9 +11,10 @@ const TableBody = styled.div `
     overflow-y: scroll;
 `
 
-export const TableBodyInner = styled.div `
+export const TableBodyInner = styled.div.attrs(({ width = '100%' }) => ({
+    style: { width }
+})) `
     position: relative;
-    width: ${props => props.width || '100%'};
     border-bottom: ${props => props.borderBottom || '1px solid #ddd'};
     ${props => props.height && css `
         height: ${props.height}

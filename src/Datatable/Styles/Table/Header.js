@@ -8,8 +8,9 @@ const TableHeader = styled.div `
     overflow: hidden;
 `
 
-export const TableHeaderInner = styled.div `
-    width: ${props => props.width || '100%'};
+export const TableHeaderInner = styled.div.attrs(({ width = '100%' }) => ({
+    style: { width }
+})) `
     border-bottom: ${props => props.borderBottom || '1px solid #ddd'};
 `
 

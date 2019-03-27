@@ -1,7 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const TableCell = styled.div `
+const TableCell = styled.div.attrs(({ width }) => ({
+    style: { width }
+})) `
     float: left;
     padding: 10px 5px;
     overflow: hidden;
@@ -9,7 +11,6 @@ const TableCell = styled.div `
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
-    width: ${props => props.width || '0px'};
     font-size: ${props => props.fontSize || '14px'};
 
     ${props => props.header && css `
