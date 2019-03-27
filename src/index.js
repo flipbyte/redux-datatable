@@ -4,7 +4,6 @@ import * as epics from './epics';
 import TableProvider, { TableConsumer, withTableConfig } from './TableProvider';
 import * as actions from './actions';
 import * as utils from './utils';
-import './css/table.css';
 
 export { TableProvider, TableConsumer, withTableConfig, actions, utils, reducer, epics }
 export default ReduxDatatable;
