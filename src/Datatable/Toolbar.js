@@ -13,10 +13,10 @@ const renderers = {
 
 const getRenderer = ( type ) => renderers[type] || renderers['default']
 export const toolbarItem = ( render, item, index ) => {
-    const { style, type } = item;
+    const { style, type, visible } = item;
     return (
         <Styles.ToolbarItem key={ index } { ...style }>
-            { render(getRenderer(item.type), item, index)  }
+            { visible !== false && render(getRenderer(item.type), item, index)  }
         </Styles.ToolbarItem>
     );
 }
