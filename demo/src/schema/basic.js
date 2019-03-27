@@ -2,7 +2,8 @@ export default {
     name: 'posts',
     height: 400,
     rowHeight: 50,
-    filterable: false,
+    filterable: true,
+    headers: true,
     pagination: {
         // visible: true, // or an object { top: true, bottom: false } default visible
         items: [{
