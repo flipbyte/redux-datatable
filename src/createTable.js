@@ -60,7 +60,7 @@ class ReduxDatatable extends Component {
     render() {
         const { name, config, tableData, reducerName, action, thunk } = this.props;
         const { columns: allColumns, ...otherConfig } = config;
-        const { toolbar, pagination, filterable, headers } = config;
+        const { toolbar = [], pagination = {}, filterable, headers } = config;
         const tableConfig = {
             ...otherConfig,
             allColumns,
