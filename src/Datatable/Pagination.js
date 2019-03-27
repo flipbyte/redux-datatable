@@ -23,7 +23,7 @@ const Pagination = ({
     position,
     margin,
     componentConfig: {
-        items,
+        items = [],
         visible = true
     }
 }) => {

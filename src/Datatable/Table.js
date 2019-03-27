@@ -126,6 +126,8 @@ class Table extends Component {
             action,
             thunk,
             data,
+            filterable,
+            headers,
             config: { columns, height },
         } = this.props;
         const { items = [], query = {} } = data;
@@ -137,7 +139,7 @@ class Table extends Component {
                 <Styles.Table>
                     <TableHeader ref={ this.tableHeader } width={ `${this.width}px` }>
                         <Styles.Row>
-                            { columns.map((column, index) =>
+                            { headers !== false && columns.map((column, index) =>
                                 <Renderer
                                     key={ index }
                                     ofType="header"
@@ -149,7 +151,7 @@ class Table extends Component {
                             )}
                         </Styles.Row>
                         <Styles.Row>
-                            { columns.map((column, index) =>
+                            { filterable !== false && columns.map((column, index) =>
                                 <Renderer
                                     key={ index }
                                     ofType="filter"
