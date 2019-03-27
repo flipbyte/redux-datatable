@@ -9,6 +9,7 @@ const Row = styled.div.attrs(({ top }) => ({
     flex: 1 0 auto;
     flex-direction: row;
     flex-wrap: wrap;
+    width: 100%;
     padding: ${props => props.padding || 0};
     height: ${props => props.height || 'auto'};
     position: ${props => props.position || 'relative'};

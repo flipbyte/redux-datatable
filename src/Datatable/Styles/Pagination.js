@@ -6,7 +6,7 @@ export const PaginationItem = styled.div `
     min-width: ${props => props.width || '200px'};
     float: ${props => props.right ? 'right' : 'left'};
     text-align: ${props => props.textAlign || 'left'};
-    font-size: ${props => props.fontSize || '14px'};
+    font-size: ${props => props.fontSize || '15px'};
 `
 
 export const PaginationList = styled.div `

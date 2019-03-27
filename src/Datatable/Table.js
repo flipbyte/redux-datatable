@@ -14,9 +14,9 @@ class Table extends Component {
     constructor(props) {
         super(props);
 
-        this.width = this.calculateWidth(this.props.config.columns);
+        this.width = this.calculateWidth(this.props.columns);
         this.minWidth = this.width;
-        this.rowHeight = this.props.config.rowHeight || 39;
+        this.rowHeight = this.props.rowHeight || 39;
         this.state = { top: 0 };
         this.handleScroll = this.handleScroll.bind(this);
         this.updateTableDimensions = this.updateTableDimensions.bind(this);
@@ -56,8 +56,7 @@ class Table extends Component {
         this.computedTableWidth = this.minWidth > tableBodyEl.clientWidth
             ? this.minWidth
             : tableBodyEl.clientWidth;
-
-        const { columns, allColumns, checkedColumns, stateUpdater } = this.props.config;
+        const { columns, allColumns, checkedColumns, stateUpdater } = this.props;
         const totalColumnsWidth = checkedColumns.reduce((result, columnIndex) => (
             result + (allColumns[columnIndex].width || 0)
         ), 0);
@@ -89,7 +88,7 @@ class Table extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        this.updateTableOnColumnVisibilityChange(prevProps.config.columns, this.props.config.columns)
+        this.updateTableOnColumnVisibilityChange(prevProps.columns, this.props.columns)
     }
 
     componentWillUnmount() {
@@ -100,7 +99,7 @@ class Table extends Component {
     getExtraBodyRowProps() {
         const {
             data,
-            config: { columns }
+            columns
         } = this.props;
         return columns.reduce((result = {}, { name, extraData }) => {
             result[name] = extraData
@@ -121,15 +120,7 @@ class Table extends Component {
     }
 
     render() {
-        const {
-            children,
-            action,
-            thunk,
-            data,
-            filterable,
-            headers,
-            config: { columns, height },
-        } = this.props;
+        const { children, action, thunk, data, filterable, headers, columns, height } = this.props;
         const { items = [], query = {} } = data;
         const { pointerEvents, top } = this.state;
         const bodyExtraData = this.getExtraBodyRowProps();
@@ -202,14 +193,4 @@ class Table extends Component {
     }
 }
 
-export default withTableConfig({
-    name: 'name',
-    height: 'height',
-    columns: 'columns',
-    minWidth: 'minWidth',
-    rowHeight: 'rowHeight',
-    allColumns: 'allColumns',
-    checkedColumns: 'checkedColumns',
-    reducerName: 'reducerName',
-    stateUpdater: 'updateTableState'
-})(Table);
+export default Table;

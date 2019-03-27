@@ -17,7 +17,7 @@ const applyFilter = ( filterer, event ) => {
 };
 
 const String = ({ name, value = '', filterer }) =>
-    <input
+    <Styles.Elements.Input
         name={ name }
         value={ value }
         onChange={ applyFilter.bind(this, filterer) } />

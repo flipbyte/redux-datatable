@@ -31,7 +31,7 @@ const applyFilter = ( key, filterer, event ) => {
 const Number = ({ name, value = [], filterer }) =>
     <Fragment>
         <Styles.Row padding="0 0 5px">
-            <input
+            <Styles.Elements.Input
                 type="number"
                 name={ name }
                 onChange={ applyFilter.bind(this, 0, filterer) }
@@ -39,7 +39,7 @@ const Number = ({ name, value = [], filterer }) =>
                 placeholder="From" />
         </Styles.Row>
         <Styles.Row>
-            <input
+            <Styles.Elements.Input
                 type="number"
                 name={ name }
                 value={ value[1] || ''}

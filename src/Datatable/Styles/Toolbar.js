@@ -10,7 +10,7 @@ export const ToolbarItem = styled.div `
     display: block;
     width: ${props => props.width || '100px'};
     float: ${props => props.right ? 'right' : 'left'};
-    font-size: ${props => props.fontSize || '14px'};
+    font-size: ${props => props.fontSize || '15px'};
 `
 
 const Toolbar = styled.div `

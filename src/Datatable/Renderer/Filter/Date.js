@@ -31,7 +31,7 @@ const applyFilter = ( key, filterer, event ) => {
 const Date = ({ name, value = [], filterer }) =>
     <Fragment>
         <Styles.Row padding="0 0 5px">
-            <input
+            <Styles.Elements.Input
                 type="date"
                 name={ name }
                 value={ value[0] || '' }
@@ -39,7 +39,7 @@ const Date = ({ name, value = [], filterer }) =>
                 placeholder="From" />
         </Styles.Row>
         <Styles.Row>
-            <input
+            <Styles.Elements.Input
                 type="date"
                 name={ name }
                 value={ value[1] || '' }

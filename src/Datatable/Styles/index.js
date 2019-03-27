@@ -7,6 +7,7 @@ import TableHeader, { TableHeaderInner } from './Table/Header';
 import TableBody, { TableBodyInner } from './Table/Body';
 import TableCell from './Table/Cell';
 import SortCaret from './SortCaret';
+import Elements from './Elements';
 
 export default {
     Container,
@@ -24,5 +25,6 @@ export default {
     TableCell,
     TableBody,
     TableBodyInner,
-    SortCaret
+    SortCaret,
+    Elements
 }

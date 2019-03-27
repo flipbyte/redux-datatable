@@ -1,9 +1,11 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const TableCell = styled.div.attrs(({ width }) => ({
-    style: { width }
+const TableCell = styled.div.attrs(({ width: maxWidth }) => ({
+    style: { maxWidth }
 })) `
+    box-sizing: border-box;
+    margin: auto;
     float: left;
     padding: 10px 5px;
     overflow: hidden;
@@ -11,6 +13,8 @@ const TableCell = styled.div.attrs(({ width }) => ({
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
+    width: 100%;
+    position: relative;
     font-size: ${props => props.fontSize || '14px'};
 
     ${props => props.header && css `
@@ -21,21 +25,6 @@ const TableCell = styled.div.attrs(({ width }) => ({
 
     ${props => props.sortable && css `
         cursor: pointer;
-    `}
-
-    ${props => props.search && css `
-        & input {
-            border-radius: ${props => props.inputRadius || 0};
-            color: ${props => props.inputColor || '#495057'};
-            border: ${props => props.inputBorder || '1px solid #ebebeb'};
-            padding: ${props => props.inputPadding || '10px 14px'};
-            width: ${props => props.inputWidth || '100%'};
-
-            &:focus {
-                box-shadow: ${props => props.inputFocusShadow || 'none'};
-                border-color: ${props => props.inputFocusBorderColor || '#80bdff'}
-            }
-        }
     `}
 `
 
