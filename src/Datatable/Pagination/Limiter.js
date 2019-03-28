@@ -9,7 +9,7 @@ const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
         <Styles.Elements.Label flex noWrap>
-            <Styles.Elements.Select
+            <Styles.Elements.Field.Select
                 width="50%"
                 id="limiter"
                 value={ limit || defaultLimit }
@@ -17,7 +17,7 @@ const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
                 { options.map( (option, index) =>
                     <option key={ index } value={ option }>{ option !== 0 ? option : 'All' }</option>
                 ) }
-            </Styles.Elements.Select> per page
+            </Styles.Elements.Field.Select> per page
         </Styles.Elements.Label>
     );
 }

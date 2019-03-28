@@ -4,17 +4,18 @@ import styled, { css } from 'styled-components';
 const TableCell = styled.div.attrs(({ width: maxWidth }) => ({
     style: { maxWidth }
 })) `
-    box-sizing: border-box;
-    margin: auto;
-    float: left;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    display: flex;
     padding: 10px 5px;
-    overflow: hidden;
     text-align: ${props => props.textAlign || 'center'};
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
     width: 100%;
     position: relative;
+    overflow: hidden;
     font-size: ${props => props.fontSize || '14px'};
 
     ${props => props.header && css `

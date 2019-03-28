@@ -24,22 +24,22 @@ const Pages = ({ page, total, action }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <Styles.PaginationList>
-            <Styles.PaginationListItem
-                onClick={ setPage.bind(this, 1) } disabled={ page == 1 } >First</Styles.PaginationListItem>
-            <Styles.PaginationListItem
-                onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Styles.PaginationListItem>
+            <Styles.Elements.Button
+                onClick={ setPage.bind(this, 1) } disabled={ page == 1 } >First</Styles.Elements.Button>
+            <Styles.Elements.Button
+                onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Styles.Elements.Button>
             { getPages(page, total).map( (link, index) =>
-                <Styles.PaginationListItem
+                <Styles.Elements.Button
                     key={ index }
                     onClick={ setPage.bind(this, link) }
                     active={ page === link }
                     disabled={ page === link }
-                >{ link }</Styles.PaginationListItem>
+                >{ link }</Styles.Elements.Button>
             ) }
-            <Styles.PaginationListItem
-                onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.PaginationListItem>
-            <Styles.PaginationListItem
-                onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.PaginationListItem>
+            <Styles.Elements.Button
+                onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.Elements.Button>
+            <Styles.Elements.Button
+                onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.Elements.Button>
         </Styles.PaginationList>
     );
 }

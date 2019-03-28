@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import { deleteData } from '../../actions';
 import { prepareActionPayload } from '../../utils'
 import { getSelectedKeys, getConfigParam } from '../../utils';
-import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
-import { Button } from 'styled-button-component';
+import Styles from '../Styles';
+
+const {
+    Elements: { Dropdown, Button }
+} = Styles;
 
 class MassActions extends Component {
     constructor( props ) {
@@ -58,22 +61,22 @@ class MassActions extends Component {
 
     render() {
         const { itemConfig, thunk } = this.props;
-        const { label, options } = itemConfig;
+        const { label, options, style } = itemConfig;
         const { open } = this.state;
 
         return (
-            <Dropdown>
-                <Button outline noRadius dropdownToggle onClick={ this.toggle }>
+            <Dropdown.Container>
+                <Button dropdownToggle onClick={ this.toggle } { ...style.button }>
                     { label }
                 </Button>
-                <DropdownMenu hidden={ !open } noRadius>
+                <Dropdown.Menu hidden={ !open } noRadius>
                     { options.map(({ thunk: cb, ...option }, index) =>
-                        <DropdownItem key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
+                        <Dropdown.Item key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
                             { option.label }
-                        </DropdownItem>
+                        </Dropdown.Item>
                     )}
-                </DropdownMenu>
-            </Dropdown>
+                </Dropdown.Menu>
+            </Dropdown.Container>
         )
     }
 }

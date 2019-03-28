@@ -69,7 +69,11 @@ export default {
             visible: true,
             style: {
                 right: false,
-                width: '100px'
+                width: '100px',
+                button: {
+                    background: '#fff',
+                    color: '#6c757d'
+                }
             }
         }, {
             type: 'reset-filters',
@@ -82,7 +86,11 @@ export default {
             visible: true,
             state: false,
             style: {
-                right: true
+                right: true,
+                button: {
+                    background: '#fff',
+                    color: '#6c757d'
+                }
             }
         }/*, {
             label: 'NACTIONS',
@@ -184,7 +192,6 @@ export default {
         label: 'ID',
         type: 'number',
         name: 'pageId',
-        sortable: true,
         width: 150,
         filterable: true,
         sortable: true,

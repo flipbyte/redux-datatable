@@ -38,18 +38,7 @@ const Select = styled.select `
     width: ${props => props.width || '100%'};
 `
 
-const Label = styled.label `
-    display: inline-block;
-    margin-bottom: 0.5rem;
-
-    ${({ flex, noWrap}) => css `
-        ${flex && `display: flex`};
-        ${noWrap && `white-space: nowrap`};
-    `}
-`
-
 export default {
-    Input,
     Select,
-    Label
-};
+    Input
+}

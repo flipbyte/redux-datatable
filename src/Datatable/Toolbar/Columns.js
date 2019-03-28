@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from 'styled-button-component';
 import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
+import Styles from '../Styles';
 
 class Columns extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ class Columns extends Component {
 
     manageEvents(remove = false) {
         var eventUpdater = remove ? document.removeEventListener : document.addEventListener;
-        
+
         ['click', 'touchstart', 'keyup'].forEach( event =>
             eventUpdater(event, this.handleDocumentClick, true)
         );
@@ -79,14 +79,17 @@ class Columns extends Component {
     }
 
     render() {
-        const { config: { allColumns, checkedColumns }} = this.props;
+        const {
+            itemConfig: { style },
+            config: { allColumns, checkedColumns }
+        } = this.props;
         const { open } = this.state;
 
         return (
             <Dropdown>
-                <Button outline noRadius dropdownToggle onClick={ this.toggle }>
+                <Styles.Elements.Button dropdownToggle onClick={ this.toggle } { ...style.button }>
                     Columns
-                </Button>
+                </Styles.Elements.Button>
                 <DropdownMenu hidden={ !open } noRadius>
                     { allColumns.map(({ name, label }, index) =>
                         <DropdownItem key={ index }>
