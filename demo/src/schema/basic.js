@@ -21,6 +21,15 @@ export default {
             position: 20,
             style: {
                 right: true,
+                button: {
+                    background: '#fff',
+                    color: '#6c757d',
+                    border: 'none',
+                    hover: {
+                        color: '#16181b',
+                        backgroundColor: '#f8f9fa'
+                    }
+                }
             }
         }, {
             type: 'resultCount',
@@ -69,7 +78,6 @@ export default {
             visible: true,
             style: {
                 right: false,
-                width: '100px',
                 button: {
                     background: '#fff',
                     color: '#6c757d'
@@ -90,6 +98,9 @@ export default {
                 button: {
                     background: '#fff',
                     color: '#6c757d'
+                },
+                dropdownMenu: {
+                    right: true
                 }
             }
         }/*, {
@@ -244,6 +255,9 @@ export default {
             },
             thunk: ( payload ) => ( dispatch, getState ) => {
                 console.log('edit', payload, getState());
+            },
+            style: {
+                fontSize: '12px'
             }
         }, {
             type: 'action',
@@ -258,6 +272,14 @@ export default {
                     ? console.log('delete', getState())
                     : console.log(false);
 
+            },
+            style: {
+                background: '#dc3545',
+                color: '#fff',
+                fontSize: '12px',
+                hover: {
+                    backgroundColor: '#c82333',
+                }
             }
         }]
     }]

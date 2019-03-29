@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Dropdown, DropdownItem, DropdownMenu } from 'styled-dropdown-component';
 import Styles from '../Styles';
+
+const {
+    Elements: { Dropdown, Button }
+} = Styles;
 
 class Columns extends Component {
     constructor(props) {
@@ -80,28 +83,28 @@ class Columns extends Component {
 
     render() {
         const {
-            itemConfig: { style },
+            itemConfig: { style = {} },
             config: { allColumns, checkedColumns }
         } = this.props;
         const { open } = this.state;
 
         return (
-            <Dropdown>
-                <Styles.Elements.Button dropdownToggle onClick={ this.toggle } { ...style.button }>
+            <Dropdown.Container>
+                <Button dropdownToggle onClick={ this.toggle } { ...style.button }>
                     Columns
-                </Styles.Elements.Button>
-                <DropdownMenu hidden={ !open } noRadius>
+                </Button>
+                <Dropdown.Menu hidden={ !open } { ...style.dropdownMenu }>
                     { allColumns.map(({ name, label }, index) =>
-                        <DropdownItem key={ index }>
+                        <Dropdown.Item key={ index }>
                             <input name={ name }
                                 type="checkbox"
                                 defaultChecked={ -1 !== checkedColumns.indexOf(index) }
                                 onChange={ this.updateColumns.bind(null, index) } />
                             <label htmlFor={ name }>{ label }</label>
-                        </DropdownItem>
+                        </Dropdown.Item>
                     )}
-                </DropdownMenu>
-            </Dropdown>
+                </Dropdown.Menu>
+            </Dropdown.Container>
         );
     }
 }

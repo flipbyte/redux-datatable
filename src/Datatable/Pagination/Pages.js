@@ -20,25 +20,31 @@ const getPages = ( currentPage, total ) => {
     return fillRange(left, right);
 }
 
-const Pages = ({ page, total, action }) => {
+const Pages = ({ page, total, action, style }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <Styles.PaginationList>
             <Styles.Elements.Button
-                onClick={ setPage.bind(this, 1) } disabled={ page == 1 } >First</Styles.Elements.Button>
+                { ...style.button }
+                onClick={ setPage.bind(this, 1) } disabled={ page == 1 }
+            >First</Styles.Elements.Button>
             <Styles.Elements.Button
+                { ...style.button }
                 onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Styles.Elements.Button>
             { getPages(page, total).map( (link, index) =>
                 <Styles.Elements.Button
                     key={ index }
+                    { ...style.button }
                     onClick={ setPage.bind(this, link) }
                     active={ page === link }
                     disabled={ page === link }
                 >{ link }</Styles.Elements.Button>
             ) }
             <Styles.Elements.Button
+                { ...style.button }
                 onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Styles.Elements.Button>
             <Styles.Elements.Button
+                { ...style.button }
                 onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Styles.Elements.Button>
         </Styles.PaginationList>
     );

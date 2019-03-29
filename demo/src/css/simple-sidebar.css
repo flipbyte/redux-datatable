@@ -38,7 +38,7 @@ body {
 
 .content {
     position: fixed;
-    overflow: scroll;
+    overflow: hidden;
     height: 100%;
     top: 60px;
 }
@@ -54,7 +54,7 @@ body {
 
     #page-content-wrapper {
         min-width: 0;
-        width: 100%;
+        /* width: 100%; */
         margin-left: 15rem;
     }
 

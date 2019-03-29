@@ -16,11 +16,11 @@ export const Menu = styled.div `
     background-clip: padding-box;
 
     ${({
-        padding = '0.375rem 0.75rem',
-        margin,
+        padding = '0.5rem 0',
+        margin = '0.125rem 0 0',
         fontSize = '14px',
         color = '#6c757d',
-        border = '1px solid #6c757d',
+        border = '1px solid #ebebeb',
         right = false,
         backgroundColor = '#fff',
         borderRadius,
@@ -50,12 +50,13 @@ export const Item = styled.div `
     white-space: nowrap;
     background-color: transparent;
     border: 0;
+    cursor: pointer;
 
     ${({
-        padding = '0.375rem 0.75rem',
-        color,
+        padding = '0.5rem 1.5rem',
+        color = '#6c757d',
         fontWeight,
-        hover,
+        hover = {},
         isActive,
         active,
         isDisabled,
@@ -65,22 +66,20 @@ export const Item = styled.div `
         color: ${color};
         font-weight: ${fontWeight};
 
-        ${hover && `
-            &:hover, &:focus {
-                color: ${hover.color};
-                text-decoration: none;
-                background-color: ${hover.backgroundColor};
-            }
-        `}
+        &:hover, &:focus {
+            color: ${hover.color || '#16181b'};
+            text-decoration: none;
+            background-color: ${hover.backgroundColor || '#f8f9fa'};
+        }
 
         ${isActive && active && `
             text-decoration: none;
-            color: ${active.color};
-            background-color: ${active.backgroundColor};
+            color: ${active.color || '#fff'};
+            background-color: ${active.backgroundColor || '#007bff'};
         `}
 
         ${isDisabled && disabled && `
-            color: ${disabled.color};
+            color: ${disabled.color || '#6c757d'};
             background-color: transparent;
         `}
     `}

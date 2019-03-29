@@ -8,7 +8,7 @@ export const ToolbarRow = styled.div `
 
 export const ToolbarItem = styled.div `
     display: block;
-    width: ${props => props.width || '100px'};
+    width: ${props => props.width || 'auto'};
     float: ${props => props.right ? 'right' : 'left'};
     font-size: ${props => props.fontSize || '15px'};
 `

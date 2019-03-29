@@ -2,11 +2,14 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 export const PaginationItem = styled.div `
-    display: block;
+    display: flex;
     min-width: ${props => props.width || '200px'};
     float: ${props => props.right ? 'right' : 'left'};
     text-align: ${props => props.textAlign || 'left'};
     font-size: ${props => props.fontSize || '15px'};
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
 `
 
 export const PaginationList = styled.div `

@@ -12,16 +12,16 @@ const Button = styled.button `
     cursor: pointer;
 
     ${({
-        background = '#6c757d',
-        border = '1px solid #6c757d',
+        background = '#fff',
+        border = '1px solid rgba(34,36,38,.15)',
         fontWeight = 400,
         lineHeight = 1.5,
         fontSize = '14px',
         borderRadius = 0,
-        color = '#fff',
+        color = '#6c757d',
         padding = '0.375rem 0.75rem',
         dropdownToggle = false,
-        hover
+        hover = {}
     }) => css `
         background: ${background};
         border: ${border};
@@ -47,11 +47,10 @@ const Button = styled.button `
             }
         `}
 
-        ${hover && `
-            &:hover {
-
-            }
-        `}
+        &:hover {
+            color: ${hover.color || '#fff'};
+            background-color: ${hover.backgroundColor || '#5a6268'};
+        }
     `}
 `;
 

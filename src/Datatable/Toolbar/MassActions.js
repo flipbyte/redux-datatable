@@ -61,7 +61,7 @@ class MassActions extends Component {
 
     render() {
         const { itemConfig, thunk } = this.props;
-        const { label, options, style } = itemConfig;
+        const { label, options, style = {} } = itemConfig;
         const { open } = this.state;
 
         return (
@@ -69,7 +69,7 @@ class MassActions extends Component {
                 <Button dropdownToggle onClick={ this.toggle } { ...style.button }>
                     { label }
                 </Button>
-                <Dropdown.Menu hidden={ !open } noRadius>
+                <Dropdown.Menu hidden={ !open } { ...style.dropdownMenu }>
                     { options.map(({ thunk: cb, ...option }, index) =>
                         <Dropdown.Item key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
                             { option.label }
