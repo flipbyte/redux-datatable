@@ -1,10 +1,7 @@
-import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Styles from '../Styles';
-
-const {
-    Elements: { Dropdown, Button }
-} = Styles;
+import React, { Component } from 'react';
+import Button from '../../components/Button';
+import Dropdown from '../../components/Dropdown';
 
 class Columns extends Component {
     constructor(props) {
@@ -18,23 +15,13 @@ class Columns extends Component {
     }
 
     updateColumns( index, event ) {
-        const { checkedColumns, allColumns, updateTableState } = this.props.config;
+        const { columnUpdater } = this.props;
 
-        var activeColumns = [];
         if(event.target.checked) {
-            activeColumns = [ ...checkedColumns, index ];
+            columnUpdater({ type: 'add', action: { index } })
         } else {
-            const itemIndex = checkedColumns.indexOf(index);
-            activeColumns = [ ...checkedColumns ];
-            activeColumns.splice(itemIndex, 1);
+            columnUpdater({ type: 'remove', action: { index } })
         }
-        activeColumns.sort();
-
-        const columns = activeColumns.reduce((result, currentIndex) => (
-            result.concat([allColumns[currentIndex]])
-        ), []);
-
-        updateTableState({ columns, checkedColumns: activeColumns });
     }
 
     componentWillUnmount() {
@@ -84,7 +71,8 @@ class Columns extends Component {
     render() {
         const {
             itemConfig: { style = {} },
-            config: { allColumns, checkedColumns }
+            columns = [],
+            visibleColumns = []
         } = this.props;
         const { open } = this.state;
 
@@ -94,11 +82,11 @@ class Columns extends Component {
                     Columns
                 </Button>
                 <Dropdown.Menu hidden={ !open } { ...style.dropdownMenu }>
-                    { allColumns.map(({ name, label }, index) =>
+                    { columns.map(({ name, label }, index) =>
                         <Dropdown.Item key={ index }>
                             <input name={ name }
                                 type="checkbox"
-                                defaultChecked={ -1 !== checkedColumns.indexOf(index) }
+                                defaultChecked={ -1 !== visibleColumns.indexOf(index) }
                                 onChange={ this.updateColumns.bind(null, index) } />
                             <label htmlFor={ name }>{ label }</label>
                         </Dropdown.Item>

@@ -6,40 +6,44 @@ export default {
     headers: true,
     pagination: {
         // visible: true, // or an object { top: true, bottom: false } default visible
-        items: [{
-            type: 'limiter',
-            visible: true,
-            position: 10,
-            options: [10, 20, 50, 200, 2000],
-            default: 200,
-            style: {
-                right: false,
-            }
-        }, {
-            type: 'pages',
-            visible: true,
-            position: 20,
-            style: {
-                right: true,
-                button: {
-                    background: '#fff',
-                    color: '#6c757d',
-                    border: 'none',
-                    hover: {
-                        color: '#16181b',
-                        backgroundColor: '#f8f9fa'
+        items: {
+            limiter: {
+                type: 'limiter',
+                visible: true,
+                position: 10,
+                options: [10, 20, 50, 200, 2000],
+                default: 200,
+                style: {
+                    right: false,
+                }
+            },
+            pages: {
+                type: 'pages',
+                visible: true,
+                position: 20,
+                style: {
+                    right: true,
+                    button: {
+                        background: '#fff',
+                        color: '#6c757d',
+                        border: 'none',
+                        hover: {
+                            color: '#16181b',
+                            backgroundColor: '#f8f9fa'
+                        }
                     }
                 }
+            },
+            resultCount: {
+                type: 'resultCount',
+                visible: true,
+                position: 30,
+                style: {
+                    width: '350px',
+                    textAlign: 'center',
+                }
             }
-        }, {
-            type: 'resultCount',
-            visible: true,
-            position: 30,
-            style: {
-                width: '350px',
-                textAlign: 'center',
-            }
-        }]
+        }
     },
     routes: {
         get: {
@@ -84,7 +88,7 @@ export default {
                 }
             }
         }, {
-            type: 'reset-filters',
+            type: 'resetFilters',
             label: 'Reset Filters',
             visible: true,
             state: false,

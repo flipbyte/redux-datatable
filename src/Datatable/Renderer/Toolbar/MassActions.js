@@ -1,15 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
-import { connect } from 'react-redux';
-import { deleteData } from '../../actions';
-import { prepareActionPayload } from '../../utils'
-import { getSelectedKeys, getConfigParam } from '../../utils';
-import Styles from '../Styles';
-
-const {
-    Elements: { Dropdown, Button }
-} = Styles;
+import Button from '../../components/Button';
+import Dropdown from '../../components/Dropdown';
 
 class MassActions extends Component {
     constructor( props ) {

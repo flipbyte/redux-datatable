@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
 import React, { Fragment } from 'react';
-import { OPERATOR } from '../Filter';
-import Styles from '../../Styles';
+import { OPERATOR } from '../../../constants';
+import Row from '../../components/Row';
+import Field from '../../components/Field';
 
 var dateFrom = null;
 var dateTo = null;
@@ -9,13 +9,13 @@ var dateTo = null;
 const applyFilter = ( key, filterer, event ) => {
     let filter = {};
 
-    if(key == 0) {
+    if (key == 0) {
         dateFrom = event.target.value;
     } else {
         dateTo = event.target.value;
     }
 
-    if( dateFrom || dateTo ) {
+    if ( dateFrom || dateTo ) {
         filter = {
             operator: OPERATOR.BETWEEN,
             field: event.target.name,
@@ -28,24 +28,27 @@ const applyFilter = ( key, filterer, event ) => {
     filterer(event.target.name, filter);
 };
 
-const Date = ({ name, value = [], filterer }) =>
+const Date = ({ name, value = [], filterer }) => (
     <Fragment>
-        <Styles.Row padding="0 0 5px">
-            <Styles.Elements.Field.Input
+        <Row padding="0 0 5px">
+            <Field.Input
                 type="date"
                 name={ name }
                 value={ value[0] || '' }
                 onChange={ applyFilter.bind(this, 0, filterer) }
-                placeholder="From" />
-        </Styles.Row>
-        <Styles.Row>
-            <Styles.Elements.Field.Input
+                placeholder="From"
+            />
+        </Row>
+        <Row>
+            <Field.Input
                 type="date"
                 name={ name }
                 value={ value[1] || '' }
                 onChange={ applyFilter.bind(this, 1, filterer) }
-                placeholder="To" />
-        </Styles.Row>
-    </Fragment>;
+                placeholder="To"
+            />
+        </Row>
+    </Fragment>
+);
 
 export default Date;

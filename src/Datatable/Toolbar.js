@@ -1,33 +1,40 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import MassActions from './Toolbar/MassActions';
-import ResetFilters from './Toolbar/ResetFilters';
-import Columns from './Toolbar/Columns';
-import Styles from './Styles'
+import styled from 'styled-components';
 
-const renderers = {
-    'reset-filters': ResetFilters,
-    'columns': Columns,
-    'default': MassActions
-}
+const Container = styled.div `
+    display: block;
+    width: 100%;
+`
 
-const getRenderer = ( type ) => renderers[type] || renderers['default']
-export const toolbarItem = ( render, item, index ) => {
+const Row = styled.div `
+    display: inline-block;
+    width: 100%;
+`
+
+const Item = styled.div `
+    display: block;
+    width: ${props => props.width || 'auto'};
+    float: ${props => props.right ? 'right' : 'left'};
+    font-size: ${props => props.fontSize || '15px'};
+`
+
+const toolbarItem = ( children, item, index ) => {
     const { style, type, visible } = item;
     return (
-        <Styles.ToolbarItem key={ index } { ...style }>
-            { visible !== false && render(getRenderer(item.type), item, index)  }
-        </Styles.ToolbarItem>
+        <Item key={ index } { ...style }>
+            { visible !== false && children(item, index)  }
+        </Item>
     );
 }
 
-const Toolbar = ({ items, render }) =>
-    <Styles.Toolbar>
+const Toolbar = ({ items, children }) => (
+    <Container>
         { items.map((row, rowIndex) =>
-            <Styles.ToolbarRow key={ rowIndex }>
-                { row.map((item, itemIndex) => toolbarItem(render, item, itemIndex) )}
-            </Styles.ToolbarRow>
+            <Row key={ rowIndex }>
+                { row.map((item, itemIndex) => toolbarItem(children, item, itemIndex) )}
+            </Row>
         )}
-    </Styles.Toolbar>
+    </Container>
+);
 
 export default Toolbar;

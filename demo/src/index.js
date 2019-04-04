@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import configureStore from './store';
 import config from './config';
 
-import '../../node_modules/bootstrap/dist/css/bootstrap.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './css/simple-sidebar.css';
 import './css/styles.css';
 

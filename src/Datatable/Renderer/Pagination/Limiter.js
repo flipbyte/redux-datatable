@@ -1,15 +1,13 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import { SET_LIMIT } from '../../actions';
-import Styles from '../Styles';
-
-export const TYPE_LIMITER = 'limiter';
+import { SET_LIMIT } from '../../../actions';
+import Field from '../../components/Field';
+import Label from '../../components/Label';
 
 const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
-        <Styles.Elements.Label flex noWrap>
-            <Styles.Elements.Field.Select
+        <Label flex noWrap>
+            <Field.Select
                 width="50%"
                 id="limiter"
                 value={ limit || defaultLimit }
@@ -17,8 +15,8 @@ const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
                 { options.map( (option, index) =>
                     <option key={ index } value={ option }>{ option !== 0 ? option : 'All' }</option>
                 ) }
-            </Styles.Elements.Field.Select> per page
-        </Styles.Elements.Label>
+            </Field.Select> per page
+        </Label>
     );
 }
 

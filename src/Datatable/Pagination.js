@@ -1,46 +1,54 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import Styles from './Styles';
-import Limiter, { TYPE_LIMITER } from './Pagination/Limiter';
-import ResultCount from './Pagination/ResultCount';
-import Pages from './Pagination/Pages';
-import { calculatePaginationProps, getLimiter } from '../utils';
+import { calculatePaginationProps } from '../utils';
+import styled from 'styled-components';
 
-const renderers = {
-    'limiter': Limiter,
-    'pages': Pages,
-    'resultCount': ResultCount,
-}
+const Container = styled.div `
+    display: block;
+    width: 100%;
+    ${props => props.margin && css `
+        margin: ${props.margin}
+    `}
+`
 
-const isVisible = (visible, position) => visible === true
-    || (typeof visible === 'object'
-        && (visible[position] === true || visible[position] === undefined));
+const Item = styled.div `
+    display: flex;
+    min-width: ${props => props.width || '200px'};
+    float: ${props => props.right ? 'right' : 'left'};
+    text-align: ${props => props.textAlign || 'left'};
+    font-size: ${props => props.fontSize || '15px'};
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+`
 
-const getRenderer = ( type ) => renderers[type];
+const isVisible = (visible, position) => (
+    visible === true || (
+        typeof visible === 'object' && (
+            visible[position] === true || visible[position] === undefined
+        )
+    )
+);
+
 const Pagination = ({
-    query,
-    render,
+    query = {},
+    children,
     position,
     margin,
-    componentConfig: {
-        items = [],
-        visible = true
-    }
+    config: { items = {}, visible = true }
 }) => {
-    const limiter = getLimiter(items);
-    const defaultLimit = limiter.default || 10;
+    const defaultLimit = items.limiter.default || 10;
     const paginationProps = calculatePaginationProps(query, defaultLimit);
     return(
-        isVisible(visible, position) && <Styles.Pagination margin={ margin }>
-            { items.map((item, index) => {
-                const { visible: itemVisible, style, type } = item;
+        isVisible(visible, position) && <Container margin={ margin }>
+            { Object.keys(items).map((key, index) => {
+                const { visible: itemVisible, style, type } = items[key];
                 return (
-                    itemVisible && <Styles.PaginationItem key={ index } { ...style }>
-                        { render(getRenderer(type), item, paginationProps, index) }
-                    </Styles.PaginationItem>
+                    itemVisible && <Item key={ index } { ...style }>
+                        { children(items[key], paginationProps, index) }
+                    </Item>
                 )
             })}
-        </Styles.Pagination>
+        </Container>
     )
 }
 
