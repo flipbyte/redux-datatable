@@ -18,9 +18,9 @@ class Columns extends Component {
         const { columnUpdater } = this.props;
 
         if(event.target.checked) {
-            columnUpdater({ type: 'add', action: { index } })
+            columnUpdater({ type: 'add', index })
         } else {
-            columnUpdater({ type: 'remove', action: { index } })
+            columnUpdater({ type: 'remove', index })
         }
     }
 

@@ -8,26 +8,6 @@ export const defaultLimiterCongig = {
 
 export const isArray = (value) => Array.isArray(value);
 
-export const calculatePaginationProps = (
-    { page, limit = 0, count = 0 },
-    defaultLimit = 10
-) => {
-    page = page > 1 ? page : 1
-    limit = limit != 0 ? limit : defaultLimit;
-
-    let start = (page - 1) * limit
-    let end = start + limit - 1
-
-    return {
-        page: page,
-        start: start,
-        end: (count > end && end >= 0) ? end : count,
-        count: count,
-        limit: limit,
-        total: Math.ceil(count / limit)
-    }
-}
-
 // export const isSelectionEmpty = (obj)  => {
 //     for(var key in obj) {
 //         if(obj.hasOwnProperty(key))
@@ -111,12 +91,22 @@ export const createActionCreator = ( type ) => ( data ) => {
     return action;
 }
 
-export const createReducer = (reducer, predicate) => (state, action) =>
+export const createReducer = (reducer, predicate) => (state, action) => (
     predicate(action) || state === undefined ? reducer(state, action) : state
+);
 
 export const prepareActionPayload = ({ name, reducerName, routes, entity }) => ( payload = {} ) => ({
     name, reducerName, routes, entity, payload
 })
 
-export const shouldUpdate = ( currentData, nextData, index ) =>
+export const shouldUpdate = ( currentData, nextData, index ) => (
     _.get(currentData, index, '') != _.get(nextData, index, '')
+)
+
+export const getStyles = ( styles, name ) => (
+    name && styles ? styles[name] : undefined
+)
+
+export const getExtendedStyles = ( name ) => ({ styles }) => (
+    name ? styles ? styles[name] : undefined : styles
+)

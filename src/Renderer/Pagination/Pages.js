@@ -1,5 +1,5 @@
 import React from 'react';
-import { SET_PAGE } from '../../../actions';
+import { SET_PAGE } from '../../actions';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 
@@ -42,7 +42,6 @@ const Pages = ({ page, total, action, style }) => {
                     { ...style.button }
                     onClick={ setPage.bind(this, link) }
                     active={ page === link }
-                    disabled={ page === link }
                 >{ link }</Button>
             ) }
             <Button { ...style.button } onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>

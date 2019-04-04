@@ -9,7 +9,6 @@ const Button = styled.button `
         box-shadow 0.15s ease-in-out;
     vertical-align: middle;
     white-space: nowrap;
-    cursor: pointer;
 
     ${({
         background = '#fff',
@@ -21,7 +20,9 @@ const Button = styled.button `
         color = '#6c757d',
         padding = '0.375rem 0.75rem',
         dropdownToggle = false,
-        hover = {}
+        hover = {},
+        active,
+        disabled = false,
     }) => css `
         background: ${background};
         border: ${border};
@@ -47,10 +48,24 @@ const Button = styled.button `
             }
         `}
 
-        &:hover {
-            color: ${hover.color || '#fff'};
-            background-color: ${hover.backgroundColor || '#5a6268'};
-        }
+        ${!disabled && !active && css `
+            cursor: pointer;
+
+            &:hover {
+                color: ${hover.color || '#fff'};
+                background-color: ${hover.backgroundColor || '#5a6268'};
+            }
+        `}
+
+        ${active && css `
+            background: ${props => props.activeBackground || '#007bff'};
+            color: ${props => props.activeColor || '#fff'};
+            font-weight: ${props => props.activeFontWeight || 'normal'}
+        `}
+
+        ${disabled && css `
+            opacity: 0.5;
+        `}
     `}
 `;
 

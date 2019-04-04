@@ -1,5 +1,5 @@
 import React from 'react';
-import { OPERATOR } from '../../../constants';
+import { OPERATOR } from '../../constants';
 import Field from '../../components/Field';
 
 const applyFilter = ( filterer, event ) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SET_FILTER } from '../../../actions';
+import { SET_FILTER } from '../../actions';
 import Button from '../../components/Button';
 
 const ResetFilters = ({ itemConfig, action }) => {

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { OPERATOR } from '../../../constants';
+import { OPERATOR } from '../../constants';
 import Row from '../../components/Row';
 import Field from '../../components/Field';
 

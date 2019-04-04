@@ -21,7 +21,6 @@ export const Menu = styled.div `
         fontSize = '14px',
         color = '#6c757d',
         border = '1px solid #ebebeb',
-        right = false,
         backgroundColor = '#fff',
         borderRadius,
         hidden
@@ -36,10 +35,6 @@ export const Menu = styled.div `
         ${hidden
             ? `display: none`
             : `display: block`
-        }
-        ${right
-            ? `right: 0`
-            : `left: 0`
         }
     `}
 `;

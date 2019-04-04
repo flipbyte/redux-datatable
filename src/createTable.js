@@ -4,18 +4,18 @@ import ReactDOM from 'react-dom';
 import { connect } from "react-redux";
 
 import TableProvider from './TableProvider';
-import Toolbar from './Datatable/Toolbar';
-import Pagination from './Datatable/Pagination';
-import Renderer from './Datatable/Renderer';
-import Table from './Datatable/components/Table';
-import Thead from './Datatable/components/Thead';
-import Tbody from './Datatable/components/Tbody';
-import Tr from './Datatable/components/Tr';
-import Th from './Datatable/components/Th';
-import Td from './Datatable/components/Td';
-import Container from './Datatable/components/Container';
-import SortCaret from './Datatable/components/SortCaret';
-import { createActionCreator, isArray } from './utils';
+import Renderer from './Renderer';
+import Table from './components/Table';
+import Thead from './components/Thead';
+import Tbody from './components/Tbody';
+import Tr from './components/Tr';
+import Th from './components/Th';
+import Td from './components/Td';
+import Toolbar from './components/Toolbar';
+import Pagination from './components/Pagination';
+import Container from './components/Container';
+import SortCaret from './components/SortCaret';
+import { createActionCreator, isArray, getStyles } from './utils';
 import { setPage, setLimit, setSort, SET_SORT, SET_FILTER } from './actions';
 
 const calculateWidth = ( columns, adjustment = 1 ) => (
@@ -47,10 +47,11 @@ const useTableScroll = ( tableBody, tableHeader ) => {
     return [ top, pointerEvents ];
 }
 
-const columnsReducer = (state, { index }) => {
+const columnsReducer = (state, { type, index }) => {
     var visibleColumns = [ ...state ];
-    if(action.type === 'add') {
-        visibleColumns.push(index).sort();
+    if(type === 'add') {
+        visibleColumns.push(index);
+        visibleColumns.sort();
     } else {
         visibleColumns.splice(visibleColumns.indexOf(index), 1).sort();
     }
@@ -105,8 +106,8 @@ const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 }
 
-const renderToolbar = ( items = [], action, thunk, columnUpdater, columns, visibleColumns ) => (
-    <Toolbar items={ items }>
+const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visibleColumns, styles ) => (
+    <Toolbar items={ config } styles={ styles }>
         {({ state, ...itemConfig }) => (
             <Renderer
                 ofType="toolbar"
@@ -122,8 +123,8 @@ const renderToolbar = ( items = [], action, thunk, columnUpdater, columns, visib
     </Toolbar>
 );
 
-const renderPagination = ( position, query, config = {}, action, thunk ) => (
-    <Pagination position={ position } config={ config } query={ query }>
+const renderPagination = ( position, query, config = {}, action, thunk, styles ) => (
+    <Pagination position={ position } config={ config } query={ query } styles={ styles }>
         {(item, paginationProps) => (
             <Renderer
                 ofType="pagination"
@@ -169,12 +170,13 @@ const renderTable = ({
     top,
     visibleHeight,
     width,
-    widthAdjustment = 1
+    widthAdjustment = 1,
+    styles
 }) => (
-    <Container>
-        <Table>
-            <Thead ref={ tableHeader } width={ `${width}px` }>
-                <Tr columns={ columns }>
+    <Container styles={ styles.tableContainer }>
+        <Table styles={ styles.table }>
+            <Thead ref={ tableHeader } width={ `${width}px` } styles={ styles.thead }>
+                <Tr columns={ columns } styles={ getStyles(styles.tr, 'header') }>
                     {({ sortable, width, textAlign, name, label }, index) => {
                         const { sort, dir } = query;
                         return (
@@ -183,6 +185,7 @@ const renderTable = ({
                                 sortable={ sortable }
                                 width={ width * widthAdjustment }
                                 textAlign={ textAlign }
+                                styles={ styles.th }
                                 onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : undefined }
                             >
                                 { label }
@@ -191,17 +194,22 @@ const renderTable = ({
                         )
                     }}
                 </Tr>
-                <Tr columns={ columns }>
+                <Tr columns={ columns } styles={ getStyles(styles.tr, 'filter') }>
                     {({ filterable, type, width, ...rest }, index) => {
                         const { name } = rest;
                         const value = _.get(query, ['search', name, 'value']);
                         return (
-                            <Td key={ index } width={ `${width * widthAdjustment}px` }>
+                            <Td
+                                key={ index }
+                                width={ `${width * widthAdjustment}px` }
+                                styles={ getStyles(styles.td, 'filter') }
+                            >
                                 { filterable && <Renderer
                                     ofType="filter"
                                     forItem={ type }
                                     value={ value }
                                     filterer={(key, filter) => action(SET_FILTER)({ key, filter })}
+                                    styles={ getStyles(styles.filter, name) }
                                     { ...rest }
                                 /> }
                             </Td>
@@ -217,6 +225,7 @@ const renderTable = ({
                 startTop={ top }
                 visibleHeight={ visibleHeight }
                 rowHeight={ rowHeight }
+                styles={ styles.tbody }
             >
                 {({ item, top, index: rowIndex }) => (
                     <Tr
@@ -226,11 +235,16 @@ const renderTable = ({
                         columns={ columns }
                         height={ rowHeight }
                         even={ rowIndex % 2 === 0 }
+                        styles={ getStyles(styles.tr, 'body') }
                     >
                         {(column, index) => {
                             const { width, textAlign, name, type } = column;
                             return (
-                                <Td key={ index } width={ `${width * widthAdjustment}px` }>
+                                <Td
+                                    key={ index }
+                                    width={ `${width * widthAdjustment}px` }
+                                    styles={ getStyles(styles.td, 'body') }
+                                >
                                     <Renderer
                                         ofType="body"
                                         forItem={ type }
@@ -239,6 +253,7 @@ const renderTable = ({
                                         extraData={ bodyExtraData[name] }
                                         action={ action }
                                         thunk={ thunk }
+                                        styles={ getStyles(styles.body, name) }
                                     />
                                 </Td>
                             );
@@ -253,7 +268,7 @@ const renderTable = ({
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData } = props;
     const [ visibleColumns, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
-    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, style, columns } = config;
+    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns } = config;
     const tableConfig = {
         ...config,
         updateTableState: dispatch,
@@ -287,8 +302,8 @@ const ReduxDatatable = ( props ) => {
     return (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container>
-                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumns) }
-                { renderPagination('top', query, pagination, action, thunk) }
+                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumns, styles.toolbar) }
+                { renderPagination('top', query, pagination, action, thunk, styles.pagination) }
                 { renderTable({
                     action,
                     bodyExtraData: getExtraBodyRowProps(tableData, tableConfig.visibleColumns),
@@ -305,8 +320,9 @@ const ReduxDatatable = ( props ) => {
                     visibleHeight: height,
                     width,
                     widthAdjustment,
+                    styles
                 }) }
-                { renderPagination('bottom', query, pagination, action, thunk) }
+                { renderPagination('bottom', query, pagination, action, thunk, styles.pagination) }
             </Container>
         </TableProvider>
     );

@@ -4,6 +4,67 @@ export default {
     rowHeight: 50,
     filterable: true,
     headers: true,
+    styles: {
+        tableContainer: {
+            fontSize: '16px',
+        },
+        // tableContainer:
+        // table:
+        // thead:
+        // tbody:
+        // tr: {
+        //     header:
+        //     filter:
+        //     body:
+        // }
+        // th:
+        // td: {
+        //      filter,
+        //      body
+        // },
+        toolbar: {
+            // item: {
+            //     backgroundColor: '#000',
+            // },
+            // containr:
+            // row:
+            // item:
+            item: {
+                actions: {
+                    marginRight: '5px'
+                },
+                columns: {
+                    float: 'right',
+                    'button': {
+                        background: '#fff',
+                        color: '#6c757d'
+                    },
+                    '> div > div': {
+                        right: 0,
+                        left: ''
+                    }
+                }
+            }
+        },
+        pagination: {
+            // container:
+            // item:
+            // items: {
+            //     [name]:
+            // },
+            item: {
+                pages: {
+                    float: 'right',
+                }
+            }
+        },
+        filter: {
+            // [name]:
+        },
+        body: {
+            // [name]:
+        }
+    },
     pagination: {
         // visible: true, // or an object { top: true, bottom: false } default visible
         items: {
@@ -60,6 +121,7 @@ export default {
     },
     toolbar: [
         [{
+            name: 'actions',
             label: 'Actions',
             id: 'dropdown',
             options: [{
@@ -79,34 +141,28 @@ export default {
                 label: 'Edit this field',
                 indexField: '@id'
             }],
-            visible: true,
-            style: {
-                right: false,
-                button: {
-                    background: '#fff',
-                    color: '#6c757d'
-                }
-            }
+            visible: true
         }, {
             type: 'resetFilters',
             label: 'Reset Filters',
             visible: true,
             state: false,
         }, {
+            name: 'columns',
             type: 'columns',
             label: 'Columns',
             visible: true,
             state: false,
-            style: {
-                right: true,
-                button: {
-                    background: '#fff',
-                    color: '#6c757d'
-                },
-                dropdownMenu: {
-                    right: true
-                }
-            }
+            // style: {
+            //     right: true,
+            //     button: {
+            //         background: '#fff',
+            //         color: '#6c757d'
+            //     },
+            //     dropdownMenu: {
+            //         right: true
+            //     }
+            // }
         }/*, {
             label: 'NACTIONS',
             id: 'massActions',

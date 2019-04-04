@@ -1,5 +1,5 @@
 import React from 'react';
-import { SET_LIMIT } from '../../../actions';
+import { SET_LIMIT } from '../../actions';
 import Field from '../../components/Field';
 import Label from '../../components/Label';
 
