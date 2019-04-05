@@ -3,6 +3,7 @@
 [Developed by Flipbyte](https://www.flipbyte.com/)
 
 [![npm package][npm-badge]][npm]
+[![Codacy Badge][codacy-badge]][codacy]
 
 Datatable built using React and Redux to fetch JSON data asynchronously using REST API.
 
@@ -46,33 +47,30 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 	name: 'your_table_name', // this is the key used to set your table data inside the table reducer
 	height: 500,
 	rowHeight: 50,
-	pagination: {
-		items: [{
-            type: 'limiter',
-            visible: true,
-            position: 10,
-            options: [10, 20, 50, 200, 2000],
-            default: 200,
-            style: {
-                right: false,
-            }
-        }, {
-            type: 'pages',
-            visible: true,
-            position: 20,
-            style: {
+    pagination: {
+        // visible: true, // or an object { top: true, bottom: false } default visible
+        items: {
+            limiter: {
+                type: 'limiter',
+                visible: true,
+                position: 10,
+                options: [10, 20, 50, 200, 2000],
+                default: 200,
+            },
+            pages: {
+                type: 'pages',
+                visible: true,
+                position: 20,
                 right: true,
-            }
-        }, {
-            type: 'resultCount',
-            visible: true,
-            position: 30,
-            style: {
-                width: '350px',
-                textAlign: 'center',
-            }
-        }]
-	},
+            },
+            resultCount: {
+                type: 'resultCount',
+                visible: true,
+                position: 30,
+                right: true,
+            },
+        }
+    },
 	routes: { // You can add other routes and handle them using custom actions.
 		get: { // The route used to fetch data and it's params
 			route: '/{your_route}',
@@ -95,9 +93,6 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             label: 'Columns',
             visible: true,
             state: false,
-            style: {
-                right: true
-            }
         },
 		...
 		]
@@ -199,29 +194,24 @@ const YourComponent = () =>
 | routes | object | true | - | Routes definition to fetch data and other custom routes config for custom handling (Check below)  |
 | toolbar | array | false | [] | Toolbar definition (Check below)  |
 | columns | array | true | - | Columns to display |
+| styles | object | false | {} | Custom styles for your table |
 
 #### Pagination object
 
 | Key | Type | Required | Default | Description |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-| items | array | false | [] | Array of item objects available for display in the pagination bar. Check below for items available |
+| items | object | false | {} | Items available for display in the pagination bar. Check below for items available |
 | visible | boolean/object | false | true | Whether the pagination is visible or not |
 
-##### Pagination items array:
+##### Pagination items object:
 
 | Key | Type | Required | Default | Description |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
 | type | string | true | - | One of the following: limiter, pages, resultCount |
 | visible | boolean | false | true | Whether the item is visible |
-| style | object | false | {} | Stylable properties |
 | **Limiter specific options** |   |   |   |   |
 | options | array | true | - | Array of integers with limiter options |
 | default | array | true | - | One of the values in the limiter options key |
-| **- style** |   |   |   |   |
-| right | boolean | false | false | Align the item to the right |
-| width | integer | false | 200 | Width of the item |
-| textAlign | string | false | left | Align the text of the item to the right, left or center|
-| fontSize | string | false | 14 | The font size of the text in the item |
 
 #### Routes object
 
@@ -244,7 +234,6 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | label | string | true | - | Label for the toolbar item |
 | visible | boolean | false | true | Whether the item is visible |
 | state | boolean | false | false | Whether to pass the state object as item prop |
-| style | object | false | {} | Define toolbar item styles |
 | **For type: actions** |   |   |   |   |
 | options | array | true | - | Array of option objects |
 | **-- options** |   |   |   |   |
@@ -252,10 +241,6 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | name | string | true | - | Unique name for the action |
 | label | string | true | - | Label for the action |
 | thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
-| **- styles** |   |   |   |   |
-| right | boolean | false | false | Align the item to the right |
-| width | integer | false | 200 | Width of the item |
-| fontSize | string | false | 14 | The font size of the text in the item |
 
 #### Columns object
 
@@ -276,8 +261,29 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | label | string | true | - | Label for the action |
 | thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
 
+#### Styles object
+
+Styles has the following properties avaailable:
+
+| Key | Type | Required | Default | Description |
+| ------------ | ------------ | ------------ | ------------ | ------------ |
+| tableContainer | styled-components style object | false | - | Outer table container |
+| table | styled-components style object | false | - | Table component |
+| thead | styled-components style object | false | - | Table header component |
+| tbody | styled-components style object | false | - | Table body component |
+| tr | object | false | - | Table rows - the object can contain the following keys `header`, `filter`, `body`, each of whose values is a styled-components style object| |
+| th | styled-components style object | false | - | Table header columns |
+| td | object | false | - | Table columns - the object contain the following keys `filter`, `body` whose value is a styled-components style object |
+| toolbar | object | false | - | Keys `container` and `row` which are styled-components style object and `item` which is an object with keys that are the names of the respective items (as defined in the config) and the value is a styled-components style object |
+| pagination | object | false | - | Keys `container` - a styled-components style object and `item` - same as above toolbar item |
+| filter | object | false | - | Each key is the name of the column and the value is the styled-components style object |
+| body | object | false | - | Same as `filter` (above) |
+
 ## License
 The MIT License (MIT)
 
 [npm-badge]: https://img.shields.io/npm/v/@flipbyte/redux-datatable.svg
 [npm]: https://www.npmjs.com/package/@flipbyte/redux-datatable
+
+[codacy-badge]: https://api.codacy.com/project/badge/Grade/67274650b4874f5db55ede76156ab4d2
+[codacy]: https://www.codacy.com/app/flipbyte/redux-datatable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=flipbyte/redux-datatable&amp;utm_campaign=Badge_Grade

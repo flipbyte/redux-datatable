@@ -4,33 +4,114 @@ export default {
     rowHeight: 50,
     filterable: true,
     headers: true,
+    // styles: {
+    //     tableContainer: {
+    //         fontSize: '16px',
+    //     },
+    //     // table: {
+    //     //     background: '#000',
+    //     // },
+    //     // thead: {
+    //     //     background: '#000'
+    //     // },
+    //     // tbody: {
+    //     //     background: '#000'
+    //     // },
+    //     // tr: {
+    //     //     header: { fontWeight: 'normal' },
+    //     //     filter: { },
+    //     //     body: { },
+    //     // },
+    //     // th: { textAlign: 'center', ':last-child': {
+    //     //     textAlign: 'right'
+    //     // }},
+    //     // td: {
+    //     //      filter: {},
+    //     //      body: { textAlign: 'center', ':last-child': {
+    //     //          textAlign: 'right'
+    //     //      }}
+    //     // },
+    //     toolbar: {
+    //         // item: {
+    //         //     backgroundColor: '#000',
+    //         // },
+    //         // containr:
+    //         // row:
+    //         // item:
+    //         item: {
+    //             actions: {
+    //                 marginRight: '5px'
+    //             },
+    //             columns: {
+    //                 float: 'right',
+    //                 'button': {
+    //                     background: '#fff',
+    //                     color: '#6c757d'
+    //                 },
+    //                 '> div > div': {
+    //                     right: 0,
+    //                     left: ''
+    //                 }
+    //             }
+    //         }
+    //     },
+    //     pagination: {
+    //         // container:
+    //         // item:
+    //         // items: {
+    //         //     [name]:
+    //         // },
+    //         item: {
+    //             pages: {
+    //                 float: 'right',
+    //             }
+    //         }
+    //     },
+    //     filter: {
+    //         // pageId: {' input': {
+    //         //     border: '1px solid #000'
+    //         // }}
+    //         // [name]:
+    //     },
+    //     body: {
+    //         actions: {
+    //             ' button': {
+    //                 fontSize: '12px',
+    //                 ':last-child': {
+    //                     background: '#dc3545',
+    //                     color: '#fff',
+    //                     ':hover': {
+    //                         backgroundColor: '#c82333',
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         // [name]:
+    //     }
+    // },
     pagination: {
         // visible: true, // or an object { top: true, bottom: false } default visible
-        items: [{
-            type: 'limiter',
-            visible: true,
-            position: 10,
-            options: [10, 20, 50, 200, 2000],
-            default: 200,
-            style: {
-                right: false,
-            }
-        }, {
-            type: 'pages',
-            visible: true,
-            position: 20,
-            style: {
+        items: {
+            limiter: {
+                type: 'limiter',
+                visible: true,
+                position: 10,
+                options: [10, 20, 50, 200, 2000],
+                default: 200,
+            },
+            pages: {
+                type: 'pages',
+                visible: true,
+                position: 20,
                 right: true,
-            }
-        }, {
-            type: 'resultCount',
-            visible: true,
-            position: 30,
-            style: {
-                width: '350px',
-                textAlign: 'center',
-            }
-        }]
+            },
+            resultCount: {
+                type: 'resultCount',
+                visible: true,
+                position: 30,
+                right: true,
+            },
+        }
     },
     routes: {
         get: {
@@ -47,6 +128,7 @@ export default {
     },
     toolbar: [
         [{
+            name: 'actions',
             label: 'Actions',
             id: 'dropdown',
             options: [{
@@ -66,112 +148,20 @@ export default {
                 label: 'Edit this field',
                 indexField: '@id'
             }],
-            visible: true,
-            style: {
-                right: false,
-                width: '100px'
-            }
+            visible: true
         }, {
-            type: 'reset-filters',
+            type: 'resetFilters',
             label: 'Reset Filters',
             visible: true,
             state: false,
         }, {
+            name: 'columns',
             type: 'columns',
             label: 'Columns',
             visible: true,
-            state: false,
-            style: {
-                right: true
-            }
-        }/*, {
-            label: 'NACTIONS',
-            id: 'massActions',
-            delete: {
-                type: 'action',
-                name: 'delete',
-                label: 'Delete',
-                indexField: '@id'
-            },
-            visible: true,
-            style: {
-                right: false,
-                width: '200px'
-            }
-        }, {
-            label: '2Actions',
-            id: 'massActions',
-            delete: {
-                type: 'action',
-                name: 'delete',
-                label: 'Delete',
-                indexField: '@id'
-            },
-            visible: true,
-            style: {
-                right: true,
-                width: '100px'
-            }
-        }*/],
-        // [{
-        //     label: 'Actions',
-        //     id: 'massActions',
-        //     delete: {
-        //         type: 'action',
-        //         name: 'delete',
-        //         label: 'Delete',
-        //         indexField: '@id'
-        //     },
-        //     visible: true,
-        //     style: {
-        //         right: false,
-        //         width: '200px'
-        //     }
-        // }, {
-        //     type: 'columns',
-        //     label: 'Columns',
-        //     visible: true,
-        // }, {
-        //     label: 'NACTIONS',
-        //     id: 'massActions',
-        //     delete: {
-        //         type: 'action',
-        //         name: 'delete',
-        //         label: 'Delete',
-        //         indexField: '@id'
-        //     },
-        //     visible: true,
-        //     style: {
-        //         width: '200px'
-        //     }
-        // }, {
-        //     label: '2Actions',
-        //     id: 'massActions',
-        //     delete: {
-        //         type: 'action',
-        //         name: 'delete',
-        //         label: 'Delete',
-        //         indexField: '@id'
-        //     },
-        //     visible: true,
-        //     style: {
-        //         right: true,
-        //         width: '100px'
-        //     }
-        // }]
+            state: false
+        }],
     ],
-    // toolbar: {
-    //     massActions: {
-    //         label: 'Actions',
-    //         delete: {
-    //             type: 'action',
-    //             name: 'delete',
-    //             label: 'Delete',
-    //             indexField: '@id'
-    //         }
-    //     },
-    //     columns: true
-    // },
     columns: [{
         name: 'ids',
         label: '',
@@ -184,36 +174,10 @@ export default {
         label: 'ID',
         type: 'number',
         name: 'pageId',
-        sortable: true,
         width: 150,
         filterable: true,
         sortable: true,
-    }, /*{
-        label: 'Avatar',
-        type: 'image',
-        name: 'avatar',
-        sortable: false,
-        textAlign: 'center',
-        width: 200,
-        filterable: false,
-        imgHeight: 50
     }, {
-        label: 'First Name',
-        type: 'string',
-        name: 'first_name',
-        sortable: true,
-        textAlign: 'text-left',
-        width: 200,
-        filterable: true,
-    }, {
-        label: 'Last Name',
-        type: 'string',
-        name: 'last_name',
-        sortable: true,
-        textAlign: 'text-left',
-        width: 200,
-        filterable: true,
-    },*/{
         label: 'Created at',
         type: 'date',
         name: 'createdAt',
