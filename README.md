@@ -46,33 +46,30 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 	name: 'your_table_name', // this is the key used to set your table data inside the table reducer
 	height: 500,
 	rowHeight: 50,
-	pagination: {
-		items: [{
-            type: 'limiter',
-            visible: true,
-            position: 10,
-            options: [10, 20, 50, 200, 2000],
-            default: 200,
-            style: {
-                right: false,
-            }
-        }, {
-            type: 'pages',
-            visible: true,
-            position: 20,
-            style: {
+    pagination: {
+        // visible: true, // or an object { top: true, bottom: false } default visible
+        items: {
+            limiter: {
+                type: 'limiter',
+                visible: true,
+                position: 10,
+                options: [10, 20, 50, 200, 2000],
+                default: 200,
+            },
+            pages: {
+                type: 'pages',
+                visible: true,
+                position: 20,
                 right: true,
-            }
-        }, {
-            type: 'resultCount',
-            visible: true,
-            position: 30,
-            style: {
-                width: '350px',
-                textAlign: 'center',
-            }
-        }]
-	},
+            },
+            resultCount: {
+                type: 'resultCount',
+                visible: true,
+                position: 30,
+                right: true,
+            },
+        }
+    },
 	routes: { // You can add other routes and handle them using custom actions.
 		get: { // The route used to fetch data and it's params
 			route: '/{your_route}',
@@ -199,15 +196,16 @@ const YourComponent = () =>
 | routes | object | true | - | Routes definition to fetch data and other custom routes config for custom handling (Check below)  |
 | toolbar | array | false | [] | Toolbar definition (Check below)  |
 | columns | array | true | - | Columns to display |
+| styles | object | false | {} | Custom styles for your table |
 
 #### Pagination object
 
 | Key | Type | Required | Default | Description |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-| items | array | false | [] | Array of item objects available for display in the pagination bar. Check below for items available |
+| items | object | false | {} | Items available for display in the pagination bar. Check below for items available |
 | visible | boolean/object | false | true | Whether the pagination is visible or not |
 
-##### Pagination items array:
+##### Pagination items object:
 
 | Key | Type | Required | Default | Description |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
@@ -275,6 +273,24 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | name  | string | true | - | Unique name for the action |
 | label | string | true | - | Label for the action |
 | thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
+
+#### Styles object
+
+Styles has the following properties avaailable:
+
+| Key | Type | Required | Default | Description |
+| ------------ | ------------ | ------------ | ------------ | ------------ |
+| tableContainer | styled-components style object | false | - | Outer table container |
+| table | styled-components style object | false | - | Table component |
+| thead | styled-components style object | false | - | Table header component |
+| tbody | styled-components style object | false | - | Table body component |
+| tr | object | false | - | Table rows - the object can contain the following keys `header`, `filter`, `body`, each of whose values is a styled-components style object| |
+| th | styled-components style object | false | - | Table header columns |
+| td | object | false | - | Table columns - the object contain the following keys `filter`, `body` whose value is a styled-components style object |
+| toolbar | object | false | - | Keys `container` and `row` which are styled-components style object and `item` which is an object with keys that are the names of the respective items (as defined in the config) and the value is a styled-components style object |
+| pagination | object | false | - | Keys `container` - a styled-components style object and `item` - same as above toolbar item |
+| filter | object | false | - | Each key is the name of the column and the value is the styled-components style object |
+| body | object | false | - | Same as `filter` (above) |
 
 ## License
 The MIT License (MIT)
