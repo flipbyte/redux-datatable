@@ -92,9 +92,6 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             label: 'Columns',
             visible: true,
             state: false,
-            style: {
-                right: true
-            }
         },
 		...
 		]
@@ -211,15 +208,9 @@ const YourComponent = () =>
 | ------------ | ------------ | ------------ | ------------ | ------------ |
 | type | string | true | - | One of the following: limiter, pages, resultCount |
 | visible | boolean | false | true | Whether the item is visible |
-| style | object | false | {} | Stylable properties |
 | **Limiter specific options** |   |   |   |   |
 | options | array | true | - | Array of integers with limiter options |
 | default | array | true | - | One of the values in the limiter options key |
-| **- style** |   |   |   |   |
-| right | boolean | false | false | Align the item to the right |
-| width | integer | false | 200 | Width of the item |
-| textAlign | string | false | left | Align the text of the item to the right, left or center|
-| fontSize | string | false | 14 | The font size of the text in the item |
 
 #### Routes object
 
@@ -242,7 +233,6 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | label | string | true | - | Label for the toolbar item |
 | visible | boolean | false | true | Whether the item is visible |
 | state | boolean | false | false | Whether to pass the state object as item prop |
-| style | object | false | {} | Define toolbar item styles |
 | **For type: actions** |   |   |   |   |
 | options | array | true | - | Array of option objects |
 | **-- options** |   |   |   |   |
@@ -250,10 +240,6 @@ Toolbar config is an array of array of object where objects are the toolbar item
 | name | string | true | - | Unique name for the action |
 | label | string | true | - | Label for the action |
 | thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
-| **- styles** |   |   |   |   |
-| right | boolean | false | false | Align the item to the right |
-| width | integer | false | 200 | Width of the item |
-| fontSize | string | false | 14 | The font size of the text in the item |
 
 #### Columns object
 
