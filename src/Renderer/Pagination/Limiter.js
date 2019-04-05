@@ -8,7 +8,6 @@ const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
     return (
         <Label flex noWrap>
             <Field.Select
-                width="50%"
                 id="limiter"
                 value={ limit || defaultLimit }
                 onChange={ ( event ) => setLimit(event.target.value) }>

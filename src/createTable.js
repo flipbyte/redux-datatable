@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import TableProvider from './TableProvider';
 import Renderer from './Renderer';
+import Row from './components/Row';
 import Table from './components/Table';
 import Thead from './components/Thead';
 import Tbody from './components/Tbody';
@@ -15,6 +16,7 @@ import Toolbar from './components/Toolbar';
 import Pagination from './components/Pagination';
 import Container from './components/Container';
 import SortCaret from './components/SortCaret';
+import ExtendedDiv from './components/ExtendedDiv';
 import { createActionCreator, isArray, getStyles } from './utils';
 import { setPage, setLimit, setSort, SET_SORT, SET_FILTER } from './actions';
 
@@ -106,35 +108,39 @@ const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 }
 
-const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visibleColumns, styles ) => (
-    <Toolbar items={ config } styles={ styles }>
-        {({ state, ...itemConfig }) => (
-            <Renderer
-                ofType="toolbar"
-                forItem={ itemConfig.type }
-                itemConfig={ itemConfig }
-                action={ action }
-                thunk={ thunk }
-                columnUpdater={ columnUpdater }
-                columns={ columns }
-                visibleColumns={ visibleColumns }
-            />
-        )}
-    </Toolbar>
+const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visibleColumns, styles = {} ) => (
+    <Row>
+        <Toolbar items={ config } styles={ styles }>
+            {({ state, ...itemConfig }) => (
+                <Renderer
+                    ofType="toolbar"
+                    forItem={ itemConfig.type }
+                    itemConfig={ itemConfig }
+                    action={ action }
+                    thunk={ thunk }
+                    columnUpdater={ columnUpdater }
+                    columns={ columns }
+                    visibleColumns={ visibleColumns }
+                />
+            )}
+        </Toolbar>
+    </Row>
 );
 
-const renderPagination = ( position, query, config = {}, action, thunk, styles ) => (
-    <Pagination position={ position } config={ config } query={ query } styles={ styles }>
-        {(item, paginationProps) => (
-            <Renderer
-                ofType="pagination"
-                forItem={ item.type }
-                action={ action }
-                { ...item }
-                { ...paginationProps }
-            />
-        )}
-    </Pagination>
+const renderPagination = ( position, query, config = {}, action, thunk, styles = {} ) => (
+    <Row>
+        <Pagination position={ position } config={ config } query={ query } styles={ styles }>
+            {(item, paginationProps) => (
+                <Renderer
+                    ofType="pagination"
+                    forItem={ item.type }
+                    action={ action }
+                    { ...item }
+                    { ...paginationProps }
+                />
+            )}
+        </Pagination>
+    </Row>
 );
 
 const getExtraBodyRowProps = (data, columns) => (
@@ -171,11 +177,11 @@ const renderTable = ({
     visibleHeight,
     width,
     widthAdjustment = 1,
-    styles
+    styles = {}
 }) => (
-    <Container styles={ styles.tableContainer }>
-        <Table styles={ styles.table }>
-            <Thead ref={ tableHeader } width={ `${width}px` } styles={ styles.thead }>
+    <Container styles={ getStyles(styles, 'tableContainer') }>
+        <Table styles={ getStyles(styles, 'table') }>
+            <Thead ref={ tableHeader } width={ `${width}px` } styles={ getStyles(styles, 'thead') }>
                 <Tr columns={ columns } styles={ getStyles(styles.tr, 'header') }>
                     {({ sortable, width, textAlign, name, label }, index) => {
                         const { sort, dir } = query;
@@ -204,14 +210,15 @@ const renderTable = ({
                                 width={ `${width * widthAdjustment}px` }
                                 styles={ getStyles(styles.td, 'filter') }
                             >
-                                { filterable && <Renderer
-                                    ofType="filter"
-                                    forItem={ type }
-                                    value={ value }
-                                    filterer={(key, filter) => action(SET_FILTER)({ key, filter })}
-                                    styles={ getStyles(styles.filter, name) }
-                                    { ...rest }
-                                /> }
+                                { filterable && <ExtendedDiv styles={ getStyles(styles.filter, name) }>
+                                    <Renderer
+                                        ofType="filter"
+                                        forItem={ type }
+                                        value={ value }
+                                        filterer={(key, filter) => action(SET_FILTER)({ key, filter })}
+                                        { ...rest }
+                                    />
+                                </ExtendedDiv> }
                             </Td>
                         )
                     }}
@@ -220,12 +227,13 @@ const renderTable = ({
             <Tbody
                 ref={ tableBody }
                 width={ width }
-                height={ height }
+                height={ `${height > visibleHeight ? visibleHeight : height}px` }
+                innerHeight={ height }
                 data={ items }
                 startTop={ top }
                 visibleHeight={ visibleHeight }
                 rowHeight={ rowHeight }
-                styles={ styles.tbody }
+                styles={ getStyles(styles, 'tbody') }
             >
                 {({ item, top, index: rowIndex }) => (
                     <Tr
@@ -233,7 +241,7 @@ const renderTable = ({
                         position="absolute"
                         top={ `${top}px` }
                         columns={ columns }
-                        height={ rowHeight }
+                        height={ `${rowHeight}px` }
                         even={ rowIndex % 2 === 0 }
                         styles={ getStyles(styles.tr, 'body') }
                     >
@@ -245,16 +253,17 @@ const renderTable = ({
                                     width={ `${width * widthAdjustment}px` }
                                     styles={ getStyles(styles.td, 'body') }
                                 >
-                                    <Renderer
-                                        ofType="body"
-                                        forItem={ type }
-                                        data={ item }
-                                        colConfig={ column }
-                                        extraData={ bodyExtraData[name] }
-                                        action={ action }
-                                        thunk={ thunk }
-                                        styles={ getStyles(styles.body, name) }
-                                    />
+                                    <ExtendedDiv styles={ getStyles(styles.body, name) }>
+                                        <Renderer
+                                            ofType="body"
+                                            forItem={ type }
+                                            data={ item }
+                                            colConfig={ column }
+                                            extraData={ bodyExtraData[name] }
+                                            action={ action }
+                                            thunk={ thunk }
+                                        />
+                                    </ExtendedDiv>
                                 </Td>
                             );
                         }}
@@ -263,7 +272,7 @@ const renderTable = ({
             </Tbody>
         </Table>
     </Container>
-);
+)
 
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData } = props;

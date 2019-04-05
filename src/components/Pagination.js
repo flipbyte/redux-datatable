@@ -1,15 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { getExtendedStyles, getStyles } from '../utils';
 
 const Item = styled.div `
     display: flex;
-    min-width: 200px;
-    float: left;
+    min-width: auto;
+    float: ${props => props.right ? 'right' : 'left'};
     text-align: left;
     flex-direction: column;
     justify-content: center;
     height: 100%;
+    margin-left: 10px;
+
+    ${props => props.first && css `
+        margin-left: 0;
+    `}
 `
 
 const ExtendedItem = styled(Item)(getExtendedStyles());
@@ -56,9 +61,16 @@ const Pagination = ({
     return(
         isVisible(visible, position) && <div className={ className }>
             { Object.keys(items).map((key, index) => {
-                const { visible: itemVisible, style, type } = items[key];
+                const { visible: itemVisible, type, right } = items[key];
                 return (
-                    itemVisible && <ExtendedItem key={ index } styles={ getStyles(item, type) }>
+                    itemVisible && <ExtendedItem
+                        key={ index }
+                        index={ index }
+                        first={ index === 0 }
+                        last={ index === items.length - 1 }
+                        right={ right }
+                        styles={ getStyles(item, type) }
+                    >
                         { children(items[key], paginationProps, index) }
                     </ExtendedItem>
                 )
@@ -71,7 +83,5 @@ const StyledPagination = styled(Pagination) `
     display: block;
     width: 100%;
 `
-
 const ExtendedStyledPagination = styled(StyledPagination)(getExtendedStyles('container'));
-
 export default ExtendedStyledPagination;

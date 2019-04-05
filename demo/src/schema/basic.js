@@ -4,67 +4,91 @@ export default {
     rowHeight: 50,
     filterable: true,
     headers: true,
-    styles: {
-        tableContainer: {
-            fontSize: '16px',
-        },
-        // tableContainer:
-        // table:
-        // thead:
-        // tbody:
-        // tr: {
-        //     header:
-        //     filter:
-        //     body:
-        // }
-        // th:
-        // td: {
-        //      filter,
-        //      body
-        // },
-        toolbar: {
-            // item: {
-            //     backgroundColor: '#000',
-            // },
-            // containr:
-            // row:
-            // item:
-            item: {
-                actions: {
-                    marginRight: '5px'
-                },
-                columns: {
-                    float: 'right',
-                    'button': {
-                        background: '#fff',
-                        color: '#6c757d'
-                    },
-                    '> div > div': {
-                        right: 0,
-                        left: ''
-                    }
-                }
-            }
-        },
-        pagination: {
-            // container:
-            // item:
-            // items: {
-            //     [name]:
-            // },
-            item: {
-                pages: {
-                    float: 'right',
-                }
-            }
-        },
-        filter: {
-            // [name]:
-        },
-        body: {
-            // [name]:
-        }
-    },
+    // styles: {
+    //     tableContainer: {
+    //         fontSize: '16px',
+    //     },
+    //     // table: {
+    //     //     background: '#000',
+    //     // },
+    //     // thead: {
+    //     //     background: '#000'
+    //     // },
+    //     // tbody: {
+    //     //     background: '#000'
+    //     // },
+    //     // tr: {
+    //     //     header: { fontWeight: 'normal' },
+    //     //     filter: { },
+    //     //     body: { },
+    //     // },
+    //     // th: { textAlign: 'center', ':last-child': {
+    //     //     textAlign: 'right'
+    //     // }},
+    //     // td: {
+    //     //      filter: {},
+    //     //      body: { textAlign: 'center', ':last-child': {
+    //     //          textAlign: 'right'
+    //     //      }}
+    //     // },
+    //     toolbar: {
+    //         // item: {
+    //         //     backgroundColor: '#000',
+    //         // },
+    //         // containr:
+    //         // row:
+    //         // item:
+    //         item: {
+    //             actions: {
+    //                 marginRight: '5px'
+    //             },
+    //             columns: {
+    //                 float: 'right',
+    //                 'button': {
+    //                     background: '#fff',
+    //                     color: '#6c757d'
+    //                 },
+    //                 '> div > div': {
+    //                     right: 0,
+    //                     left: ''
+    //                 }
+    //             }
+    //         }
+    //     },
+    //     pagination: {
+    //         // container:
+    //         // item:
+    //         // items: {
+    //         //     [name]:
+    //         // },
+    //         item: {
+    //             pages: {
+    //                 float: 'right',
+    //             }
+    //         }
+    //     },
+    //     filter: {
+    //         // pageId: {' input': {
+    //         //     border: '1px solid #000'
+    //         // }}
+    //         // [name]:
+    //     },
+    //     body: {
+    //         actions: {
+    //             ' button': {
+    //                 fontSize: '12px',
+    //                 ':last-child': {
+    //                     background: '#dc3545',
+    //                     color: '#fff',
+    //                     ':hover': {
+    //                         backgroundColor: '#c82333',
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         // [name]:
+    //     }
+    // },
     pagination: {
         // visible: true, // or an object { top: true, bottom: false } default visible
         items: {
@@ -74,36 +98,19 @@ export default {
                 position: 10,
                 options: [10, 20, 50, 200, 2000],
                 default: 200,
-                style: {
-                    right: false,
-                }
             },
             pages: {
                 type: 'pages',
                 visible: true,
                 position: 20,
-                style: {
-                    right: true,
-                    button: {
-                        background: '#fff',
-                        color: '#6c757d',
-                        border: 'none',
-                        hover: {
-                            color: '#16181b',
-                            backgroundColor: '#f8f9fa'
-                        }
-                    }
-                }
+                right: true,
             },
             resultCount: {
                 type: 'resultCount',
                 visible: true,
                 position: 30,
-                style: {
-                    width: '350px',
-                    textAlign: 'center',
-                }
-            }
+                right: true,
+            },
         }
     },
     routes: {
@@ -152,105 +159,9 @@ export default {
             type: 'columns',
             label: 'Columns',
             visible: true,
-            state: false,
-            // style: {
-            //     right: true,
-            //     button: {
-            //         background: '#fff',
-            //         color: '#6c757d'
-            //     },
-            //     dropdownMenu: {
-            //         right: true
-            //     }
-            // }
-        }/*, {
-            label: 'NACTIONS',
-            id: 'massActions',
-            delete: {
-                type: 'action',
-                name: 'delete',
-                label: 'Delete',
-                indexField: '@id'
-            },
-            visible: true,
-            style: {
-                right: false,
-                width: '200px'
-            }
-        }, {
-            label: '2Actions',
-            id: 'massActions',
-            delete: {
-                type: 'action',
-                name: 'delete',
-                label: 'Delete',
-                indexField: '@id'
-            },
-            visible: true,
-            style: {
-                right: true,
-                width: '100px'
-            }
-        }*/],
-        // [{
-        //     label: 'Actions',
-        //     id: 'massActions',
-        //     delete: {
-        //         type: 'action',
-        //         name: 'delete',
-        //         label: 'Delete',
-        //         indexField: '@id'
-        //     },
-        //     visible: true,
-        //     style: {
-        //         right: false,
-        //         width: '200px'
-        //     }
-        // }, {
-        //     type: 'columns',
-        //     label: 'Columns',
-        //     visible: true,
-        // }, {
-        //     label: 'NACTIONS',
-        //     id: 'massActions',
-        //     delete: {
-        //         type: 'action',
-        //         name: 'delete',
-        //         label: 'Delete',
-        //         indexField: '@id'
-        //     },
-        //     visible: true,
-        //     style: {
-        //         width: '200px'
-        //     }
-        // }, {
-        //     label: '2Actions',
-        //     id: 'massActions',
-        //     delete: {
-        //         type: 'action',
-        //         name: 'delete',
-        //         label: 'Delete',
-        //         indexField: '@id'
-        //     },
-        //     visible: true,
-        //     style: {
-        //         right: true,
-        //         width: '100px'
-        //     }
-        // }]
+            state: false
+        }],
     ],
-    // toolbar: {
-    //     massActions: {
-    //         label: 'Actions',
-    //         delete: {
-    //             type: 'action',
-    //             name: 'delete',
-    //             label: 'Delete',
-    //             indexField: '@id'
-    //         }
-    //     },
-    //     columns: true
-    // },
     columns: [{
         name: 'ids',
         label: '',
@@ -266,32 +177,7 @@ export default {
         width: 150,
         filterable: true,
         sortable: true,
-    }, /*{
-        label: 'Avatar',
-        type: 'image',
-        name: 'avatar',
-        sortable: false,
-        textAlign: 'center',
-        width: 200,
-        filterable: false,
-        imgHeight: 50
     }, {
-        label: 'First Name',
-        type: 'string',
-        name: 'first_name',
-        sortable: true,
-        textAlign: 'text-left',
-        width: 200,
-        filterable: true,
-    }, {
-        label: 'Last Name',
-        type: 'string',
-        name: 'last_name',
-        sortable: true,
-        textAlign: 'text-left',
-        width: 200,
-        filterable: true,
-    },*/{
         label: 'Created at',
         type: 'date',
         name: 'createdAt',
@@ -315,9 +201,6 @@ export default {
             },
             thunk: ( payload ) => ( dispatch, getState ) => {
                 console.log('edit', payload, getState());
-            },
-            style: {
-                fontSize: '12px'
             }
         }, {
             type: 'action',
@@ -332,14 +215,6 @@ export default {
                     ? console.log('delete', getState())
                     : console.log(false);
 
-            },
-            style: {
-                background: '#dc3545',
-                color: '#fff',
-                fontSize: '12px',
-                hover: {
-                    backgroundColor: '#c82333',
-                }
             }
         }]
     }]

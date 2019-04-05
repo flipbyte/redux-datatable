@@ -7,9 +7,10 @@ const Container = styled.div `
     margin-right: auto;
     margin-left: auto;
     font-size: 14px;
+    clear: both;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
         sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 `
 
 const ExtendedContainer = styled(Container)(getExtendedStyles());
-export default Container;
+export default ExtendedContainer;

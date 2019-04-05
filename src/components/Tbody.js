@@ -1,37 +1,20 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-
-const Outer = styled.div `
-    max-width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    ${props => props.height && css `
-        height: ${props.height}
-    `};
-    overflow-y: scroll;
-    overflow-x: scroll;
-`
-
-export const Inner = styled.div.attrs(({ width = '100%' }) => ({
-    style: { width }
-})) `
-    position: relative;
-    border-bottom: ${props => props.borderBottom || '1px solid #ddd'};
-    ${props => props.height && css `
-        height: ${props.height}
-    `};
-`
+import { getExtendedStyles } from '../utils';
 
 const Tbody = React.forwardRef(({
+    className,
+    style,
     children,
     data,
     height,
+    innerHeight,
     overScanCount = 10,
     rowHeight,
     rowWidth,
     startTop,
     visibleHeight,
-    width
+    width = '100%'
 }, ref) => {
     const visibleLower =  startTop - overScanCount * rowHeight;
     const visibleUpper = startTop + visibleHeight + overScanCount * rowHeight;
@@ -45,15 +28,27 @@ const Tbody = React.forwardRef(({
     const slicedData = data.slice(startIndex, endIndex);
 
     return (
-        <Outer ref={ ref } height={ `${height > visibleHeight ? visibleHeight : height}px` }>
-            <Inner width={ `${width}px` } height={ `${height}px` }>
+        <div className={ className } style={ style } ref={ ref }>
+            <div style={{ width, height: innerHeight, position: 'relative' }}>
                 { slicedData.map((item, index) => {
                     let currentIndex = startIndex + index;
                     return children({ item, top: currentIndex * rowHeight, index: currentIndex })
                 })}
-            </Inner>
-        </Outer>
+            </div>
+        </div>
     );
 });
 
-export default Tbody;
+
+const StyledTbody = styled(Tbody).attrs(({ height }) => ({
+    style: { height }
+})) `
+    max-width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    border-bottom: 1px solid #ddd;
+`
+const ExtendedStyledTbody = styled(StyledTbody)(getExtendedStyles())
+export default ExtendedStyledTbody;

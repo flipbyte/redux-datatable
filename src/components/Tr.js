@@ -1,5 +1,6 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 const Tr = ({ className, children, style, columns }) => (
     <div className={ className } style={ style }>
@@ -14,15 +15,12 @@ const StyledTr = styled(Tr).attrs(({ top }) => ({
 })) `
     display: flex;
     width: 100%;
-    padding: ${props => props.padding || 0};
-    height: ${props => props.height || 'auto'};
+    padding: 0;
+    height: auto;
+    position: relative;
+    background: none;
     position: ${props => props.position || 'relative'};
-    background: ${props => props.background || 'none'};
 
-    ${props => props.even && css `
-        background: ${props.evenBackground || 'none'};
-    `}
 `
-
-
-export default StyledTr;
+const ExtendedStyledTr = styled(StyledTr)(getExtendedStyles())
+export default ExtendedStyledTr;

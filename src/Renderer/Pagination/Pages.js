@@ -34,18 +34,17 @@ const Pages = ({ page, total, action, style }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <List>
-            <Button { ...style.button } onClick={ setPage.bind(this, 1) } disabled={ page == 1 }>First</Button>
-            <Button { ...style.button } onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
+            <Button onClick={ setPage.bind(this, 1) } disabled={ page == 1 }>First</Button>
+            <Button onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
             { getPages(page, total).map( (link, index) =>
                 <Button
                     key={ index }
-                    { ...style.button }
                     onClick={ setPage.bind(this, link) }
                     active={ page === link }
                 >{ link }</Button>
             ) }
-            <Button { ...style.button } onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
-            <Button { ...style.button } onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Button>
+            <Button onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
+            <Button onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Button>
         </List>
     );
 }

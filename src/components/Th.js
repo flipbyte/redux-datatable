@@ -1,16 +1,14 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 import Td from './Td';
 
 const Th = styled(Td) `
-    font-weight: ${props => props.fontWeigth || 'bold'};
-    background: ${props => props.background || '#f9fafb'};
-    border-bottom: ${props => props.borderBottom || '1px solid rgba(34,36,38,.1)'};
-
-    ${props => props.sortable && css `
-        cursor: pointer;
-    `}
+    font-weight: bold;
+    background: #f9fafb;
+    border-bottom: 1px solid rgba(34, 36, 38, .1);
+    cursor: ${props => props.sortable ? 'pointer': 'default'};
 `
-
-export default Th;
+const ExtendedTh = styled(Th)(getExtendedStyles())
+export default ExtendedTh;

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 const Table = styled.div `
     overflow: hidden;
@@ -7,6 +8,9 @@ const Table = styled.div `
     width: 100%;
     background-color: transparent;
     border-collapse: collapse;
+    clear: both;
+    margin: 10px 0;
 `
 
-export default Table;
+const ExtendedTable = styled(Table)(getExtendedStyles());
+export default ExtendedTable;

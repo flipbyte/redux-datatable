@@ -8,21 +8,7 @@ export const defaultLimiterCongig = {
 
 export const isArray = (value) => Array.isArray(value);
 
-// export const isSelectionEmpty = (obj)  => {
-//     for(var key in obj) {
-//         if(obj.hasOwnProperty(key))
-//             return false;
-//     }
-//
-//     return true;
-// }
-
 export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
-
-// export const pushRoute = ( action, params, context ) => context.router.history.push({
-//     pathname: action.route,
-//     search: '?' + params.toString()
-// });
 
 export const getSelectedKeys = ( data, dataKey ) => {
     if( !data[dataKey] ) {
@@ -79,9 +65,6 @@ export const paramsResolver = ( params, data ) => {
 
     return paramsObject;
 }
-
-// export const getValueByPath = ( obj, path ) =>
-//     path.reduce((acc, currVal) => (acc && acc[currVal]) ? acc[currVal] : null, obj);
 
 export const createActionCreator = ( type ) => ( data ) => {
     const { name, reducerName, routes, entity, payload } = data;

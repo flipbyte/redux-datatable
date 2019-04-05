@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 const Td = styled.div.attrs(({ width: maxWidth }) => ({
     style: { maxWidth }
@@ -9,14 +10,15 @@ const Td = styled.div.attrs(({ width: maxWidth }) => ({
     flex: 1;
     display: flex;
     padding: 10px 5px;
-    text-align: ${props => props.textAlign || 'center'};
+    text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
     width: 100%;
     position: relative;
     overflow: hidden;
-    font-size: ${props => props.fontSize || '14px'};
+    font-size: 14px;
 `
 
-export default Td;
+const ExtendedTd = styled(Td)(getExtendedStyles())
+export default ExtendedTd;

@@ -1,25 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
-const Outer = styled.div `
+const Thead = React.forwardRef(({ className, children, width = '100%' }, ref) => (
+    <div className={ className } ref={ ref }>
+        <div style={{ width }}>
+            { children }
+        </div>
+    </div>
+));
+
+const StyledThead = styled(Thead) `
     max-width: 100%;
     margin-right: auto;
     margin-left: auto;
     overflow: hidden;
+    border-bottom: 1px solid #ddd;
 `
 
-export const Inner = styled.div.attrs(({ width = '100%' }) => ({
-    style: { width }
-})) `
-    border-bottom: ${props => props.borderBottom || '1px solid #ddd'};
-`
-
-const Thead = React.forwardRef(({ children, width }, ref) => (
-    <Outer ref={ ref }>
-        <Inner width={ width }>
-            { children }
-        </Inner>
-    </Outer>
-));
-
-export default Thead;
+const ExtendedStyledThead = styled(StyledThead)(getExtendedStyles());
+export default ExtendedStyledThead;
