@@ -3,6 +3,7 @@
 [Developed by Flipbyte](https://www.flipbyte.com/)
 
 [![npm package][npm-badge]][npm]
+[![Codacy Badge][codacy-badge]][codacy]
 
 Datatable built using React and Redux to fetch JSON data asynchronously using REST API.
 
@@ -283,3 +284,6 @@ The MIT License (MIT)
 
 [npm-badge]: https://img.shields.io/npm/v/@flipbyte/redux-datatable.svg
 [npm]: https://www.npmjs.com/package/@flipbyte/redux-datatable
+
+[codacy-badge]: https://api.codacy.com/project/badge/Grade/67274650b4874f5db55ede76156ab4d2
+[codacy]: https://www.codacy.com/app/flipbyte/redux-datatable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=flipbyte/redux-datatable&amp;utm_campaign=Badge_Grade
