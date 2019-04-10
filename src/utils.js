@@ -11,17 +11,13 @@ export const isArray = (value) => Array.isArray(value);
 export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
 
 export const getSelectedKeys = ( data, dataKey ) => {
-    if ( !data[dataKey] ) {
+    if (!data[dataKey]) {
         return false;
     }
 
+    const dataForFilter = data[dataKey];
     let selectedItems = {};
-    selectedItems[dataKey] = Object.keys(data[dataKey])
-        .filter(key => {
-            if (data[dataKey][key] == true) {
-                return key;
-            }
-        });
+    selectedItems[dataKey] = Object.keys(dataForFilter).filter(key => dataForFilter[key] === true);
 
     const paramsObject = Object.assign({}, selectedItems);
     paramsObject.get = () => selectedItems;
@@ -30,7 +26,7 @@ export const getSelectedKeys = ( data, dataKey ) => {
 }
 
 export const getConfigParam = ( param ) => {
-    if ( !param.startsWith('@') ) {
+    if (!param.startsWith('@')) {
         return false;
     }
 
@@ -39,7 +35,7 @@ export const getConfigParam = ( param ) => {
 
 export const getParam = ( param, data ) => {
     var dataKey = getConfigParam(param);
-    if ( !dataKey ) {
+    if (!dataKey) {
         return false;
     }
 
@@ -54,7 +50,7 @@ export const paramsResolver = ( params, data ) => {
     let processedParams = {};
     for (var key in params) {
         let resolvedParam = getParam(params[key], data);
-        if ( false === resolvedParam ) {
+        if (false === resolvedParam) {
             continue;
         }
 

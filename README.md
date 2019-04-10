@@ -31,7 +31,7 @@ npm i @flipbyte/redux-datatable
 
 ## Usage
 
-### Add the table reducer and epics to your store.
+### Add the table reducer and epics to your store
 
 ```javascript
 // Get the table reducer and epics as follows

@@ -30,9 +30,7 @@ const updateState = ( state, tableName ) => ( newState ) => {
     };
 };
 
-const getTableState = ( name ) => ( state ) => (
-    state[name] ? state[name] : initialTableState
-);
+const getTableState = ( name ) => ( state ) => state[name] || initialTableState;
 
 export default function reducer(state = {}, action) {
     if (!action.meta) {
@@ -157,4 +155,4 @@ export default function reducer(state = {}, action) {
         default:
             return state;
     }
-};
+}
