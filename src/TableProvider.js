@@ -21,19 +21,19 @@ export const withTableConfig = ( paths ) => ( WrappedComponent ) => {
             { config => {
                 var tableConfig = {};
                 if(_.isObject(paths)) {
-                    _.forEach(paths, function( value, key ) {
-                        tableConfig[key] = _.get(config.config, value, undefined)
+                    _.forEach(paths, ( value, key ) => {
+                        tableConfig[key] = _.get(config.config, value, undefined);
                     });
                 } else {
                     tableConfig = paths ? _.get(config.config, paths, false) : config;
                 }
 
-                return <WrappedComponent config={ tableConfig } { ...props } />
+                return <WrappedComponent config={ tableConfig } { ...props } />;
             } }
         </TableConsumer>
     );
 
     return ComponentWithConfig;
-}
+};
 
 export default TableProvider;

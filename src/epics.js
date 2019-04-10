@@ -67,7 +67,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
             catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
-                filter(cancelAction => cancelAction.name == name)
+                filter(cancelAction => cancelAction.name === name)
             ))
         );
     })

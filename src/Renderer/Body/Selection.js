@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { SET_SELECTION } from '../../actions';

@@ -44,7 +44,7 @@ const useTableScroll = ( tableBody, tableHeader ) => {
         }
         return () => {
             tableBody.current.removeEventListener('scroll', handleScroll, true);
-        }
+        };
     }, [ tableBody.current ])
 
     return [ top, pointerEvents ];
@@ -75,13 +75,13 @@ const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
         const percentage = computedTableWidth / calculateWidth(visibleColumns);
         setWidth(calculateWidth(visibleColumns, percentage));
         setWidthAdjustment(percentage);
-    }
+    };
 
     useEffect(() => {
         window.addEventListener('resize', updateTableDimensions);
         return () => {
             window.removeEventListener('resize', updateTableDimensions);
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -93,12 +93,12 @@ const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
 
 const changeSortOrder = ( query, colName, sorter ) => {
     let dir = null;
-    if( query.sort != colName ) {
+    if( query.sort !== colName ) {
         dir = 'asc';
     } else {
-        if(query.dir == 'asc') {
+        if(query.dir === 'asc') {
             dir = 'desc';
-        } else if(query.dir == 'desc') {
+        } else if(query.dir === 'desc') {
             colName = '';
             dir = '';
         } else {
@@ -210,7 +210,7 @@ const renderTable = ({
                                     { sortable && sort === name && <SortCaret dir={ dir } /> }
                                 </label>
                             </Th>
-                        )
+                        );
                     }}
                 </Tr>
                 <Tr columns={ columns } styles={ getStyles(styles.tr, 'filter') }>
@@ -233,7 +233,7 @@ const renderTable = ({
                                     />
                                 </ExtendedDiv> }
                             </Td>
-                        )
+                        );
                     }}
                 </Tr>
             </Thead>
@@ -288,7 +288,7 @@ const renderTable = ({
             </Tbody>
         </Table>
     </Container>
-)
+);
 
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;

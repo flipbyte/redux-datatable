@@ -52,7 +52,7 @@ export default function reducer(state = {}, action) {
             return stateUpdater({
                 isFetching: false,
                 query: {
-                    count: parseInt(payload.response.total)
+                    count: parseInt(payload.response.total, 10)
                 },
                 items: payload.data,
                 selection: {}
@@ -66,7 +66,7 @@ export default function reducer(state = {}, action) {
                 isFetching: true,
                 query: {
                     page: payload.page,
-                    offset: offset
+                    offset
                 },
             });
 
@@ -83,7 +83,7 @@ export default function reducer(state = {}, action) {
             return stateUpdater({
                 isFetching: true,
                 query: {
-                    limit: parseInt(payload.limit),
+                    limit: parseInt(payload.limit, 10),
                     offset: (tableState(state).query.page - 1) * tableState(state).query.limit
                 },
             });
@@ -132,7 +132,7 @@ export default function reducer(state = {}, action) {
                         ...selection
                     }
                 }
-            }
+            };
 
             // return stateUpdater({
             //     selection: {

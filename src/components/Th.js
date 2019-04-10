@@ -8,7 +8,6 @@ const Th = styled(Td) `
     font-weight: bold;
     background: #f9fafb;
     border-bottom: 1px solid rgba(34, 36, 38, .1);
-    cursor: ${props => props.sortable ? 'pointer': 'default'};
 
     ${props => props.sortable && css `
         cursor: pointer;

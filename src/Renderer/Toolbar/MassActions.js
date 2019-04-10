@@ -69,7 +69,7 @@ class MassActions extends Component {
                     )}
                 </Dropdown.Menu>
             </Dropdown.Container>
-        )
+        );
     }
 }
 

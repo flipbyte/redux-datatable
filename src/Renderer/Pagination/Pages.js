@@ -10,7 +10,7 @@ export const List = styled.div `
     border: ${props => props.border || '1px solid rgba(34,36,38,.15)'};
     border-radius: ${props => props.borderRadius || 'none'};
     height: ${props => props.height || '40px'};
-`
+`;
 
 const NUM_LINKS = 5;
 
@@ -23,12 +23,12 @@ const getPages = ( currentPage, total ) => {
     var left = (currentPage - padding < padding) ? 1 : currentPage - padding;
     var right = (left + NUM_LINKS - 1 > total) ? total : left + NUM_LINKS - 1;
 
-    left = (right == total) ?
+    left = (right === total) ?
         (right - NUM_LINKS < 1) ? 1 : right - NUM_LINKS + 1
         : left;
 
     return fillRange(left, right);
-}
+};
 
 const Pages = ({ page, total, action, style }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });

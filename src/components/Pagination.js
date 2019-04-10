@@ -32,17 +32,17 @@ export const calculatePaginationProps = (
     defaultLimit = 10
 ) => {
     page = page > 1 ? page : 1;
-    limit = limit != 0 ? limit : defaultLimit;
+    limit = limit !== 0 ? limit : defaultLimit;
 
     let start = (page - 1) * limit;
     let end = start + limit - 1;
 
     return {
-        page: page,
-        start: start,
+        page,
+        start,
         end: (count > end && end >= 0) ? end : count,
-        count: count,
-        limit: limit,
+        count,
+        limit,
         total: Math.ceil(count / limit)
     };
 };
@@ -73,7 +73,7 @@ const Pagination = ({
                     >
                         { children(items[key], paginationProps, index) }
                     </ExtendedItem>
-                )
+                );
             })}
         </div>
     );

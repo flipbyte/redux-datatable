@@ -9,7 +9,7 @@ var valTo = null;
 const applyFilter = ( key, filterer, event ) => {
     let filter = {};
 
-    if (key == 0) {
+    if (key === 0) {
         valFrom = event.target.value;
     } else {
         valTo = event.target.value;

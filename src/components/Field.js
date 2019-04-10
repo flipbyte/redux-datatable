@@ -27,7 +27,7 @@ const formControl = ({
         box-shadow: ${focusShadow || 'none'};
         border-color: ${focusBorderColor || '#80bdff'}
     };
-`
+`;
 
 const Input = styled.input `
     ${props => formControl(props)};
@@ -36,7 +36,7 @@ const Input = styled.input `
 const Select = styled.select `
     ${props => formControl(props)};
     width: ${props => props.width || '100%'};
-`
+`;
 
 export default {
     Select,

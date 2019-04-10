@@ -32,13 +32,12 @@ const Tbody = React.forwardRef(({
             <div style={{ width, height: innerHeight, position: 'relative' }}>
                 { slicedData.map((item, index) => {
                     let currentIndex = startIndex + index;
-                    return children({ item, top: currentIndex * rowHeight, index: currentIndex })
+                    return children({ item, top: currentIndex * rowHeight, index: currentIndex });
                 })}
             </div>
         </div>
     );
 });
-
 
 const StyledTbody = styled(Tbody).attrs(({ height }) => ({
     style: { height }

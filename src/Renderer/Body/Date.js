@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Time from 'react-pure-time';
 import React, { Component } from 'react';
-import { shouldUpdate } from '../../utils';
 
 const Date = ({
     data,

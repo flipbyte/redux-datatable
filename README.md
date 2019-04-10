@@ -203,7 +203,7 @@ const YourComponent = () =>
 | items | object | false | {} | Items available for display in the pagination bar. Check below for items available |
 | visible | boolean/object | false | true | Whether the pagination is visible or not |
 
-##### Pagination items object:
+##### Pagination items object
 
 | Key | Type | Required | Default | Description |
 | ------------ | ------------ | ------------ | ------------ | ------------ |

@@ -22,7 +22,7 @@ const toolbarItem = ( children, item, index, first, last, styles ) => {
             { visible !== false && children(item, index)  }
         </ExtendedItem>
     );
-}
+};
 
 const Toolbar = ({
     className,

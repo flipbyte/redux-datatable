@@ -23,7 +23,7 @@ export const getSelectedKeys = ( data, dataKey ) => {
     paramsObject.get = () => selectedItems;
     paramsObject.toString = () => qs.stringify(selectedItems);
     return paramsObject;
-}
+};
 
 export const getConfigParam = ( param ) => {
     if (!param.startsWith('@')) {
@@ -80,14 +80,10 @@ export const prepareActionPayload = ({ name, reducerName, routes, entity }) => (
     name, reducerName, routes, entity, payload
 });
 
-export const shouldUpdate = ( currentData, nextData, index ) => (
-    _.get(currentData, index, '') != _.get(nextData, index, '')
-);
-
 export const getStyles = ( styles, name ) => (
-    name && styles ? styles[name] : undefined
+    name && styles ? styles[name] : null
 );
 
 export const getExtendedStyles = ( name ) => ({ styles }) => (
-    name ? styles ? styles[name] : undefined : styles
+    name ? styles ? styles[name] : null : styles
 );

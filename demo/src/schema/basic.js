@@ -137,7 +137,7 @@ export default {
                 label: 'Delete',
                 indexField: '@id',
                 thunk: ( payload ) => ( dispatch, getState ) => {
-                    confirm("Are your sure you want to delete the selected items?")
+                    confirm('Are your sure you want to delete the selected items?')
                         ? console.log('delete items', getState())
                         : console.log(false);
 
@@ -211,7 +211,7 @@ export default {
                 id: '@id'
             },
             thunk: ( payload ) => ( dispatch, getState ) => {
-                confirm("Are your sure you want to delete this page?")
+                confirm('Are your sure you want to delete this page?')
                     ? console.log('delete', getState())
                     : console.log(false);
 
