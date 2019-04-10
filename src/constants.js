@@ -4,4 +4,4 @@ export const OPERATOR = {
     NOT_IN: 'not_in',
     BETWEEN: 'between',
     CONTAINS: 'contains'
-}
+};

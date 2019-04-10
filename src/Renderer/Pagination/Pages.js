@@ -34,7 +34,7 @@ const Pages = ({ page, total, action, style }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <List>
-            <Button onClick={ setPage.bind(this, 1) } disabled={ page == 1 }>First</Button>
+            <Button onClick={ setPage.bind(this, 1) } disabled={ page === 1 }>First</Button>
             <Button onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
             { getPages(page, total).map( (link, index) =>
                 <Button
@@ -44,7 +44,7 @@ const Pages = ({ page, total, action, style }) => {
                 >{ link }</Button>
             ) }
             <Button onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
-            <Button onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Button>
+            <Button onClick={ setPage.bind(this, total) } disabled={ page === total }>Last</Button>
         </List>
     );
 }

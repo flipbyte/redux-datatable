@@ -9,6 +9,6 @@ const Date = ({
     colConfig: { name, textAlign, format }
 }) => (
     <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } />
-)
+);
 
 export default Date;

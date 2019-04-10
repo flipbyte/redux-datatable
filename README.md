@@ -7,19 +7,19 @@
 
 Datatable built using React and Redux to fetch JSON data asynchronously using REST API.
 
-- Filterable columns by date ranges, numeric ranges and text.
-- Pagination
-- Sortable columns
-- Configurable column widths
-- Built in windowing to handle large dataset with thousands of rows
-- Customizable limiter options
-- Customizable toolbar with the ability to add custom renderers
-- Completely configurable headers, filters, toolbar and pagination with options to enable/disable them individual
-- Custom row level actions
-- Thunks to handle custom mass or row actions externally.
-- Compatible with normalizr to handle externally managed states
-- Easily stylable with styled-components.
-- Show or hide columns dynamically using the Columns item in the toolbar.
+-   Filterable columns by date ranges, numeric ranges and text.
+-   Pagination
+-   Sortable columns
+-   Configurable column widths
+-   Built in windowing to handle large dataset with thousands of rows
+-   Customizable limiter options
+-   Customizable toolbar with the ability to add custom renderers
+-   Completely configurable headers, filters, toolbar and pagination with options to enable/disable them individual
+-   Custom row level actions
+-   Thunks to handle custom mass or row actions externally.
+-   Compatible with normalizr to handle externally managed states
+-   Easily stylable with styled-components.
+-   Show or hide columns dynamically using the Columns item in the toolbar.
 
 ## Installation
 
@@ -31,7 +31,7 @@ npm i @flipbyte/redux-datatable
 
 ## Usage
 
-#### Add the table reducer and epics to your store.
+### Add the table reducer and epics to your store.
 
 ```javascript
 // Get the table reducer and epics as follows
@@ -40,7 +40,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 // Add the above reducer and epics to your store.
 ```
 
-#### Preparing your table config object
+### Preparing your table config object
 
 ```javascript
 {
@@ -170,7 +170,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 }
 ```
 
-#### Render table component
+### Render table component
 ```javascript
 import ReduxDatatable from '@flipbyte/redux-datatable';
 

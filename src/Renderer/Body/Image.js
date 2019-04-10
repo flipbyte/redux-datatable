@@ -8,6 +8,6 @@ const Image = ({
     colConfig: { name, imgWidth, imgHeight }
 }) => (
     <img src={ _.get(data, name, '') } width={ imgWidth } height={ imgHeight } />
-)
+);
 
 export default Image;

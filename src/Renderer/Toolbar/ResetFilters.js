@@ -8,7 +8,7 @@ const ResetFilters = ({ itemConfig, action }) => {
         <Button onClick={ clearFilter.bind(this) }>
             { itemConfig.label || 'Reset Filters' }
         </Button>
-    )
+    );
 };
 
 export default ResetFilters;

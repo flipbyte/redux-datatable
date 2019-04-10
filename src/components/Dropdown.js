@@ -32,10 +32,7 @@ export const Menu = styled.div `
         background-color: ${backgroundColor};
         border: ${border};
         border-radius: ${borderRadius};
-        ${hidden
-            ? `display: none`
-            : `display: block`
-        }
+        ${hidden ? 'display: none' : 'display: block' }
     `}
 `;
 

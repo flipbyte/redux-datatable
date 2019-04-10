@@ -50,15 +50,15 @@ const useTableScroll = ( tableBody, tableHeader ) => {
 }
 
 const columnsReducer = (state, { type, index }) => {
-    var visibleColumns = [ ...state ];
+    var visibleColumnIds = [ ...state ];
     if(type === 'add') {
-        visibleColumns.push(index);
-        visibleColumns.sort();
+        visibleColumnIds.push(index);
+        visibleColumnIds.sort();
     } else {
-        visibleColumns.splice(visibleColumns.indexOf(index), 1).sort();
+        visibleColumnIds.splice(visibleColumnIds.indexOf(index), 1).sort();
     }
 
-    return visibleColumns;
+    return visibleColumnIds;
 }
 
 const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
@@ -276,12 +276,14 @@ const renderTable = ({
 
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData } = props;
-    const [ visibleColumns, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
+    const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
     const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns } = config;
+
+    const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => [ ...result, columns[currentIndex]], []);
     const tableConfig = {
         ...config,
         updateTableState: dispatch,
-        visibleColumns: visibleColumns.reduce((result, currentIndex) => [ ...result, columns[currentIndex]], [])
+        visibleColumns
     };
 
     useEffect(() => {
@@ -295,13 +297,13 @@ const ReduxDatatable = ( props ) => {
     // Set min-width of the table
     const [ minWidth ] = useState(calculateWidth(columns));
     // Handle table columns and width
-    const [ width, widthAdjustment ] = useTableWidth(tableBody, minWidth, tableConfig.visibleColumns);
+    const [ width, widthAdjustment ] = useTableWidth(tableBody, minWidth, visibleColumns);
 
     if(!tableData) {
         return (
             <div className="status_message offline">
                 <p>
-                    The table failed to initialise. Please check you are connected to the internet and try again.
+                    The table failed to initialise. Please make sure you are connected to the internet and try again.
                 </p>
             </div>
         );
@@ -311,12 +313,12 @@ const ReduxDatatable = ( props ) => {
     return (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container>
-                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumns, styles.toolbar) }
+                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
                 { renderPagination('top', query, pagination, action, thunk, styles.pagination) }
                 { renderTable({
                     action,
                     bodyExtraData: getExtraBodyRowProps(tableData, tableConfig.visibleColumns),
-                    columns: tableConfig.visibleColumns,
+                    columns: visibleColumns,
                     height: rowHeight * ( tableData.items || [] ).length,
                     items: tableData.items || [],
                     pointerEvents,
