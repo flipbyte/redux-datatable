@@ -109,7 +109,7 @@ const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 };
 
-const prepareItem = ( item, schema, state ) => {
+const prepareData = ( item, schema, state ) => {
     if (_.isEmpty(schema) || _.isObject(item)) {
         return item;
     }
@@ -205,8 +205,10 @@ const renderTable = ({
                                 styles={ styles.th }
                                 onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : undefined }
                             >
-                                { label }
-                                { sortable && sort === name && <SortCaret dir={ dir } /> }
+                                <label>
+                                    { label }
+                                    { sortable && sort === name && <SortCaret dir={ dir } /> }
+                                </label>
                             </Th>
                         )
                     }}
@@ -247,7 +249,7 @@ const renderTable = ({
                 styles={ getStyles(styles, 'tbody') }
             >
                 {({ item, top, index: rowIndex }) => {
-                    var item = prepareItem(item, schema, state);
+                    var data = prepareData(item, schema, state);
                     return (
                         <Tr
                             key={ rowIndex }
@@ -270,7 +272,7 @@ const renderTable = ({
                                             <Renderer
                                                 ofType="body"
                                                 forItem={ type }
-                                                data={ item }
+                                                data={ data }
                                                 colConfig={ column }
                                                 extraData={ bodyExtraData[name] }
                                                 action={ action }

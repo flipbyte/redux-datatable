@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const SortCaret = styled.div `
+const SortCaret = styled.span `
     display: inline-block;
     width: 0;
     height: 0;
