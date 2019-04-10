@@ -9,6 +9,6 @@ const Th = styled(Td) `
     background: #f9fafb;
     border-bottom: 1px solid rgba(34, 36, 38, .1);
     cursor: ${props => props.sortable ? 'pointer': 'default'};
-`
-const ExtendedTh = styled(Th)(getExtendedStyles())
+`;
+const ExtendedTh = styled(Th)(getExtendedStyles());
 export default ExtendedTh;

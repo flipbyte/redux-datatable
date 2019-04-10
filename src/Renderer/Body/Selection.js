@@ -11,7 +11,7 @@ const handleSelection = ({ data, indexField, action }, event ) => {
     let paramKey = getConfigParam(indexField);
     let key = getParam(indexField, data);
     action(SET_SELECTION)({ paramKey, key, value: event.target.checked });
-}
+};
 
 const Selection = ({
     action,
@@ -31,6 +31,6 @@ const Selection = ({
                 onChange={ handleSelection.bind(this, { data, indexField, action }) } />
         </div>
     );
-}
+};
 
 export default Selection;

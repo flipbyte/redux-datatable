@@ -17,7 +17,7 @@ let initialTableState = {
         search: {}
     },
     selection: {}
-}
+};
 
 const updateState = ( state, tableName ) => ( newState ) => {
     var updatedState = objectAssignDeep({}, initialTableState, state[tableName], newState);
@@ -27,15 +27,15 @@ const updateState = ( state, tableName ) => ( newState ) => {
             ...state[tableName],
             ...updatedState
         }
-    }
-}
+    };
+};
 
-const getTableState = ( name ) => ( state ) => {
-    return state[name] ? state[name] : initialTableState;
-}
+const getTableState = ( name ) => ( state ) => (
+    state[name] ? state[name] : initialTableState
+);
 
 export default function reducer(state = {}, action) {
-    if(!action.meta) {
+    if (!action.meta) {
         return state;
     }
 
@@ -120,7 +120,7 @@ export default function reducer(state = {}, action) {
             } else {
                 selection = _.get(tableState(state), 'selection', {});
                 if(_.isEmpty(selection[payload.paramKey])) {
-                    selection[payload.paramKey] = {}
+                    selection[payload.paramKey] = {};
                 }
                 selection[payload.paramKey][payload.key] = payload.value;
             }
@@ -157,4 +157,4 @@ export default function reducer(state = {}, action) {
         default:
             return state;
     }
-}
+};

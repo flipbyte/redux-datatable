@@ -3,19 +3,20 @@ import _ from 'lodash';
 
 const ConfigContext = React.createContext({});
 
-const TableProvider = ({ config, children }) => {
-    return <ConfigContext.Provider value={ config }>{ children }</ConfigContext.Provider>
-}
+const TableProvider = ({ config, children }) => (
+    <ConfigContext.Provider value={ config }>{ children }</ConfigContext.Provider>
+);
 
-export const TableConsumer = ({ children }) =>
+export const TableConsumer = ({ children }) => (
     <ConfigContext.Consumer>
         { config => (
             children({ config })
         )}
     </ConfigContext.Consumer>
+);
 
 export const withTableConfig = ( paths ) => ( WrappedComponent ) => {
-    const ComponentWithConfig = ( props ) =>
+    const ComponentWithConfig = ( props ) => (
         <TableConsumer>
             { config => {
                 var tableConfig = {};
@@ -30,9 +31,9 @@ export const withTableConfig = ( paths ) => ( WrappedComponent ) => {
                 return <WrappedComponent config={ tableConfig } { ...props } />
             } }
         </TableConsumer>
+    );
 
     return ComponentWithConfig;
 }
-
 
 export default TableProvider;

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import { denormalize } from 'normalizr';
 
 import TableProvider from './TableProvider';
@@ -36,7 +36,7 @@ const useTableScroll = ( tableBody, tableHeader ) => {
         tableHeader.current.scrollLeft = tableBody.current.scrollLeft;
         setPointerEvents('none');
         setTop(tableBody.current.scrollTop);
-    }
+    };
 
     useEffect(() => {
         if(typeof tableBody.current.addEventListener === 'function') {
@@ -73,7 +73,7 @@ const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
             : tableBodyEl.clientWidth;
 
         const percentage = computedTableWidth / calculateWidth(visibleColumns);
-        setWidth(calculateWidth(visibleColumns, percentage))
+        setWidth(calculateWidth(visibleColumns, percentage));
         setWidthAdjustment(percentage);
     }
 
@@ -368,9 +368,9 @@ const mapDispatchToProps = ( dispatch, ownProps ) => {
     let preparePayload = prepareActionPayload(ownProps);
     return {
         loadData: ( ) => {
-            dispatch(setPage(preparePayload({ page: 1 })))
-            dispatch(setLimit(preparePayload({ limit: ownProps.config.pagination.items.limiter.default || 10 })))
-            dispatch(setSort(preparePayload({ dir: 'desc' })))
+            dispatch(setPage(preparePayload({ page: 1 })));
+            dispatch(setLimit(preparePayload({ limit: ownProps.config.pagination.items.limiter.default || 10 })));
+            dispatch(setSort(preparePayload({ dir: 'desc' })));
         },
         action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
         thunk: ( thunk, payload ) => dispatch(thunk(preparePayload(payload)))

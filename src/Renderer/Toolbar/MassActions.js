@@ -23,7 +23,7 @@ class MassActions extends Component {
 
     toggle( e ) {
         const { open } = this.state;
-        this.setState({ open: !open })
+        this.setState({ open: !open });
     }
 
     manageEvents(remove = false) {
@@ -73,4 +73,4 @@ class MassActions extends Component {
     }
 }
 
-export default MassActions
+export default MassActions;

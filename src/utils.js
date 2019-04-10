@@ -11,14 +11,16 @@ export const isArray = (value) => Array.isArray(value);
 export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
 
 export const getSelectedKeys = ( data, dataKey ) => {
-    if( !data[dataKey] ) {
+    if ( !data[dataKey] ) {
         return false;
     }
 
     let selectedItems = {};
     selectedItems[dataKey] = Object.keys(data[dataKey])
         .filter(key => {
-            if(data[dataKey][key] == true) return key
+            if (data[dataKey][key] == true) {
+                return key;
+            }
         });
 
     const paramsObject = Object.assign({}, selectedItems);
@@ -28,7 +30,7 @@ export const getSelectedKeys = ( data, dataKey ) => {
 }
 
 export const getConfigParam = ( param ) => {
-    if( !param.startsWith('@') ) {
+    if ( !param.startsWith('@') ) {
         return false;
     }
 
@@ -37,22 +39,22 @@ export const getConfigParam = ( param ) => {
 
 export const getParam = ( param, data ) => {
     var dataKey = getConfigParam(param);
-    if( !dataKey ) {
+    if ( !dataKey ) {
         return false;
     }
 
-    if(!data[dataKey]) {
+    if (!data[dataKey]) {
         return false;
     }
 
     return data[dataKey];
-}
+};
 
 export const paramsResolver = ( params, data ) => {
     let processedParams = {};
-    for(var key in params) {
+    for (var key in params) {
         let resolvedParam = getParam(params[key], data);
-        if( false === resolvedParam ) {
+        if ( false === resolvedParam ) {
             continue;
         }
 
@@ -61,10 +63,10 @@ export const paramsResolver = ( params, data ) => {
 
     const paramsObject = Object.assign({}, processedParams);
     paramsObject.get = () => processedParams;
-    paramsObject.toString = () => qs.stringify(processedParams);;
+    paramsObject.toString = () => qs.stringify(processedParams);
 
     return paramsObject;
-}
+};
 
 export const createActionCreator = ( type ) => ( data ) => {
     const { name, reducerName, routes, entity, payload } = data;
@@ -72,7 +74,7 @@ export const createActionCreator = ( type ) => ( data ) => {
     action.toString = () => type;
 
     return action;
-}
+};
 
 export const createReducer = (reducer, predicate) => (state, action) => (
     predicate(action) || state === undefined ? reducer(state, action) : state
@@ -80,16 +82,16 @@ export const createReducer = (reducer, predicate) => (state, action) => (
 
 export const prepareActionPayload = ({ name, reducerName, routes, entity }) => ( payload = {} ) => ({
     name, reducerName, routes, entity, payload
-})
+});
 
 export const shouldUpdate = ( currentData, nextData, index ) => (
     _.get(currentData, index, '') != _.get(nextData, index, '')
-)
+);
 
 export const getStyles = ( styles, name ) => (
     name && styles ? styles[name] : undefined
-)
+);
 
 export const getExtendedStyles = ( name ) => ({ styles }) => (
     name ? styles ? styles[name] : undefined : styles
-)
+);

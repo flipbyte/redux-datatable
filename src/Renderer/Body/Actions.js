@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { deleteData } from '../../actions';
 import { withTableConfig } from '../../TableProvider';
-import { paramsResolver, prepareActionPayload } from '../../utils'
+import { paramsResolver, prepareActionPayload } from '../../utils';
 import Button from '../../components/Button';
 
 const Actions = ({

@@ -40,7 +40,7 @@ class Columns extends Component {
         //     this.manageEvents(true);
         // }
         //
-        this.setState({ open: !open })
+        this.setState({ open: !open });
     }
 
     manageEvents(remove = false) {

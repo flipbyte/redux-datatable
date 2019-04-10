@@ -49,6 +49,6 @@ const StyledTbody = styled(Tbody).attrs(({ height }) => ({
     overflow-y: scroll;
     overflow-x: scroll;
     border-bottom: 1px solid #ddd;
-`
-const ExtendedStyledTbody = styled(StyledTbody)(getExtendedStyles())
+`;
+const ExtendedStyledTbody = styled(StyledTbody)(getExtendedStyles());
 export default ExtendedStyledTbody;

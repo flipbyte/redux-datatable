@@ -13,7 +13,7 @@ const Row = styled.div.attrs(({ top }) => ({
 
     ${props => props.even && css `
         background: ${props.evenBackground || 'none'};
-    `}
-`
+    `};
+`;
 
 export default Row;

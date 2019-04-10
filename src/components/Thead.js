@@ -16,7 +16,7 @@ const StyledThead = styled(Thead) `
     margin-left: auto;
     overflow: hidden;
     border-bottom: 1px solid #ddd;
-`
+`;
 
 const ExtendedStyledThead = styled(StyledThead)(getExtendedStyles());
 export default ExtendedStyledThead;

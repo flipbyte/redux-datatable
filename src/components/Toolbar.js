@@ -5,15 +5,15 @@ import { getExtendedStyles, getStyles } from '../utils';
 const Row = styled.div `
     display: inline-block;
     width: 100%;
-`
-const ExtendedRow = styled(Row)(getExtendedStyles())
+`;
+const ExtendedRow = styled(Row)(getExtendedStyles());
 
 const Item = styled.div `
     display: block;
     width: auto;
     float: left;
-`
-const ExtendedItem = styled(Item)(getExtendedStyles())
+`;
+const ExtendedItem = styled(Item)(getExtendedStyles());
 
 const toolbarItem = ( children, item, index, first, last, styles ) => {
     const { visible } = item;

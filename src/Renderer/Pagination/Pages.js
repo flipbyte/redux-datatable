@@ -9,7 +9,7 @@ export const List = styled.div `
     background: ${props => props.background || '#fff'};
     border: ${props => props.border || '1px solid rgba(34,36,38,.15)'};
     border-radius: ${props => props.borderRadius || 'none'};
-    height: ${props => props.height || '40px'}
+    height: ${props => props.height || '40px'};
 `
 
 const NUM_LINKS = 5;
@@ -47,6 +47,6 @@ const Pages = ({ page, total, action, style }) => {
             <Button onClick={ setPage.bind(this, total) } disabled={ page === total }>Last</Button>
         </List>
     );
-}
+};
 
-export default Pages
+export default Pages;

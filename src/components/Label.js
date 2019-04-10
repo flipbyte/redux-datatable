@@ -7,7 +7,7 @@ const Label = styled.label `
     ${({ flex, noWrap }) => css `
         ${flex && `display: flex`};
         ${noWrap && `white-space: nowrap`};
-    `}
+    `};
 `
 
 export default Label;

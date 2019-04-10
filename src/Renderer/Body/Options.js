@@ -18,6 +18,6 @@ const Options = ({
             { options[value].value }
         </span>
     );
-}
+};
 
 export default Options;

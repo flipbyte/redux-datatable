@@ -33,7 +33,7 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
             requestData({
                 name, routes, reducerName, entity, payload: { query: _.get(state$.value, [reducerName, name]).query }
             })
-        )
+        );
     })
 );
 
@@ -69,7 +69,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
                 filter(cancelAction => cancelAction.name == name)
             ))
-        )
+        );
     })
 );
 
@@ -97,6 +97,6 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                 );
             }),
             catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })))
-        )
+        );
     })
-)
+);

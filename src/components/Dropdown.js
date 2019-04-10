@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 const Container = styled.div `
     position: relative;
-`
+`;
 
 export const Menu = styled.div `
     position: absolute;
@@ -32,8 +32,8 @@ export const Menu = styled.div `
         background-color: ${backgroundColor};
         border: ${border};
         border-radius: ${borderRadius};
-        ${hidden ? 'display: none' : 'display: block' }
-    `}
+        ${hidden ? 'display: none' : 'display: block' };
+    `};
 `;
 
 export const Item = styled.div `
@@ -68,13 +68,13 @@ export const Item = styled.div `
             text-decoration: none;
             color: ${active.color || '#fff'};
             background-color: ${active.backgroundColor || '#007bff'};
-        `}
+        `};
 
         ${isDisabled && disabled && `
             color: ${disabled.color || '#6c757d'};
             background-color: transparent;
-        `}
-    `}
+        `};
+    `};
 `;
 
 
