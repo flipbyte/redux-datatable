@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from "react-redux";
+import { denormalize } from 'normalizr';
 
 import TableProvider from './TableProvider';
 import Renderer from './Renderer';
@@ -47,7 +48,7 @@ const useTableScroll = ( tableBody, tableHeader ) => {
     }, [ tableBody.current ])
 
     return [ top, pointerEvents ];
-}
+};
 
 const columnsReducer = (state, { type, index }) => {
     var visibleColumnIds = [ ...state ];
@@ -59,7 +60,7 @@ const columnsReducer = (state, { type, index }) => {
     }
 
     return visibleColumnIds;
-}
+};
 
 const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
     const [ width, setWidth ] = useState(minWidth);
@@ -88,7 +89,7 @@ const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
     }, [ visibleColumns ]);
 
     return [ width, widthAdjustment ];
-}
+};
 
 const changeSortOrder = ( query, colName, sorter ) => {
     let dir = null;
@@ -106,7 +107,15 @@ const changeSortOrder = ( query, colName, sorter ) => {
     }
 
     sorter({ sort: colName, dir });
-}
+};
+
+const prepareItem = ( item, schema, state ) => {
+    if (_.isEmpty(schema) || _.isObject(item)) {
+        return item;
+    }
+
+    return denormalize(item, schema, state);
+};
 
 const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visibleColumns, styles = {} ) => (
     <Row>
@@ -157,10 +166,10 @@ const getExtraBodyRowProps = (data, columns) => (
                     return edResult;
                 }, {})
                 : { [extraData]: _.get(data, extraData) }
-            : {}
+            : {};
         return result;
     }, {})
-)
+);
 
 const renderTable = ({
     action,
@@ -170,6 +179,9 @@ const renderTable = ({
     items,
     query = {},
     rowHeight,
+    schema,
+    state = {},
+    styles = {},
     tableHeader,
     tableBody,
     thunk,
@@ -177,7 +189,6 @@ const renderTable = ({
     visibleHeight,
     width,
     widthAdjustment = 1,
-    styles = {}
 }) => (
     <Container styles={ getStyles(styles, 'tableContainer') }>
         <Table styles={ getStyles(styles, 'table') }>
@@ -235,49 +246,52 @@ const renderTable = ({
                 rowHeight={ rowHeight }
                 styles={ getStyles(styles, 'tbody') }
             >
-                {({ item, top, index: rowIndex }) => (
-                    <Tr
-                        key={ rowIndex }
-                        position="absolute"
-                        top={ `${top}px` }
-                        columns={ columns }
-                        height={ `${rowHeight}px` }
-                        even={ rowIndex % 2 === 0 }
-                        styles={ getStyles(styles.tr, 'body') }
-                    >
-                        {(column, index) => {
-                            const { width, textAlign, name, type } = column;
-                            return (
-                                <Td
-                                    key={ index }
-                                    width={ `${width * widthAdjustment}px` }
-                                    styles={ getStyles(styles.td, 'body') }
-                                >
-                                    <ExtendedDiv styles={ getStyles(styles.body, name) }>
-                                        <Renderer
-                                            ofType="body"
-                                            forItem={ type }
-                                            data={ item }
-                                            colConfig={ column }
-                                            extraData={ bodyExtraData[name] }
-                                            action={ action }
-                                            thunk={ thunk }
-                                        />
-                                    </ExtendedDiv>
-                                </Td>
-                            );
-                        }}
-                    </Tr>
-                )}
+                {({ item, top, index: rowIndex }) => {
+                    var item = prepareItem(item, schema, state);
+                    return (
+                        <Tr
+                            key={ rowIndex }
+                            position="absolute"
+                            top={ `${top}px` }
+                            columns={ columns }
+                            height={ `${rowHeight}px` }
+                            even={ rowIndex % 2 === 0 }
+                            styles={ getStyles(styles.tr, 'body') }
+                        >
+                            {(column, index) => {
+                                const { width, textAlign, name, type } = column;
+                                return (
+                                    <Td
+                                        key={ index }
+                                        width={ `${width * widthAdjustment}px` }
+                                        styles={ getStyles(styles.td, 'body') }
+                                    >
+                                        <ExtendedDiv styles={ getStyles(styles.body, name) }>
+                                            <Renderer
+                                                ofType="body"
+                                                forItem={ type }
+                                                data={ item }
+                                                colConfig={ column }
+                                                extraData={ bodyExtraData[name] }
+                                                action={ action }
+                                                thunk={ thunk }
+                                            />
+                                        </ExtendedDiv>
+                                    </Td>
+                                );
+                            }}
+                        </Tr>
+                    );
+                }}
             </Tbody>
         </Table>
     </Container>
 )
 
 const ReduxDatatable = ( props ) => {
-    const { config = {}, reducerName, tableData, action, thunk, loadData } = props;
+    const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;
     const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
-    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns } = config;
+    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns, entity = {} } = config;
 
     const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => [ ...result, columns[currentIndex]], []);
     const tableConfig = {
@@ -324,6 +338,9 @@ const ReduxDatatable = ( props ) => {
                     pointerEvents,
                     query,
                     rowHeight,
+                    schema: entity.schema,
+                    state,
+                    styles,
                     tableHeader,
                     tableBody,
                     thunk,
@@ -331,19 +348,20 @@ const ReduxDatatable = ( props ) => {
                     visibleHeight: height,
                     width,
                     widthAdjustment,
-                    styles
                 }) }
                 { renderPagination('bottom', query, pagination, action, thunk, styles.pagination) }
             </Container>
         </TableProvider>
     );
-}
+};
 
-const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) =>
+const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) => (
     ( payload = {} ) => ({ name, reducerName, routes, entity, payload })
+);
 
-const mapStateToProps = ( state, { reducerName, config: { name } } ) => ({
-    tableData: state[reducerName][name]
+const mapStateToProps = ( state, { reducerName, config: { name, entity } } ) => ({
+    tableData: state[reducerName][name],
+    state
 });
 
 const mapDispatchToProps = ( dispatch, ownProps ) => {
