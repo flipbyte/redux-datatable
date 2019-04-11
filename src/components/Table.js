@@ -10,7 +10,7 @@ const Table = styled.div `
     border-collapse: collapse;
     clear: both;
     margin: 10px 0;
-`
+`;
 
 const ExtendedTable = styled(Table)(getExtendedStyles());
 export default ExtendedTable;

@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
+import { denormalize } from 'normalizr';
 
 import TableProvider from './TableProvider';
 import Renderer from './Renderer';
@@ -35,7 +36,7 @@ const useTableScroll = ( tableBody, tableHeader ) => {
         tableHeader.current.scrollLeft = tableBody.current.scrollLeft;
         setPointerEvents('none');
         setTop(tableBody.current.scrollTop);
-    }
+    };
 
     useEffect(() => {
         if(typeof tableBody.current.addEventListener === 'function') {
@@ -43,23 +44,23 @@ const useTableScroll = ( tableBody, tableHeader ) => {
         }
         return () => {
             tableBody.current.removeEventListener('scroll', handleScroll, true);
-        }
-    }, [ tableBody.current ])
+        };
+    }, [ tableBody.current ]);
 
     return [ top, pointerEvents ];
-}
+};
 
 const columnsReducer = (state, { type, index }) => {
-    var visibleColumns = [ ...state ];
+    var visibleColumnIds = [ ...state ];
     if(type === 'add') {
-        visibleColumns.push(index);
-        visibleColumns.sort();
+        visibleColumnIds.push(index);
+        visibleColumnIds.sort();
     } else {
-        visibleColumns.splice(visibleColumns.indexOf(index), 1).sort();
+        visibleColumnIds.splice(visibleColumnIds.indexOf(index), 1).sort();
     }
 
-    return visibleColumns;
-}
+    return visibleColumnIds;
+};
 
 const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
     const [ width, setWidth ] = useState(minWidth);
@@ -72,15 +73,15 @@ const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
             : tableBodyEl.clientWidth;
 
         const percentage = computedTableWidth / calculateWidth(visibleColumns);
-        setWidth(calculateWidth(visibleColumns, percentage))
+        setWidth(calculateWidth(visibleColumns, percentage));
         setWidthAdjustment(percentage);
-    }
+    };
 
     useEffect(() => {
         window.addEventListener('resize', updateTableDimensions);
         return () => {
             window.removeEventListener('resize', updateTableDimensions);
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -88,16 +89,16 @@ const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
     }, [ visibleColumns ]);
 
     return [ width, widthAdjustment ];
-}
+};
 
 const changeSortOrder = ( query, colName, sorter ) => {
     let dir = null;
-    if( query.sort != colName ) {
+    if( query.sort !== colName ) {
         dir = 'asc';
     } else {
-        if(query.dir == 'asc') {
+        if(query.dir === 'asc') {
             dir = 'desc';
-        } else if(query.dir == 'desc') {
+        } else if(query.dir === 'desc') {
             colName = '';
             dir = '';
         } else {
@@ -106,7 +107,15 @@ const changeSortOrder = ( query, colName, sorter ) => {
     }
 
     sorter({ sort: colName, dir });
-}
+};
+
+const prepareData = ( item, schema, state ) => {
+    if (_.isEmpty(schema) || _.isObject(item)) {
+        return item;
+    }
+
+    return denormalize(item, schema, state);
+};
 
 const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visibleColumns, styles = {} ) => (
     <Row>
@@ -157,10 +166,10 @@ const getExtraBodyRowProps = (data, columns) => (
                     return edResult;
                 }, {})
                 : { [extraData]: _.get(data, extraData) }
-            : {}
+            : {};
         return result;
     }, {})
-)
+);
 
 const renderTable = ({
     action,
@@ -170,6 +179,9 @@ const renderTable = ({
     items,
     query = {},
     rowHeight,
+    schema,
+    state = {},
+    styles = {},
     tableHeader,
     tableBody,
     thunk,
@@ -177,7 +189,6 @@ const renderTable = ({
     visibleHeight,
     width,
     widthAdjustment = 1,
-    styles = {}
 }) => (
     <Container styles={ getStyles(styles, 'tableContainer') }>
         <Table styles={ getStyles(styles, 'table') }>
@@ -192,12 +203,14 @@ const renderTable = ({
                                 width={ width * widthAdjustment }
                                 textAlign={ textAlign }
                                 styles={ styles.th }
-                                onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : undefined }
+                                onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
                             >
-                                { label }
-                                { sortable && sort === name && <SortCaret dir={ dir } /> }
+                                <label>
+                                    { label }
+                                    { sortable && sort === name && <SortCaret dir={ dir } /> }
+                                </label>
                             </Th>
-                        )
+                        );
                     }}
                 </Tr>
                 <Tr columns={ columns } styles={ getStyles(styles.tr, 'filter') }>
@@ -220,7 +233,7 @@ const renderTable = ({
                                     />
                                 </ExtendedDiv> }
                             </Td>
-                        )
+                        );
                     }}
                 </Tr>
             </Thead>
@@ -235,53 +248,62 @@ const renderTable = ({
                 rowHeight={ rowHeight }
                 styles={ getStyles(styles, 'tbody') }
             >
-                {({ item, top, index: rowIndex }) => (
-                    <Tr
-                        key={ rowIndex }
-                        position="absolute"
-                        top={ `${top}px` }
-                        columns={ columns }
-                        height={ `${rowHeight}px` }
-                        even={ rowIndex % 2 === 0 }
-                        styles={ getStyles(styles.tr, 'body') }
-                    >
-                        {(column, index) => {
-                            const { width, textAlign, name, type } = column;
-                            return (
-                                <Td
-                                    key={ index }
-                                    width={ `${width * widthAdjustment}px` }
-                                    styles={ getStyles(styles.td, 'body') }
-                                >
-                                    <ExtendedDiv styles={ getStyles(styles.body, name) }>
-                                        <Renderer
-                                            ofType="body"
-                                            forItem={ type }
-                                            data={ item }
-                                            colConfig={ column }
-                                            extraData={ bodyExtraData[name] }
-                                            action={ action }
-                                            thunk={ thunk }
-                                        />
-                                    </ExtendedDiv>
-                                </Td>
-                            );
-                        }}
-                    </Tr>
-                )}
+                {({ item, top, index: rowIndex }) => {
+                    var data = prepareData(item, schema, state);
+                    return (
+                        <Tr
+                            key={ rowIndex }
+                            position="absolute"
+                            top={ `${top}px` }
+                            columns={ columns }
+                            height={ `${rowHeight}px` }
+                            even={ rowIndex % 2 === 0 }
+                            styles={ getStyles(styles.tr, 'body') }
+                        >
+                            {(column, index) => {
+                                const { width, textAlign, name, type } = column;
+                                return (
+                                    <Td
+                                        key={ index }
+                                        width={ `${width * widthAdjustment}px` }
+                                        styles={ getStyles(styles.td, 'body') }
+                                    >
+                                        <ExtendedDiv styles={ getStyles(styles.body, name) }>
+                                            <Renderer
+                                                ofType="body"
+                                                forItem={ type }
+                                                data={ data }
+                                                colConfig={ column }
+                                                extraData={ bodyExtraData[name] }
+                                                action={ action }
+                                                thunk={ thunk }
+                                            />
+                                        </ExtendedDiv>
+                                    </Td>
+                                );
+                            }}
+                        </Tr>
+                    );
+                }}
             </Tbody>
         </Table>
     </Container>
-)
+);
 
 const ReduxDatatable = ( props ) => {
-    const { config = {}, reducerName, tableData, action, thunk, loadData } = props;
-    const [ visibleColumns, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
-    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns } = config;
+    const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;
+    const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
+    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns, entity = {} } = config;
+
+    const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => {
+        const { [currentIndex]: column } = columns;
+        return [ ...result, column ];
+    }, []);
+
     const tableConfig = {
         ...config,
         updateTableState: dispatch,
-        visibleColumns: visibleColumns.reduce((result, currentIndex) => [ ...result, columns[currentIndex]], [])
+        visibleColumns
     };
 
     useEffect(() => {
@@ -295,13 +317,13 @@ const ReduxDatatable = ( props ) => {
     // Set min-width of the table
     const [ minWidth ] = useState(calculateWidth(columns));
     // Handle table columns and width
-    const [ width, widthAdjustment ] = useTableWidth(tableBody, minWidth, tableConfig.visibleColumns);
+    const [ width, widthAdjustment ] = useTableWidth(tableBody, minWidth, visibleColumns);
 
     if(!tableData) {
         return (
             <div className="status_message offline">
                 <p>
-                    The table failed to initialise. Please check you are connected to the internet and try again.
+                    The table failed to initialise. Please make sure you are connected to the internet and try again.
                 </p>
             </div>
         );
@@ -311,17 +333,20 @@ const ReduxDatatable = ( props ) => {
     return (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container>
-                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumns, styles.toolbar) }
+                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
                 { renderPagination('top', query, pagination, action, thunk, styles.pagination) }
                 { renderTable({
                     action,
                     bodyExtraData: getExtraBodyRowProps(tableData, tableConfig.visibleColumns),
-                    columns: tableConfig.visibleColumns,
+                    columns: visibleColumns,
                     height: rowHeight * ( tableData.items || [] ).length,
                     items: tableData.items || [],
                     pointerEvents,
                     query,
                     rowHeight,
+                    schema: entity.schema,
+                    state,
+                    styles,
                     tableHeader,
                     tableBody,
                     thunk,
@@ -329,28 +354,29 @@ const ReduxDatatable = ( props ) => {
                     visibleHeight: height,
                     width,
                     widthAdjustment,
-                    styles
                 }) }
                 { renderPagination('bottom', query, pagination, action, thunk, styles.pagination) }
             </Container>
         </TableProvider>
     );
-}
+};
 
-const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) =>
+const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) => (
     ( payload = {} ) => ({ name, reducerName, routes, entity, payload })
+);
 
-const mapStateToProps = ( state, { reducerName, config: { name } } ) => ({
-    tableData: state[reducerName][name]
+const mapStateToProps = ( state, { reducerName, config: { name, entity } } ) => ({
+    tableData: state[reducerName][name],
+    state
 });
 
 const mapDispatchToProps = ( dispatch, ownProps ) => {
     let preparePayload = prepareActionPayload(ownProps);
     return {
         loadData: ( ) => {
-            dispatch(setPage(preparePayload({ page: 1 })))
-            dispatch(setLimit(preparePayload({ limit: ownProps.config.pagination.items.limiter.default || 10 })))
-            dispatch(setSort(preparePayload({ dir: 'desc' })))
+            dispatch(setPage(preparePayload({ page: 1 })));
+            dispatch(setLimit(preparePayload({ limit: ownProps.config.pagination.items.limiter.default || 10 })));
+            dispatch(setSort(preparePayload({ dir: 'desc' })));
         },
         action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
         thunk: ( thunk, payload ) => dispatch(thunk(preparePayload(payload)))

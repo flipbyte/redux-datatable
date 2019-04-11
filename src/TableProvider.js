@@ -3,36 +3,40 @@ import _ from 'lodash';
 
 const ConfigContext = React.createContext({});
 
-const TableProvider = ({ config, children }) => {
-    return <ConfigContext.Provider value={ config }>{ children }</ConfigContext.Provider>
-}
+const TableProvider = ({ config, children }) => (
+    <ConfigContext.Provider value={ config }>{ children }</ConfigContext.Provider>
+);
 
-export const TableConsumer = ({ children }) =>
+export const TableConsumer = ({ children }) => (
     <ConfigContext.Consumer>
-        { config => (
+        { (config) => (
             children({ config })
         )}
     </ConfigContext.Consumer>
+);
 
 export const withTableConfig = ( paths ) => ( WrappedComponent ) => {
-    const ComponentWithConfig = ( props ) =>
+    const ComponentWithConfig = ( props ) => (
         <TableConsumer>
-            { config => {
+            { (config) => {
                 var tableConfig = {};
                 if(_.isObject(paths)) {
-                    _.forEach(paths, function( value, key ) {
-                        tableConfig[key] = _.get(config.config, value, undefined)
+                    _.forEach(paths, ( value, key ) => {
+                        tableConfig = {
+                            ...tableConfig,
+                            [key]: _.get(config.config, value)
+                        };
                     });
                 } else {
                     tableConfig = paths ? _.get(config.config, paths, false) : config;
                 }
 
-                return <WrappedComponent config={ tableConfig } { ...props } />
+                return <WrappedComponent config={ tableConfig } { ...props } />;
             } }
         </TableConsumer>
+    );
 
     return ComponentWithConfig;
-}
-
+};
 
 export default TableProvider;

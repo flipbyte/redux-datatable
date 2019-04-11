@@ -17,6 +17,6 @@ const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
             </Field.Select> per page
         </Label>
     );
-}
+};
 
 export default Limiter;

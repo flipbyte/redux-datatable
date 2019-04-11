@@ -9,8 +9,8 @@ export const List = styled.div `
     background: ${props => props.background || '#fff'};
     border: ${props => props.border || '1px solid rgba(34,36,38,.15)'};
     border-radius: ${props => props.borderRadius || 'none'};
-    height: ${props => props.height || '40px'}
-`
+    height: ${props => props.height || '40px'};
+`;
 
 const NUM_LINKS = 5;
 
@@ -23,18 +23,18 @@ const getPages = ( currentPage, total ) => {
     var left = (currentPage - padding < padding) ? 1 : currentPage - padding;
     var right = (left + NUM_LINKS - 1 > total) ? total : left + NUM_LINKS - 1;
 
-    left = (right == total) ?
+    left = (right === total) ?
         (right - NUM_LINKS < 1) ? 1 : right - NUM_LINKS + 1
         : left;
 
     return fillRange(left, right);
-}
+};
 
 const Pages = ({ page, total, action, style }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <List>
-            <Button onClick={ setPage.bind(this, 1) } disabled={ page == 1 }>First</Button>
+            <Button onClick={ setPage.bind(this, 1) } disabled={ page === 1 }>First</Button>
             <Button onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
             { getPages(page, total).map( (link, index) =>
                 <Button
@@ -44,9 +44,9 @@ const Pages = ({ page, total, action, style }) => {
                 >{ link }</Button>
             ) }
             <Button onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
-            <Button onClick={ setPage.bind(this, total) } disabled={ page == total }>Last</Button>
+            <Button onClick={ setPage.bind(this, total) } disabled={ total === 0 || page === total }>Last</Button>
         </List>
     );
-}
+};
 
-export default Pages
+export default Pages;

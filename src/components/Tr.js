@@ -20,7 +20,6 @@ const StyledTr = styled(Tr).attrs(({ top }) => ({
     position: relative;
     background: none;
     position: ${props => props.position || 'relative'};
-
-`
-const ExtendedStyledTr = styled(StyledTr)(getExtendedStyles())
+`;
+const ExtendedStyledTr = styled(StyledTr)(getExtendedStyles());
 export default ExtendedStyledTr;

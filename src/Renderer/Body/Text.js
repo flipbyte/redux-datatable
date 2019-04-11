@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { shouldUpdate } from '../../utils';
 import React, { Fragment, Component } from 'react';
 
 const Text = ({

@@ -14,15 +14,15 @@ const Item = styled.div `
 
     ${props => props.first && css `
         margin-left: 0;
-    `}
-`
+    `};
+`;
 
 const ExtendedItem = styled(Item)(getExtendedStyles());
 
 const isVisible = (visible, position) => (
     visible === true || (
         typeof visible === 'object' && (
-            visible[position] === true || visible[position] === undefined
+            visible[position] === true || typeof visible[position] === 'undefined'
         )
     )
 );
@@ -31,21 +31,21 @@ export const calculatePaginationProps = (
     { page, limit = 0, count = 0 },
     defaultLimit = 10
 ) => {
-    page = page > 1 ? page : 1
-    limit = limit != 0 ? limit : defaultLimit;
+    page = page > 1 ? page : 1;
+    limit = limit !== 0 ? limit : defaultLimit;
 
-    let start = (page - 1) * limit
-    let end = start + limit - 1
+    let start = (page - 1) * limit;
+    let end = start + limit - 1;
 
     return {
-        page: page,
-        start: start,
+        page,
+        start,
         end: (count > end && end >= 0) ? end : count,
-        count: count,
-        limit: limit,
+        count,
+        limit,
         total: Math.ceil(count / limit)
-    }
-}
+    };
+};
 
 const Pagination = ({
     children,
@@ -73,15 +73,15 @@ const Pagination = ({
                     >
                         { children(items[key], paginationProps, index) }
                     </ExtendedItem>
-                )
+                );
             })}
         </div>
-    )
-}
+    );
+};
 
 const StyledPagination = styled(Pagination) `
     display: block;
     width: 100%;
-`
+`;
 const ExtendedStyledPagination = styled(StyledPagination)(getExtendedStyles('container'));
 export default ExtendedStyledPagination;

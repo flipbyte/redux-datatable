@@ -18,7 +18,7 @@ const Td = styled.div.attrs(({ width: maxWidth }) => ({
     position: relative;
     overflow: hidden;
     font-size: 14px;
-`
+`;
 
-const ExtendedTd = styled(Td)(getExtendedStyles())
+const ExtendedTd = styled(Td)(getExtendedStyles());
 export default ExtendedTd;

@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import Time from 'react-pure-time';
-import { shouldUpdate } from '../../utils';
 import React, { Fragment, Component } from 'react';
 
 const Options = ({
@@ -10,7 +9,7 @@ const Options = ({
     const value = _.get(data, name);
 
     if(!options || !options[value]) {
-        return <Fragment>{ value }</Fragment>
+        return <Fragment>{ value }</Fragment>;
     }
 
     return (
@@ -18,6 +17,6 @@ const Options = ({
             { options[value].value }
         </span>
     );
-}
+};
 
 export default Options;

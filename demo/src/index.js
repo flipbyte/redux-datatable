@@ -12,7 +12,7 @@ import './css/styles.css';
 
 const store = configureStore(config);
 
-const Demo = () =>
+const Demo = () => (
     <div className="d-flex" id="wrapper">
         <div className="bg-light border-right sidenav" id="sidebar-wrapper">
             <div className="sidebar-heading"><strong>redux-datatable</strong></div>
@@ -36,6 +36,7 @@ const Demo = () =>
             </div>
         </div>
     </div>
+);
 
 render(
     <Provider store={ store }>

@@ -50,7 +50,7 @@ const getRenderers = ( ofType ) => renderers[ofType] || {};
 const Renderer = ({ ofType, forItem, ...props }) => {
     const renderers = getRenderers(ofType);
     const Renderer = renderers[forItem] || renderers['default'];
-    return <Renderer { ...props } />
-}
+    return <Renderer { ...props } />;
+};
 
 export default Renderer;

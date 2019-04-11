@@ -46,7 +46,7 @@ const Button = styled.button `
                 border-left: 0.3rem solid transparent;
                 margin-left: 0.255rem;
             }
-        `}
+        `};
 
         ${!disabled && !active && css `
             cursor: pointer;
@@ -55,17 +55,17 @@ const Button = styled.button `
                 color: ${hover.color || '#fff'};
                 background-color: ${hover.backgroundColor || '#5a6268'};
             }
-        `}
+        `};
 
         ${active && css `
             background: ${props => props.activeBackground || '#007bff'};
             color: ${props => props.activeColor || '#fff'};
-            font-weight: ${props => props.activeFontWeight || 'normal'}
-        `}
+            font-weight: ${props => props.activeFontWeight || 'normal'};
+        `};
 
         ${disabled && css `
             opacity: 0.5;
-        `}
+        `};
     `}
 `;
 

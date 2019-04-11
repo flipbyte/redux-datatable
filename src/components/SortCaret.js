@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const SortCaret = styled.div `
+const SortCaret = styled.span `
     display: inline-block;
     width: 0;
     height: 0;
@@ -15,7 +15,7 @@ const SortCaret = styled.div `
         border-right: 4px solid transparent;
         border-bottom: 4px solid #000000;
         border-left: 4px solid transparent;
-    `}
+    `};
 
     ${props => props.dir === 'desc' && css `
         vertical-align: super;
@@ -23,7 +23,7 @@ const SortCaret = styled.div `
         border-right: 4px solid transparent;
         border-bottom: none;
         border-left: 4px solid transparent;
-    `}
-`
+    `};
+`;
 
 export default SortCaret;

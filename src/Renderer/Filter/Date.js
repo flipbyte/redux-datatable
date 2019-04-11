@@ -9,7 +9,7 @@ var dateTo = null;
 const applyFilter = ( key, filterer, event ) => {
     let filter = {};
 
-    if (key == 0) {
+    if (key === 0) {
         dateFrom = event.target.value;
     } else {
         dateTo = event.target.value;
