@@ -31,6 +31,7 @@ const getPages = ( currentPage, total ) => {
 };
 
 const Pages = ({ page, total, action, style }) => {
+    console.log('page', page, total);
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <List>
@@ -44,7 +45,7 @@ const Pages = ({ page, total, action, style }) => {
                 >{ link }</Button>
             ) }
             <Button onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
-            <Button onClick={ setPage.bind(this, total) } disabled={ page === total }>Last</Button>
+            <Button onClick={ setPage.bind(this, total) } disabled={ total === 0 || page === total }>Last</Button>
         </List>
     );
 };
