@@ -20,17 +20,21 @@ let initialTableState = {
 };
 
 const updateState = ( state, tableName ) => ( newState ) => {
-    var updatedState = objectAssignDeep({}, initialTableState, state[tableName], newState);
+    const { [tableName]: tableState = {} } = state;
+    var updatedState = objectAssignDeep({}, initialTableState, tableState, newState);
     return {
         ...state,
         [tableName]: {
-            ...state[tableName],
+            ...tableState,
             ...updatedState
         }
     };
 };
 
-const getTableState = ( name ) => ( state ) => state[name] || initialTableState;
+const getTableState = ( name ) => ( state ) => {
+    const { [name]: tableState } = state;
+    return tableState || initialTableState;
+};
 
 export default function reducer(state = {}, action) {
     if (!action.meta) {
@@ -38,28 +42,21 @@ export default function reducer(state = {}, action) {
     }
 
     const { payload, meta: { name } } = action;
-    const tableState = getTableState(name);
+    const tableState = getTableState(name)(state);
     const stateUpdater = updateState(state, name);
-
-    switch (action.type) {
-        case actions.REQUEST_DATA:
-            return stateUpdater({ isFetching: true });
-
-        case actions.REQUEST_DATA_CANCEL:
-            return stateUpdater({ isFetching: false });
-
-        case actions.RECEIVE_DATA:
-            return stateUpdater({
-                isFetching: false,
-                query: {
-                    count: parseInt(payload.response.total, 10)
-                },
-                items: payload.data,
-                selection: {}
-            });
-
-        case actions.SET_PAGE:
-            let offset =  ( (payload.page - 1) * tableState(state).query.limit );
+    const acceptedActions = {
+        [actions.REQUEST_DATA]: () => stateUpdater({ isFetching: true }),
+        [actions.REQUEST_DATA_CANCEL]: () => stateUpdater({ isFetching: false }),
+        [actions.RECEIVE_DATA]: () => stateUpdater({
+            isFetching: false,
+            query: {
+                count: parseInt(payload.response.total, 10)
+            },
+            items: payload.data,
+            selection: {}
+        }),
+        [actions.SET_PAGE]: () => {
+            let offset =  ( (payload.page - 1) * tableState.query.limit );
             offset = offset > 0 ? offset : 0;
 
             return stateUpdater({
@@ -69,30 +66,26 @@ export default function reducer(state = {}, action) {
                     offset
                 },
             });
-
-        case actions.SET_SORT:
-            return stateUpdater({
-                isFetching: true,
-                query: {
-                    sort: payload.sort,
-                    dir: payload.dir
-                },
-            });
-
-        case actions.SET_LIMIT:
-            return stateUpdater({
-                isFetching: true,
-                query: {
-                    limit: parseInt(payload.limit, 10),
-                    offset: (tableState(state).query.page - 1) * tableState(state).query.limit
-                },
-            });
-
-        case actions.SET_FILTER:
+        },
+        [actions.SET_SORT]: () => stateUpdater({
+            isFetching: true,
+            query: {
+                sort: payload.sort,
+                dir: payload.dir
+            },
+        }),
+        [actions.SET_LIMIT]: () => stateUpdater({
+            isFetching: true,
+            query: {
+                limit: parseInt(payload.limit, 10),
+                offset: (tableState.query.page - 1) * tableState.query.limit
+            },
+        }),
+        [actions.SET_FILTER]: () => {
             var updatedFilters = {};
             if(!payload.clear) {
                 updatedFilters = {
-                    ...state[name].query.search,
+                    ...tableState.query.search,
                     [payload.key]: payload.filter
                 };
             }
@@ -100,9 +93,9 @@ export default function reducer(state = {}, action) {
             return {
                 ...state,
                 [name]: {
-                    ...state[name],
+                    ...tableState,
                     query: {
-                        ...state[name].query,
+                        ...tableState.query,
                         search: {
                             ...updatedFilters
                         }
@@ -110,13 +103,13 @@ export default function reducer(state = {}, action) {
                     isFetching: true
                 }
             };
-
-        case actions.SET_SELECTION:
+        },
+        [actions.SET_SELECTION]: () => {
             let selection = {};
             if( typeof payload.key == 'object') {
                 selection[payload.paramKey] = payload.key;
             } else {
-                selection = _.get(tableState(state), 'selection', {});
+                selection = _.get(tableState, 'selection', {});
                 if(_.isEmpty(selection[payload.paramKey])) {
                     selection[payload.paramKey] = {};
                 }
@@ -126,33 +119,19 @@ export default function reducer(state = {}, action) {
             return {
                 ...state,
                 [name]: {
-                    ...state[name],
+                    ...tableState,
                     selection: {
-                        ...state[name].selection,
+                        ...tableState.selection,
                         ...selection
                     }
                 }
             };
+        }
+    };
 
-            // return stateUpdater({
-            //     selection: {
-            //         [payload.paramKey]: {
-            //             ...selection
-            //         }
-            //     }
-            // });
-            // return {
-            //     ...state,
-            //     selection: {
-            //         ...state.selection,
-            //         [payload.paramKey]: {
-            //             ...state.selection[payload.paramKey],
-            //             ...selection
-            //         }
-            //     }
-            // }
-
-        default:
-            return state;
+    if (acceptedActions.hasOwnProperty(action.type)) {
+        return acceptedActions[action.type]();
     }
+
+    return state;
 }

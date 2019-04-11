@@ -9,7 +9,7 @@ const TableProvider = ({ config, children }) => (
 
 export const TableConsumer = ({ children }) => (
     <ConfigContext.Consumer>
-        { config => (
+        { (config) => (
             children({ config })
         )}
     </ConfigContext.Consumer>
@@ -18,11 +18,14 @@ export const TableConsumer = ({ children }) => (
 export const withTableConfig = ( paths ) => ( WrappedComponent ) => {
     const ComponentWithConfig = ( props ) => (
         <TableConsumer>
-            { config => {
+            { (config) => {
                 var tableConfig = {};
                 if(_.isObject(paths)) {
                     _.forEach(paths, ( value, key ) => {
-                        tableConfig[key] = _.get(config.config, value, undefined);
+                        tableConfig = {
+                            ...tableConfig,
+                            [key]: _.get(config.config, value)
+                        };
                     });
                 } else {
                     tableConfig = paths ? _.get(config.config, paths, false) : config;

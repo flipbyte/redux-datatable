@@ -8,16 +8,20 @@ export const defaultLimiterCongig = {
 
 export const isArray = (value) => Array.isArray(value);
 
-export const getUrl = ( baseUrl, endpoint ) =>  baseUrl + endpoint;
+export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
 
-export const getSelectedKeys = ( data, dataKey ) => {
-    if (!data[dataKey]) {
+export const getSelectedKeys = (data, dataKey) => {
+    const { [dataKey]: dataForFilter } = data;
+    if (dataForFilter) {
         return false;
     }
 
-    const dataForFilter = data[dataKey];
-    let selectedItems = {};
-    selectedItems[dataKey] = Object.keys(dataForFilter).filter(key => dataForFilter[key] === true);
+    let selectedItems = {
+        [dataKey]: Object.keys(dataForFilter).filter((key) => {
+            const { [key]: value } = dataForFilter;
+            return value === true;
+        })
+    };
 
     const paramsObject = Object.assign({}, selectedItems);
     paramsObject.get = () => selectedItems;
@@ -25,7 +29,7 @@ export const getSelectedKeys = ( data, dataKey ) => {
     return paramsObject;
 };
 
-export const getConfigParam = ( param ) => {
+export const getConfigParam = (param) => {
     if (!param.startsWith('@')) {
         return false;
     }
@@ -33,28 +37,31 @@ export const getConfigParam = ( param ) => {
     return param.substr(1);
 };
 
-export const getParam = ( param, data ) => {
+export const getParam = (param, data) => {
     var dataKey = getConfigParam(param);
     if (!dataKey) {
         return false;
     }
 
-    if (!data[dataKey]) {
-        return false;
-    }
-
-    return data[dataKey];
+    const { [dataKey]: paramData } = data;
+    return paramData || false;
 };
 
-export const paramsResolver = ( params, data ) => {
+export const paramsResolver = (params, data) => {
     let processedParams = {};
     for (var key in params) {
-        let resolvedParam = getParam(params[key], data);
-        if (false === resolvedParam) {
-            continue;
-        }
+        if (params.hasOwnProperty(key)) {
+            const { [key]: param } = params;
+            let resolvedParam = getParam(param, data);
+            if (false === resolvedParam) {
+                continue;
+            }
 
-        processedParams[key] = resolvedParam;
+            processedParams = {
+                ...processedParams,
+                [key]: resolvedParam
+            };
+        }
     }
 
     const paramsObject = Object.assign({}, processedParams);
@@ -64,7 +71,7 @@ export const paramsResolver = ( params, data ) => {
     return paramsObject;
 };
 
-export const createActionCreator = ( type ) => ( data ) => {
+export const createActionCreator = (type) => (data) => {
     const { name, reducerName, routes, entity, payload } = data;
     let action = ({ type, meta: { name, routes, reducerName, entity }, payload });
     action.toString = () => type;
@@ -73,17 +80,23 @@ export const createActionCreator = ( type ) => ( data ) => {
 };
 
 export const createReducer = (reducer, predicate) => (state, action) => (
-    predicate(action) || state === undefined ? reducer(state, action) : state
+    predicate(action) || typeof state === 'undefined' ? reducer(state, action) : state
 );
 
-export const prepareActionPayload = ({ name, reducerName, routes, entity }) => ( payload = {} ) => ({
+export const prepareActionPayload = ({ name, reducerName, routes, entity }) => (payload = {}) => ({
     name, reducerName, routes, entity, payload
 });
 
-export const getStyles = ( styles, name ) => (
-    name && styles ? styles[name] : null
-);
+export const getStyles = (styles = {}, name) => {
+    const { [name]: style } = styles;
+    return style;
+};
 
-export const getExtendedStyles = ( name ) => ({ styles }) => (
-    name ? styles ? styles[name] : null : styles
-);
+export const getExtendedStyles = (name) => ({ styles }) => {
+    if (!name) {
+        return styles;
+    }
+
+    const { [name]: style } = styles;
+    return style;
+};

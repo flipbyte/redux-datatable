@@ -22,7 +22,7 @@ const ExtendedItem = styled(Item)(getExtendedStyles());
 const isVisible = (visible, position) => (
     visible === true || (
         typeof visible === 'object' && (
-            visible[position] === true || visible[position] === undefined
+            visible[position] === true || typeof visible[position] === 'undefined'
         )
     )
 );

@@ -45,7 +45,7 @@ const useTableScroll = ( tableBody, tableHeader ) => {
         return () => {
             tableBody.current.removeEventListener('scroll', handleScroll, true);
         };
-    }, [ tableBody.current ])
+    }, [ tableBody.current ]);
 
     return [ top, pointerEvents ];
 };
@@ -203,7 +203,7 @@ const renderTable = ({
                                 width={ width * widthAdjustment }
                                 textAlign={ textAlign }
                                 styles={ styles.th }
-                                onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : undefined }
+                                onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
                             >
                                 <label>
                                     { label }
@@ -295,7 +295,11 @@ const ReduxDatatable = ( props ) => {
     const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
     const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns, entity = {} } = config;
 
-    const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => [ ...result, columns[currentIndex]], []);
+    const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => {
+        const { [currentIndex]: column } = columns;
+        return [ ...result, column ];
+    }, []);
+
     const tableConfig = {
         ...config,
         updateTableState: dispatch,

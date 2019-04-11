@@ -25,7 +25,7 @@ const getResult = (response, resultPath) => resultPath
 
 export const setParamsEpic = ( action$, state$ ) => action$.pipe(
     ofType(SET_PAGE, SET_FILTER, SET_SORT, SET_LIMIT),
-    concatMap(action => {
+    concatMap((action) => {
         const { meta: { name, routes, reducerName, entity } } = action;
 
         return of(
@@ -39,7 +39,7 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
 
 export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(REQUEST_DATA),
-    switchMap(action => {
+    switchMap((action) => {
         const {
             meta: { name, routes, entity },
             payload
@@ -51,7 +51,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 ...payload.query
             }
         }).pipe(
-            map(response => {
+            map((response) => {
                 if(entity) {
                     const normalizedData = normalize(response, entity.responseSchema);
                     if(!_.isEmpty(normalizedData.entities)) {
@@ -63,11 +63,11 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 const data = getResult(response, _.get(routes, 'get.resultPath.data', null));
                 return { response, data };
             }),
-            map(payload => receiveData({ name, payload })),
-            catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
+            map((payload) => receiveData({ name, payload })),
+            catchError((error) => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
-                filter(cancelAction => cancelAction.name === name)
+                filter((cancelAction) => cancelAction.name === name)
             ))
         );
     })
@@ -75,14 +75,14 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
 
 export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(DELETE_DATA),
-    switchMap(action => {
+    switchMap((action) => {
         const {
             meta: { name, routes, reducerName, entity },
             payload
         } = action;
 
         return api.delete(routes.delete.route, { params: payload.params }).pipe(
-            concatMap(response => {
+            concatMap((response) => {
                 if(!response.success) {
                     return of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: response.result }));
                 }
@@ -96,7 +96,7 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                     })
                 );
             }),
-            catchError(error => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })))
+            catchError((error) => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })))
         );
     })
 );
