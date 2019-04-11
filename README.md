@@ -5,7 +5,8 @@
 [![npm package][npm-badge]][npm]
 [![Codacy Badge][codacy-badge]][codacy]
 
-Datatable built using React and Redux to fetch JSON data asynchronously using REST API.
+Datatable built using React and Redux to fetch JSON data asynchronously
+using REST API.  
 
 -   Filterable columns by date ranges, numeric ranges and text.
 -   Pagination
@@ -14,12 +15,14 @@ Datatable built using React and Redux to fetch JSON data asynchronously using RE
 -   Built in windowing to handle large dataset with thousands of rows
 -   Customizable limiter options
 -   Customizable toolbar with the ability to add custom renderers
--   Completely configurable headers, filters, toolbar and pagination with options to enable/disable them individual
+-   Completely configurable headers, filters, toolbar and pagination
+    with options to enable/disable them individual
 -   Custom row level actions
 -   Thunks to handle custom mass or row actions externally.
 -   Compatible with normalizr to handle externally managed states
 -   Easily stylable with styled-components.
--   Show or hide columns dynamically using the Columns item in the toolbar.
+-   Show or hide columns dynamically using the Columns item in the
+    toolbar.
 
 ## Installation
 
@@ -171,6 +174,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 ```
 
 ### Render table component
+
 ```javascript
 import ReduxDatatable from '@flipbyte/redux-datatable';
 
@@ -183,107 +187,109 @@ const YourComponent = () =>
 
 ### Table config props
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| name | string | true | - | A unique key where the data for the table is saved in the table state object |
-| height | integer | true | - | The maximum height of the table |
-| rowHeight | integer | true | - | The maximum height of each table body row |
-| filterable | boolean | false | true | Whether to show/hide filters row |
-| headers | boolean | false | true | Whether to show/hide headers row |
-| pagination | object | false | {} | Pagination bar configuration (Check below) |
-| routes | object | true | - | Routes definition to fetch data and other custom routes config for custom handling (Check below)  |
-| toolbar | array | false | [] | Toolbar definition (Check below)  |
-| columns | array | true | - | Columns to display |
-| styles | object | false | {} | Custom styles for your table |
+| Key        | Type    | Required | Default | Description                                                                                      |
+| ---------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
+| name       | string  | true     | -       | A unique key where the data for the table is saved in the table state object                     |
+| height     | integer | true     | -       | The maximum height of the table                                                                  |
+| rowHeight  | integer | true     | -       | The maximum height of each table body row                                                        |
+| filterable | boolean | false    | true    | Whether to show/hide filters row                                                                 |
+| headers    | boolean | false    | true    | Whether to show/hide headers row                                                                 |
+| pagination | object  | false    | {}      | Pagination bar configuration (Check below)                                                       |
+| routes     | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
+| toolbar    | array   | false    | \[]     | Toolbar definition (Check below)                                                                 |
+| columns    | array   | true     | -       | Columns to display                                                                               |
+| styles     | object  | false    | {}      | Custom styles for your table                                                                     |
 
 #### Pagination object
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| items | object | false | {} | Items available for display in the pagination bar. Check below for items available |
-| visible | boolean/object | false | true | Whether the pagination is visible or not |
+| Key     | Type           | Required | Default | Description                                                                        |
+| ------- | -------------- | -------- | ------- | ---------------------------------------------------------------------------------- |
+| items   | object         | false    | {}      | Items available for display in the pagination bar. Check below for items available |
+| visible | boolean/object | false    | true    | Whether the pagination is visible or not                                           |
 
 ##### Pagination items object
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| type | string | true | - | One of the following: limiter, pages, resultCount |
-| visible | boolean | false | true | Whether the item is visible |
-| **Limiter specific options** |   |   |   |   |
-| options | array | true | - | Array of integers with limiter options |
-| default | array | true | - | One of the values in the limiter options key |
+| Key                          | Type    | Required | Default | Description                                       |
+| ---------------------------- | ------- | -------- | ------- | ------------------------------------------------- |
+| type                         | string  | true     | -       | One of the following: limiter, pages, resultCount |
+| visible                      | boolean | false    | true    | Whether the item is visible                       |
+| **Limiter specific options** |         |          |         |                                                   |
+| options                      | array   | true     | -       | Array of integers with limiter options            |
+| default                      | array   | true     | -       | One of the values in the limiter options key      |
 
 #### Routes object
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| get | object | true | - | The configuration for fetching data |
-| **- get** |   |   |   |   |
-| route | string | true | - | Your data fetching route |
-| sort | string | true | - | Your key to sort with |
-| dir | string | true | - | Sort by 'asc' or 'desc' order |
-| resultPath | object | true | - | The keys object to your data. Required { data: '{your data path in json response. Ex: result.data}'} |
+| Key        | Type   | Required | Default | Description                                                                                          |
+| ---------- | ------ | -------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| get        | object | true     | -       | The configuration for fetching data                                                                  |
+| **- get**  |        |          |         |                                                                                                      |
+| route      | string | true     | -       | Your data fetching route                                                                             |
+| sort       | string | true     | -       | Your key to sort with                                                                                |
+| dir        | string | true     | -       | Sort by 'asc' or 'desc' order                                                                        |
+| resultPath | object | true     | -       | The keys object to your data. Required { data: '{your data path in json response. Ex: result.data}'} |
 
 #### Toolbar
 
-Toolbar config is an array of array of object where objects are the toolbar items. Each inner array represents a different row.
+Toolbar config is an array of array of object where objects are the
+toolbar items. Each inner array represents a different row.
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| type | string | false | actions | Available values reset-filters and columns  |
-| label | string | true | - | Label for the toolbar item |
-| visible | boolean | false | true | Whether the item is visible |
-| state | boolean | false | false | Whether to pass the state object as item prop |
-| **For type: actions** |   |   |   |   |
-| options | array | true | - | Array of option objects |
-| **-- options** |   |   |   |   |
-| type | string | true | action | Available option: action |
-| name | string | true | - | Unique name for the action |
-| label | string | true | - | Label for the action |
-| thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
+| Key                   | Type     | Required | Default | Description                                                               |
+| --------------------- | -------- | -------- | ------- | ------------------------------------------------------------------------- |
+| type                  | string   | false    | actions | Available values reset-filters and columns                                |
+| label                 | string   | true     | -       | Label for the toolbar item                                                |
+| visible               | boolean  | false    | true    | Whether the item is visible                                               |
+| state                 | boolean  | false    | false   | Whether to pass the state object as item prop                             |
+| **For type: actions** |          |          |         |                                                                           |
+| options               | array    | true     | -       | Array of option objects                                                   |
+| **-- options**        |          |          |         |                                                                           |
+| type                  | string   | true     | action  | Available option: action                                                  |
+| name                  | string   | true     | -       | Unique name for the action                                                |
+| label                 | string   | true     | -       | Label for the action                                                      |
+| thunk                 | function | true     | -       | An action creator which is dispatched on action click. Check demo schema. |
 
 #### Columns object
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| name | string | true | - | Unique name for the column |
-| label | string | true | - | Label for the column |
-| sortable | boolean | false | true | Whether the column is sortable |
-| filterable | boolean | false | true | Whether the column is filterable |
-| type | string | true | string | Available types: selection, number, date, string, image, actions |
-| width | integer | true | - | Width of the column |
-| extraData | string/array | fasle | - | properties from the state to pass as in the extra object |
-| textAlign | string | false | left | Text alignment in the column |
-| **type: actions** |  |  |  |  |
-| items | array | true | - | array of item configuration object |
-| **- item configuration object** |  |  |  |  |
-| name  | string | true | - | Unique name for the action |
-| label | string | true | - | Label for the action |
-| thunk | function | true | - | An action creator which is dispatched on action click. Check demo schema. |
+| Key                             | Type         | Required | Default | Description                                                               |
+| ------------------------------- | ------------ | -------- | ------- | ------------------------------------------------------------------------- |
+| name                            | string       | true     | -       | Unique name for the column                                                |
+| label                           | string       | true     | -       | Label for the column                                                      |
+| sortable                        | boolean      | false    | true    | Whether the column is sortable                                            |
+| filterable                      | boolean      | false    | true    | Whether the column is filterable                                          |
+| type                            | string       | true     | string  | Available types: selection, number, date, string, image, actions          |
+| width                           | integer      | true     | -       | Width of the column                                                       |
+| extraData                       | string/array | false    | -       | properties from the state to pass as in the extra object                  |
+| textAlign                       | string       | false    | left    | Text alignment in the column                                              |
+| **type: actions**               |              |          |         |                                                                           |
+| items                           | array        | true     | -       | array of item configuration object                                        |
+| **- item configuration object** |              |          |         |                                                                           |
+| name                            | string       | true     | -       | Unique name for the action                                                |
+| label                           | string       | true     | -       | Label for the action                                                      |
+| thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema. |
 
 #### Styles object
 
-Styles has the following properties avaailable:
+Styles has the following properties available:
 
-| Key | Type | Required | Default | Description |
-| ------------ | ------------ | ------------ | ------------ | ------------ |
-| tableContainer | styled-components style object | false | - | Outer table container |
-| table | styled-components style object | false | - | Table component |
-| thead | styled-components style object | false | - | Table header component |
-| tbody | styled-components style object | false | - | Table body component |
-| tr | object | false | - | Table rows - the object can contain the following keys `header`, `filter`, `body`, each of whose values is a styled-components style object| |
-| th | styled-components style object | false | - | Table header columns |
-| td | object | false | - | Table columns - the object contain the following keys `filter`, `body` whose value is a styled-components style object |
-| toolbar | object | false | - | Keys `container` and `row` which are styled-components style object and `item` which is an object with keys that are the names of the respective items (as defined in the config) and the value is a styled-components style object |
-| pagination | object | false | - | Keys `container` - a styled-components style object and `item` - same as above toolbar item |
-| filter | object | false | - | Each key is the name of the column and the value is the styled-components style object |
-| body | object | false | - | Same as `filter` (above) |
+| Key            | Type                           | Required | Default | Description                                                                                                                                                                                                                         |
+| -------------- | ------------------------------ | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| tableContainer | styled-components style object | false    | -       | Outer table container                                                                                                                                                                                                               |
+| table          | styled-components style object | false    | -       | Table component                                                                                                                                                                                                                     |
+| thead          | styled-components style object | false    | -       | Table header component                                                                                                                                                                                                              |
+| tbody          | styled-components style object | false    | -       | Table body component                                                                                                                                                                                                                |
+| tr             | object                         | false    | -       | Table rows - the object can contain the following keys `header`, `filter`, `body`, each of whose values is a styled-components style object                                                                                         |
+| th             | styled-components style object | false    | -       | Table header columns                                                                                                                                                                                                                |
+| td             | object                         | false    | -       | Table columns - the object contain the following keys `filter`, `body` whose value is a styled-components style object                                                                                                              |
+| toolbar        | object                         | false    | -       | Keys `container` and `row` which are styled-components style object and `item` which is an object with keys that are the names of the respective items (as defined in the config) and the value is a styled-components style object |
+| pagination     | object                         | false    | -       | Keys `container` - a styled-components style object and `item` - same as above toolbar item                                                                                                                                         |
+| filter         | object                         | false    | -       | Each key is the name of the column and the value is the styled-components style object                                                                                                                                              |
+| body           | object                         | false    | -       | Same as `filter` (above)                                                                                                                                                                                                            |
 
 ## License
+
 The MIT License (MIT)
 
 [npm-badge]: https://img.shields.io/npm/v/@flipbyte/redux-datatable.svg
 [npm]: https://www.npmjs.com/package/@flipbyte/redux-datatable
 
 [codacy-badge]: https://api.codacy.com/project/badge/Grade/67274650b4874f5db55ede76156ab4d2
-[codacy]: https://www.codacy.com/app/flipbyte/redux-datatable?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=flipbyte/redux-datatable&amp;utm_campaign=Badge_Grade
+[codacy]: https://www.codacy.com/app/flipbyte/redux-datatable?utm_source=github.com&utm_medium=referral&utm_content=flipbyte/redux-datatable&utm_campaign=Badge_Grade
