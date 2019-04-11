@@ -31,7 +31,6 @@ const getPages = ( currentPage, total ) => {
 };
 
 const Pages = ({ page, total, action, style }) => {
-    console.log('page', page, total);
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <List>
