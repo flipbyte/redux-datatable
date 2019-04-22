@@ -18,6 +18,10 @@ const Td = styled.div.attrs(({ width: maxWidth }) => ({
     position: relative;
     overflow: hidden;
     font-size: 14px;
+
+    &:empty {
+        padding: 0
+    }
 `;
 
 const ExtendedTd = styled(Td)(getExtendedStyles());
