@@ -9,6 +9,7 @@ import MassActions from './Renderer/Toolbar/MassActions';
 import ResetFilters from './Renderer/Toolbar/ResetFilters';
 
 import DateFilter from './Renderer/Filter/Date';
+import FilterOptions from './Renderer/Filter/Options';
 import String from './Renderer/Filter/String';
 import Number from './Renderer/Filter/Number';
 
@@ -33,6 +34,7 @@ const renderers = {
     filter: {
         number: Number,
         date: DateFilter,
+        options: FilterOptions,
         default: String
     },
     body: {
