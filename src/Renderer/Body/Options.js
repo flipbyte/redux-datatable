@@ -14,7 +14,7 @@ const Options = ({
 
     return (
         <span className={ (options[value].badge ? 'badge ' + options[value].badge : '') }>
-            { options[value].value }
+            { options[value].label }
         </span>
     );
 };
