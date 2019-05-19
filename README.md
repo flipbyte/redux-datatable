@@ -47,9 +47,9 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 
 ```javascript
 {
-	name: 'your_table_name', // this is the key used to set your table data inside the table reducer
-	height: 500,
-	rowHeight: 50,
+    name: 'your_table_name', // this is the key used to set your table data inside the table reducer
+    height: 500,
+    rowHeight: 50,
     pagination: {
         // visible: true, // or an object { top: true, bottom: false } default visible
         items: {
@@ -74,19 +74,19 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             },
         }
     },
-	routes: { // You can add other routes and handle them using custom actions.
-		get: { // The route used to fetch data and it's params
-			route: '/{your_route}',
-			sort: 'id',
-			dir: 'asc',
-			resultPath: {
-				data: 'data'
-			}
-		},
-		...
-	},
-	toolbar: [ // Each toolbar array of objects below is a separate row in the toolbar section. You can add your own renderers and toolbar items or use some of the in-built ones.
-		[{
+    routes: { // You can add other routes and handle them using custom actions.
+    	get: { // The route used to fetch data and it's params
+    		route: '/{your_route}',
+    		sort: 'id',
+    		dir: 'asc',
+    		resultPath: {
+    			data: 'data'
+    		}
+    	},
+    	...
+    },
+    toolbar: [ // Each toolbar array of objects below is a separate row in the toolbar section. You can add your own renderers and toolbar items or use some of the in-built ones.
+    	[{
             type: 'reset-filters',
             label: 'Reset Filters',
             visible: true,
@@ -97,11 +97,11 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             visible: true,
             state: false,
         },
-		...
-		]
-		...
-	],
-	columns: [{
+    	...
+    	]
+    	...
+    ],
+    columns: [{
         name: 'ids',
         label: '',
         sortable: false,
@@ -183,8 +183,8 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
                     : console.log(false);
             }
         },
-		...
-		]
+    	...
+    	]
     },
     ...
     ]
