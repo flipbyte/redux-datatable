@@ -118,6 +118,24 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
         filterable: true,
         sortable: true,
     }, {
+        label: "Status",
+        type: "options",
+        name: "entityData.data.status",
+        sortable: true,
+        filterable: true,
+        textAlign: "center",
+        options: {
+            "published": {
+                label: "Published"
+            },
+            "draft": {
+                label: "Draft"
+            },
+            "archived": {
+                label: "Archived"
+            }
+        }
+    }, {
         label: 'Avatar',
         type: 'image',
         name: 'avatar',
@@ -249,22 +267,24 @@ toolbar items. Each inner array represents a different row.
 
 #### Columns object
 
-| Key                             | Type         | Required | Default | Description                                                               |
-| ------------------------------- | ------------ | -------- | ------- | ------------------------------------------------------------------------- |
-| name                            | string       | true     | -       | Unique name for the column                                                |
-| label                           | string       | true     | -       | Label for the column                                                      |
-| sortable                        | boolean      | false    | true    | Whether the column is sortable                                            |
-| filterable                      | boolean      | false    | true    | Whether the column is filterable                                          |
-| type                            | string       | true     | string  | Available types: selection, number, date, string, image, actions          |
-| width                           | integer      | true     | -       | Width of the column                                                       |
-| extraData                       | string/array | false    | -       | properties from the state to pass as in the extra object                  |
-| textAlign                       | string       | false    | left    | Text alignment in the column                                              |
-| **type: actions**               |              |          |         |                                                                           |
-| items                           | array        | true     | -       | array of item configuration object                                        |
-| **- item configuration object** |              |          |         |                                                                           |
-| name                            | string       | true     | -       | Unique name for the action                                                |
-| label                           | string       | true     | -       | Label for the action                                                      |
-| thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema. |
+| Key                             | Type         | Required | Default | Description                                                                                                                                              |
+| ------------------------------- | ------------ | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name                            | string       | true     | -       | Unique name for the column                                                                                                                               |
+| label                           | string       | true     | -       | Label for the column                                                                                                                                     |
+| sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                                                                           |
+| filterable                      | boolean      | false    | true    | Whether the column is filterable                                                                                                                         |
+| type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                                                                                |
+| width                           | integer      | true     | -       | Width of the column                                                                                                                                      |
+| extraData                       | string/array | false    | -       | properties from the state to pass as value in the extra object.                                                                                          |
+| textAlign                       | string       | false    | left    | Text alignment in the column                                                                                                                             |
+| **type: options**               |              |          |         |                                                                                                                                                          |
+| options                         | object       | true     | -       | object of objects with key for each child object being the value of the column and child object being { label: "{Your label for the respective value}" } |
+| **type: actions**               |              |          |         |                                                                                                                                                          |
+| items                           | array        | true     | -       | array of item configuration object                                                                                                                       |
+| **- item configuration object** |              |          |         |                                                                                                                                                          |
+| name                            | string       | true     | -       | Unique name for the action                                                                                                                               |
+| label                           | string       | true     | -       | Label for the action                                                                                                                                     |
+| thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema.                                                                                |
 
 #### Styles object
 
@@ -289,7 +309,9 @@ Styles has the following properties available:
 The MIT License (MIT)
 
 [npm-badge]: https://img.shields.io/npm/v/@flipbyte/redux-datatable.svg
+
 [npm]: https://www.npmjs.com/package/@flipbyte/redux-datatable
 
 [codacy-badge]: https://api.codacy.com/project/badge/Grade/67274650b4874f5db55ede76156ab4d2
+
 [codacy]: https://www.codacy.com/app/flipbyte/redux-datatable?utm_source=github.com&utm_medium=referral&utm_content=flipbyte/redux-datatable&utm_campaign=Badge_Grade
