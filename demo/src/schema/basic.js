@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default {
     name: 'posts',
     height: 400,
@@ -5,6 +7,14 @@ export default {
     filterable: true,
     headers: true,
     // styles: {
+    //     loader: {
+    //         mask: {
+    //             backgroundColor: 'red',
+    //         },
+    //         spinner: {
+    //             borderTopColor: 'black',
+    //         }
+    //     },
     //     tableContainer: {
     //         fontSize: '16px',
     //     },
@@ -177,6 +187,37 @@ export default {
         width: 150,
         filterable: true,
         sortable: true,
+    }, {
+        label: "Status",
+        type: "options",
+        name: "entityData.data.status",
+        sortable: true,
+        filterable: true,
+        textAlign: "center",
+        options: {
+            "published": {
+                "label": "Published"
+            },
+            "draft": {
+                "label": "Draft"
+            },
+            "unpublished": {
+                "label": "Unpublished"
+            },
+            "pending-review": {
+                "label": "Pending Review"
+            },
+            "trashed": {
+                "label": "Trashed"
+            },
+            "archived": {
+                "label": "Archived"
+            }
+        },
+        renderer: ({
+            data,
+            colConfig: { name, options }
+        }) => <div>Not specified</div>
     }, {
         label: 'Created at',
         type: 'date',
