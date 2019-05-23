@@ -272,6 +272,7 @@ const renderTable = ({
                         >
                             {(column, index) => {
                                 const { width, textAlign, name, type } = column;
+                                const ColRenderer = column.renderer || Renderer;
                                 return (
                                     <Td
                                         key={ index }
@@ -279,7 +280,7 @@ const renderTable = ({
                                         styles={ getStyles(styles.td, 'body') }
                                     >
                                         <ExtendedDiv styles={ getStyles(styles.body, name) }>
-                                            <Renderer
+                                            <ColRenderer
                                                 ofType="body"
                                                 forItem={ type }
                                                 data={ data }
