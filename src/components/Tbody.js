@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { getExtendedStyles } from '../utils';
+import Loader from './Loader';
 
 const Tbody = React.forwardRef(({
     className,
@@ -9,6 +10,8 @@ const Tbody = React.forwardRef(({
     data,
     height,
     innerHeight,
+    isFetching,
+    loaderStyles = {},
     overScanCount = 10,
     rowHeight,
     rowWidth,
@@ -29,6 +32,7 @@ const Tbody = React.forwardRef(({
 
     return (
         <div className={ className } style={ style } ref={ ref }>
+            { isFetching && <Loader styles={ loaderStyles }/> }
             <div style={{ width, height: innerHeight, position: 'relative' }}>
                 { slicedData.map((item, index) => {
                     let currentIndex = startIndex + index;

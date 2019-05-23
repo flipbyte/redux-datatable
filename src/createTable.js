@@ -186,6 +186,7 @@ const renderTable = ({
     bodyExtraData = {},
     columns = [],
     height,
+    isFetching,
     items,
     query = {},
     rowHeight,
@@ -254,8 +255,10 @@ const renderTable = ({
                 innerHeight={ height }
                 data={ items }
                 startTop={ top }
+                isFetching={ isFetching }
                 visibleHeight={ visibleHeight }
                 rowHeight={ rowHeight }
+                loaderStyles={ getStyles(styles, 'loader') }
                 styles={ getStyles(styles, 'tbody') }
             >
                 {({ item, top, index: rowIndex }) => {
@@ -340,7 +343,7 @@ const ReduxDatatable = ( props ) => {
         );
     }
 
-    const { query } = tableData;
+    const { query, isFetching } = tableData;
     return (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container>
@@ -351,6 +354,7 @@ const ReduxDatatable = ( props ) => {
                     bodyExtraData: getExtraBodyRowProps(tableData, tableConfig.visibleColumns),
                     columns: visibleColumns,
                     height: rowHeight * ( tableData.items || [] ).length,
+                    isFetching,
                     items: tableData.items || [],
                     pointerEvents,
                     query,

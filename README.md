@@ -305,6 +305,7 @@ Styles has the following properties available:
 | pagination     | object                         | false    | -       | Keys `container` - a styled-components style object and `item` - same as above toolbar item                                                                                                                                         |
 | filter         | object                         | false    | -       | Each key is the name of the column and the value is the styled-components style object                                                                                                                                              |
 | body           | object                         | false    | -       | Same as `filter` (above)                                                                                                                                                                                                            |
+| loader         | object                         | false    | -       | There are 2 style-able keys `mask` and `spinner` for the loader overlay and the loading spinner respectively                                                                                                                        |
 
 ## License
 
