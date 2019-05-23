@@ -19,9 +19,9 @@ const formControl = ({
     background-clip: padding-box;
     border: ${border || '1px solid #ebebeb'};
     border-radius: ${borderRadius || 0};
-    font-size: ${fontSize || '14px'};
+    font-size: ${fontSize || '.875rem'};
     color: ${color || '#495057'};
-    padding: ${padding || '10px 14px'};
+    padding: ${padding || '.375rem .75rem'};
 
     &:focus {
         box-shadow: ${focusShadow || 'none'};
