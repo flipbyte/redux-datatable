@@ -27,6 +27,16 @@ const calculateWidth = ( columns, adjustment = 1 ) => (
     ), 0)
 );
 
+const getInitialVisibleColumns = ( columns = [] ) => (
+    columns.reduce((visibleColumnIndexes, column, index) => {
+        if (column.visible !== false) {
+            visibleColumnIndexes.push(index);
+        }
+
+        return visibleColumnIndexes;
+    }, [])
+);
+
 const useTableScroll = ( tableBody, tableHeader ) => {
     const [ pointerEvents, setPointerEvents ] = useState('');
     const [ top, setTop ] = useState(0);
@@ -292,7 +302,7 @@ const renderTable = ({
 
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;
-    const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, _.range(config.columns.length));
+    const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, getInitialVisibleColumns(config.columns));
     const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns, entity = {} } = config;
 
     const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => {
