@@ -169,7 +169,7 @@ export default {
             label: 'Print Table',
             visible: true,
             state: false,
-        },{
+        }, {
             name: 'columns',
             type: 'columns',
             label: 'Columns',

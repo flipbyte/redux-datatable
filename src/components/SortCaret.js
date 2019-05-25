@@ -8,22 +8,40 @@ const SortCaret = styled.span `
     margin-left: 0.3em;
     border: 0;
     content: "";
+    vertical-align: top;
+    font-weight: normal;
+    font-size: 10px;
+    margin-top: 3px
 
-    ${props => props.dir === 'asc' && css `
-        vertical-align: middle;
-        border-top: none;
-        border-right: 4px solid transparent;
-        border-bottom: 4px solid #000000;
-        border-left: 4px solid transparent;
+    ${props => props.show && props.dir === 'asc' && css `
+        &::before {
+            content: ' \\2191';
+        }
+
+        &::after {
+            content: '\\2193';
+            color: #aaa;
+        }
     `};
 
-    ${props => props.dir === 'desc' && css `
-        vertical-align: middle;
-        border-top: 4px solid #000000;
-        border-right: 4px solid transparent;
-        border-bottom: none;
-        border-left: 4px solid transparent;
+    ${props => props.show && props.dir === 'desc' && css `
+        &::before {
+            content: ' \\2191';
+            color: #aaa;
+        }
+
+        &::after {
+            content: '\\2193';
+        }
     `};
+
+    ${props => props.show === false && css`
+        &::before {
+            content: ' \\2191 \\2193';
+            padding-right: 8px;
+            color: #000
+        }
+    `}
 `;
 
 export default SortCaret;

@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { useState, useEffect, useReducer, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { denormalize } from 'normalizr';
 
 import TableProvider from './TableProvider';
 import Renderer from './Renderer';
@@ -127,7 +126,7 @@ const renderTable = ({
                             >
                                 <label>
                                     { label }
-                                    { sortable && sort === name && <SortCaret dir={ dir } /> }
+                                    { sortable && <SortCaret show={ sort === name } dir={ dir } /> }
                                 </label>
                             </Th>
                         );
