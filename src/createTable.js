@@ -126,7 +126,7 @@ const renderTable = ({
                             >
                                 <label>
                                     { label }
-                                    { sortable && sort === name && <SortCaret dir={ dir } /> }
+                                    { sortable && <SortCaret show={ sort === name } dir={ dir } /> }
                                 </label>
                             </Th>
                         );
