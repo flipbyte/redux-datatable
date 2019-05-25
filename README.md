@@ -273,10 +273,12 @@ toolbar items. Each inner array represents a different row.
 | label                           | string       | true     | -       | Label for the column                                                                                                                                     |
 | sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                                                                           |
 | filterable                      | boolean      | false    | true    | Whether the column is filterable                                                                                                                         |
+| visible                         | boolean      | false    | true    | Whether the column is visible on load                                                                                                                    |
 | type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                                                                                |
 | width                           | integer      | true     | -       | Width of the column                                                                                                                                      |
 | extraData                       | string/array | false    | -       | properties from the state to pass as value in the extra object.                                                                                          |
 | textAlign                       | string       | false    | left    | Text alignment in the column                                                                                                                             |
+| renderer                        | function     | false    | -       | Define a custom renderer for column body.                                                                                                                |
 | **type: options**               |              |          |         |                                                                                                                                                          |
 | options                         | object       | true     | -       | object of objects with key for each child object being the value of the column and child object being { label: "{Your label for the respective value}" } |
 | **type: actions**               |              |          |         |                                                                                                                                                          |
@@ -303,6 +305,7 @@ Styles has the following properties available:
 | pagination     | object                         | false    | -       | Keys `container` - a styled-components style object and `item` - same as above toolbar item                                                                                                                                         |
 | filter         | object                         | false    | -       | Each key is the name of the column and the value is the styled-components style object                                                                                                                                              |
 | body           | object                         | false    | -       | Same as `filter` (above)                                                                                                                                                                                                            |
+| loader         | object                         | false    | -       | There are 2 style-able keys `mask` and `spinner` for the loader overlay and the loading spinner respectively                                                                                                                        |
 
 ## License
 

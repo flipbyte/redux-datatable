@@ -10,7 +10,7 @@ const SortCaret = styled.span `
     content: "";
 
     ${props => props.dir === 'asc' && css `
-        vertical-align: baseline;
+        vertical-align: middle;
         border-top: none;
         border-right: 4px solid transparent;
         border-bottom: 4px solid #000000;
@@ -18,7 +18,7 @@ const SortCaret = styled.span `
     `};
 
     ${props => props.dir === 'desc' && css `
-        vertical-align: super;
+        vertical-align: middle;
         border-top: 4px solid #000000;
         border-right: 4px solid transparent;
         border-bottom: none;

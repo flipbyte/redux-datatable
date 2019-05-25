@@ -14,7 +14,7 @@ const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
                 { options.map( (option, index) =>
                     <option key={ index } value={ option }>{ option !== 0 ? option : 'All' }</option>
                 ) }
-            </Field.Select> per page
+            </Field.Select>&nbsp;per page
         </Label>
     );
 };
