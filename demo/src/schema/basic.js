@@ -165,6 +165,11 @@ export default {
             visible: true,
             state: false,
         }, {
+            type: 'print',
+            label: 'Print Table',
+            visible: true,
+            state: false,
+        },{
             name: 'columns',
             type: 'columns',
             label: 'Columns',

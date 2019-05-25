@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import Button from '../../components/Button';
 import Dropdown from '../../components/Dropdown';
+import { ADD_COLUMN, REMOVE_COLUMN } from '../../constants';
 
 class Columns extends Component {
     constructor(props) {
@@ -14,13 +15,13 @@ class Columns extends Component {
         this.handleDocumentClick = this.handleDocumentClick.bind(this);
     }
 
-    updateColumns( index, event ) {
-        const { columnUpdater } = this.props;
+    updateColumns( value, event ) {
+        const { internalStateUpdater } = this.props;
 
-        if(event.target.checked) {
-            columnUpdater({ type: 'add', index });
+        if (event.target.checked) {
+            internalStateUpdater({ type: ADD_COLUMN, value });
         } else {
-            columnUpdater({ type: 'remove', index });
+            internalStateUpdater({ type: REMOVE_COLUMN, value });
         }
     }
 

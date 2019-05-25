@@ -11,6 +11,7 @@ const Tbody = React.forwardRef(({
     height,
     innerHeight,
     isFetching,
+    isPrinting = false,
     loaderStyles = {},
     overScanCount = 10,
     rowHeight,
@@ -19,16 +20,22 @@ const Tbody = React.forwardRef(({
     visibleHeight,
     width = '100%'
 }, ref) => {
-    const visibleLower =  startTop - overScanCount * rowHeight;
-    const visibleUpper = startTop + visibleHeight + overScanCount * rowHeight;
+    let slicedData = [];
+    let startIndex = 0;
+    if (isPrinting === false) {
+        const visibleLower =  startTop - overScanCount * rowHeight;
+        const visibleUpper = startTop + visibleHeight + overScanCount * rowHeight;
 
-    let startIndex = Math.floor(visibleLower / rowHeight);
-    if(startIndex < 0) {
-        startIndex = 0;
+        startIndex = Math.floor(visibleLower / rowHeight);
+        if(startIndex < 0) {
+            startIndex = 0;
+        }
+
+        const endIndex = Math.ceil(visibleUpper / rowHeight);
+        slicedData = data.slice(startIndex, endIndex);
+    } else {
+        slicedData = data.slice(0)
     }
-
-    const endIndex = Math.ceil(visibleUpper / rowHeight);
-    const slicedData = data.slice(startIndex, endIndex);
 
     return (
         <div className={ className } style={ style } ref={ ref }>
@@ -43,14 +50,14 @@ const Tbody = React.forwardRef(({
     );
 });
 
-const StyledTbody = styled(Tbody).attrs(({ height }) => ({
-    style: { height }
-})) `
+const StyledTbody = styled(Tbody).attrs(({ isPrinting, windowing, height }) => (
+    isPrinting === false ? { style: { height } } : null
+))`
     max-width: 100%;
     margin-right: auto;
     margin-left: auto;
-    overflow-y: scroll;
-    overflow-x: scroll;
+    overflow-y: ${props => props.isPrinting ? 'none': 'scroll'};
+    overflow-x: ${props => props.isPrinting ? 'none': 'scroll'};
     border-bottom: 1px solid #ddd;
 `;
 const ExtendedStyledTbody = styled(StyledTbody)(getExtendedStyles());

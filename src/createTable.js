@@ -18,116 +18,43 @@ import Pagination from './components/Pagination';
 import Container from './components/Container';
 import SortCaret from './components/SortCaret';
 import ExtendedDiv from './components/ExtendedDiv';
-import { createActionCreator, isArray, getStyles } from './utils';
+import Popup from './components/Popup';
+import { useTableWidth, useTableScroll } from './hooks';
 import { setPage, setLimit, setSort, SET_SORT, SET_FILTER } from './actions';
+import { ADD_COLUMN, REMOVE_COLUMN, SET_IS_PRINTING } from './constants';
+import {
+    createActionCreator,
+    isArray,
+    getStyles,
+    getExtraBodyRowProps,
+    calculateWidth,
+    prepareData,
+    getInitialVisibleColumns,
+    changeSortOrder
+} from './utils';
 
-const calculateWidth = ( columns, adjustment = 1 ) => (
-    columns.reduce((result, column) => (
-        result + ((column.width * adjustment) || 0)
-    ), 0)
-);
-
-const getInitialVisibleColumns = ( columns = [] ) => (
-    columns.reduce((visibleColumnIndexes, column, index) => {
-        if (column.visible !== false) {
-            visibleColumnIndexes.push(index);
-        }
-
-        return visibleColumnIndexes;
-    }, [])
-);
-
-const useTableScroll = ( tableBody, tableHeader ) => {
-    const [ pointerEvents, setPointerEvents ] = useState('');
-    const [ top, setTop ] = useState(0);
-
-    const scrollEnded = _.debounce(() => setPointerEvents(''), 150);
-    const handleScroll = () => {
-        tableHeader.current.scrollLeft = tableBody.current.scrollLeft;
-        setPointerEvents('none');
-        setTop(tableBody.current.scrollTop);
-    };
-
-    useEffect(() => {
-        if(typeof tableBody.current.addEventListener === 'function') {
-            tableBody.current.addEventListener('scroll', handleScroll, true);
-        }
-        return () => {
-            tableBody.current.removeEventListener('scroll', handleScroll, true);
-        };
-    }, [ tableBody.current ]);
-
-    return [ top, pointerEvents ];
-};
-
-const columnsReducer = (state, { type, index }) => {
-    var visibleColumnIds = [ ...state ];
-    if(type === 'add') {
-        visibleColumnIds.push(index);
-        visibleColumnIds.sort();
-    } else {
-        visibleColumnIds.splice(visibleColumnIds.indexOf(index), 1).sort();
-    }
-
-    return visibleColumnIds;
-};
-
-const useTableWidth = ( tableBody, minWidth, visibleColumns ) => {
-    const [ width, setWidth ] = useState(minWidth);
-    const [ widthAdjustment, setWidthAdjustment ] = useState(1);
-
-    const updateTableDimensions = ( ) => {
-        const tableBodyEl = tableBody.current;
-        const computedTableWidth = minWidth > tableBodyEl.clientWidth || !tableBodyEl.clientWidth
-            ? minWidth
-            : tableBodyEl.clientWidth;
-
-        const percentage = computedTableWidth / calculateWidth(visibleColumns);
-        setWidth(calculateWidth(visibleColumns, percentage));
-        setWidthAdjustment(percentage);
-    };
-
-    useEffect(() => {
-        window.addEventListener('resize', updateTableDimensions);
-        return () => {
-            window.removeEventListener('resize', updateTableDimensions);
-        };
-    }, []);
-
-    useEffect(() => {
-        updateTableDimensions();
-    }, [ visibleColumns ]);
-
-    return [ width, widthAdjustment ];
-};
-
-const changeSortOrder = ( query, colName, sorter ) => {
-    let dir = null;
-    if( query.sort !== colName ) {
-        dir = 'asc';
-    } else {
-        if(query.dir === 'asc') {
-            dir = 'desc';
-        } else if(query.dir === 'desc') {
-            colName = '';
-            dir = '';
-        } else {
-            dir = 'asc';
+const tableReducer = ( state, { type, value }) => {
+    const options = {
+        [ADD_COLUMN]: () => {
+            let visibleColumnIds = [ ...state.visibleColumnIds ];
+            visibleColumnIds.push(value);
+            visibleColumnIds.sort();
+            return { ...state, visibleColumnIds }
+        },
+        [REMOVE_COLUMN]: () => {
+            let visibleColumnIds = [ ...state.visibleColumnIds ];
+            visibleColumnIds.splice(visibleColumnIds.indexOf(value), 1).sort();
+            return { ...state, visibleColumnIds }
+        },
+        [SET_IS_PRINTING]: () => {
+            return { ...state, isPrinting: value };
         }
     }
 
-    sorter({ sort: colName, dir });
-};
+    return options[type]();
+}
 
-const prepareData = ( item, schema, state ) => {
-    if (_.isEmpty(schema) || _.isObject(item)) {
-        return item;
-    }
-
-    return denormalize(item, schema, state);
-};
-
-const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visibleColumns, styles = {} ) => (
+const renderToolbar = ( config = [], action, thunk, internalStateUpdater, columns, visibleColumns, styles = {} ) => (
     <Row>
         <Toolbar items={ config } styles={ styles }>
             {({ state, ...itemConfig }) => (
@@ -137,7 +64,7 @@ const renderToolbar = ( config = [], action, thunk, columnUpdater, columns, visi
                     itemConfig={ itemConfig }
                     action={ action }
                     thunk={ thunk }
-                    columnUpdater={ columnUpdater }
+                    internalStateUpdater={ internalStateUpdater }
                     columns={ columns }
                     visibleColumns={ visibleColumns }
                 />
@@ -162,31 +89,13 @@ const renderPagination = ( position, query, config = {}, action, thunk, styles =
     </Row>
 );
 
-const getExtraBodyRowProps = (data, columns) => (
-    columns.reduce((result = {}, { name, extraData }) => {
-        result[name] = extraData
-            ? isArray(extraData)
-                ? extraData.reduce((edResult, dataKey) => {
-                    if(isArray(dataKey)) {
-                        edResult[dataKey[1] || dataKey[0]] = _.get(data, dataKey[0]);
-                    } else {
-                        edResult[dataKey] = _.get(data, dataKey);
-                    }
-
-                    return edResult;
-                }, {})
-                : { [extraData]: _.get(data, extraData) }
-            : {};
-        return result;
-    }, {})
-);
-
 const renderTable = ({
     action,
     bodyExtraData = {},
     columns = [],
     height,
     isFetching,
+    isPrinting,
     items,
     query = {},
     rowHeight,
@@ -256,10 +165,12 @@ const renderTable = ({
                 data={ items }
                 startTop={ top }
                 isFetching={ isFetching }
+                isPrinting={ isPrinting }
                 visibleHeight={ visibleHeight }
                 rowHeight={ rowHeight }
                 loaderStyles={ getStyles(styles, 'loader') }
                 styles={ getStyles(styles, 'tbody') }
+                windowing={ true }
             >
                 {({ item, top, index: rowIndex }) => {
                     var data = prepareData(item, schema, state);
@@ -306,9 +217,12 @@ const renderTable = ({
 
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;
-    const [ visibleColumnIds, dispatch ] = useReducer(columnsReducer, getInitialVisibleColumns(config.columns));
+    const [ tableInternalState, dispatch ] = useReducer(tableReducer, {
+        isPrinting: false,
+        visibleColumnIds: getInitialVisibleColumns(config.columns)
+    });
     const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns, entity = {} } = config;
-
+    const { visibleColumnIds, isPrinting } = tableInternalState;
     const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => {
         const { [currentIndex]: column } = columns;
         return [ ...result, column ];
@@ -343,8 +257,7 @@ const ReduxDatatable = ( props ) => {
         );
     }
 
-    const { query, isFetching } = tableData;
-    return (
+    const tableRenderer = () => (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container>
                 { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
@@ -355,6 +268,7 @@ const ReduxDatatable = ( props ) => {
                     columns: visibleColumns,
                     height: rowHeight * ( tableData.items || [] ).length,
                     isFetching,
+                    isPrinting,
                     items: tableData.items || [],
                     pointerEvents,
                     query,
@@ -374,6 +288,14 @@ const ReduxDatatable = ( props ) => {
             </Container>
         </TableProvider>
     );
+
+
+    const { query, isFetching } = tableData;
+    if (isPrinting) {
+        return <Popup internalStateUpdater={ dispatch }>{ tableRenderer() }</Popup>
+    }
+
+    return tableRenderer();
 };
 
 const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) => (

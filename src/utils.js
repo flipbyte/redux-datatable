@@ -100,3 +100,64 @@ export const getExtendedStyles = (name) => ({ styles }) => {
     const { [name]: style } = styles;
     return style;
 };
+
+export const getExtraBodyRowProps = (data, columns) => (
+    columns.reduce((result = {}, { name, extraData }) => {
+        result[name] = extraData
+            ? isArray(extraData)
+                ? extraData.reduce((edResult, dataKey) => {
+                    if(isArray(dataKey)) {
+                        edResult[dataKey[1] || dataKey[0]] = _.get(data, dataKey[0]);
+                    } else {
+                        edResult[dataKey] = _.get(data, dataKey);
+                    }
+
+                    return edResult;
+                }, {})
+                : { [extraData]: _.get(data, extraData) }
+            : {};
+        return result;
+    }, {})
+);
+
+export const calculateWidth = ( columns, adjustment = 1 ) => (
+    columns.reduce((result, column) => (
+        result + ((column.width * adjustment) || 0)
+    ), 0)
+);
+
+export const getInitialVisibleColumns = ( columns = [] ) => (
+    columns.reduce((visibleColumnIndexes, column, index) => {
+        if (column.visible !== false) {
+            visibleColumnIndexes.push(index);
+        }
+
+        return visibleColumnIndexes;
+    }, [])
+);
+
+export const prepareData = ( item, schema, state ) => {
+    if (_.isEmpty(schema) || _.isObject(item)) {
+        return item;
+    }
+
+    return denormalize(item, schema, state);
+};
+
+export const changeSortOrder = ( query, colName, sorter ) => {
+    let dir = null;
+    if( query.sort !== colName ) {
+        dir = 'asc';
+    } else {
+        if(query.dir === 'asc') {
+            dir = 'desc';
+        } else if(query.dir === 'desc') {
+            colName = '';
+            dir = '';
+        } else {
+            dir = 'asc';
+        }
+    }
+
+    sorter({ sort: colName, dir });
+};
