@@ -64,7 +64,10 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 return { response, data };
             }),
             map((payload) => receiveData({ name, payload })),
-            catchError((error) => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }))),
+            catchError((error) => of(
+                cancelRequest({ name }),
+                createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })
+            )),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
                 filter((cancelAction) => cancelAction.name === name)
@@ -96,7 +99,10 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                     })
                 );
             }),
-            catchError((error) => of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })))
+            catchError((error) => of(
+                cancelRequest({ name }),
+                createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })
+            ))
         );
     })
 );
