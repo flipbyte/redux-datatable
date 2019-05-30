@@ -106,7 +106,7 @@ export default {
                 type: 'limiter',
                 visible: true,
                 position: 10,
-                options: [10, 20, 50, 200, 2000],
+                options: [10, 20, 50, 200, 2000, 0],
                 default: 200,
             },
             pages: {
@@ -159,6 +159,14 @@ export default {
                 indexField: '@id'
             }],
             visible: true
+        }, {
+            type: 'button',
+            label: 'Simple Button',
+            visible: true,
+            state: false,
+            thunk: ( payload ) => ( dispatch, getState ) => {
+                console.log('toolbar button click', payload);
+            }
         }, {
             type: 'resetFilters',
             label: 'Reset Filters',

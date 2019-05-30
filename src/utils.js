@@ -8,7 +8,7 @@ export const defaultLimiterCongig = {
 };
 
 export const isArray = (value) => Array.isArray(value);
-
+export const isUndefined = (value) => typeof value === 'undefined';
 export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
 
 export const getSelectedKeys = (data, dataKey) => {

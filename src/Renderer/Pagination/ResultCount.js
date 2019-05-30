@@ -1,7 +1,7 @@
 import React from 'react';
 
 const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
-const upperLimit = ( page, limit, count ) =>  (page * limit) > count ? count : page * limit;
+const upperLimit = ( page, limit, count ) =>  (page * limit) > count || limit === 0 ? count : page * limit;
 
 const ResultCount = ({ page, limit, count }) => (
     !!count > 0 &&
