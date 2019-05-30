@@ -15,7 +15,6 @@ import Td from './components/Td';
 import Toolbar from './components/Toolbar';
 import Pagination from './components/Pagination';
 import Container from './components/Container';
-import SortCaret from './components/SortCaret';
 import ExtendedDiv from './components/ExtendedDiv';
 import Popup from './components/Popup';
 import { useTableWidth, useTableScroll } from './hooks';
@@ -113,7 +112,7 @@ const renderTable = ({
         <Table styles={ getStyles(styles, 'table') }>
             <Thead ref={ tableHeader } width={ `${width}px` } styles={ getStyles(styles, 'thead') }>
                 <Tr columns={ columns } styles={ getStyles(styles.tr, 'header') }>
-                    {({ sortable, width, textAlign, name, label }, index) => {
+                    {({ sortable, width, textAlign, name, type, ...rest }, index) => {
                         const { sort, dir } = query;
                         return (
                             <Th
@@ -124,10 +123,16 @@ const renderTable = ({
                                 styles={ styles.th }
                                 onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
                             >
-                                <label>
-                                    { label }
-                                    { sortable && <SortCaret show={ sort === name } dir={ dir } /> }
-                                </label>
+                                <Renderer
+                                    ofType="header"
+                                    forItem={ type }
+                                    name={ name }
+                                    sortable={ sortable }
+                                    sort={ sort }
+                                    dir={ dir }
+                                    action={ action }
+                                    { ...rest }
+                                />
                             </Th>
                         );
                     }}

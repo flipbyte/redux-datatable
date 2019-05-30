@@ -22,6 +22,8 @@ import Actions from './Renderer/Body/Actions';
 import Options from './Renderer/Body/Options';
 import Selection from './Renderer/Body/Selection';
 
+import HeaderCol from './Renderer/Header/Column';
+
 const renderers = {
     pagination: {
         limiter: Limiter,
@@ -48,6 +50,9 @@ const renderers = {
         options: Options,
         image: Image,
         default: Text
+    },
+    header: {
+        default: HeaderCol
     }
 };
 
