@@ -4,6 +4,7 @@ import Limiter from './Renderer/Pagination/Limiter';
 import Pages from './Renderer/Pagination/Pages';
 import ResultCount from './Renderer/Pagination/ResultCount';
 
+import Button from './Renderer/Toolbar/Button';
 import Print from './Renderer/Toolbar/Print';
 import Columns from './Renderer/Toolbar/Columns';
 import MassActions from './Renderer/Toolbar/MassActions';
@@ -28,6 +29,7 @@ const renderers = {
         resultCount: ResultCount
     },
     toolbar: {
+        button: Button,
         print: Print,
         columns: Columns,
         resetFilters: ResetFilters,
