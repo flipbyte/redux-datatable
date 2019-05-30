@@ -19,6 +19,7 @@ const applyFilter = ( filterer, event ) => {
 
 const Options = ({ name, value = '', filterer, options }) => (
     <Field.Select
+        className="rdt-filter-select"
         name={ name }
         value={ value }
         onChange={ applyFilter.bind(this, filterer) }

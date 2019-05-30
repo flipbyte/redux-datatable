@@ -78,13 +78,13 @@ class Columns extends Component {
         const { open } = this.state;
 
         return (
-            <Dropdown.Container>
-                <Button dropdownToggle onClick={ this.toggle } { ...style.button }>
+            <Dropdown.Container className="rdt-toolbar-columns">
+                <Button  className="rdt-toolbar-btn" dropdownToggle onClick={ this.toggle } { ...style.button }>
                     Columns
                 </Button>
-                <Dropdown.Menu hidden={ !open } { ...style.dropdownMenu }>
+                <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
                     { columns.map(({ name, label }, index) =>
-                        <Dropdown.Item key={ index }>
+                        <Dropdown.Item key={ index } className="rdt-toolbar-item">
                             <input name={ name }
                                 type="checkbox"
                                 defaultChecked={ -1 !== visibleColumns.indexOf(index) }

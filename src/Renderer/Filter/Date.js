@@ -32,6 +32,7 @@ const Date = ({ name, value = [], filterer }) => (
     <Fragment>
         <Row padding="0 0 5px">
             <Field.Input
+                className="rdt-filter-input date from"
                 type="date"
                 name={ name }
                 value={ value[0] || '' }
@@ -41,6 +42,7 @@ const Date = ({ name, value = [], filterer }) => (
         </Row>
         <Row>
             <Field.Input
+                className="rdt-filter-input date to"
                 type="date"
                 name={ name }
                 value={ value[1] || '' }

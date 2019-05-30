@@ -2,7 +2,12 @@ import React from 'react';
 import Sortable from '../../components/Sortable';
 
 const Column = ({ name, label, sortable, sort, dir }) => (
-    <Sortable sortable={ sortable } show={ sort === name } dir={ dir }>
+    <Sortable
+        className={ `rdt-th-inner ${sortable ? 'sortable' : ''} ${sort === name ? 'current': ''} ${dir}` }
+        sortable={ sortable }
+        current={ sort === name }
+        dir={ dir }
+    >
         { label }
     </Sortable>
 );

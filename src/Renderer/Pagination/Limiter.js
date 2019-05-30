@@ -7,9 +7,10 @@ import { isUndefined } from '../../utils';
 const Limiter = ({ options, limit, action, style }) => {
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
-        <Label flex noWrap>
+        <Label className="rdt-limiter-label" flex noWrap>
             <Field.Select
                 id="limiter"
+                className="rdt-limiter-select"
                 value={ limit }
                 onChange={ ( event ) => setLimit(event.target.value) }>
                 { options.map( (option, index) =>

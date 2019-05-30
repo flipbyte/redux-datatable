@@ -53,17 +53,17 @@ class MassActions extends Component {
 
     render() {
         const { itemConfig, thunk } = this.props;
-        const { label, options, style = {} } = itemConfig;
+        const { label, name, options, style = {} } = itemConfig;
         const { open } = this.state;
 
         return (
-            <Dropdown.Container>
-                <Button dropdownToggle onClick={ this.toggle } { ...style.button }>
+            <Dropdown.Container className={ `rdt-toolbar-mass-actions ${name || ''}` }>
+                <Button className="rdt-toolbar-button" dropdownToggle onClick={ this.toggle } { ...style.button }>
                     { label }
                 </Button>
-                <Dropdown.Menu hidden={ !open } { ...style.dropdownMenu }>
+                <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
                     { options.map(({ thunk: cb, ...option }, index) =>
-                        <Dropdown.Item key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
+                        <Dropdown.Item className="rdt-toolbar-item" key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
                             { option.label }
                         </Dropdown.Item>
                     )}

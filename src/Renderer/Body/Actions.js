@@ -9,12 +9,13 @@ import Button from '../../components/Button';
 const Actions = ({
     extra,
     thunk,
-    colConfig: { items }
+    colConfig: { items, htmlClass, name }
 }) => (
     <div className="btn-group-sm">
         { items.map(({ thunk: cb, ...item }, index) =>
             <Button
                 key={ index }
+                className={ `rdt-body-actions button ${htmlClass || ''} ${name || ''}` }
                 onClick={ cb && thunk.bind(this, cb, { item, extra }) }
                 { ...item.style }
             >

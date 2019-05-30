@@ -5,7 +5,7 @@ const upperLimit = ( page, limit, count ) =>  (page * limit) > count || limit ==
 
 const ResultCount = ({ page, limit, count }) => (
     !!count > 0 &&
-        <span>Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>
+        <span className="rdt-pg-res-cnt">Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries</span>
 );
 
 export default ResultCount;

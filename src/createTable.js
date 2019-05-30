@@ -53,7 +53,7 @@ const tableReducer = ( state, { type, value }) => {
 }
 
 const renderToolbar = ( config = [], action, thunk, internalStateUpdater, columns, visibleColumns, styles = {} ) => (
-    <Row>
+    <Row className="rdt-toolbar-row">
         <Toolbar items={ config } styles={ styles }>
             {({ state, ...itemConfig }) => (
                 <Renderer
@@ -72,7 +72,7 @@ const renderToolbar = ( config = [], action, thunk, internalStateUpdater, column
 );
 
 const renderPagination = ( position, query, config = {}, action, thunk, styles = {} ) => (
-    <Row>
+    <Row className={ `rdt-pagination-row ${position}` }>
         <Pagination position={ position } config={ config } query={ query } styles={ styles }>
             {(item, paginationProps) => (
                 <Renderer
@@ -96,6 +96,7 @@ const renderTable = ({
     isPrinting,
     items,
     query = {},
+    pointerEvents,
     rowHeight,
     schema,
     state = {},
@@ -108,15 +109,16 @@ const renderTable = ({
     width,
     widthAdjustment = 1,
 }) => (
-    <Container styles={ getStyles(styles, 'tableContainer') }>
-        <Table styles={ getStyles(styles, 'table') }>
-            <Thead ref={ tableHeader } width={ `${width}px` } styles={ getStyles(styles, 'thead') }>
-                <Tr columns={ columns } styles={ getStyles(styles.tr, 'header') }>
+    <Container className="rdt-inner-container" styles={ getStyles(styles, 'tableContainer') }>
+        <Table className="rdt-table" styles={ getStyles(styles, 'table') }>
+            <Thead className="rdt-table-head" ref={ tableHeader } width={ `${width}px` } styles={ getStyles(styles, 'thead') }>
+                <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'header') }>
                     {({ sortable, width, textAlign, name, type, ...rest }, index) => {
                         const { sort, dir } = query;
                         return (
                             <Th
                                 key={ index }
+                                className={ `rdt-th ${name} ${type}` }
                                 sortable={ sortable }
                                 width={ width * widthAdjustment }
                                 textAlign={ textAlign }
@@ -137,13 +139,14 @@ const renderTable = ({
                         );
                     }}
                 </Tr>
-                <Tr columns={ columns } styles={ getStyles(styles.tr, 'filter') }>
+                <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'filter') }>
                     {({ filterable, type, width, ...rest }, index) => {
                         const { name } = rest;
                         const value = _.get(query, ['search', name, 'value']);
                         return (
                             <Td
                                 key={ index }
+                                className={ `rdt-table-col filter ${name} ${type}` }
                                 width={ `${width * widthAdjustment}px` }
                                 styles={ getStyles(styles.td, 'filter') }
                             >
@@ -162,6 +165,7 @@ const renderTable = ({
                 </Tr>
             </Thead>
             <Tbody
+                className="rdt-table-body"
                 ref={ tableBody }
                 width={ width }
                 height={ `${height > visibleHeight ? visibleHeight : height}px` }
@@ -181,6 +185,7 @@ const renderTable = ({
                     return (
                         <Tr
                             key={ rowIndex }
+                            className="rdt-table-row"
                             position="absolute"
                             top={ `${top}px` }
                             columns={ columns }
@@ -194,10 +199,11 @@ const renderTable = ({
                                 return (
                                     <Td
                                         key={ index }
+                                        className={ `rdt-table-col ${name} ${type}` }
                                         width={ `${width * widthAdjustment}px` }
                                         styles={ getStyles(styles.td, 'body') }
                                     >
-                                        <ExtendedDiv styles={ getStyles(styles.body, name) }>
+                                        <ExtendedDiv className="rdt-table-col-inner" styles={ getStyles(styles.body, name) }>
                                             <ColRenderer
                                                 ofType="body"
                                                 forItem={ type }
@@ -225,7 +231,17 @@ const ReduxDatatable = ( props ) => {
         isPrinting: false,
         visibleColumnIds: getInitialVisibleColumns(config.columns)
     });
-    const { toolbar = [], pagination = {}, filterable, headers, height, rowHeight, styles = {}, columns, entity = {} } = config;
+    const {
+        toolbar = [],
+        pagination = {},
+        filterable,
+        headers,
+        height,
+        rowHeight,
+        styles = {},
+        columns,
+        entity = {}
+    } = config;
     const { visibleColumnIds, isPrinting } = tableInternalState;
     const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => {
         const { [currentIndex]: column } = columns;
@@ -263,7 +279,7 @@ const ReduxDatatable = ( props ) => {
 
     const tableRenderer = () => (
         <TableProvider config={{ reducerName, ...tableConfig }}>
-            <Container>
+            <Container className="rdt-outer-container">
                 { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
                 { renderPagination('top', query, pagination, action, thunk, styles.pagination) }
                 { renderTable({

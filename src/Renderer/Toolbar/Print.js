@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 const Print = ({ itemConfig, internalStateUpdater }) => {
     const printTable = () => internalStateUpdater({ type: SET_IS_PRINTING, value: true });
     return (
-        <Button onClick={ printTable.bind(this) }>
+        <Button className="rdt-toolbar-button print" onClick={ printTable.bind(this) }>
             { itemConfig.label || 'Print' }
         </Button>
     );

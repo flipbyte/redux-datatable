@@ -31,7 +31,7 @@ const Sortable = styled.a `
             margin-top: 1px;
         }
 
-        ${props.show === true && (
+        ${props.current === true && (
             props.dir === 'asc' ?
                 css `
                     &:before {
@@ -45,13 +45,13 @@ const Sortable = styled.a `
             )
         }
 
-        ${props.show === true && props.dir === 'asc' && css `
+        ${props.current === true && props.dir === 'asc' && css `
             &:before {
                 border-bottom-color: #000;
             }
         `}
 
-        ${props.show === true && props.dir === 'desc' && css `
+        ${props.current === true && props.dir === 'desc' && css `
             &:after {
                 border-top-color: #000;
             }
