@@ -58,7 +58,6 @@ const Pagination = ({
 }) => {
     const defaultLimit = items.limiter.default || 10;
     const paginationProps = calculatePaginationProps(query, defaultLimit);
-    console.log(paginationProps);
     return(
         isVisible(visible, position) && <div className={ className }>
             { Object.keys(items).map((key, index) => {
