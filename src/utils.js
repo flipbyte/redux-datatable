@@ -1,6 +1,8 @@
 import qs from 'query-string';
 import _ from 'lodash';
 import { denormalize } from 'normalizr';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export const defaultLimiterCongig = {
     options: [10, 20, 50, 100, 200],
@@ -162,3 +164,28 @@ export const changeSortOrder = ( query, colName, sorter ) => {
 
     sorter({ sort: colName, dir });
 };
+
+export const withModal = WrappedComponent => (
+    class extends React.Component {
+        constructor(props) {
+            super(props);
+            this.el = document.createElement('div');
+        }
+
+        componentDidMount() {
+            this.props.root.appendChild(this.el);
+        }
+
+        componentWillUnmount() {
+            this.props.root.removeChild(this.el);
+        }
+
+        render() {
+            const { children, ...rest } = this.props;
+            return ReactDOM.createPortal(
+                <WrappedComponent className="rdt-modal" { ...rest }>{ this.props.children }</WrappedComponent>,
+                this.el
+            );
+        }
+    }
+);

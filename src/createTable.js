@@ -16,7 +16,7 @@ import Toolbar from './components/Toolbar';
 import Pagination from './components/Pagination';
 import Container from './components/Container';
 import ExtendedDiv from './components/ExtendedDiv';
-import Popup from './components/Popup';
+import Print from './components/Print';
 import { useTableWidth, useTableScroll } from './hooks';
 import { setPage, setLimit, setSort, SET_SORT, SET_FILTER } from './actions';
 import { ADD_COLUMN, REMOVE_COLUMN, SET_IS_PRINTING } from './constants';
@@ -277,11 +277,11 @@ const ReduxDatatable = ( props ) => {
         );
     }
 
-    const tableRenderer = () => (
+    const tableRenderer = ( isPrinting = false ) => (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container className="rdt-outer-container">
-                { renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
-                { renderPagination('top', query, pagination, action, thunk, styles.pagination) }
+                { !isPrinting && renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
+                { !isPrinting && renderPagination('top', query, pagination, action, thunk, styles.pagination) }
                 { renderTable({
                     action,
                     bodyExtraData: getExtraBodyRowProps(tableData, tableConfig.visibleColumns),
@@ -304,18 +304,25 @@ const ReduxDatatable = ( props ) => {
                     width,
                     widthAdjustment,
                 }) }
-                { renderPagination('bottom', query, pagination, action, thunk, styles.pagination) }
+                { !isPrinting && renderPagination('bottom', query, pagination, action, thunk, styles.pagination) }
             </Container>
         </TableProvider>
     );
 
-
     const { query, isFetching } = tableData;
-    if (isPrinting) {
-        return <Popup internalStateUpdater={ dispatch }>{ tableRenderer() }</Popup>
-    }
-
-    return tableRenderer();
+    return (
+        <React.Fragment>
+            { isPrinting && (
+                <Print
+                    root={ document.body }
+                    internalStateUpdater={ dispatch }
+                >
+                    { tableRenderer(true) }
+                </Print>
+            )}
+            { !isPrinting && tableRenderer() }
+        </React.Fragment>
+    );
 };
 
 const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) => (
