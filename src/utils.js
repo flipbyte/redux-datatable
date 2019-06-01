@@ -10,6 +10,7 @@ export const defaultLimiterCongig = {
 };
 
 export const isArray = (value) => Array.isArray(value);
+export const isObject = (value) => typeof value === 'object';
 export const isUndefined = (value) => typeof value === 'undefined';
 export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
 
