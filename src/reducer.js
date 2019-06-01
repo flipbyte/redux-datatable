@@ -1,6 +1,7 @@
+import _ from 'lodash';
 import * as actions from './actions';
 import objectAssignDeep from 'object-assign-deep';
-import _ from 'lodash';
+import { SELECT_ALL } from './constants';
 
 let initialTableState = {
     isFetching: false,
@@ -16,7 +17,10 @@ let initialTableState = {
         count: 0,
         search: {}
     },
-    selection: {}
+    selection: {
+        all: false,
+        selected: {}
+    }
 };
 
 const updateState = ( state, tableName ) => ( newState ) => {
@@ -105,15 +109,15 @@ export default function reducer(state = {}, action) {
             };
         },
         [actions.SET_SELECTION]: () => {
-            let selection = {};
-            if( typeof payload.key == 'object') {
-                selection[payload.paramKey] = payload.key;
+            let selection = _.get(tableState, 'selection', {});
+            if (payload.type === SELECT_ALL) {
+                selection.all = payload.value;
+                selection.selected = {};
             } else {
-                selection = _.get(tableState, 'selection', {});
-                if(_.isEmpty(selection[payload.paramKey])) {
-                    selection[payload.paramKey] = {};
+                if (_.isEmpty(selection.selected[payload.paramKey])) {
+                    selection.selected[payload.paramKey] = {};
                 }
-                selection[payload.paramKey][payload.key] = payload.value;
+                selection.selected[payload.paramKey][payload.key] = payload.value;
             }
 
             return {

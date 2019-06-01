@@ -23,6 +23,7 @@ import Options from './Renderer/Body/Options';
 import Selection from './Renderer/Body/Selection';
 
 import HeaderCol from './Renderer/Header/Column';
+import SelectAll from './Renderer/Header/Selection';
 
 const renderers = {
     pagination: {
@@ -52,6 +53,7 @@ const renderers = {
         default: Text
     },
     header: {
+        selection: SelectAll,
         default: HeaderCol
     }
 };

@@ -147,10 +147,15 @@ export default {
                 label: 'Delete',
                 indexField: '@id',
                 thunk: ( payload ) => ( dispatch, getState ) => {
+                    // Get current table state.
+                    const tableState = getState()[payload.reducerName][payload.name];
                     confirm('Are your sure you want to delete the selected items?')
-                        ? console.log('delete items', getState())
+                        ? console.log('delete items', payload, getState(), tableState)
                         : console.log(false);
 
+                    // Filter your selected item ids here for deletion
+                    // You can find the selection data in the selection key of the tableState.
+                    // When all:true, exclude the ids in the selected object with value false and vice versa.
                 }
             }, {
                 type: 'action',
@@ -248,8 +253,7 @@ export default {
             type: 'action',
             name: 'edit',
             label: 'Edit',
-            btnClass: 'btn btn-secondary',
-            icon: 'edit',
+            htmlClass: 'btn btn-secondary',
             params: {
                 id: '@id',
             },
