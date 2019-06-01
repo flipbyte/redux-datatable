@@ -253,7 +253,7 @@ toolbar items. Each inner array represents a different row.
 
 | Key                   | Type     | Required | Default | Description                                                               |
 | --------------------- | -------- | -------- | ------- | ------------------------------------------------------------------------- |
-| type                  | string   | false    | actions | Available values resetFilters, print and columns                                |
+| type                  | string   | false    | actions | Available values resetFilters, print and columns                          |
 | label                 | string   | true     | -       | Label for the toolbar item                                                |
 | visible               | boolean  | false    | true    | Whether the item is visible                                               |
 | state                 | boolean  | false    | false   | Whether to pass the state object as item prop                             |
