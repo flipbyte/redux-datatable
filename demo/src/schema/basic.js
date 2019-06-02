@@ -6,6 +6,9 @@ export default {
     rowHeight: 50,
     filterable: true,
     headers: true,
+    isEditable: true,
+    isEditing: false,
+    primaryKey: 'pageId',
     // styles: {
     //     loader: {
     //         mask: {
@@ -188,6 +191,20 @@ export default {
             label: 'Columns',
             visible: true,
             state: false
+        }, {
+            name: 'editable',
+            type: 'editable',
+            editableLabel: {
+                0: 'Make editable',
+                1: 'Hide editable'
+            },
+            saveLabel: 'Save',
+            save: ( payload ) => ( dispatch, getState ) => {
+                const tableState = getState()[payload.reducerName][payload.name];
+                console.log('toolbar save click with modified data', payload, tableState.modified);
+                // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
+                // Dispatch REQUEST_DATA action "payload.action(REQUEST_DATA)" to refresh data.
+            }
         }],
     ],
     columns: [{
@@ -205,6 +222,7 @@ export default {
         width: 150,
         filterable: true,
         sortable: true,
+        // isEditable: true
     }, {
         label: "Status",
         type: "options",
@@ -232,10 +250,11 @@ export default {
                 "label": "Archived"
             }
         },
-        renderer: ({
-            data,
-            colConfig: { name, options }
-        }) => <div>Not specified</div>
+        isEditable: true
+        // renderer: ({
+        //     data,
+        //     colConfig: { name, options }
+        // }) => <div>Not specified</div>
     }, {
         label: 'Created at',
         type: 'date',
@@ -243,6 +262,7 @@ export default {
         sortable: true,
         textAlign: 'left',
         width: 200,
+        isEditable: true,
         filterable: true,
     }, {
         label: 'Actions',

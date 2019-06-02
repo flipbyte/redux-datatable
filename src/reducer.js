@@ -20,7 +20,8 @@ let initialTableState = {
     selection: {
         all: false,
         selected: {}
-    }
+    },
+    modified: {}
 };
 
 const updateState = ( state, tableName ) => ( newState ) => {
@@ -87,7 +88,7 @@ export default function reducer(state = {}, action) {
         }),
         [actions.SET_FILTER]: () => {
             var updatedFilters = {};
-            if(!payload.clear) {
+            if (!payload.clear) {
                 updatedFilters = {
                     ...tableState.query.search,
                     [payload.key]: payload.filter
@@ -127,6 +128,29 @@ export default function reducer(state = {}, action) {
                     selection: {
                         ...tableState.selection,
                         ...selection
+                    }
+                }
+            };
+        },
+        [actions.MODIFY_DATA]: () => {
+            var modifiedData = {};
+            if (!payload.clear) {
+                modifiedData = {
+                    ...tableState.modified,
+                    [payload.key]: {
+                        ...tableState.modified[payload.key],
+                        ...payload.value
+                    }
+                };
+            }
+
+            return {
+                ...state,
+                [name]: {
+                    ...tableState,
+                    modified: {
+                        ...tableState.modified,
+                        ...modifiedData
                     }
                 }
             };

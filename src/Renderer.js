@@ -9,6 +9,7 @@ import Print from './Renderer/Toolbar/Print';
 import Columns from './Renderer/Toolbar/Columns';
 import MassActions from './Renderer/Toolbar/MassActions';
 import ResetFilters from './Renderer/Toolbar/ResetFilters';
+import EditableButtons from './Renderer/Toolbar/EditableButtons';
 
 import DateFilter from './Renderer/Filter/Date';
 import FilterOptions from './Renderer/Filter/Options';
@@ -36,6 +37,7 @@ const renderers = {
         print: Print,
         columns: Columns,
         resetFilters: ResetFilters,
+        editable: EditableButtons,
         default: MassActions,
     },
     filter: {

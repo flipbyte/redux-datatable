@@ -217,6 +217,9 @@ const YourComponent = () =>
 | toolbar    | array   | false    | \[]     | Toolbar definition (Check below)                                                                 |
 | columns    | array   | true     | -       | Columns to display                                                                               |
 | styles     | object  | false    | {}      | Custom styles for your table                                                                     |
+| isEditable | boolean | false    | {}      | Set whether the table is editable                                                                |
+| isEditing  | boolean | false    | {}      | Set the default state of the table to be in editing mode                                         |
+| primaryKey | string  | true     | {}      | Set the primary key column of the table for actions like editing.                                |
 
 #### Pagination object
 
@@ -253,7 +256,7 @@ toolbar items. Each inner array represents a different row.
 
 | Key                   | Type     | Required | Default | Description                                                               |
 | --------------------- | -------- | -------- | ------- | ------------------------------------------------------------------------- |
-| type                  | string   | false    | actions | Available values resetFilters, print and columns                          |
+| type                  | string   | false    | actions | Available values resetFilters, print, editable and columns                |
 | label                 | string   | true     | -       | Label for the toolbar item                                                |
 | visible               | boolean  | false    | true    | Whether the item is visible                                               |
 | state                 | boolean  | false    | false   | Whether to pass the state object as item prop                             |
@@ -265,6 +268,8 @@ toolbar items. Each inner array represents a different row.
 | label                 | string   | true     | -       | Label for the action                                                      |
 | thunk                 | function | true     | -       | An action creator which is dispatched on action click. Check demo schema. |
 
+Note: action of type "editable" is required when you set the table to be editable
+
 #### Columns object
 
 | Key                             | Type         | Required | Default | Description                                                                                                                                              |
@@ -273,6 +278,7 @@ toolbar items. Each inner array represents a different row.
 | label                           | string       | true     | -       | Label for the column                                                                                                                                     |
 | sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                                                                           |
 | filterable                      | boolean      | false    | true    | Whether the column is filterable                                                                                                                         |
+| isEditable                      | boolean      | false    | false   | When the table is set to be editable, set whether the respective column is among the editable                                                            |
 | visible                         | boolean      | false    | true    | Whether the column is visible on load                                                                                                                    |
 | type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                                                                                |
 | width                           | integer      | true     | -       | Width of the column                                                                                                                                      |

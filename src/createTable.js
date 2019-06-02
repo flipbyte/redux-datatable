@@ -18,8 +18,8 @@ import Container from './components/Container';
 import ExtendedDiv from './components/ExtendedDiv';
 import Print from './components/Print';
 import { useTableWidth, useTableScroll } from './hooks';
-import { setPage, setLimit, setSort, SET_SORT, SET_FILTER } from './actions';
-import { ADD_COLUMN, REMOVE_COLUMN, SET_IS_PRINTING } from './constants';
+import { setPage, setLimit, setSort, SET_SORT, SET_FILTER, MODIFY_DATA } from './actions';
+import { ADD_COLUMN, REMOVE_COLUMN, SET_IS_PRINTING, TOGGLE_EDITABLE } from './constants';
 import {
     createActionCreator,
     isArray,
@@ -46,13 +46,27 @@ const tableReducer = ( state, { type, value }) => {
         },
         [SET_IS_PRINTING]: () => {
             return { ...state, isPrinting: value };
+        },
+        [TOGGLE_EDITABLE]: () => {
+            return { ...state, isEditing: !state.isEditing }
         }
     }
 
     return options[type]();
 }
 
-const renderToolbar = ( config = [], action, thunk, internalStateUpdater, columns, visibleColumns, styles = {} ) => (
+const renderToolbar = (
+    config = [],
+    action,
+    thunk,
+    internalStateUpdater,
+    columns,
+    isEditable,
+    isEditing,
+    isModified,
+    visibleColumns,
+    styles = {}
+) => (
     <Row className="rdt-toolbar-row">
         <Toolbar items={ config } styles={ styles }>
             {({ state, ...itemConfig }) => (
@@ -65,6 +79,9 @@ const renderToolbar = ( config = [], action, thunk, internalStateUpdater, column
                     internalStateUpdater={ internalStateUpdater }
                     columns={ columns }
                     visibleColumns={ visibleColumns }
+                    isModified={ isModified }
+                    isEditable={ isEditable }
+                    isEditing={ isEditing }
                 />
             )}
         </Toolbar>
@@ -93,10 +110,13 @@ const renderTable = ({
     columns = [],
     height,
     isFetching,
+    isEditing,
     isPrinting,
     items,
+    modified = {},
     query = {},
     pointerEvents,
+    primaryKey,
     rowHeight,
     schema,
     state = {},
@@ -182,6 +202,7 @@ const renderTable = ({
             >
                 {({ item, top, index: rowIndex }) => {
                     var data = prepareData(item, schema, state);
+                    var modifiedData = modified[data[primaryKey]] || {};
                     return (
                         <Tr
                             key={ rowIndex }
@@ -212,6 +233,13 @@ const renderTable = ({
                                                 extraData={ bodyExtraData[name] }
                                                 action={ action }
                                                 thunk={ thunk }
+                                                isEditing={ isEditing }
+                                                modifiedData={ modifiedData }
+                                                handleChange={(event) => {
+                                                    const newData = Object.assign({}, data);
+                                                    _.set(newData, event.target.name, event.target.value);
+                                                    action(MODIFY_DATA)({ key: newData[primaryKey], value: newData })
+                                                }}
                                             />
                                         </ExtendedDiv>
                                     </Td>
@@ -229,6 +257,7 @@ const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;
     const [ tableInternalState, dispatch ] = useReducer(tableReducer, {
         isPrinting: false,
+        isEditing: !!config.isEditing,
         visibleColumnIds: getInitialVisibleColumns(config.columns)
     });
     const {
@@ -240,9 +269,11 @@ const ReduxDatatable = ( props ) => {
         rowHeight,
         styles = {},
         columns,
-        entity = {}
+        entity = {},
+        isEditable,
+        primaryKey
     } = config;
-    const { visibleColumnIds, isPrinting } = tableInternalState;
+    const { visibleColumnIds, isPrinting, isEditing } = tableInternalState;
     const visibleColumns = visibleColumnIds.reduce((result, currentIndex) => {
         const { [currentIndex]: column } = columns;
         return [ ...result, column ];
@@ -280,17 +311,31 @@ const ReduxDatatable = ( props ) => {
     const tableRenderer = ( isPrinting = false ) => (
         <TableProvider config={{ reducerName, ...tableConfig }}>
             <Container className="rdt-outer-container">
-                { !isPrinting && renderToolbar(toolbar, action, thunk, dispatch, columns, visibleColumnIds, styles.toolbar) }
+                { !isPrinting && renderToolbar(
+                    toolbar,
+                    action,
+                    thunk,
+                    dispatch,
+                    columns,
+                    isEditable,
+                    isEditing,
+                    !_.isEmpty(tableData.modified), // table data has been modified
+                    visibleColumnIds,
+                    styles.toolbar
+                )}
                 { !isPrinting && renderPagination('top', query, pagination, action, thunk, styles.pagination) }
                 { renderTable({
                     action,
                     bodyExtraData: getExtraBodyRowProps(tableData, tableConfig.visibleColumns),
                     columns: visibleColumns,
                     height: rowHeight * ( tableData.items || [] ).length,
+                    isEditing,
                     isFetching,
                     isPrinting,
                     items: tableData.items || [],
+                    modified: tableData.modified,
                     pointerEvents,
+                    primaryKey,
                     query,
                     rowHeight,
                     schema: entity.schema,

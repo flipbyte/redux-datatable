@@ -1,13 +1,30 @@
 import _ from 'lodash';
-import Time from 'react-pure-time';
-import React, { Component } from 'react';
+import Time, { format as formatDate } from 'react-pure-time';
+import React, { Fragment } from 'react';
+import Field from '../../components/Field';
+import Row from '../../components/Row';
 
 const Date = ({
     data,
     index,
-    colConfig: { name, textAlign, format }
+    isEditing,
+    handleChange,
+    modifiedData,
+    colConfig: { name, textAlign, format, isEditable }
 }) => (
-    <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } />
+    <Fragment>
+        { (!isEditable || !isEditing) && <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } /> }
+        { !!isEditable && isEditing && (
+            <Row padding="0 0 5px">
+                <Field.Input
+                    type="date"
+                    name={ name }
+                    onChange={ handleChange }
+                    value={ formatDate(_.get(modifiedData, name) || _.get(data, name, ''), 'Y-m-d') }
+                />
+            </Row>
+        )}
+    </Fragment>
 );
 
 export default Date;

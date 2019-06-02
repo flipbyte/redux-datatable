@@ -11,6 +11,7 @@ export const SET_LIMIT = 'SET_LIMIT';
 export const SET_SELECTION = 'SET_SELECTION';
 export const CLEAR_FILTER = 'CLEAR_FILTER';
 export const DELETE_DATA = 'DELETE_DATA';
+export const MODIFY_DATA = 'MODIFY_DATA';
 
 export const cancelRequest = createActionCreator(REQUEST_DATA_CANCEL);
 export const requestData = createActionCreator(REQUEST_DATA);
