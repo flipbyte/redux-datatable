@@ -2,14 +2,16 @@ import React from 'react';
 import { SET_LIMIT } from '../../actions';
 import Field from '../../components/Field';
 import Label from '../../components/Label';
+import { isUndefined } from '../../utils';
 
-const Limiter = ({ options, limit, action, style, default: defaultLimit }) => {
+const Limiter = ({ options, limit, action, style }) => {
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
-        <Label flex noWrap>
+        <Label className="rdt-limiter-label" flex noWrap>
             <Field.Select
                 id="limiter"
-                value={ limit || defaultLimit }
+                className="rdt-limiter-select"
+                value={ limit }
                 onChange={ ( event ) => setLimit(event.target.value) }>
                 { options.map( (option, index) =>
                     <option key={ index } value={ option }>{ option !== 0 ? option : 'All' }</option>

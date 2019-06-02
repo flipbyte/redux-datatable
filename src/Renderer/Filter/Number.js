@@ -32,6 +32,7 @@ const Number = ({ name, value = [], filterer }) => (
     <Fragment>
         <Row padding="0 0 5px">
             <Field.Input
+                className="rdt-filter-input number from"
                 type="number"
                 name={ name }
                 onChange={ applyFilter.bind(this, 0, filterer) }
@@ -41,6 +42,7 @@ const Number = ({ name, value = [], filterer }) => (
         </Row>
         <Row>
             <Field.Input
+                className="rdt-filter-input number to"
                 type="number"
                 name={ name }
                 value={ value[1] || ''}

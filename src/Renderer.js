@@ -4,10 +4,12 @@ import Limiter from './Renderer/Pagination/Limiter';
 import Pages from './Renderer/Pagination/Pages';
 import ResultCount from './Renderer/Pagination/ResultCount';
 
+import Button from './Renderer/Toolbar/Button';
 import Print from './Renderer/Toolbar/Print';
 import Columns from './Renderer/Toolbar/Columns';
 import MassActions from './Renderer/Toolbar/MassActions';
 import ResetFilters from './Renderer/Toolbar/ResetFilters';
+import EditableButtons from './Renderer/Toolbar/EditableButtons';
 
 import DateFilter from './Renderer/Filter/Date';
 import FilterOptions from './Renderer/Filter/Options';
@@ -21,6 +23,9 @@ import Actions from './Renderer/Body/Actions';
 import Options from './Renderer/Body/Options';
 import Selection from './Renderer/Body/Selection';
 
+import HeaderCol from './Renderer/Header/Column';
+import SelectAll from './Renderer/Header/Selection';
+
 const renderers = {
     pagination: {
         limiter: Limiter,
@@ -28,9 +33,11 @@ const renderers = {
         resultCount: ResultCount
     },
     toolbar: {
+        button: Button,
         print: Print,
         columns: Columns,
         resetFilters: ResetFilters,
+        editable: EditableButtons,
         default: MassActions,
     },
     filter: {
@@ -46,6 +53,10 @@ const renderers = {
         options: Options,
         image: Image,
         default: Text
+    },
+    header: {
+        selection: SelectAll,
+        default: HeaderCol
     }
 };
 

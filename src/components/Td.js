@@ -20,7 +20,7 @@ const Td = styled.div.attrs(({ width: maxWidth }) => ({
     font-size: 14px;
 
     &:empty {
-        padding: 0
+        padding: 0 5px;
     }
 `;
 

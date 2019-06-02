@@ -6,6 +6,9 @@ export default {
     rowHeight: 50,
     filterable: true,
     headers: true,
+    isEditable: true,
+    isEditing: false,
+    primaryKey: 'pageId',
     // styles: {
     //     loader: {
     //         mask: {
@@ -106,7 +109,7 @@ export default {
                 type: 'limiter',
                 visible: true,
                 position: 10,
-                options: [10, 20, 50, 200, 2000],
+                options: [10, 20, 50, 200, 2000, 0],
                 default: 200,
             },
             pages: {
@@ -147,10 +150,15 @@ export default {
                 label: 'Delete',
                 indexField: '@id',
                 thunk: ( payload ) => ( dispatch, getState ) => {
+                    // Get current table state.
+                    const tableState = getState()[payload.reducerName][payload.name];
                     confirm('Are your sure you want to delete the selected items?')
-                        ? console.log('delete items', getState())
+                        ? console.log('delete items', payload, getState(), tableState)
                         : console.log(false);
 
+                    // Filter your selected item ids here for deletion
+                    // You can find the selection data in the selection key of the tableState.
+                    // When all:true, exclude the ids in the selected object with value false and vice versa.
                 }
             }, {
                 type: 'action',
@@ -159,6 +167,14 @@ export default {
                 indexField: '@id'
             }],
             visible: true
+        }, {
+            type: 'button',
+            label: 'Simple Button',
+            visible: true,
+            state: false,
+            thunk: ( payload ) => ( dispatch, getState ) => {
+                console.log('toolbar button click', payload);
+            }
         }, {
             type: 'resetFilters',
             label: 'Reset Filters',
@@ -175,6 +191,20 @@ export default {
             label: 'Columns',
             visible: true,
             state: false
+        }, {
+            name: 'editable',
+            type: 'editable',
+            editableLabel: {
+                0: 'Make editable',
+                1: 'Hide editable'
+            },
+            saveLabel: 'Save',
+            save: ( payload ) => ( dispatch, getState ) => {
+                const tableState = getState()[payload.reducerName][payload.name];
+                console.log('toolbar save click with modified data', payload, tableState.modified);
+                // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
+                // Dispatch REQUEST_DATA action "payload.action(REQUEST_DATA)" to refresh data.
+            }
         }],
     ],
     columns: [{
@@ -192,6 +222,7 @@ export default {
         width: 150,
         filterable: true,
         sortable: true,
+        // isEditable: true
     }, {
         label: "Status",
         type: "options",
@@ -219,10 +250,11 @@ export default {
                 "label": "Archived"
             }
         },
-        renderer: ({
-            data,
-            colConfig: { name, options }
-        }) => <div>Not specified</div>
+        isEditable: true
+        // renderer: ({
+        //     data,
+        //     colConfig: { name, options }
+        // }) => <div>Not specified</div>
     }, {
         label: 'Created at',
         type: 'date',
@@ -230,6 +262,7 @@ export default {
         sortable: true,
         textAlign: 'left',
         width: 200,
+        isEditable: true,
         filterable: true,
     }, {
         label: 'Actions',
@@ -240,8 +273,7 @@ export default {
             type: 'action',
             name: 'edit',
             label: 'Edit',
-            btnClass: 'btn btn-secondary',
-            icon: 'edit',
+            htmlClass: 'btn btn-secondary',
             params: {
                 id: '@id',
             },

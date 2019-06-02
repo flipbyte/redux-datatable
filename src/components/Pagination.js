@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { getExtendedStyles, getStyles } from '../utils';
+import { getExtendedStyles, getStyles, isUndefined } from '../utils';
 
 const Item = styled.div `
     display: flex;
@@ -32,7 +32,7 @@ export const calculatePaginationProps = (
     defaultLimit = 10
 ) => {
     page = page > 1 ? page : 1;
-    limit = limit !== 0 ? limit : defaultLimit;
+    limit = isUndefined(limit) !== true ? limit : defaultLimit;
 
     let start = (page - 1) * limit;
     let end = start + limit - 1;
@@ -43,7 +43,7 @@ export const calculatePaginationProps = (
         end: (count > end && end >= 0) ? end : count,
         count,
         limit,
-        total: Math.ceil(count / limit)
+        total: limit > 0 ? Math.ceil(count / limit) : 1
     };
 };
 

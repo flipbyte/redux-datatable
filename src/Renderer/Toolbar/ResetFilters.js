@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 const ResetFilters = ({ itemConfig, action }) => {
     const clearFilter = () => action(SET_FILTER)({ clear: true });
     return (
-        <Button onClick={ clearFilter.bind(this) }>
+        <Button className="rdt-toolbar-button reset-filters" onClick={ clearFilter.bind(this) }>
             { itemConfig.label || 'Reset Filters' }
         </Button>
     );

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { deleteData } from '../../actions';
 import { withTableConfig } from '../../TableProvider';
-import { paramsResolver, prepareActionPayload } from '../../utils';
+import { paramsResolver, prepareActionPayload, isUndefined } from '../../utils';
 import Button from '../../components/Button';
 
 const Actions = ({
@@ -12,15 +12,20 @@ const Actions = ({
     colConfig: { items }
 }) => (
     <div className="btn-group-sm">
-        { items.map(({ thunk: cb, ...item }, index) =>
-            <Button
-                key={ index }
-                onClick={ cb && thunk.bind(this, cb, { item, extra }) }
-                { ...item.style }
-            >
-                { item.label }
-            </Button>
-        )}
+        { items.map((item, index) => {
+            const { thunk: cb, style, label, icon, name, htmlClass } = item;
+            return (
+                <Button
+                    key={ index }
+                    className={ `rdt-body-actions button ${htmlClass || ''} ${name || ''}` }
+                    onClick={ cb && thunk.bind(this, cb, { item, extra }) }
+                    { ...style }
+                >
+                    { !isUndefined(icon) && <i className={ icon } /> }
+                    { !isUndefined(label) && label }
+                </Button>
+            );
+        })}
     </div>
 );
 

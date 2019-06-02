@@ -1,12 +1,29 @@
 import _ from 'lodash';
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
+import Field from '../../components/Field';
+import Row from '../../components/Row';
 
 const Text = ({
     data,
     index,
-    colConfig: { name }
+    isEditing,
+    handleChange,
+    modifiedData,
+    colConfig: { name, isEditable }
 }) => (
-    <Fragment>{ _.get(data, name, '') }</Fragment>
+    <Fragment>
+        { (!isEditable || !isEditing) && _.get(data, name, '') }
+        { !!isEditable && isEditing && (
+            <Row padding="0 0 5px">
+                <Field.Input
+                    type="text"
+                    name={ name }
+                    onChange={ handleChange }
+                    value={ _.get(modifiedData, name) || _.get(data, name, '') }
+                />
+            </Row>
+        )}
+    </Fragment>
 );
 
 export default Text;

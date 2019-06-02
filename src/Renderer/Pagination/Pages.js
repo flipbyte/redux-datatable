@@ -33,18 +33,19 @@ const getPages = ( currentPage, total ) => {
 const Pages = ({ page, total, action, style }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
-        <List>
-            <Button onClick={ setPage.bind(this, 1) } disabled={ page === 1 }>First</Button>
-            <Button onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
+        <List className="rdt-pg-list">
+            <Button className="rdt-pg-first" onClick={ setPage.bind(this, 1) } disabled={ page === 1 }>First</Button>
+            <Button className="rdt-pg-prev" onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
             { getPages(page, total).map( (link, index) =>
                 <Button
                     key={ index }
+                    className={ `rdt-pg-num ${page === link ? 'active' : ''}` }
                     onClick={ setPage.bind(this, link) }
                     active={ page === link }
                 >{ link }</Button>
             ) }
-            <Button onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
-            <Button onClick={ setPage.bind(this, total) } disabled={ total === 0 || page === total }>Last</Button>
+            <Button className="rdt-pg-next" onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
+            <Button className="rdt-pg-last" onClick={ setPage.bind(this, total) } disabled={ total === 0 || page === total }>Last</Button>
         </List>
     );
 };
