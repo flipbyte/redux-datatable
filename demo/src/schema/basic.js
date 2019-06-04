@@ -6,8 +6,8 @@ export default {
     rowHeight: 50,
     filterable: true,
     headers: true,
-    isEditable: true,
-    isEditing: false,
+    editable: true,
+    editing: false,
     primaryKey: 'pageId',
     // styles: {
     //     loader: {
@@ -222,7 +222,7 @@ export default {
         width: 150,
         filterable: true,
         sortable: true,
-        // isEditable: true
+        // editable: true
     }, {
         label: "Status",
         type: "options",
@@ -250,7 +250,7 @@ export default {
                 "label": "Archived"
             }
         },
-        isEditable: true
+        editable: true
         // renderer: ({
         //     data,
         //     colConfig: { name, options }
@@ -262,7 +262,7 @@ export default {
         sortable: true,
         textAlign: 'left',
         width: 200,
-        isEditable: true,
+        editable: true,
         filterable: true,
     }, {
         label: 'Actions',

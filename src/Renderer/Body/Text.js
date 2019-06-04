@@ -9,11 +9,11 @@ const Text = ({
     isEditing,
     handleChange,
     modifiedData,
-    colConfig: { name, isEditable }
+    colConfig: { name, editable }
 }) => (
     <Fragment>
-        { (!isEditable || !isEditing) && _.get(data, name, '') }
-        { !!isEditable && isEditing && (
+        { (!editable || !isEditing) && _.get(data, name, '') }
+        { !!editable && isEditing && (
             <Row padding="0 0 5px">
                 <Field.Input
                     type="text"
