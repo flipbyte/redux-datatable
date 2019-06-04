@@ -10,11 +10,11 @@ const Date = ({
     isEditing,
     handleChange,
     modifiedData,
-    colConfig: { name, textAlign, format, isEditable }
+    colConfig: { name, textAlign, format, editable }
 }) => (
     <Fragment>
-        { (!isEditable || !isEditing) && <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } /> }
-        { !!isEditable && isEditing && (
+        { (!editable || !isEditing) && <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } /> }
+        { !!editable && isEditing && (
             <Row padding="0 0 5px">
                 <Field.Input
                     type="date"

@@ -61,7 +61,7 @@ const renderToolbar = (
     thunk,
     internalStateUpdater,
     columns,
-    isEditable,
+    editable,
     isEditing,
     isModified,
     visibleColumns,
@@ -80,7 +80,7 @@ const renderToolbar = (
                     columns={ columns }
                     visibleColumns={ visibleColumns }
                     isModified={ isModified }
-                    isEditable={ isEditable }
+                    isEditable={ editable }
                     isEditing={ isEditing }
                 />
             )}
@@ -257,7 +257,7 @@ const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName, tableData, action, thunk, loadData, state } = props;
     const [ tableInternalState, dispatch ] = useReducer(tableReducer, {
         isPrinting: false,
-        isEditing: !!config.isEditing,
+        isEditing: !!config.editing,
         visibleColumnIds: getInitialVisibleColumns(config.columns)
     });
     const {
@@ -270,7 +270,7 @@ const ReduxDatatable = ( props ) => {
         styles = {},
         columns,
         entity = {},
-        isEditable,
+        editable,
         primaryKey
     } = config;
     const { visibleColumnIds, isPrinting, isEditing } = tableInternalState;
@@ -317,7 +317,7 @@ const ReduxDatatable = ( props ) => {
                     thunk,
                     dispatch,
                     columns,
-                    isEditable,
+                    editable,
                     isEditing,
                     !_.isEmpty(tableData.modified), // table data has been modified
                     visibleColumnIds,
