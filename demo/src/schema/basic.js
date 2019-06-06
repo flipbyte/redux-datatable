@@ -194,11 +194,11 @@ export default {
         }, {
             name: 'editable',
             type: 'editable',
-            editableLabel: {
-                0: 'Make editable',
-                1: 'Hide editable'
+            labels: {
+                show: 'Make editable',
+                hide: 'Hide editable',
+                save: 'Save',
             },
-            saveLabel: 'Save',
             save: ( payload ) => ( dispatch, getState ) => {
                 const tableState = getState()[payload.reducerName][payload.name];
                 console.log('toolbar save click with modified data', payload, tableState.modified);
@@ -230,6 +230,7 @@ export default {
         sortable: true,
         filterable: true,
         textAlign: "center",
+        width: 150,
         options: {
             "published": {
                 "label": "Published"

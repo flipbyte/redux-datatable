@@ -218,8 +218,8 @@ const YourComponent = () =>
 | toolbar    | array   | false    | \[]     | Toolbar definition (Check below)                                                                 |
 | columns    | array   | true     | -       | Columns to display                                                                               |
 | styles     | object  | false    | {}      | Custom styles for your table                                                                     |
-| editable | boolean | false    | {}      | Set whether the table is editable                                                                |
-| editing  | boolean | false    | {}      | Set the default state of the table to be in editing mode                                         |
+| editable   | boolean | false    | {}      | Set whether the table is editable                                                                |
+| editing    | boolean | false    | {}      | Set the default state of the table to be in editing mode                                         |
 | primaryKey | string  | true     | {}      | Set the primary key column of the table for actions like editing.                                |
 
 #### Pagination object
@@ -255,19 +255,21 @@ const YourComponent = () =>
 Toolbar config is an array of array of object where objects are the
 toolbar items. Each inner array represents a different row.
 
-| Key                   | Type     | Required | Default | Description                                                               |
-| --------------------- | -------- | -------- | ------- | ------------------------------------------------------------------------- |
-| type                  | string   | false    | actions | Available values resetFilters, print, editable and columns                |
-| label                 | string   | true     | -       | Label for the toolbar item                                                |
-| visible               | boolean  | false    | true    | Whether the item is visible                                               |
-| state                 | boolean  | false    | false   | Whether to pass the state object as item prop                             |
-| **For type: actions** |          |          |         |                                                                           |
-| options               | array    | true     | -       | Array of option objects                                                   |
-| **-- options**        |          |          |         |                                                                           |
-| type                  | string   | true     | action  | Available option: action                                                  |
-| name                  | string   | true     | -       | Unique name for the action                                                |
-| label                 | string   | true     | -       | Label for the action                                                      |
-| thunk                 | function | true     | -       | An action creator which is dispatched on action click. Check demo schema. |
+| Key                    | Type     | Required | Default                                                       | Description                                                               |
+| ---------------------- | -------- | -------- | ------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| type                   | string   | false    | actions                                                       | Available values resetFilters, print, editable and columns                |
+| label                  | string   | true     | -                                                             | Label for the toolbar item                                                |
+| visible                | boolean  | false    | true                                                          | Whether the item is visible                                               |
+| state                  | boolean  | false    | false                                                         | Whether to pass the state object as item prop                             |
+| **For type: actions**  |          |          |                                                               |                                                                           |
+| options                | array    | true     | -                                                             | Array of option objects                                                   |
+| **-- options**         |          |          |                                                               |                                                                           |
+| type                   | string   | true     | action                                                        | Available option: action                                                  |
+| name                   | string   | true     | -                                                             | Unique name for the action                                                |
+| label                  | string   | true     | -                                                             | Label for the action                                                      |
+| thunk                  | function | true     | -                                                             | An action creator which is dispatched on action click. Check demo schema. |
+| **For type: editable** |          |          |                                                               |                                                                           |
+| labels                 | object   | false    | { show: 'Make editable', hide: 'Hide editable', save: 'Save'} | Labels for each of the buttons enabled when the table is editable         |
 
 Note: action of type "editable" is required when you set the table to be editable
 
@@ -279,7 +281,7 @@ Note: action of type "editable" is required when you set the table to be editabl
 | label                           | string       | true     | -       | Label for the column                                                                                                                                     |
 | sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                                                                           |
 | filterable                      | boolean      | false    | true    | Whether the column is filterable                                                                                                                         |
-| editable                      | boolean      | false    | false   | When the table is set to be editable, set whether the respective column is among the editable                                                            |
+| editable                        | boolean      | false    | false   | When the table is set to be editable, set whether the respective column is among the editable                                                            |
 | visible                         | boolean      | false    | true    | Whether the column is visible on load                                                                                                                    |
 | type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                                                                                |
 | width                           | integer      | true     | -       | Width of the column                                                                                                                                      |
