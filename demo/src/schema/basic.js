@@ -1,5 +1,5 @@
 import React from 'react';
-import { MODIFY_DATA } from '../../../src/actions';
+import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
 
 export default {
     name: 'posts',
@@ -174,7 +174,13 @@ export default {
             visible: true,
             state: false,
             thunk: ( config ) => ( dispatch, getState ) => {
-                console.log('toolbar button click', config);
+                const tableState = getState()[config.reducerName][config.name];
+                console.log('toolbar button click', config, tableState);
+                config.action(REQUEST_DATA)();
+                config.action(IS_LOADING)({ value: true });
+                setTimeout(function() {
+                    config.action(IS_LOADING)({ value: false });
+                }, 1000);
             }
         }, {
             type: 'resetFilters',
