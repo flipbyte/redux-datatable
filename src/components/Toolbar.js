@@ -33,6 +33,7 @@ const Toolbar = ({
     <div className={ className }>
         { items.map((row, rowIndex) => (
             <ExtendedRow
+                className={ `rdt-toolbar-row-inner rdt-toolbar-row-${rowIndex} `}
                 key={ rowIndex }
                 index={ rowIndex }
                 first={ rowIndex === 0 }
@@ -42,6 +43,7 @@ const Toolbar = ({
                 { row.map((item, itemIndex) => (
                     <ExtendedItem
                         key={ itemIndex }
+                        className={ `rdt-toolbar-item ${item.name || ''} `}
                         index={ itemIndex }
                         first={ itemIndex === 0 }
                         last={ itemIndex === row.length - 1 }
