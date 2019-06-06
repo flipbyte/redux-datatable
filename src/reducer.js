@@ -50,6 +50,7 @@ export default function reducer(state = {}, action) {
     const tableState = getTableState(name)(state);
     const stateUpdater = updateState(state, name);
     const acceptedActions = {
+        [actions.IS_LOADING]: () => stateUpdater({ isFetching: !!payload.value }),
         [actions.REQUEST_DATA]: () => stateUpdater({ isFetching: true }),
         [actions.REQUEST_DATA_CANCEL]: () => stateUpdater({ isFetching: false }),
         [actions.RECEIVE_DATA]: () => stateUpdater({

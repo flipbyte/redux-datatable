@@ -241,7 +241,7 @@ const renderTable = ({
                                                 isEditing={ isEditing }
                                                 origValue={ origValue }
                                                 modifiedData={ modifiedData }
-                                                isModified={ !!modifiedValue }
+                                                isModified={ _.has(modifiedData, name) }
                                                 modifiedValue={ modifiedValue }
                                                 handleChange={(event) => {
                                                     var newData = { ...modifiedData };

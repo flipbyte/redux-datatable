@@ -30,9 +30,7 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
 
         return of(
             cancelRequest({ name }),
-            requestData({
-                name, routes, reducerName, entity, payload: { query: _.get(state$.value, [reducerName, name]).query }
-            })
+            requestData({ name, routes, reducerName, entity })
         );
     })
 );
@@ -40,15 +38,13 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
 export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(REQUEST_DATA),
     switchMap((action) => {
-        const {
-            meta: { name, routes, entity },
-            payload
-        } = action;
+        const { name, routes, entity, reducerName } = action.meta;
+        const query = _.get(state$.value, [reducerName, name]).query;
 
         return api.get(routes.get.route, {
             params: {
                 ...routes.get.params,
-                ...payload.query
+                ...query
             }
         }).pipe(
             map((response) => {
@@ -93,10 +89,7 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                 return of(
                     createNotification({ type: NOTIFICATION_TYPE_SUCCESS, message: response.result }),
                     cancelRequest({ name }),
-                    requestData({
-                        name, routes, reducerName, entity,
-                        payload: { query: _.get(state$.value, [reducerName, name]).query }
-                    })
+                    requestData({ name, routes, reducerName, entity })
                 );
             }),
             catchError((error) => of(

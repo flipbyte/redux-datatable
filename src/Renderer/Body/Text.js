@@ -24,6 +24,7 @@ const Text = ({
                     modified={ isModified }
                     className={ isModified ? 'modified' : ''}
                     value={ value }
+                    autocomplete="off"
                 />
             </Row>
         )}
