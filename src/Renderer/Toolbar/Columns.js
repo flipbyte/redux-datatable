@@ -84,9 +84,10 @@ class Columns extends Component {
                 </Button>
                 <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
                     { columns.map(({ name, label }, index) =>
-                        <Dropdown.Item key={ index } className="rdt-toolbar-item">
+                        <Dropdown.Item key={ index } className="rdt-toolbar-item" padding="0.25rem 0.75rem">
                             <input name={ name }
                                 type="checkbox"
+                                style={{ margin: 5 }}
                                 defaultChecked={ -1 !== visibleColumns.indexOf(index) }
                                 onChange={ this.updateColumns.bind(null, index) } />
                             <label htmlFor={ name }>{ label }</label>

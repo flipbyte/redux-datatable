@@ -50,14 +50,14 @@ const Tbody = React.forwardRef(({
     );
 });
 
-const StyledTbody = styled(Tbody).attrs(({ isPrinting, windowing, height }) => (
+const StyledTbody = styled(Tbody).attrs(({ isPrinting, height }) => (
     isPrinting === false ? { style: { height } } : null
 ))`
     max-width: 100%;
     margin-right: auto;
     margin-left: auto;
-    overflow-y: ${props => props.isPrinting ? 'none': 'scroll'};
-    overflow-x: ${props => props.isPrinting ? 'none': 'scroll'};
+    overflow-y: ${props => props.isPrinting || props.innerHeight === props.visibleHeight ? 'hidden': 'scroll'};
+    overflow-x: ${props => props.isPrinting ? 'hidden': 'scroll'};
     border-bottom: 1px solid #ddd;
 `;
 const ExtendedStyledTbody = styled(StyledTbody)(getExtendedStyles());

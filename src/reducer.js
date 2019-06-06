@@ -134,7 +134,7 @@ export default function reducer(state = {}, action) {
         },
         [actions.MODIFY_DATA]: () => {
             var modifiedData = {};
-            if (!payload.clear) {
+            if (payload.clear !== true) {
                 modifiedData = {
                     ...tableState.modified,
                     [payload.key]: {
@@ -149,7 +149,6 @@ export default function reducer(state = {}, action) {
                 [name]: {
                     ...tableState,
                     modified: {
-                        ...tableState.modified,
                         ...modifiedData
                     }
                 }

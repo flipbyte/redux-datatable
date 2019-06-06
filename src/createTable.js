@@ -188,7 +188,7 @@ const renderTable = ({
                 className="rdt-table-body"
                 ref={ tableBody }
                 width={ width }
-                height={ `${height > visibleHeight ? visibleHeight : height}px` }
+                height={ height > visibleHeight ? visibleHeight : height }
                 innerHeight={ height }
                 data={ items }
                 startTop={ top }
@@ -201,8 +201,9 @@ const renderTable = ({
                 windowing={ true }
             >
                 {({ item, top, index: rowIndex }) => {
-                    var data = prepareData(item, schema, state);
-                    var modifiedData = modified[data[primaryKey]] || {};
+                    const data = prepareData(item, schema, state);
+                    const primarKeyValue = _.get(data, primaryKey);
+                    const modifiedData = modified[primarKeyValue] || {};
                     return (
                         <Tr
                             key={ rowIndex }
@@ -217,6 +218,9 @@ const renderTable = ({
                             {(column, index) => {
                                 const { width, textAlign, name, type } = column;
                                 const ColRenderer = column.renderer || Renderer;
+                                const modifiedValue = _.get(modifiedData, name);
+                                const origValue = _.get(data, name);
+                                const value = modifiedValue || origValue;
                                 return (
                                     <Td
                                         key={ index }
@@ -229,16 +233,21 @@ const renderTable = ({
                                                 ofType="body"
                                                 forItem={ type }
                                                 data={ data }
+                                                value={ value }
                                                 colConfig={ column }
                                                 extraData={ bodyExtraData[name] }
                                                 action={ action }
                                                 thunk={ thunk }
                                                 isEditing={ isEditing }
+                                                origValue={ origValue }
                                                 modifiedData={ modifiedData }
+                                                isModified={ !!modifiedValue }
+                                                modifiedValue={ modifiedValue }
                                                 handleChange={(event) => {
-                                                    const newData = Object.assign({}, data);
+                                                    var newData = { ...modifiedData };
+                                                    _.set(newData, primaryKey, primarKeyValue);
                                                     _.set(newData, event.target.name, event.target.value);
-                                                    action(MODIFY_DATA)({ key: newData[primaryKey], value: newData })
+                                                    action(MODIFY_DATA)({ key: primarKeyValue, value: newData })
                                                 }}
                                             />
                                         </ExtendedDiv>
@@ -345,7 +354,7 @@ const ReduxDatatable = ( props ) => {
                     tableBody,
                     thunk,
                     top,
-                    visibleHeight: height,
+                    visibleHeight: height || (rowHeight * ( tableData.items || [] ).length),
                     width,
                     widthAdjustment,
                 }) }
