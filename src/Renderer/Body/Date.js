@@ -25,6 +25,7 @@ const Date = ({
                     modified={ isModified }
                     className={ isModified ? 'modified' : ''}
                     value={ formatDate(value, 'Y-m-d') }
+                    autocomplete="off"
                 />
             </Row>
         )}
