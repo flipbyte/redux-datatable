@@ -188,7 +188,7 @@ const renderTable = ({
                 className="rdt-table-body"
                 ref={ tableBody }
                 width={ width }
-                height={ `${height > visibleHeight ? visibleHeight : height}px` }
+                height={ height > visibleHeight ? visibleHeight : height }
                 innerHeight={ height }
                 data={ items }
                 startTop={ top }
@@ -345,7 +345,7 @@ const ReduxDatatable = ( props ) => {
                     tableBody,
                     thunk,
                     top,
-                    visibleHeight: height,
+                    visibleHeight: height || (rowHeight * ( tableData.items || [] ).length),
                     width,
                     widthAdjustment,
                 }) }
