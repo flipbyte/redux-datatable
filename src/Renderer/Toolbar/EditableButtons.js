@@ -8,7 +8,7 @@ const defaultLabels = {
     save: 'Save'
 };
 
-const EditableButtons = ({ itemConfig, action, isModified, isEditable, isEditing, internalStateUpdater, thunk }) => {
+const EditableButtons = ({ itemConfig, isModified, isEditable, isEditing, internalStateUpdater, thunk }) => {
     const { save } = itemConfig;
     const labels = _.merge(defaultLabels, itemConfig.labels);
     const toggleEditable = () => internalStateUpdater({ type: TOGGLE_EDITABLE });
@@ -21,7 +21,7 @@ const EditableButtons = ({ itemConfig, action, isModified, isEditable, isEditing
                 </Button>
             )}
             { isModified && (
-                <Button className="rdt-toolbar-button reset-filters" onClick={ save && thunk.bind(this, save, { itemConfig, action }) }>
+                <Button className="rdt-toolbar-button reset-filters" onClick={ save && thunk.bind(this, save, { itemConfig }) }>
                     { labels.save }
                 </Button>
             )}

@@ -379,8 +379,8 @@ const ReduxDatatable = ( props ) => {
     );
 };
 
-const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}) => (
-    ( payload = {} ) => ({ name, reducerName, routes, entity, payload })
+const prepareActionPayload = ({ reducerName, config: { name, routes, entity }}, action) => (
+    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action })
 );
 
 const mapStateToProps = ( state, { reducerName, config: { name, entity } } ) => ({
@@ -389,14 +389,15 @@ const mapStateToProps = ( state, { reducerName, config: { name, entity } } ) => 
 });
 
 const mapDispatchToProps = ( dispatch, ownProps ) => {
-    let preparePayload = prepareActionPayload(ownProps);
+    const action = ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload)));
+    const preparePayload = prepareActionPayload(ownProps, action);
     return {
+        action,
         loadData: ( ) => {
             dispatch(setPage(preparePayload({ page: 1 })));
             dispatch(setLimit(preparePayload({ limit: ownProps.config.pagination.items.limiter.default || 10 })));
             dispatch(setSort(preparePayload({ dir: 'desc' })));
         },
-        action: ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
         thunk: ( thunk, payload ) => dispatch(thunk(preparePayload(payload)))
     };
 };

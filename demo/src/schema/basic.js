@@ -154,7 +154,7 @@ export default {
                     // Get current table state.
                     const tableState = getState()[payload.reducerName][payload.name];
                     confirm('Are your sure you want to delete the selected items?')
-                        ? console.log('delete items', payload, getState(), tableState)
+                        ? console.log('delete items', config, getState(), tableState)
                         : console.log(false);
 
                     // Filter your selected item ids here for deletion
@@ -174,7 +174,7 @@ export default {
             visible: true,
             state: false,
             thunk: ( config ) => ( dispatch, getState ) => {
-                console.log('toolbar button click', payload);
+                console.log('toolbar button click', config);
             }
         }, {
             type: 'resetFilters',
@@ -203,9 +203,9 @@ export default {
             save: ( config ) => ( dispatch, getState ) => {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar save click with modified data', config, tableState.modified);
-                config.payload.action(MODIFY_DATA)({ clear: true });
+                config.action(MODIFY_DATA)({ clear: true });
                 // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
-                // Dispatch REQUEST_DATA action "config.payload.action(REQUEST_DATA)" to refresh data.
+                // Dispatch REQUEST_DATA action "config.action(REQUEST_DATA)" to refresh data.
             }
         }],
     ],
@@ -281,7 +281,7 @@ export default {
                 id: '@id',
             },
             thunk: ( config ) => ( dispatch, getState ) => {
-                console.log('edit', payload, getState());
+                console.log('edit', config, getState());
             }
         }, {
             type: 'action',
