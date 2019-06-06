@@ -8,10 +8,11 @@ const Options = ({
     data,
     isEditing,
     handleChange,
+    isModified,
     modifiedValue,
+    value = '',
     colConfig: { name, options, editable }
 }) => {
-    const value = _.get(data, name);
     if (!editable || !isEditing) {
         if(!options || !options[value]) {
             return <Fragment>{ value }</Fragment>;
@@ -28,9 +29,9 @@ const Options = ({
         <Row padding="0 0 5px">
             <Field.Select
                 name={ name }
-                value={ modifiedValue || value || '' }
-                modified={ !!modifiedValue }
-                className={ !!modifiedValue ? 'modified' : ''}
+                modified={ isModified }
+                className={ isModified ? 'modified' : ''}
+                value={ value }
                 onChange={ handleChange }
             >
                 <option></option>

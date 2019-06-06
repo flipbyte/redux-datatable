@@ -218,6 +218,9 @@ const renderTable = ({
                             {(column, index) => {
                                 const { width, textAlign, name, type } = column;
                                 const ColRenderer = column.renderer || Renderer;
+                                const modifiedValue = _.get(modifiedData, name);
+                                const origValue = _.get(data, name);
+                                const value = modifiedValue || origValue;
                                 return (
                                     <Td
                                         key={ index }
@@ -230,13 +233,16 @@ const renderTable = ({
                                                 ofType="body"
                                                 forItem={ type }
                                                 data={ data }
+                                                value={ value }
                                                 colConfig={ column }
                                                 extraData={ bodyExtraData[name] }
                                                 action={ action }
                                                 thunk={ thunk }
                                                 isEditing={ isEditing }
+                                                origValue={ origValue }
                                                 modifiedData={ modifiedData }
-                                                modifiedValue={ _.get(modifiedData, name) }
+                                                isModified={ !!modifiedValue }
+                                                modifiedValue={ modifiedValue }
                                                 handleChange={(event) => {
                                                     var newData = { ...modifiedData };
                                                     _.set(newData, primaryKey, primarKeyValue);

@@ -9,20 +9,22 @@ const Date = ({
     index,
     isEditing,
     handleChange,
+    isModified,
     modifiedValue,
+    value = '',
     colConfig: { name, textAlign, format, editable }
 }) => (
     <Fragment>
-        { (!editable || !isEditing) && <Time value={ _.get(data, name, '') } format={ format ? format : 'F j, Y, g:i a' } /> }
+        { (!editable || !isEditing) && <Time value={ value } format={ format ? format : 'F j, Y, g:i a' } /> }
         { !!editable && isEditing && (
             <Row padding="0 0 5px">
                 <Field.Input
                     type="date"
                     name={ name }
                     onChange={ handleChange }
-                    modified={ !!modifiedValue }
-                    className={ !!modifiedValue ? 'modified' : ''}
-                    value={ formatDate(modifiedValue || _.get(data, name, ''), 'Y-m-d') }
+                    modified={ isModified }
+                    className={ isModified ? 'modified' : ''}
+                    value={ formatDate(value, 'Y-m-d') }
                 />
             </Row>
         )}

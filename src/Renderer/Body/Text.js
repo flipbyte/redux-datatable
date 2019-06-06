@@ -8,20 +8,22 @@ const Text = ({
     index,
     isEditing,
     handleChange,
+    isModified,
     modifiedValue,
+    value = '',
     colConfig: { name, editable }
 }) => (
     <Fragment>
-        { (!editable || !isEditing) && _.get(data, name, '') }
+        { (!editable || !isEditing) && value }
         { !!editable && isEditing && (
             <Row padding="0 0 5px">
                 <Field.Input
                     type="text"
                     name={ name }
                     onChange={ handleChange }
-                    modified={ !!modifiedValue }
-                    className={ !!modifiedValue ? 'modified' : ''}
-                    value={ modifiedValue || _.get(data, name, '') }
+                    modified={ isModified }
+                    className={ isModified ? 'modified' : ''}
+                    value={ value }
                 />
             </Row>
         )}
