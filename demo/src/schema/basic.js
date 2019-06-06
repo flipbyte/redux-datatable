@@ -1,4 +1,5 @@
 import React from 'react';
+import { MODIFY_DATA } from '../../../src/actions';
 
 export default {
     name: 'posts',
@@ -149,7 +150,7 @@ export default {
                 name: 'delete',
                 label: 'Delete',
                 indexField: '@id',
-                thunk: ( payload ) => ( dispatch, getState ) => {
+                thunk: ( config ) => ( dispatch, getState ) => {
                     // Get current table state.
                     const tableState = getState()[payload.reducerName][payload.name];
                     confirm('Are your sure you want to delete the selected items?')
@@ -172,7 +173,7 @@ export default {
             label: 'Simple Button',
             visible: true,
             state: false,
-            thunk: ( payload ) => ( dispatch, getState ) => {
+            thunk: ( config ) => ( dispatch, getState ) => {
                 console.log('toolbar button click', payload);
             }
         }, {
@@ -199,9 +200,10 @@ export default {
                 hide: 'Hide editable',
                 save: 'Save',
             },
-            save: ( payload ) => ( dispatch, getState ) => {
-                const tableState = getState()[payload.reducerName][payload.name];
-                console.log('toolbar save click with modified data', payload, tableState.modified);
+            save: ( config ) => ( dispatch, getState ) => {
+                const tableState = getState()[config.reducerName][config.name];
+                console.log('toolbar save click with modified data', config, tableState.modified);
+                config.payload.action(MODIFY_DATA)({ clear: true });
                 // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
                 // Dispatch REQUEST_DATA action "payload.action(REQUEST_DATA)" to refresh data.
             }
@@ -278,7 +280,7 @@ export default {
             params: {
                 id: '@id',
             },
-            thunk: ( payload ) => ( dispatch, getState ) => {
+            thunk: ( config ) => ( dispatch, getState ) => {
                 console.log('edit', payload, getState());
             }
         }, {
@@ -289,7 +291,7 @@ export default {
             params: {
                 id: '@id'
             },
-            thunk: ( payload ) => ( dispatch, getState ) => {
+            thunk: ( config ) => ( dispatch, getState ) => {
                 confirm('Are your sure you want to delete this page?')
                     ? console.log('delete', getState())
                     : console.log(false);
