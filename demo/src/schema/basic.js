@@ -205,7 +205,7 @@ export default {
                 console.log('toolbar save click with modified data', config, tableState.modified);
                 config.payload.action(MODIFY_DATA)({ clear: true });
                 // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
-                // Dispatch REQUEST_DATA action "payload.action(REQUEST_DATA)" to refresh data.
+                // Dispatch REQUEST_DATA action "config.payload.action(REQUEST_DATA)" to refresh data.
             }
         }],
     ],
