@@ -201,8 +201,9 @@ const renderTable = ({
                 windowing={ true }
             >
                 {({ item, top, index: rowIndex }) => {
-                    var data = prepareData(item, schema, state);
-                    var modifiedData = modified[data[primaryKey]] || {};
+                    const data = prepareData(item, schema, state);
+                    const primarKeyValue = _.get(data, primaryKey);
+                    const modifiedData = modified[primarKeyValue] || {};
                     return (
                         <Tr
                             key={ rowIndex }
@@ -235,10 +236,12 @@ const renderTable = ({
                                                 thunk={ thunk }
                                                 isEditing={ isEditing }
                                                 modifiedData={ modifiedData }
+                                                modifiedValue={ _.get(modifiedData, name) }
                                                 handleChange={(event) => {
-                                                    const newData = Object.assign({}, data);
+                                                    var newData = { ...modifiedData };
+                                                    _.set(newData, primaryKey, primarKeyValue);
                                                     _.set(newData, event.target.name, event.target.value);
-                                                    action(MODIFY_DATA)({ key: newData[primaryKey], value: newData })
+                                                    action(MODIFY_DATA)({ key: primarKeyValue, value: newData })
                                                 }}
                                             />
                                         </ExtendedDiv>

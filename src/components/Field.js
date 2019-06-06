@@ -9,7 +9,8 @@ const formControl = ({
     color,
     padding,
     focusShadow,
-    focusBorderColor
+    focusBorderColor,
+    modified
 }) => css `
     display: block;
     width: 100%;
@@ -27,6 +28,10 @@ const formControl = ({
         box-shadow: ${focusShadow || 'none'};
         border-color: ${focusBorderColor || '#80bdff'}
     };
+
+    ${modified && css`
+        border: 1px solid #007bff;
+    `}
 `;
 
 const Input = styled.input `

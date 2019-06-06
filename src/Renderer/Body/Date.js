@@ -9,7 +9,7 @@ const Date = ({
     index,
     isEditing,
     handleChange,
-    modifiedData,
+    modifiedValue,
     colConfig: { name, textAlign, format, editable }
 }) => (
     <Fragment>
@@ -20,7 +20,9 @@ const Date = ({
                     type="date"
                     name={ name }
                     onChange={ handleChange }
-                    value={ formatDate(_.get(modifiedData, name) || _.get(data, name, ''), 'Y-m-d') }
+                    modified={ !!modifiedValue }
+                    className={ !!modifiedValue ? 'modified' : ''}
+                    value={ formatDate(modifiedValue || _.get(data, name, ''), 'Y-m-d') }
                 />
             </Row>
         )}

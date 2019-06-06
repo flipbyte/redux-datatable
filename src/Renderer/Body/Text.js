@@ -8,7 +8,7 @@ const Text = ({
     index,
     isEditing,
     handleChange,
-    modifiedData,
+    modifiedValue,
     colConfig: { name, editable }
 }) => (
     <Fragment>
@@ -19,7 +19,9 @@ const Text = ({
                     type="text"
                     name={ name }
                     onChange={ handleChange }
-                    value={ _.get(modifiedData, name) || _.get(data, name, '') }
+                    modified={ !!modifiedValue }
+                    className={ !!modifiedValue ? 'modified' : ''}
+                    value={ modifiedValue || _.get(data, name, '') }
                 />
             </Row>
         )}
