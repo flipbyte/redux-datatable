@@ -22,6 +22,7 @@ const String = ({ name, value = '', filterer }) => (
         name={ name }
         value={ value }
         onChange={ applyFilter.bind(this, filterer) }
+        autocomplete="off"
     />
 );
 

@@ -38,6 +38,7 @@ const Number = ({ name, value = [], filterer }) => (
                 onChange={ applyFilter.bind(this, 0, filterer) }
                 value={ value[0] || '' }
                 placeholder="From"
+                autocomplete="off"
             />
         </Row>
         <Row>
@@ -48,6 +49,7 @@ const Number = ({ name, value = [], filterer }) => (
                 value={ value[1] || ''}
                 onChange={ applyFilter.bind(this, 1, filterer) }
                 placeholder="To"
+                autocomplete="off"
             />
         </Row>
     </Fragment>
