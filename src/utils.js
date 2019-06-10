@@ -166,6 +166,26 @@ export const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 };
 
+export const calculatePaginationProps = (
+    { page, limit = 0, count = 0 },
+    defaultLimit = 10
+) => {
+    page = page > 1 ? page : 1;
+    limit = isUndefined(limit) !== true ? limit : defaultLimit;
+
+    let start = (page - 1) * limit;
+    let end = start + limit - 1;
+
+    return {
+        page,
+        start,
+        end: (count > end && end >= 0) ? end : count,
+        count,
+        limit,
+        total: limit > 0 ? Math.ceil(count / limit) : 1
+    };
+};
+
 export const withModal = WrappedComponent => (
     class extends React.Component {
         constructor(props) {

@@ -1,26 +1,17 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
-import { getExtendedStyles, withModal } from '../utils';
-import { SET_IS_PRINTING } from '../constants';
+import React from 'react';
+import Button from '../styled-components/Button';
 
-const StyledPrint = styled.div `
-    position: absolute;
-    width: 100%;
-    height: auto;
-    background: #fff;
-    top: 0;
-    left: 0;
-    z-index: 1
-`;
-const ExtendedStyledPrint = styled(StyledPrint)(getExtendedStyles());
+const Print = ({
+    config: { label = 'Print' },
+    setIsPrinting
+}) => (
+    <Button className="rdt-toolbar-button print" onClick={ setIsPrinting(true) }>
+        { label }
+    </Button>
+);
 
-const Print = ({ children, internalStateUpdater, ...rest }) => {
-    useEffect(() => {
-        window.print();
-        internalStateUpdater({ type: SET_IS_PRINTING, value: false })
-    }, [])
+Print.mapPropsToComponent = ({
+    printing: [ _, setIsPrinting ]
+}) => ({ setIsPrinting });
 
-    return <ExtendedStyledPrint { ...rest }>{ children }</ExtendedStyledPrint>;
-}
-
-export default withModal(Print);
+export default Print;
