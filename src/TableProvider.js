@@ -4,28 +4,28 @@ import { getInitialVisibleColumns, calculatePaginationProps, calculateWidth } fr
 
 const TableContext = React.createContext(null);
 
-export const TableProvider = ({ config = {}, tableData = {}, action, thunk, children }) => {
-    const [ isPrinting, setIsPrinting ] = useState(false);
-    const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(config.components.table));
-    const [ isEditing, setIsEditing ] = useState(!!config.isEditing);
-    const [ minWidth ] = useState(calculateWidth(config.components.table));
-
-    return (
-        <TableContext.Provider value={{
-            action,
-            config,
-            tableData,
-            thunk,
-            columns: [ visibleColumnIds, setVisibleColumnIds ],
-            editing: [ isEditing, setIsEditing ],
-            printing: [ isPrinting, setIsPrinting ],
-            paginationProps: tableData.query && calculatePaginationProps(tableData.query, config.components.Limiter.default || 10),
-            minWidth
-        }}>
-            { children }
-        </TableContext.Provider>
-    )
-}
+// export const TableProvider = ({ config = {}, tableData = {}, action, thunk, children }) => {
+//     const [ isPrinting, setIsPrinting ] = useState(false);
+//     const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(config.components.table));
+//     const [ isEditing, setIsEditing ] = useState(!!config.isEditing);
+//     const [ minWidth ] = useState(calculateWidth(config.components.table));
+//
+//     return (
+//         <TableContext.Provider value={{
+//             action,
+//             config,
+//             tableData,
+//             thunk,
+//             columns: [ visibleColumnIds, setVisibleColumnIds ],
+//             editing: [ isEditing, setIsEditing ],
+//             printing: [ isPrinting, setIsPrinting ],
+//             paginationProps: tableData.query && calculatePaginationProps(tableData.query, config.components.Limiter.default || 10),
+//             minWidth
+//         }}>
+//             { children }
+//         </TableContext.Provider>
+//     )
+// }
 
 
 // const ConfigContext = React.createContext({});

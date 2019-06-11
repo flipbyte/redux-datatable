@@ -10,3 +10,5 @@ export Pages from './Pages';
 export Print from './Print';
 export ResetFilters from './ResetFilters';
 export ResultCount from './ResultCount';
+export Spacer from './Spacer';
+export Table from './Table';

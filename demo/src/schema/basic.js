@@ -25,19 +25,29 @@ export default {
     },
     layout: [
         ['Editable'],
-        ['MassActions', 'SimpleButton', 'ResetFilters', /*'Spacer',*/'Print', /*'Columns'*/],
-        ['Limiter', /*'Spacer',*/ 'ResultCount', 'Pages'],
-        // [{ id: 'table', layout: [
-        //     [{ id: 'head', layout: [
-        //         ['header'],
-        //         ['filters']
-        //     ]}],
-        //     ['body'],
-        //     [{ id: 'head', layout: [
-        //         ['header'],
-        //     ]}],
-        // ]}],
-        ['Limiter', /*'Spacer',*/ 'ResultCount', 'Pages'],
+        ['MassActions', 'SimpleButton', 'ResetFilters', 'Spacer', 'Print', 'Columns'],
+        ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
+        // [['Table', [
+        //     ['THead', [
+        //         ['Header'],
+        //         ['Filter']
+        //     ]],
+        //     ['Tbody'],
+        //     ['Thead', [
+        //         ['Header']
+        //     ]]
+        // ]]]
+        [{ id: 'Table', layout: [
+            // [{ id: 'head', layout: [
+            //     ['header'],
+            //     // ['filters']
+            // ]}],
+            // ['body'],
+            // [{ id: 'head', layout: [
+            //     ['header'],
+            // ]}],
+        ]}],
+        ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
     ],
     components: {
         Editable: {
@@ -119,7 +129,7 @@ export default {
             options: [10, 20, 50, 200, 2000, 0],
             default: 200,
         },
-        table: [{
+        Table: [{
             name: 'ids',
             label: '',
             sortable: false,

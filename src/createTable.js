@@ -3,7 +3,7 @@ import React, { useState, useEffect, useReducer, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
-import { TableProvider } from './TableProvider';
+// import { TableProvider } from './TableProvider';
 import * as InternalComponents from './components';
 import Layout from './containers/Layout';
 import Row from './styled-components/Row';
@@ -269,9 +269,9 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData, action, thunk, lo
     const { layout, components } = config;
 
     const [ isPrinting, setIsPrinting ] = useState(false);
-    const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(config.components.table));
+    const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(config.components.Table));
     const [ isEditing, setIsEditing ] = useState(!!config.isEditing);
-    const [ minWidth ] = useState(calculateWidth(config.components.table));
+    const [ minWidth ] = useState(calculateWidth(config.components.Table));
 
     const tableConfig = {
         action,
@@ -307,14 +307,14 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData, action, thunk, lo
                 }
 
                 const componentConfig = _.get(components, id, false);
-                console.log(componentConfig);
+                // console.log(componentConfig);
                 if (componentConfig !== false && !!componentConfig.renderer === true) {
                     return componentConfig.renderer({ componentConfig });
                 }
 
                 const type = _.chain(componentConfig.type || id).camelCase().upperFirst().value();
                 const Component = InternalComponents[type];
-                console.log(type, Component);
+                // console.log(type, Component, mapPropsToComponent(Component));
                 return (
                     <Component
                         key={ index }
@@ -326,17 +326,19 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData, action, thunk, lo
         </Layout>
     );
 
-    return (
-        <TableProvider
-            config={ config }
-            reducerName={ reducerName }
-            tableData={ tableData }
-            action={ action }
-            thunk={ thunk }
-        >
-            { render(layout) }
-        </TableProvider>
-    );
+    return render(layout);
+
+    // return (
+    //     <TableProvider
+    //         config={ config }
+    //         reducerName={ reducerName }
+    //         tableData={ tableData }
+    //         action={ action }
+    //         thunk={ thunk }
+    //     >
+    //         { render(layout) }
+    //     </TableProvider>
+    // );
 };
 
 const prepareActionPayload = ({

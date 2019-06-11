@@ -1,107 +1,62 @@
-import ReactDOM from 'react-dom';
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import Button from '../styled-components/Button';
 import Dropdown from '../styled-components/Dropdown';
+import withDropdown from '../hoc/withDropdown';
 import { ADD_COLUMN, REMOVE_COLUMN } from '../constants';
 
-class Columns extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = { open: false };
-        this.updateColumns = this.updateColumns.bind(this);
-        this.toggle = this.toggle.bind(this);
-        this.manageEvents = this.manageEvents.bind(this);
-        this.handleDocumentClick = this.handleDocumentClick.bind(this);
+const updateState = (type, index) => (state) => {
+    let visibleColumnIds = [ ...state ];
+    if (type === ADD_COLUMN) {
+        visibleColumnIds.push(index);
+        visibleColumnIds.sort();
+    } else {
+        visibleColumnIds.splice(visibleColumnIds.indexOf(index), 1).sort();
     }
 
-    updateColumns( value, event ) {
-        const { internalStateUpdater } = this.props;
-
-        if (event.target.checked) {
-            internalStateUpdater({ type: ADD_COLUMN, value });
-        } else {
-            internalStateUpdater({ type: REMOVE_COLUMN, value });
-        }
-    }
-
-    componentWillUnmount() {
-        this.manageEvents(true);
-    }
-
-    componentDidMount() {
-        this.manageEvents();
-    }
-
-    toggle( e ) {
-        const { open } = this.state;
-        // if(isOpen) {
-        //     this.manageEvents();
-        // } else {
-        //     this.manageEvents(true);
-        // }
-        //
-        this.setState({ open: !open });
-    }
-
-    manageEvents(remove = false) {
-        var eventUpdater = remove ? document.removeEventListener : document.addEventListener;
-
-        ['click', 'touchstart', 'keyup'].forEach( event =>
-            eventUpdater(event, this.handleDocumentClick, true)
-        );
-    }
-
-    handleDocumentClick(e) {
-        if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== 9))) {
-            return;
-        }
-
-        const container = ReactDOM.findDOMNode(this);
-        if (container.contains(e.target) && container !== e.target
-            && (e.type !== 'keyup' || e.which === 9)
-        ) {
-            return;
-        }
-
-        if (this.state.open) {
-            this.toggle(e);
-        }
-    }
-
-    render() {
-        const {
-            config: { style = {} },
-            columns = [],
-            visibleColumns = []
-        } = this.props;
-        const { open } = this.state;
-
-        return (
-            <Dropdown.Container className="rdt-toolbar-columns">
-                <Button  className="rdt-toolbar-btn" dropdownToggle onClick={ this.toggle } { ...style.button }>
-                    Columns
-                </Button>
-                <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
-                    { columns.map(({ name, label }, index) =>
-                        <Dropdown.Item key={ index } className="rdt-toolbar-item" padding="0.25rem 0.75rem">
-                            <input name={ name }
-                                type="checkbox"
-                                style={{ margin: 5 }}
-                                defaultChecked={ -1 !== visibleColumns.indexOf(index) }
-                                onChange={ this.updateColumns.bind(null, index) } />
-                            <label htmlFor={ name }>{ label }</label>
-                        </Dropdown.Item>
-                    )}
-                </Dropdown.Menu>
-            </Dropdown.Container>
-        );
-    }
+    return visibleColumnIds;
 }
 
+const updateColumns = (setVisibleColumnIds, index, event) => {
+    if (event.target.checked) {
+        setVisibleColumnIds(updateState(ADD_COLUMN, index))
+    } else {
+        setVisibleColumnIds(updateState(REMOVE_COLUMN, index))
+    }
+};
+
+const Columns = withDropdown(({
+    open,
+    toggle,
+    columns,
+    visibleColumnIds,
+    setVisibleColumnIds,
+    config: { style = {} }
+}) => (
+    <Dropdown.Container className="rdt-toolbar-columns">
+        <Button  className="rdt-toolbar-btn" dropdownToggle onClick={ toggle } { ...style.button }>
+            Columns
+        </Button>
+        <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
+            { columns.map(({ name, label }, index) => (
+                <Dropdown.Item key={ index } className="rdt-toolbar-item" padding="0.25rem 0.75rem">
+                    <input name={ name }
+                        type="checkbox"
+                        style={{ margin: 5 }}
+                        defaultChecked={ -1 !== visibleColumnIds.indexOf(index) }
+                        onChange={(event) => updateColumns(setVisibleColumnIds, index, event)}
+                    />
+                    <label htmlFor={ name }>{ label }</label>
+                </Dropdown.Item>
+            ))}
+        </Dropdown.Menu>
+    </Dropdown.Container>
+));
+
 Columns.mapPropsToComponent = ({
-    config: { columns },
-    visibleColumns
-}) => ({ columns,  });
+    config: {
+        components: { Table: columns }
+    },
+    columns: [ visibleColumnIds, setVisibleColumnIds ]
+}) => ({ columns, visibleColumnIds, setVisibleColumnIds });
 
 export default Columns;
