@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import Button from '../styled-components/Button';
-import Dropdown from '../styled-components/Dropdown';
 import withDropdown from '../hoc/withDropdown';
 import { ADD_COLUMN, REMOVE_COLUMN } from '../constants';
+import { Button, Dropdown } from '../styled-components';
 
 const updateState = (type, index) => (state) => {
     let visibleColumnIds = [ ...state ];

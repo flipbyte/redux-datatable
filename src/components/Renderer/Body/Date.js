@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import Time, { format as formatDate } from 'react-pure-time';
 import React, { Fragment } from 'react';
-import Field from '../../styled-components/Field';
-import Row from '../../styled-components/Row';
+import { Field, Row } from '../../../styled-components';
 
 const Date = ({
     data,

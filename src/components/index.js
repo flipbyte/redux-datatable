@@ -1,6 +1,4 @@
-export * as Filter from './Filter';
-export * as Body from './Body';
-export * as Header from './Header';
+export Table from './Table';
 export Button from './Button';
 export Columns from './Columns';
 export Editable from './Editable';
@@ -11,4 +9,6 @@ export Print from './Print';
 export ResetFilters from './ResetFilters';
 export ResultCount from './ResultCount';
 export Spacer from './Spacer';
-export Table from './Table';
+export Header from './Header';
+export Body from './Body';
+export Filters from './Filters';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SET_PAGE } from '../actions';
 import styled from 'styled-components';
-import Button from '../styled-components/Button';
+import { Button } from '../styled-components';
 
 export const List = styled.div `
     display: inline-flex;
@@ -19,7 +19,6 @@ const fillRange = ( start, end ) => {
 };
 
 const getPages = ( currentPage = 1, total = 0 ) => {
-    console.log(currentPage, total);
     var padding = Math.floor(NUM_LINKS / 2);
     var left = (currentPage - padding < padding) ? 1 : currentPage - padding;
     var right = (left + NUM_LINKS - 1 > total) ? total : left + NUM_LINKS - 1;
@@ -35,18 +34,18 @@ const Pages = ({ page, total, action }) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
         <List className="rdt-pg-list">
-            <Button className="rdt-pg-first" onClick={ setPage.bind(this, 1) } disabled={ page === 1 }>First</Button>
-            <Button className="rdt-pg-prev" onClick={ setPage.bind(this, page - 1) } disabled={ page < 2 } >Previous</Button>
+            <Button className="rdt-pg-first" onClick={() => setPage(1)} disabled={ page === 1 }>First</Button>
+            <Button className="rdt-pg-prev" onClick={() => setPage(page - 1)} disabled={ page < 2 } >Previous</Button>
             { getPages(page, total).map( (link, index) =>
                 <Button
                     key={ index }
                     className={ `rdt-pg-num ${page === link ? 'active' : ''}` }
-                    onClick={ setPage.bind(this, link) }
+                    onClick={() => setPage(link)}
                     active={ page === link }
                 >{ link }</Button>
             ) }
-            <Button className="rdt-pg-next" onClick={ setPage.bind(this, page + 1) } disabled={ page >= total }>Next</Button>
-            <Button className="rdt-pg-last" onClick={ setPage.bind(this, total) } disabled={ total === 0 || page === total }>Last</Button>
+            <Button className="rdt-pg-next" onClick={() => setPage(page + 1)} disabled={ page >= total }>Next</Button>
+            <Button className="rdt-pg-last" onClick={() => setPage(total)} disabled={ total === 0 || page === total }>Last</Button>
         </List>
     );
 };

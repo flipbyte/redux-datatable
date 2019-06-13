@@ -1,8 +1,8 @@
 import React from 'react';
-import { SET_SELECTION } from '../../actions';
-import { SELECT_ALL } from '../../constants';
-import { getConfigParam } from '../../utils';
-import Field from '../../styled-components/Field';
+import { SET_SELECTION } from '../../../actions';
+import { SELECT_ALL } from '../../../constants';
+import { getConfigParam } from '../../../utils';
+import { Field } from '../../../styled-components';
 
 const handleSelection = ( selector, indexField, event ) => {
     let paramKey = getConfigParam(indexField);

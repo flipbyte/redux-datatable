@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
-import { OPERATOR } from '../../constants';
-import Field from '../../styled-components/Field';
+import { OPERATOR } from '../../../constants';
+import { Field } from '../../../styled-components';
 
 const applyFilter = ( filterer, event ) => {
     let filter = {};

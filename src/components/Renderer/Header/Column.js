@@ -1,5 +1,5 @@
 import React from 'react';
-import Sortable from '../../styled-components/Sortable';
+import { Sortable } from '../../../styled-components';
 
 const Column = ({ name, label, sortable, sort, dir }) => (
     <Sortable

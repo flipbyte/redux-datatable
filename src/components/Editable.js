@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Button from '../styled-components/Button';
+import { Button } from '../styled-components';
 import { TOGGLE_EDITABLE } from '../constants';
 
 const defaultLabels = {

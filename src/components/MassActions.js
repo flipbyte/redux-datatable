@@ -1,7 +1,6 @@
 import React from 'react';
-import Button from '../styled-components/Button';
-import Dropdown from '../styled-components/Dropdown';
 import withDropdown from '../hoc/withDropdown';
+import { Button, Dropdown } from '../styled-components';
 
 const MassActions = withDropdown(({
     toggle,

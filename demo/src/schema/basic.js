@@ -5,9 +5,6 @@ export default {
     name: 'posts',
     height: 400,
     rowHeight: 50,
-    // filterable: true,
-    // headers: true,
-    // editable: true,
     editing: false,
     primaryKey: 'pageId',
     routes: {
@@ -27,25 +24,11 @@ export default {
         ['Editable'],
         ['MassActions', 'SimpleButton', 'ResetFilters', 'Spacer', 'Print', 'Columns'],
         ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
-        // [['Table', [
-        //     ['THead', [
-        //         ['Header'],
-        //         ['Filter']
-        //     ]],
-        //     ['Tbody'],
-        //     ['Thead', [
-        //         ['Header']
-        //     ]]
-        // ]]]
         [{ id: 'Table', layout: [
-            // [{ id: 'head', layout: [
-            //     ['header'],
-            //     // ['filters']
-            // ]}],
-            // ['body'],
-            // [{ id: 'head', layout: [
-            //     ['header'],
-            // ]}],
+            ['Header'],
+            ['Filters'],
+            ['Body'],
+            ['Header']
         ]}],
         ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
     ],
@@ -137,6 +120,38 @@ export default {
             indexField: '@pageId',
             width: 50,
             extraData: 'selection'
+        }, {
+            label: 'ID',
+            type: 'number',
+            name: 'pageId',
+            width: 150,
+            filterable: true,
+            sortable: true,
+            // editable: true
+        }, {
+            label: 'ID',
+            type: 'number',
+            name: 'pageId',
+            width: 150,
+            filterable: true,
+            sortable: true,
+            // editable: true
+        }, {
+            label: 'ID',
+            type: 'number',
+            name: 'pageId',
+            width: 150,
+            filterable: true,
+            sortable: true,
+            // editable: true
+        }, {
+            label: 'ID',
+            type: 'number',
+            name: 'pageId',
+            width: 150,
+            filterable: true,
+            sortable: true,
+            // editable: true
         }, {
             label: 'ID',
             type: 'number',

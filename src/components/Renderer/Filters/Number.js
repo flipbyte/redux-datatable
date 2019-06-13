@@ -1,52 +1,51 @@
 import React, { Fragment } from 'react';
-import { OPERATOR } from '../../constants';
-import Row from '../../styled-components/Row';
-import Field from '../../styled-components/Field';
+import { OPERATOR } from '../../../constants';
+import { Field, Row } from '../../../styled-components';
 
-var dateFrom = null;
-var dateTo = null;
+var valFrom = null;
+var valTo = null;
 
 const applyFilter = ( key, filterer, event ) => {
     let filter = {};
 
     if (key === 0) {
-        dateFrom = event.target.value;
+        valFrom = event.target.value;
     } else {
-        dateTo = event.target.value;
+        valTo = event.target.value;
     }
 
-    if ( dateFrom || dateTo ) {
+    if ( valFrom || valTo ) {
         filter = {
             operator: OPERATOR.BETWEEN,
             field: event.target.name,
-            value: [ dateFrom, dateTo ],
+            value: [ valFrom, valTo ],
             logic: 'where',
-            type: 'date',
+            type: 'number',
         };
     }
 
     filterer(event.target.name, filter);
 };
 
-const Date = ({ name, value = [], filterer }) => (
+const Number = ({ name, value = [], filterer }) => (
     <Fragment>
         <Row padding="0 0 5px">
             <Field.Input
-                className="rdt-filter-input date from"
-                type="date"
+                className="rdt-filter-input number from"
+                type="number"
                 name={ name }
-                value={ value[0] || '' }
                 onChange={ applyFilter.bind(this, 0, filterer) }
+                value={ value[0] || '' }
                 placeholder="From"
                 autocomplete="off"
             />
         </Row>
         <Row>
             <Field.Input
-                className="rdt-filter-input date to"
-                type="date"
+                className="rdt-filter-input number to"
+                type="number"
                 name={ name }
-                value={ value[1] || '' }
+                value={ value[1] || ''}
                 onChange={ applyFilter.bind(this, 1, filterer) }
                 placeholder="To"
                 autocomplete="off"
@@ -55,4 +54,4 @@ const Date = ({ name, value = [], filterer }) => (
     </Fragment>
 );
 
-export default Date;
+export default Number;

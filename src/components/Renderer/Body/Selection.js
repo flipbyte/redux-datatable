@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
-import { SET_SELECTION } from '../../actions';
-import { getParam, getConfigParam } from '../../utils';
-import { SELECT_ALL } from '../../constants';
-import Field from '../../styled-components/Field';
+import { SET_SELECTION } from '../../../actions';
+import { getParam, getConfigParam } from '../../../utils';
+import { SELECT_ALL } from '../../../constants';
+import { Field } from '../../../styled-components';
 
 const handleSelection = ({ data, indexField, action }, event ) => {
     let paramKey = getConfigParam(indexField);

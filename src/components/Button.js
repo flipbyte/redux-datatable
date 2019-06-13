@@ -1,5 +1,5 @@
 import React from 'react';
-import StyledButton from '../styled-components/Button';
+import { Button as StyledButton } from '../styled-components';
 
 const Button = (props) => {
     const { config, thunk } = props;

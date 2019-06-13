@@ -1,11 +1,11 @@
 import React from 'react';
-import Button from '../styled-components/Button';
+import { Button } from '../styled-components';
 
 const Print = ({
     config: { label = 'Print' },
     setIsPrinting
 }) => (
-    <Button className="rdt-toolbar-button print" onClick={ setIsPrinting(true) }>
+    <Button className="rdt-toolbar-button print" onClick={() => setIsPrinting(true)}>
         { label }
     </Button>
 );

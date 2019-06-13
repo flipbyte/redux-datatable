@@ -1,6 +1,6 @@
 import React from 'react';
 import { SET_FILTER } from '../actions';
-import Button from '../styled-components/Button';
+import { Button } from '../styled-components';
 
 const ResetFilters = ({
     action,

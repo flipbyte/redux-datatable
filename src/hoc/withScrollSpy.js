@@ -1,22 +1,30 @@
 import React, { Component } from 'react';
+import { calculateWidth } from '../utils';
 
 export let scrollerMap = {};
 
-// const handleScroll = (setState, event) => {
-//     const left = event.target.scrollLeft;
-//     _.map(scrollerMap, (ref, key, index) => (
-//         ref.current.scrollLeft = left;
-//     ))
-//
-//     this.setState({ pointerEvents: none, top: event.target.scrollTop });
-// };
+const handleScroll = (setState, event) => (
+    setState({ pointerEvents: 'none', top: event.target.scrollTop, left: -event.target.scrollLeft })
+);
+
+const updateTableDimensions = (tableBody, minWidth, visibleColumns, setState) => {
+    const tableBodyEl = tableBody.current;
+    const computedTableWidth = minWidth > tableBodyEl.clientWidth || !tableBodyEl.clientWidth
+        ? minWidth
+        : tableBodyEl.clientWidth;
+
+    const percentage = computedTableWidth / calculateWidth(visibleColumns);
+    setState({
+        width: calculateWidth(visibleColumns, percentage),
+        widthAdjustment: percentage
+    })
+}
 
 const withScrollSpy = WrappedComponent => (
     class extends Component {
         constructor(props) {
             super(props);
             this.ref = React.createRef(null);
-            // this.state = { top: 0, pointerEvents: '' };
         }
 
         componentDidMount() {
@@ -24,11 +32,14 @@ const withScrollSpy = WrappedComponent => (
                 return false;
             }
 
-            scrollerMap[this.props.name] = this.ref;
-            // if (this.props.type === 'body') {
-            //     this.ref.current.addEventListener('scroll', handleScroll.bind(this, setState), true);
-            //     window.addEventListener('resize', updateTableDimensions);
-            // }
+            const { name, setScrollData, setTableWidth, minWidth, columns } = this.props;
+
+            scrollerMap[name] = this.ref;
+            if (this.props.name === 'Body') {
+                this.ref.current.addEventListener('scroll', handleScroll.bind(this, setScrollData), true);
+                window.addEventListener('resize', updateTableDimensions.bind(this, this.ref, minWidth, columns, setTableWidth));
+                updateTableDimensions(this.ref, minWidth, columns, setTableWidth);
+            }
         }
 
         componentWillUnmount() {
@@ -36,11 +47,11 @@ const withScrollSpy = WrappedComponent => (
                 return false;
             }
 
-            // if (this.props.type === 'body') {
-            //     this.ref.current.removeEventListener('scroll', handleScroll.bind(this, setState), true);
-            //     window.removeEventListener('resize', updateTableDimensions);
-            // }
-            //
+            if (this.props.name === 'Body') {
+                this.ref.current.removeEventListener('scroll', handleScroll.bind(this, this.props.setScrollData), true);
+                window.removeEventListener('resize', updateTableDimensions.bind(this, this.props.setTableWidth));
+            }
+
             delete scrollerMap[this.props.name];
         }
 

@@ -3,4 +3,4 @@ export Date from './Date';
 export Image from './Image';
 export Options from './Options';
 export Selection from './Selection';
-export Text from './Text'; 
+export { default } from './Text'; 

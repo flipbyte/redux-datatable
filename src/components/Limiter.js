@@ -1,8 +1,7 @@
 import React from 'react';
 import { SET_LIMIT } from '../actions';
-import Field from '../styled-components/Field';
-import Label from '../styled-components/Label';
 import { isUndefined } from '../utils';
+import { Field, Label } from '../styled-components';
 
 const Limiter = ({
     config: { options },

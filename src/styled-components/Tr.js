@@ -10,8 +10,8 @@ const Tr = ({ className, children, style, columns }) => (
     </div>
 );
 
-const StyledTr = styled(Tr).attrs(({ top }) => ({
-    style: { top }
+const StyledTr = styled(Tr).attrs(({ top, left }) => ({
+    style: { top, left }
 })) `
     display: flex;
     width: 100%;
