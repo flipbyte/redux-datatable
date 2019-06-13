@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { Loader, Tbody, Tr, Td, ExtendedDiv } from '../styled-components';
+import { Loader, Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
 import { getStyles, getRenderer, prepareData, getExtraBodyRowProps, calculateWidth } from '../utils';
+import { MODIFY_DATA } from '../actions';
 
 const Body = ({
     columns,
@@ -26,7 +27,8 @@ const Body = ({
     action,
     thunk,
     isEditing,
-    minWidth
+    minWidth,
+    loaderStyles = {},
 }) => {
     let slicedData = [];
     let startIndex = 0;
@@ -75,14 +77,14 @@ const Body = ({
 
     return (
         <Tbody
-            styles={ styles }
+            styles={ getStyles(styles, 'tbody') }
             ref={ ref }
             isPrinting={ isPrinting }
             height={ height }
             visibleHeight={ visibleHeight }
             innerHeight={ innerHeight }
         >
-            { isFetching && <Loader /> }
+            { isFetching && <Loader styles={ loaderStyles } /> }
             <div style={{ width, height: innerHeight, position: 'relative' }}>
                 { slicedData.map((item, index) => {
                     const rowIndex = startIndex + index;
@@ -99,6 +101,7 @@ const Body = ({
                             columns={ columns }
                             height={ rowHeight }
                             even={ rowIndex % 2 === 0 }
+                            styles={ getStyles(styles.tr, 'body') }
                         >
                             {(column, index) => {
                                 const { width, textAlign, name, type } = column;
@@ -111,8 +114,9 @@ const Body = ({
                                         key={ index }
                                         className={ `rdt-table-col ${name} ${type}` }
                                         width={ width * widthAdjustment }
+                                        styles={ getStyles(styles.td, 'body') }
                                     >
-                                        <ExtendedDiv className="rdt-table-col-inner">
+                                        <Div className="rdt-table-col-inner">
                                             <ColRenderer
                                                 data={ data }
                                                 value={ value }
@@ -132,7 +136,7 @@ const Body = ({
                                                     action(MODIFY_DATA)({ key: primarKeyValue, value: newData })
                                                 }}
                                             />
-                                        </ExtendedDiv>
+                                        </Div>
                                     </Td>
                                 );
                             }}
@@ -145,7 +149,15 @@ const Body = ({
 }
 
 Body.mapPropsToComponent = ({
-    config: { rowHeight, height, primaryKey },
+    config: {
+        rowHeight,
+        height,
+        primaryKey,
+        components: {
+            Loader = {},
+            Table = {}
+        }
+    },
     tableData,
     printing: [ isPrinting ],
     editing: [ isEditing ],
@@ -184,7 +196,9 @@ Body.mapPropsToComponent = ({
         setScrollData,
         setTableWidth,
         tableWidth,
-        minWidth
+        minWidth,
+        loaderStyles: Loader.styles,
+        styles: Table.styles
     });
 }
 

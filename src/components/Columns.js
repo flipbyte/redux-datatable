@@ -29,15 +29,22 @@ const Columns = withDropdown(({
     columns,
     visibleColumnIds,
     setVisibleColumnIds,
-    config: { style = {} }
+    config: {
+        styles = {}
+    }
 }) => (
     <Dropdown.Container className="rdt-toolbar-columns">
-        <Button  className="rdt-toolbar-btn" dropdownToggle onClick={ toggle } { ...style.button }>
+        <Button  className="rdt-toolbar-btn" dropdownToggle onClick={ toggle } styles={ styles.button }>
             Columns
         </Button>
-        <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
+        <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open }  styles={ styles.dropdownMenu }>
             { columns.map(({ name, label }, index) => (
-                <Dropdown.Item key={ index } className="rdt-toolbar-item" padding="0.25rem 0.75rem">
+                <Dropdown.Item
+                    key={ index }
+                    className="rdt-toolbar-item"
+                    padding="0.25rem 0.75rem"
+                    styles={ styles.dropdownItem }
+                >
                     <input name={ name }
                         type="checkbox"
                         style={{ margin: 5 }}
@@ -53,7 +60,9 @@ const Columns = withDropdown(({
 
 Columns.mapPropsToComponent = ({
     config: {
-        components: { Table: columns }
+        components: {
+            Table: { columns }
+        }
     },
     columns: [ visibleColumnIds, setVisibleColumnIds ]
 }) => ({ columns, visibleColumnIds, setVisibleColumnIds });

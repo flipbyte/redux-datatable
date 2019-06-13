@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 const Tbody = styled.div.attrs(({ isPrinting, height }) => (
     isPrinting === false ? { style: { height } } : null
@@ -12,4 +13,5 @@ const Tbody = styled.div.attrs(({ isPrinting, height }) => (
     border-bottom: 1px solid #ddd;
 `;
 
-export default Tbody;
+const ExtendedStyledTbody = styled(Tbody)(getExtendedStyles());
+export default ExtendedStyledTbody;

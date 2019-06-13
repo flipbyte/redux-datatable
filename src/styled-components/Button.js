@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 const Button = styled.button `
     display: inline-block;
@@ -69,4 +70,5 @@ const Button = styled.button `
     `}
 `;
 
-export default Button;
+const ExtendedButton = styled(Button)(getExtendedStyles());
+export default ExtendedButton;

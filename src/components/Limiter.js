@@ -6,11 +6,12 @@ import { Field, Label } from '../styled-components';
 const Limiter = ({
     config: { options },
     limit,
-    action
+    action,
+    config: { styles }
 }) => {
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
-        <Label className="rdt-limiter-label" flex noWrap>
+        <Label className="rdt-limiter-label" flex noWrap styles={ styles }>
             <Field.Select
                 id="limiter"
                 className="rdt-limiter-select"

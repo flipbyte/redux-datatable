@@ -6,15 +6,20 @@ const MassActions = withDropdown(({
     toggle,
     open,
     thunk,
-    config: { label, name, options, style = {} },
+    config: { label, name, options, styles = {} },
 }) => (
     <Dropdown.Container className={ `rdt-toolbar-mass-actions ${name || ''}` }>
-        <Button className="rdt-toolbar-button" dropdownToggle onClick={ toggle } { ...style.button }>
+        <Button className="rdt-toolbar-button" dropdownToggle onClick={ toggle } styles={ styles.button }>
             { label }
         </Button>
-        <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } { ...style.dropdownMenu }>
-            { options.map(({ thunk: cb, ...option }, index) =>
-                <Dropdown.Item className="rdt-toolbar-item" key={ index } onClick={ cb && thunk.bind(this, cb, { option }) }>
+        <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } styles={ styles.dropdownMenu }>
+            { options.map(({ thunk: cb, ...option, styles: itemStyles }, index) =>
+                <Dropdown.Item
+                    className="rdt-toolbar-item"
+                    key={ index }
+                    onClick={ cb && thunk.bind(this, cb, { option }) }
+                    styles={ itemStyles || styles.dropdownItem }
+                >
                     { option.label }
                 </Dropdown.Item>
             )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { getExtendedStyles } from '../utils';
+import Row from './Row';
 
 const Container = styled.div `
     width: 100%;

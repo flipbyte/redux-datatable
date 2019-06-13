@@ -33,6 +33,31 @@ export default {
         ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
     ],
     components: {
+        // Loader: {
+        //     // styles: {
+        //     //     mask: {
+        //     //         backgroundColor: 'red',
+        //     //     },
+        //     //     spinner: {
+        //     //         borderTopColor: 'black',
+        //     //     }
+        //     // }
+        // },
+        ResultCount: {
+            styles: {
+                flexDirection: 'column',
+                justifyContent: 'center'
+            }
+        },
+        // Pages: {
+        //     styles: {
+        //         first: { backgroundColor: 'red' },
+        //         previous: { backgroundColor: 'green' },
+        //         pageNumber: { backgroundColor: 'yellow' },
+        //         next: { backgroundColor: 'pink' },
+        //         last: { backgroundColor: 'purple' },
+        //     }
+        // },
         Editable: {
             type: 'editable',
             labels: {
@@ -47,17 +72,36 @@ export default {
                 // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
                 // Dispatch REQUEST_DATA action "config.action(REQUEST_DATA)" to refresh data.
             },
+            // styles: {
+            //     show: { backgroundColor: 'blue' },
+            //     hide: { backgroundColor: 'black', color: 'white'},
+            //     save: { backgroundColor: 'green' }
+            // }
             // renderer: ( props ) => {}
         },
         MassActions: {
             name: 'actions',
             label: 'Actions',
             id: 'dropdown',
+            // styles: {
+            //     button: {
+            //         backgroundColor: '#aaa'
+            //     },
+            //     dropdownMenu: {
+            //         backgroundColor: 'magento'
+            //     },
+            //     dropdownItem: {
+            //         backgroundColor: 'pink'
+            //     }
+            // },
             options: [{
                 type: 'action',
                 name: 'delete',
                 label: 'Delete',
                 indexField: '@id',
+                styles: {
+                    backgroundColor: 'red',
+                },
                 thunk: ( config ) => ( dispatch, getState ) => {
                     // Get current table state.
                     const tableState = getState()[payload.reducerName][payload.name];
@@ -88,152 +132,217 @@ export default {
                 setTimeout(function() {
                     config.action(IS_LOADING)({ value: false });
                 }, 1000);
-            }
+            },
+            // styles: {
+            //     backgroundColor: 'green',
+            //     color: 'white'
+            // }
         },
         ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
             state: false,
+            // styles: {
+            //     backgroundColor: 'red',
+            //     color: 'white'
+            // }
         },
         Print: {
             type: 'print',
             label: 'Print Table',
             state: false,
+            // styles: {
+            //     backgroundColor: 'yellow',
+            // }
         },
         Columns: {
             name: 'columns',
             type: 'columns',
             label: 'Columns',
             visible: true,
-            state: false
+            state: false,
+            // styles: {
+            //     button: {
+            //         backgroundColor: '#aaa'
+            //     },
+            //     dropdownMenu: {
+            //         backgroundColor: 'magento'
+            //     },
+            //     dropdownItem: {
+            //         backgroundColor: 'pink'
+            //     }
+            // }
         },
         Limiter: {
             type: 'limiter',
             options: [10, 20, 50, 200, 2000, 0],
             default: 200,
+            // styles: {}
         },
-        Table: [{
-            name: 'ids',
-            label: '',
-            sortable: false,
-            type: 'selection',
-            indexField: '@pageId',
-            width: 50,
-            extraData: 'selection'
-        }, {
-            label: 'ID',
-            type: 'number',
-            name: 'pageId',
-            width: 150,
-            filterable: true,
-            sortable: true,
-            // editable: true
-        }, {
-            label: 'ID',
-            type: 'number',
-            name: 'pageId',
-            width: 150,
-            filterable: true,
-            sortable: true,
-            // editable: true
-        }, {
-            label: 'ID',
-            type: 'number',
-            name: 'pageId',
-            width: 150,
-            filterable: true,
-            sortable: true,
-            // editable: true
-        }, {
-            label: 'ID',
-            type: 'number',
-            name: 'pageId',
-            width: 150,
-            filterable: true,
-            sortable: true,
-            // editable: true
-        }, {
-            label: 'ID',
-            type: 'number',
-            name: 'pageId',
-            width: 150,
-            filterable: true,
-            sortable: true,
-            // editable: true
-        }, {
-            label: "Status",
-            type: "options",
-            name: "entityData.data.status",
-            sortable: true,
-            filterable: true,
-            textAlign: "center",
-            width: 150,
-            options: {
-                "published": {
-                    "label": "Published"
-                },
-                "draft": {
-                    "label": "Draft"
-                },
-                "unpublished": {
-                    "label": "Unpublished"
-                },
-                "pending-review": {
-                    "label": "Pending Review"
-                },
-                "trashed": {
-                    "label": "Trashed"
-                },
-                "archived": {
-                    "label": "Archived"
-                }
+        Table: {
+            styles: {
+                // table: {
+                //     background: '#000',
+                // },
+                // thead: {
+                //     background: '#000'
+                // },
+                // filters: {
+                //     background: 'blue'
+                // },
+                // // tbody: {
+                // //     background: '#000'
+                // // },
+                // tr: {
+                //     header: { fontWeight: 'normal' },
+                //     filters: { background: 'green' },
+                //     body: { },
+                // },
+                // // th: {
+                // //     background: 'red',
+                // //     textAlign: 'center',
+                // //     ':last-child': {
+                // //         textAlign: 'right'
+                // //     }
+                // // },
+                // td: {
+                //     filters: { backgroundColor: '#000' },
+                //     // body: {
+                //     //     color: '#fff',
+                //     //     textAlign: 'center',
+                //     //     ':last-child': {
+                //     //         textAlign: 'right'
+                //     //     }
+                //     // }
+                // },
             },
-            editable: true
-            // renderer: ({
-            //     data,
-            //     colConfig: { name, options }
-            // }) => <div>Not specified</div>
-        }, {
-            label: 'Created at',
-            type: 'date',
-            name: 'createdAt',
-            sortable: true,
-            textAlign: 'left',
-            width: 200,
-            editable: true,
-            filterable: true,
-        }, {
-            label: 'Actions',
-            type: 'actions',
-            name: 'actions',
-            width: 100,
-            items: [{
-                type: 'action',
-                name: 'edit',
-                label: 'Edit',
-                htmlClass: 'btn btn-secondary',
-                params: {
-                    id: '@id',
-                },
-                thunk: ( config ) => ( dispatch, getState ) => {
-                    console.log('edit', config, getState());
-                }
+            columns: [{
+                name: 'ids',
+                label: '',
+                sortable: false,
+                type: 'selection',
+                indexField: '@pageId',
+                width: 50,
+                extraData: 'selection',
             }, {
-                type: 'action',
-                name: 'delete',
-                label: 'Delete',
-                icon: 'trash-alt',
-                params: {
-                    id: '@id'
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: "Status",
+                type: "options",
+                name: "entityData.data.status",
+                sortable: true,
+                filterable: true,
+                textAlign: "center",
+                width: 150,
+                options: {
+                    "published": {
+                        "label": "Published"
+                    },
+                    "draft": {
+                        "label": "Draft"
+                    },
+                    "unpublished": {
+                        "label": "Unpublished"
+                    },
+                    "pending-review": {
+                        "label": "Pending Review"
+                    },
+                    "trashed": {
+                        "label": "Trashed"
+                    },
+                    "archived": {
+                        "label": "Archived"
+                    }
                 },
-                thunk: ( config ) => ( dispatch, getState ) => {
-                    confirm('Are your sure you want to delete this page?')
-                        ? console.log('delete', getState())
-                        : console.log(false);
+                editable: true
+                // renderer: ({
+                //     data,
+                //     colConfig: { name, options }
+                // }) => <div>Not specified</div>
+            }, {
+                label: 'Created at',
+                type: 'date',
+                name: 'createdAt',
+                sortable: true,
+                textAlign: 'left',
+                width: 200,
+                editable: true,
+                filterable: true,
+            }, {
+                label: 'Actions',
+                type: 'actions',
+                name: 'actions',
+                width: 100,
+                items: [{
+                    type: 'action',
+                    name: 'edit',
+                    label: 'Edit',
+                    htmlClass: 'btn btn-secondary',
+                    params: {
+                        id: '@id',
+                    },
+                    thunk: ( config ) => ( dispatch, getState ) => {
+                        console.log('edit', config, getState());
+                    }
+                }, {
+                    type: 'action',
+                    name: 'delete',
+                    label: 'Delete',
+                    icon: 'trash-alt',
+                    params: {
+                        id: '@id'
+                    },
+                    styles: {
+                        backgroundColor: 'red',
+                        color: 'white'
+                    },
+                    thunk: ( config ) => ( dispatch, getState ) => {
+                        confirm('Are your sure you want to delete this page?')
+                            ? console.log('delete', getState())
+                            : console.log(false);
 
-                }
+                    }
+                }]
             }]
-        }]
+        }
     }
     // styles: {
     //     loader: {

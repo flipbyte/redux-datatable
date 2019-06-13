@@ -19,7 +19,9 @@ import * as Components from './components';
 
 const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thunk, loadData, state }) => {
     const { layout, components } = config;
-    const { Table: columns } = components;
+    const {
+        Table: { columns }
+    } = components;
 
     const [ isPrinting, setIsPrinting ] = useState(false);
     const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(columns));
@@ -81,7 +83,12 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thun
                 if (isObject(item)) {
                     const { Component } = getComponent(item.id);
                     return (
-                        <Component key={ index }>{ render(item.layout) }</Component>
+                        <Component
+                            key={ index }
+                            { ...mapPropsToComponent(Component) }
+                        >
+                            { render(item.layout) }
+                        </Component>
                     );
                 }
 

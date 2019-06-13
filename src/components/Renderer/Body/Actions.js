@@ -12,13 +12,13 @@ const Actions = ({
 }) => (
     <div className="btn-group-sm">
         { items.map((item, index) => {
-            const { thunk: cb, style, label, icon, name, htmlClass } = item;
+            const { thunk: cb, styles, label, icon, name, htmlClass } = item;
             return (
                 <Button
                     key={ index }
                     className={ `rdt-body-actions button ${htmlClass || ''} ${name || ''}` }
                     onClick={ cb && thunk.bind(this, cb, { item, extra }) }
-                    { ...style }
+                    styles={ styles }
                 >
                     { !isUndefined(icon) && <i className={ icon } /> }
                     { !isUndefined(label) && label }

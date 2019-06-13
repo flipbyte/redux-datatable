@@ -13,6 +13,7 @@ const formControl = ({
     modified
 }) => css `
     display: block;
+    box-sizing: border-box;
     width: 100%;
     font-weight: 400;
     line-height: 1.5;

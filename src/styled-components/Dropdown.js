@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { getExtendedStyles } from '../utils';
 
 const Container = styled.div `
     position: relative;
@@ -79,7 +80,7 @@ export const Item = styled.div `
 
 
 export default {
-    Container,
-    Menu,
-    Item
+    Container: styled(Container)(getExtendedStyles()),
+    Menu: styled(Menu)(getExtendedStyles()),
+    Item: styled(Item)(getExtendedStyles())
 };

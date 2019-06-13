@@ -29,11 +29,12 @@ const Header = ({
     selection,
     children,
     scrollData: { left },
+    styles = {},
     tableWidth: { width = '100%', widthAdjustment = 1 }
 }) => (
-    <Thead>
+    <Thead styles={ getStyles(styles, 'thead') }>
         <div style={{ width }}>
-            <Tr className="rdt-table-row" columns={ columns } left={ left }>
+            <Tr className="rdt-table-row" columns={ columns } left={ left }  styles={ getStyles(styles.tr, 'header') }>
                 {(config, index) => {
                     const { sortable, width, textAlign, name, type, ...rest } = config;
                     const { sort, dir } = query;
@@ -45,6 +46,7 @@ const Header = ({
                             sortable={ sortable }
                             width={ width * widthAdjustment }
                             textAlign={ textAlign }
+                            styles={ styles.th }
                             onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
                         >
                             { Component && (
@@ -71,7 +73,12 @@ Header.mapPropsToComponent = ({
     action,
     tableData: { query, selection },
     width: [ tableWidth ],
-    scroller: [ scrollData ]
-}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, selection });
+    scroller: [ scrollData ],
+    config: {
+        components: {
+            Table: { styles }
+        }
+    }
+}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, selection, styles });
 
 export default Header;

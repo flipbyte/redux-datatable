@@ -2,6 +2,7 @@ import React from 'react';
 import { SET_PAGE } from '../actions';
 import styled from 'styled-components';
 import { Button } from '../styled-components';
+import { getExtendedStyles } from '../utils';
 
 export const List = styled.div `
     display: inline-flex;
@@ -11,9 +12,9 @@ export const List = styled.div `
     border-radius: ${props => props.borderRadius || 'none'};
     height: ${props => props.height || '40px'};
 `;
+const ExtendedList = styled(List)(getExtendedStyles());
 
 const NUM_LINKS = 5;
-
 const fillRange = ( start, end ) => {
     return Array(end - start + 1).fill().map((item, index) => start + index);
 };
@@ -30,23 +31,59 @@ const getPages = ( currentPage = 1, total = 0 ) => {
     return fillRange(left, right);
 };
 
-const Pages = ({ page, total, action }) => {
+const Pages = ({
+    page,
+    total,
+    action,
+    config: {
+        styles = {}
+    }
+}) => {
     const setPage = ( page ) =>  action(SET_PAGE)({ page });
     return (
-        <List className="rdt-pg-list">
-            <Button className="rdt-pg-first" onClick={() => setPage(1)} disabled={ page === 1 }>First</Button>
-            <Button className="rdt-pg-prev" onClick={() => setPage(page - 1)} disabled={ page < 2 } >Previous</Button>
+        <ExtendedList className="rdt-pg-list" styles={ styles.list }>
+            <Button
+                className="rdt-pg-first"
+                onClick={() => setPage(1)}
+                disabled={ page === 1 }
+                styles={ styles.first }
+            >
+                First
+            </Button>
+            <Button
+                className="rdt-pg-prev"
+                onClick={() => setPage(page - 1)}
+                disabled={ page < 2 }
+                styles={ styles.previous }
+            >
+                Previous
+            </Button>
             { getPages(page, total).map( (link, index) =>
                 <Button
                     key={ index }
                     className={ `rdt-pg-num ${page === link ? 'active' : ''}` }
                     onClick={() => setPage(link)}
                     active={ page === link }
+                     styles={ styles.pageNumber }
                 >{ link }</Button>
             ) }
-            <Button className="rdt-pg-next" onClick={() => setPage(page + 1)} disabled={ page >= total }>Next</Button>
-            <Button className="rdt-pg-last" onClick={() => setPage(total)} disabled={ total === 0 || page === total }>Last</Button>
-        </List>
+            <Button
+                className="rdt-pg-next"
+                onClick={() => setPage(page + 1)}
+                disabled={ page >= total }
+                styles={ styles.next }
+            >
+                Next
+            </Button>
+            <Button
+                className="rdt-pg-last"
+                onClick={() => setPage(total)}
+                disabled={ total === 0 || page === total }
+                styles={ styles.last }
+            >
+                Last
+            </Button>
+        </ExtendedList>
     );
 };
 

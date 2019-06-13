@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tr, Td, Thead, ExtendedDiv } from '../styled-components';
+import { Tr, Td, Thead, Div } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';
 import { Filters as Renderers } from './Renderer';
 import { SET_FILTER } from '../actions';
@@ -9,12 +9,13 @@ const Filters = ({
     action,
     query = {},
     children,
+    styles = {},
     scrollData: { left },
     tableWidth: { width = '100%', widthAdjustment = 1 }
 }) => (
-    <Thead>
+    <Thead styles={ getStyles(styles, 'filters') }>
         <div style={{ width }}>
-            <Tr className="rdt-table-row" columns={ columns } left={ left }>
+            <Tr className="rdt-table-row" columns={ columns } left={ left } styles={ getStyles(styles.tr, 'filters') }>
                 {(config, index) => {
                     const { filterable, type, width, ...rest } = config;
                     const { name } = rest;
@@ -25,16 +26,17 @@ const Filters = ({
                             key={ index }
                             className={ `rdt-table-col filter ${name} ${type}` }
                             width={ width * widthAdjustment }
+                            styles={ getStyles(styles.td, 'filters') }
                         >
                             { filterable && Component && (
-                                <ExtendedDiv>
+                                <Div>
                                     <Component
                                         name={ name }
                                         value={ value }
                                         filterer={(key, filter) => action(SET_FILTER)({ key, filter })}
                                         { ...rest }
                                     />
-                                </ExtendedDiv>
+                                </Div>
                             )}
                         </Td>
                     );
@@ -49,7 +51,12 @@ Filters.mapPropsToComponent = ({
     action,
     tableData: { query },
     width: [ tableWidth ],
-    scroller: [ scrollData ]
-}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData });
+    scroller: [ scrollData ],
+    config: {
+        components: {
+            Table: { styles }
+        }
+    }
+}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, styles });
 
 export default Filters;

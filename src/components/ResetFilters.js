@@ -4,11 +4,14 @@ import { Button } from '../styled-components';
 
 const ResetFilters = ({
     action,
-    config: { label = 'Reset Filters' }
+    config: {
+        label = 'Reset Filters',
+        styles = {}
+    }
 }) => {
     const clearFilter = () => action(SET_FILTER)({ clear: true });
     return (
-        <Button className="rdt-toolbar-button reset-filters" onClick={ clearFilter.bind(this) }>
+        <Button className="rdt-toolbar-button reset-filters" onClick={ clearFilter.bind(this) } styles={ styles }>
             { label }
         </Button>
     );

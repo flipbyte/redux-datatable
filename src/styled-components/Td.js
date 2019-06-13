@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { getExtendedStyles } from '../utils';
 
-const Td = styled.div.attrs(({ width }) => ({
-    style: { width }
+const Td = styled.div.attrs(({ width: maxWidth }) => ({
+    style: { maxWidth }
 })) `
     flex-direction: column;
     justify-content: center;
