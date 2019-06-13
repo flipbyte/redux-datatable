@@ -1,5 +1,6 @@
 import React from 'react';
 import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
+import { getItemIds } from '../../../src/utils';
 
 export default {
     name: 'posts',
@@ -105,7 +106,9 @@ export default {
                 },
                 thunk: ( config ) => ( dispatch, getState ) => {
                     // Get current table state.
-                    const tableState = getState()[payload.reducerName][payload.name];
+                    const tableState = getState()[config.reducerName][config.name];
+                    console.log(config, tableState);
+                    console.log(getItemIds(tableState.selection, tableState.items, config.primaryKey/*, config.entity.schema*/))
                     confirm('Are your sure you want to delete the selected items?')
                         ? console.log('delete items', config, getState(), tableState)
                         : console.log(false);

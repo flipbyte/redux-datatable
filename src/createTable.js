@@ -112,9 +112,9 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thun
 
 const prepareActionPayload = ({
     reducerName,
-    config: { name, routes, entity }
+    config: { name, routes, entity, primaryKey }
 }, action) => (
-    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action })
+    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action, primaryKey })
 );
 
 const mapStateToProps = (

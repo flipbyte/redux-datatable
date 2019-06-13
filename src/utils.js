@@ -149,11 +149,11 @@ export const prepareData = ( item, schema, state ) => {
 
 export const getItemIds = (selection, items, primaryKey, schema) => {
     if (schema) {
-        return data;
+        return items;
     }
 
     return selection.all === true
-        ? data.reduce((acc, item, index) => {
+        ? items.reduce((acc, item, index) => {
             if (_.get(selection, ['selected', primaryKey, _.get(item, primaryKey)]) !== false) {
                 acc.push(_.get(item, primaryKey));
             }
