@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tr, Td, Thead, ExtendedDiv } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';
-import withScrollSpy from '../hoc/withScrollSpy';
 import { Filters as Renderers } from './Renderer';
 import { SET_FILTER } from '../actions';
 

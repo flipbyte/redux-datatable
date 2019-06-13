@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import withScrollSpy from '../hoc/withScrollSpy';
 
 const Tbody = styled.div.attrs(({ isPrinting, height }) => (
     isPrinting === false ? { style: { height } } : null

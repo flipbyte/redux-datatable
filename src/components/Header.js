@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tr, Th, Thead } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';
-import withScrollSpy from '../hoc/withScrollSpy';
 import { Header as Renderers } from './Renderer';
 import { SET_SORT } from '../actions';
 
@@ -27,6 +26,7 @@ const Header = ({
     columns,
     action,
     query = {},
+    selection,
     children,
     scrollData: { left },
     tableWidth: { width = '100%', widthAdjustment = 1 }
@@ -53,6 +53,7 @@ const Header = ({
                                     sortable={ sortable }
                                     sort={ sort }
                                     dir={ dir }
+                                    selection={ selection }
                                     action={ action }
                                     { ...rest }
                                 />
@@ -68,9 +69,9 @@ const Header = ({
 Header.mapPropsToComponent = ({
     visibleColumns,
     action,
-    tableData: { query },
+    tableData: { query, selection },
     width: [ tableWidth ],
     scroller: [ scrollData ]
-}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData });
+}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, selection });
 
 export default Header;

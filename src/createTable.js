@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Layout from './containers/Layout';
 import Row from './styled-components/Row';
+import Print from './containers/Print';
 import { setPage, setLimit, setSort, SET_SORT, SET_FILTER, MODIFY_DATA } from './actions';
 import { ADD_COLUMN, REMOVE_COLUMN, SET_IS_PRINTING, TOGGLE_EDITABLE } from './constants';
 import {
@@ -97,7 +98,9 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thun
         </Layout>
     );
 
-    return render(layout);
+    return !isPrinting
+        ? render(layout)
+        : <Print setIsPrinting={ setIsPrinting } root={ document.body }>{ render(layout) }</Print>;
 };
 
 const prepareActionPayload = ({

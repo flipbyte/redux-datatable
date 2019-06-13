@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 const withModal = WrappedComponent => (
     class extends React.Component {

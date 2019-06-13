@@ -1,19 +1,14 @@
-import _ from 'lodash';
-import React, { useEffect, useContext } from 'react';
-import { SET_IS_PRINTING } from '../constants';
+import React, { useEffect } from 'react';
 import PrintButton from '../styled-components/Print';
-import TableContext from '../'
+import withModal from '../hoc/withModal';
 
-const Print = ({ children, ...rest }) => {
-    const context = useContext()
-    const [ _, setIsPriting ] = use
-
+const Print = ({ setIsPrinting, children, ...rest }) => {
     useEffect(() => {
         window.print();
-        setIsPriting(false)
+        setIsPrinting(false);
     }, [])
 
     return <PrintButton { ...rest }>{ children }</PrintButton>;
 }
 
-export default _.flowRight(Print);
+export default withModal(Print);
