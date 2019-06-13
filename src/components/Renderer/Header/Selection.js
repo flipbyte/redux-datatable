@@ -14,12 +14,14 @@ const handleSelection = ( selector, indexField, event ) => {
     selector({ paramKey, type: SELECT_ALL, value: event.target.checked });
 };
 
+const isIndeterminate = (selection) => !_.isEmpty(selection.selected);
 const Selection = ({ name, action, selection = {}, indexField }) => (
     <Field.Input
         type="checkbox"
         name={ name }
         checked={ selection.all === true && _.isEmpty(selection.selected) }
         onChange={(event) => handleSelection(action(SET_SELECTION), indexField, event)}
+        ref={(el) => el && (el.indeterminate = isIndeterminate(selection))}
     />
 );
 
