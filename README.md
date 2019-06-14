@@ -317,8 +317,8 @@ const YourComponent = () =>
 | routes     | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
 | components | object  | true     | -       | All the components required for your table                                                       |
 | layout     | array   | true     | -       | The layout of your table                                                                         |
-| editing    | boolean | false    | { ... } | Set the default state of the table to be in editing mode                                         |
-| primaryKey | string  | true     | { ... } | Set the primary key column of the table for actions like editing.                                |
+| editing    | boolean | false    | false   | Set the default state of the table to be in editing mode                                         |
+| primaryKey | string  | true     | -       | Set the primary key column of the table for actions like editing.                                |
 
 #### Routes object
 
@@ -346,11 +346,11 @@ Please check the example table config object above.
 
 **_Common Properties_**
 
-| Key      | Type     | Required | Default | Description                    |
-| -------- | -------- | -------- | ------- | ------------------------------ |
-| styles   | object   | false    | {}      | styled-component styles object |
-| renderer | function | false    | -       | returns a react component      |
-| type     | string   | true     | -       | the type of the object         |
+| Key      | Type     | Required | Default | Description                                                                                        |
+| -------- | -------- | -------- | ------- | -------------------------------------------------------------------------------------------------- |
+| styles   | object   | false    | {}      | styled-component styles object or key-value pairs with values being styled-component styles object |
+| renderer | function | false    | -       | returns a react component                                                                          |
+| type     | string   | true     | -       | the type of the object                                                                             |
 
 ##### Loader
 
@@ -495,27 +495,79 @@ Shows the columns toggling dropdown.
 
 **_Columns object properties_**
 
-| Key                             | Type         | Required | Default | Description                                                                                                                                              |
-| ------------------------------- | ------------ | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| name                            | string       | true     | -       | Unique name for the column                                                                                                                               |
-| label                           | string       | true     | -       | Label for the column                                                                                                                                     |
-| sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                                                                           |
-| filterable                      | boolean      | false    | true    | Whether the column is filterable                                                                                                                         |
-| editable                        | boolean      | false    | false   | When the table is set to be editable, set whether the respective column is among the editable                                                            |
-| visible                         | boolean      | false    | true    | Whether the column is visible on load                                                                                                                    |
-| type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                                                                                |
-| width                           | integer      | true     | -       | Width of the column                                                                                                                                      |
-| extraData                       | string/array | false    | -       | properties from the state to pass as value in the extra object.                                                                                          |
-| textAlign                       | string       | false    | left    | Text alignment in the column                                                                                                                             |
-| renderer                        | function     | false    | -       | Define a custom renderer for column body.                                                                                                                |
-| **type: options**               |              |          |         |                                                                                                                                                          |
-| options                         | object       | true     | -       | object of objects with key for each child object being the value of the column and child object being { label: "{Your label for the respective value}" } |
-| **type: actions**               |              |          |         |                                                                                                                                                          |
-| items                           | array        | true     | -       | array of item configuration object                                                                                                                       |
-| **- item configuration object** |              |          |         |                                                                                                                                                          |
-| name                            | string       | true     | -       | Unique name for the action                                                                                                                               |
-| label                           | string       | true     | -       | Label for the action                                                                                                                                     |
-| thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema.                                                                                |
+| Key                             | Type         | Required | Default | Description                                                                                   |
+| ------------------------------- | ------------ | -------- | ------- | --------------------------------------------------------------------------------------------- |
+| name                            | string       | true     | -       | Unique name for the column                                                                    |
+| label                           | string       | true     | -       | Label for the column                                                                          |
+| sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                |
+| filterable                      | boolean      | false    | true    | Whether the column is filterable                                                              |
+| editable                        | boolean      | false    | false   | When the table is set to be editable, set whether the respective column is among the editable |
+| visible                         | boolean      | false    | true    | Whether the column is visible on load                                                         |
+| type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                     |
+| width                           | integer      | true     | -       | Width of the column                                                                           |
+| extraData                       | string/array | false    | -       | properties from the state to pass as value in the extra object.                               |
+| textAlign                       | string       | false    | left    | Text alignment in the column                                                                  |
+| renderer                        | function     | false    | -       | Define a custom renderer for column body.                                                     |
+| **type: actions**               |              |          |         |                                                                                               |
+| items                           | array        | true     | -       | array of item configuration object                                                            |
+| **- item configuration object** |              |          |         |                                                                                               |
+| name                            | string       | true     | -       | Unique name for the action                                                                    |
+| label                           | string       | true     | -       | Label for the action                                                                          |
+| thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema.                     |
+
+**_Properties specific to column of type 'options'_**
+
+| Key     | Type   | Required | Default | Description                                  |
+| ------- | ------ | -------- | ------- | -------------------------------------------- |
+| options | object | true     | -       | Defines options for the column. Check below. |
+
+`options` key is an object with a unique key for each value object. The value object consists of a property `label` used to define the label of the said option. Please check the following example:
+
+```js
+options: {
+    active: {
+        label: 'Active'
+    },
+    inactive: {
+        label: 'Inactive'
+    }
+    ...
+}
+```
+
+**_Properties specific to column of type 'actions'_**
+
+| Key   | Type  | Required | Default | Description                        |
+| ----- | ----- | -------- | ------- | ---------------------------------- |
+| items | array | true     | -       | array of item configuration object |
+
+**_Properties for a single item of type 'actions'_**
+
+| Key    | Type     | Required | Default | Description                                                                     |
+| ------ | -------- | -------- | ------- | ------------------------------------------------------------------------------- |
+| name   | string   | true     | -       | Unique name for the action                                                      |
+| label  | string   | true     | -       | Label for the action                                                            |
+| thunk  | function | true     | -       | An action creator which is dispatched on action click. Check the example below. |
+| styles | object   | false    | {}      | styled-component styles object                                                  |
+
+Example:
+
+```js
+{
+    type: 'action',
+    name: 'edit',
+    label: 'Edit',
+    btnClass: 'btn btn-secondary',
+    icon: 'edit',
+    params: {
+        id: '@id',
+    },
+    thunk: ( payload ) => ( dispatch, getState ) => {
+        console.log('edit', payload, getState());
+    },
+    styles: { ... }
+}
+```
 
 **_Styles object properties_**
 
@@ -537,7 +589,7 @@ Shows the columns toggling dropdown.
 | filters | object | false    | {}      | styled-component styles object |
 | body    | object | false    | {}      | styled-component styles object |
 
-**_tr Styles object properties_**
+**_td Styles object properties_**
 
 | Key     | Type   | Required | Default | Description                    |
 | ------- | ------ | -------- | ------- | ------------------------------ |
