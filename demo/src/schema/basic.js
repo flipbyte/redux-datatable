@@ -100,7 +100,6 @@ export default {
                 type: 'action',
                 name: 'delete',
                 label: 'Delete',
-                indexField: '@id',
                 styles: {
                     backgroundColor: 'red',
                 },
@@ -121,7 +120,6 @@ export default {
                 type: 'action',
                 name: 'edit',
                 label: 'Edit this field',
-                indexField: '@id'
             }]
         },
         SimpleButton: {
