@@ -2,26 +2,28 @@ import _ from 'lodash';
 import React from 'react';
 import { SET_SELECTION } from '../../../actions';
 import { SELECT_ALL } from '../../../constants';
-import { getConfigParam } from '../../../utils';
 import { Field } from '../../../styled-components';
 
-const handleSelection = ( selector, indexField, event ) => {
-    let paramKey = getConfigParam(indexField);
-    if (!paramKey) {
+const handleSelection = ( selector, primaryKey, event ) => {
+    if (!primaryKey) {
         return false;
     }
 
-    selector({ paramKey, type: SELECT_ALL, value: event.target.checked });
+    selector({ primaryKey, type: SELECT_ALL, value: event.target.checked });
 };
 
-const isIndeterminate = (selection) => !_.isEmpty(selection.selected);
-const Selection = ({ name, action, selection = {}, indexField }) => (
+const isIndeterminate = (selection, primaryKey) => {
+    const values = _.values(_.get(selection.selected, primaryKey, {}));
+    return values.includes(true) || (selection.all === true && values.includes(false));
+};
+
+const Selection = ({ name, action, selection = {}, primaryKey }) => (
     <Field.Input
         type="checkbox"
         name={ name }
         checked={ selection.all === true && _.isEmpty(selection.selected) }
-        onChange={(event) => handleSelection(action(SET_SELECTION), indexField, event)}
-        ref={(el) => el && (el.indeterminate = isIndeterminate(selection))}
+        onChange={(event) => handleSelection(action(SET_SELECTION), primaryKey, event)}
+        ref={(el) => el && (el.indeterminate = isIndeterminate(selection, primaryKey))}
     />
 );
 

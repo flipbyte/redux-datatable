@@ -225,7 +225,7 @@ export default {
                 label: '',
                 sortable: false,
                 type: 'selection',
-                indexField: '@pageId',
+                // indexField: '@pageId',
                 width: 50,
                 extraData: 'selection',
             }, {

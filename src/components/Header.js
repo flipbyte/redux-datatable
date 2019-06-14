@@ -30,6 +30,7 @@ const Header = ({
     children,
     scrollData: { left },
     styles = {},
+    primaryKey,
     tableWidth: { width = '100%', widthAdjustment = 1 }
 }) => (
     <Thead styles={ getStyles(styles, 'thead') }>
@@ -56,6 +57,7 @@ const Header = ({
                                     sort={ sort }
                                     dir={ dir }
                                     selection={ selection }
+                                    primaryKey={ primaryKey }
                                     action={ action }
                                     { ...rest }
                                 />
@@ -75,10 +77,11 @@ Header.mapPropsToComponent = ({
     width: [ tableWidth ],
     scroller: [ scrollData ],
     config: {
+        primaryKey,
         components: {
             Table: { styles }
         }
     }
-}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, selection, styles });
+}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, selection, styles, primaryKey });
 
 export default Header;

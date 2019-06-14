@@ -122,6 +122,7 @@ const Body = ({
                                                 value={ value }
                                                 colConfig={ column }
                                                 extraData={ bodyExtraData[name] }
+                                                primaryKey={ primaryKey }
                                                 action={ action }
                                                 thunk={ thunk }
                                                 isEditing={ isEditing }

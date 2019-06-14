@@ -1,13 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
 import { SET_SELECTION } from '../../../actions';
-import { getParam, getConfigParam } from '../../../utils';
+import { getParam } from '../../../utils';
 import { SELECT_ALL } from '../../../constants';
 import { Field } from '../../../styled-components';
 
-const handleSelection = ({ data, indexField, action }, event ) => {
-    let paramKey = getConfigParam(indexField);
-    let key = getParam(indexField, data);
+const handleSelection = ({ data, primaryKey: paramKey, action }, event ) => {
+    let key = getParam(paramKey, data);
     action(SET_SELECTION)({ paramKey, key, value: event.target.checked });
 };
 
@@ -16,18 +15,17 @@ const isChecked = ( selection, selected ) => selection.all === true && selected 
 const Selection = ({
     action,
     data,
-    extraData: { selection },
-    colConfig: { indexField }
+    primaryKey,
+    extraData: { selection }
 }) => {
-    const dataKey = getConfigParam(indexField);
-    const key = _.get(data, dataKey);
-    const value = isChecked(selection, _.get(selection.selected, [dataKey, key]));
+    const key = _.get(data, primaryKey);
+    const value = isChecked(selection, _.get(selection.selected, [primaryKey, key]));
     return (
         <div className="col-12">
             <Field.Input
                 type="checkbox"
                 checked={ value }
-                onChange={ handleSelection.bind(this, { data, indexField, action }) } />
+                onChange={ handleSelection.bind(this, { data, primaryKey, action }) } />
         </div>
     );
 };

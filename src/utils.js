@@ -32,16 +32,7 @@ export const getSelectedKeys = (data, dataKey) => {
     return paramsObject;
 };
 
-export const getConfigParam = (param) => {
-    if (!param.startsWith('@')) {
-        return false;
-    }
-
-    return param.substr(1);
-};
-
-export const getParam = (param, data) => {
-    var dataKey = getConfigParam(param);
+export const getParam = (dataKey, data) => {
     if (!dataKey) {
         return false;
     }
@@ -147,15 +138,12 @@ export const prepareData = ( item, schema, state ) => {
     return denormalize(item, schema, state);
 };
 
-export const getItemIds = (selection, items, primaryKey, schema) => {
-    if (schema) {
-        return items;
-    }
-
-    return selection.all === true
+export const getItemIds = (selection, items, primaryKey, schema) => (
+    selection.all === true
         ? items.reduce((acc, item, index) => {
-            if (_.get(selection, ['selected', primaryKey, _.get(item, primaryKey)]) !== false) {
-                acc.push(_.get(item, primaryKey));
+            const itemId = schema ? item : _.get(item, primaryKey);
+            if (_.get(selection, ['selected', primaryKey, itemId]) !== false) {
+                acc.push(itemId);
             }
 
             return acc;
@@ -167,7 +155,7 @@ export const getItemIds = (selection, items, primaryKey, schema) => {
 
             return acc;
         }, [])
-}
+)
 
 export const calculatePaginationProps = (
     query = {},
