@@ -1,16 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
-import { getExtendedStyles } from '../utils';
+import { Table as StyledTable } from '../styled-components';
 
-const Table = styled.div `
-    overflow: hidden;
-    table-layout: fixed;
-    width: 100%;
-    background-color: transparent;
-    border-collapse: collapse;
-    clear: both;
-    margin: 10px 0;
-`;
+const Table = ({ children, styles = {} }) => (
+    <StyledTable styles={ styles.table }>
+        { children }
+    </StyledTable>
+);
 
-const ExtendedTable = styled(Table)(getExtendedStyles());
-export default ExtendedTable;
+Table.mapPropsToComponent = ({
+    config: {
+        components: {
+            Table: { styles }
+        }
+    }
+}) => ({ styles });
+
+export default Table;

@@ -1,8 +1,6 @@
 import qs from 'query-string';
 import _ from 'lodash';
 import { denormalize } from 'normalizr';
-import React from 'react';
-import ReactDOM from 'react-dom';
 
 export const defaultLimiterCongig = {
     options: [10, 20, 50, 100, 200],
@@ -13,6 +11,7 @@ export const isArray = (value) => Array.isArray(value);
 export const isObject = (value) => typeof value === 'object';
 export const isUndefined = (value) => typeof value === 'undefined';
 export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
+export const toPascalCase = (str) => _.chain(str).camelCase().upperFirst().value();
 
 export const getSelectedKeys = (data, dataKey) => {
     const { [dataKey]: dataForFilter } = data;
@@ -33,16 +32,7 @@ export const getSelectedKeys = (data, dataKey) => {
     return paramsObject;
 };
 
-export const getConfigParam = (param) => {
-    if (!param.startsWith('@')) {
-        return false;
-    }
-
-    return param.substr(1);
-};
-
-export const getParam = (param, data) => {
-    var dataKey = getConfigParam(param);
+export const getParam = (dataKey, data) => {
     if (!dataKey) {
         return false;
     }
@@ -96,7 +86,7 @@ export const getStyles = (styles = {}, name) => {
     return style;
 };
 
-export const getExtendedStyles = (name) => ({ styles }) => {
+export const getExtendedStyles = (name) => ({ styles = {} }) => {
     if (!name) {
         return styles;
     }
@@ -148,45 +138,55 @@ export const prepareData = ( item, schema, state ) => {
     return denormalize(item, schema, state);
 };
 
-export const changeSortOrder = ( query, colName, sorter ) => {
-    let dir = null;
-    if( query.sort !== colName ) {
-        dir = 'asc';
-    } else {
-        if(query.dir === 'asc') {
-            dir = 'desc';
-        } else if(query.dir === 'desc') {
-            colName = '';
-            dir = '';
-        } else {
-            dir = 'asc';
-        }
-    }
+export const getItemIds = (selection, items, primaryKey, schema) => (
+    selection.all === true
+        ? items.reduce((acc, item, index) => {
+            const itemId = schema ? item : _.get(item, primaryKey);
+            if (_.get(selection, ['selected', primaryKey, itemId]) !== false) {
+                acc.push(itemId);
+            }
 
-    sorter({ sort: colName, dir });
+            return acc;
+        }, [])
+        : _.reduce(_.get(selection, ['selected', primaryKey]), (acc, value, key) => {
+            if (value !== false) {
+                acc.push(key);
+            }
+
+            return acc;
+        }, [])
+)
+
+export const calculatePaginationProps = (
+    query = {},
+    defaultLimit = 10
+) => {
+    let { page, limit = 0, count = 0 } = query;
+    page = page > 1 ? page : 1;
+    limit = isUndefined(limit) !== true ? limit : defaultLimit;
+
+    let start = (page - 1) * limit;
+    let end = start + limit - 1;
+
+    return {
+        page,
+        start,
+        end: (count > end && end >= 0) ? end : count,
+        count,
+        limit,
+        total: limit > 0 ? Math.ceil(count / limit) : 1
+    };
 };
 
-export const withModal = WrappedComponent => (
-    class extends React.Component {
-        constructor(props) {
-            super(props);
-            this.el = document.createElement('div');
-        }
-
-        componentDidMount() {
-            this.props.root.appendChild(this.el);
-        }
-
-        componentWillUnmount() {
-            this.props.root.removeChild(this.el);
-        }
-
-        render() {
-            const { children, ...rest } = this.props;
-            return ReactDOM.createPortal(
-                <WrappedComponent className="rdt-modal" { ...rest }>{ this.props.children }</WrappedComponent>,
-                this.el
-            );
-        }
+export const getRenderer = ( config, Renderers ) => {
+    if (config.renderer && _.isFuntion(config.renderer)) {
+        return config.renderer;
     }
-);
+
+    if (config.type) {
+        const pcaseType = toPascalCase(config.type);
+        return !isUndefined(Renderers[pcaseType]) ? Renderers[pcaseType] : Renderers.default;
+    }
+
+    return Renderers.default;
+};
