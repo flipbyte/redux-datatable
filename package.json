@@ -1,6 +1,6 @@
 {
     "name": "@flipbyte/redux-datatable",
-    "version": "0.5.4",
+    "version": "0.6.0",
     "description": "React-Redux data table",
     "main": "lib/index.js",
     "module": "es/index.js",
