@@ -16,12 +16,11 @@ using REST API.
 -   Built in windowing to handle large dataset with thousands of rows
 -   Customizable limiter options
 -   Customizable toolbar with the ability to add custom renderers
--   Completely configurable headers, filters, toolbar and pagination
-    with options to enable/disable them individual
+-   Easily configurable layout
 -   Custom row level actions
 -   Thunks to handle custom mass or row actions externally.
 -   Compatible with normalizr to handle externally managed states
--   Easily stylable with styled-components.
+-   Easily styleable with styled-components and/or external css.
 -   Show or hide columns dynamically using the Columns item in the
     toolbar.
 
@@ -49,146 +48,250 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
 ```javascript
 {
     name: 'your_table_name', // this is the key used to set your table data inside the table reducer
-    height: 500,
+    height: 400,
     rowHeight: 50,
-    pagination: {
-        // visible: true, // or an object { top: true, bottom: false } default visible
-        items: {
-            limiter: {
-                type: 'limiter',
-                visible: true,
-                position: 10,
-                options: [10, 20, 50, 200, 2000],
-                default: 200,
-            },
-            pages: {
-                type: 'pages',
-                visible: true,
-                position: 20,
-                right: true,
-            },
-            resultCount: {
-                type: 'resultCount',
-                visible: true,
-                position: 30,
-                right: true,
-            },
-        }
-    },
+    editing: false,
+    primaryKey: 'id',
     routes: { // You can add other routes and handle them using custom actions.
-    	get: { // The route used to fetch data and it's params
-    		route: '/{your_route}',
-    		sort: 'id',
-    		dir: 'asc',
-    		resultPath: {
-    			data: 'data'
-    		}
-    	},
-    	...
+        get: { // The route used to fetch data and it's params
+            route: '/{your_route}',
+            sort: 'id',
+            dir: 'asc',
+            resultPath: {
+                data: 'data'
+            }
+        },
+        ...
     },
-    toolbar: [ // Each toolbar array of objects below is a separate row in the toolbar section. You can add your own renderers and toolbar items or use some of the in-built ones.
-    	[{
+    layout: [
+        ['Editable'],
+        ['MassActions', 'SimpleButton', 'ResetFilters', 'Spacer', 'Print', 'Columns'],
+        ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
+        [{ id: 'Table', layout: [
+            ['Header'],
+            ['Filters'],
+            ['Body'],
+            ['Header']
+        ]}],
+        ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
+    ],
+    components: {
+        Loader: {
+            styles: {
+                mask: { ... },
+                spinner: { ... }
+            }
+        },
+        ResultCount: {
+            styles: { ... }
+        },
+        Pages: {
+            styles: {
+                first: { ... },
+                last: { ... },
+                previous: { ... },
+                next: { ... },
+                pageNumber: { ... },
+            }
+        },
+        Editable: {
+            type: 'editable',
+            labels: {
+                show: 'Make editable',
+                hide: 'Hide editable',
+                save: 'Save',
+            },
+            save: ( config ) => ( dispatch, getState ) => {
+                const tableState = getState()[config.reducerName][config.name];
+                console.log('toolbar save click with modified data', config, tableState.modified);
+                config.action(MODIFY_DATA)({ clear: true });
+                // Dispatch MODIFY_DATA action with clear: true, to reset the modified data
+                // Dispatch REQUEST_DATA action "config.action(REQUEST_DATA)" to refresh data.
+            },
+            styles: {
+                show: { ... },
+                hide: { ... },
+                save: { ... }
+            }
+            // renderer: ( props ) => { ... }
+        },
+        MassActions: {
+            name: 'actions',
+            label: 'Actions',
+            id: 'dropdown',
+            styles: {
+                button: { ... },
+                dropdownMenu: { ... },
+                dropdownItem: { ... }
+            }
+            options: [{
+                type: 'action',
+                name: 'delete',
+                label: 'Delete',
+                styles: { ... },
+                thunk: ( config ) => ( dispatch, getState ) => {
+                    // Get current table state.
+                    const tableState = getState()[config.reducerName][config.name];
+                    console.log(config, tableState);
+                    console.log(getItemIds(tableState.selection, tableState.items, config.primaryKey/*, config.entity.schema*/))
+                    confirm('Are your sure you want to delete the selected items?')
+                        ? console.log('delete items', config, getState(), tableState)
+                        : console.log(false);
+
+                    // Filter your selected item ids here for deletion
+                    // You can find the selection data in the selection key of the tableState.
+                    // When all:true, exclude the ids in the selected object with value false and vice versa.
+                }
+            }, {
+                type: 'action',
+                name: 'edit',
+                label: 'Edit this field',
+            }, ...]
+        },
+        SimpleButton: {
+            type: 'button',
+            label: 'Simple Button',
+            state: false,
+            thunk: ( config ) => ( dispatch, getState ) => { ... },
+            styles: { ... }
+        },
+        ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
-            visible: true,
             state: false,
-        }, {
+            styles: { ... }
+        },
+        Print: {
+            type: 'print',
+            label: 'Print Table',
+            state: false,
+            styles: { ... }
+        },
+        Columns: {
+            name: 'columns',
             type: 'columns',
             label: 'Columns',
             visible: true,
             state: false,
-        },
-    	...
-    	]
-    	...
-    ],
-    columns: [{
-        name: 'ids',
-        label: '',
-        sortable: false,
-        type: 'selection',
-        indexField: '@pageId',
-        width: 50,
-        extraData: 'selection'
-    }, {
-        label: 'ID',
-        type: 'number',
-        name: 'pageId',
-        sortable: true,
-        width: 150,
-        filterable: true,
-        sortable: true,
-    }, {
-        label: "Status",
-        type: "options",
-        name: "entityData.data.status",
-        sortable: true,
-        filterable: true,
-        textAlign: "center",
-        options: {
-            "published": {
-                label: "Published"
-            },
-            "draft": {
-                label: "Draft"
-            },
-            "archived": {
-                label: "Archived"
+            styles: {
+                button: { ... },
+                dropdownMenu: { ... },
+                dropdownItem: { ... }
             }
+        },
+        Limiter: {
+            type: 'limiter',
+            options: [10, 20, 50, 200, 2000, 0],
+            default: 200,
+            styles: { ... }
+        },
+        Table: {
+            styles: {
+                table: { ... },
+                thead: { ... },
+                tbody: { ... },
+                filters: { ... },
+                tr: {
+                    header: { ... },
+                    filters: { ... },
+                    body: { ... }
+                },
+                th: { ... },
+                td: {
+                    filters: { ... },
+                    body: { ... }
+                }
+            },
+            columns: [{
+                name: 'ids',
+                label: '',
+                sortable: false,
+                type: 'selection',
+                width: 50,
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'id',
+                sortable: true,
+                width: 150,
+                filterable: true,
+                sortable: true,
+            }, {
+                label: "Status",
+                type: "options",
+                name: "status",
+                sortable: true,
+                filterable: true,
+                textAlign: "center",
+                options: {
+                    "published": {
+                        label: "Published"
+                    },
+                    "draft": {
+                        label: "Draft"
+                    },
+                    "archived": {
+                        label: "Archived"
+                    },
+                    ...
+                }
+            }, {
+                label: 'Avatar',
+                type: 'image',
+                name: 'avatar',
+                sortable: false,
+                textAlign: 'center',
+                width: 200,
+                filterable: false,
+                imgHeight: 50
+            }, {
+                label: 'First Name',
+                type: 'string',
+                name: 'first_name',
+                sortable: true,
+                textAlign: 'text-left',
+                width: 200,
+                filterable: true,
+            }, {
+                label: 'Actions',
+                type: 'actions',
+                name: 'actions',
+                width: 100,
+                items: [{
+                    type: 'action',
+                    name: 'edit',
+                    label: 'Edit',
+                    btnClass: 'btn btn-secondary',
+                    icon: 'edit',
+                    params: {
+                        id: '@id',
+                    },
+                    thunk: ( payload ) => ( dispatch, getState ) => {
+                        console.log('edit', payload, getState());
+                    },
+                    style: { ... }
+                }, {
+                    type: 'action',
+                    name: 'delete',
+                    label: 'Delete',
+                    icon: 'trash-alt',
+                    params: {
+                        id: '@id'
+                    },
+                    thunk: ( payload ) => ( dispatch, getState ) => {
+                        confirm("Are your sure you want to delete this page?")
+                            ? console.log('delete', getState())
+                            : console.log(false);
+                    },
+                    style: { ... }
+                },
+            	...
+            	]
+            },
+            ...
+            ]
         }
-    }, {
-        label: 'Avatar',
-        type: 'image',
-        name: 'avatar',
-        sortable: false,
-        textAlign: 'center',
-        width: 200,
-        filterable: false,
-        imgHeight: 50
-    }, {
-        label: 'First Name',
-        type: 'string',
-        name: 'first_name',
-        sortable: true,
-        textAlign: 'text-left',
-        width: 200,
-        filterable: true,
-    }, {
-        label: 'Actions',
-        type: 'actions',
-        name: 'actions',
-        width: 100,
-        items: [{
-            type: 'action',
-            name: 'edit',
-            label: 'Edit',
-            btnClass: 'btn btn-secondary',
-            icon: 'edit',
-            params: {
-                id: '@id',
-            },
-            thunk: ( payload ) => ( dispatch, getState ) => {
-                console.log('edit', payload, getState());
-            }
-        }, {
-            type: 'action',
-            name: 'delete',
-            label: 'Delete',
-            icon: 'trash-alt',
-            params: {
-                id: '@id'
-            },
-            thunk: ( payload ) => ( dispatch, getState ) => {
-                confirm("Are your sure you want to delete this page?")
-                    ? console.log('delete', getState())
-                    : console.log(false);
-            }
-        },
-    	...
-    	]
-    },
-    ...
-    ]
+    }
 }
 ```
 
@@ -211,33 +314,11 @@ const YourComponent = () =>
 | name       | string  | true     | -       | A unique key where the data for the table is saved in the table state object                     |
 | height     | integer | true     | -       | The maximum height of the table                                                                  |
 | rowHeight  | integer | true     | -       | The maximum height of each table body row                                                        |
-| filterable | boolean | false    | true    | Whether to show/hide filters row                                                                 |
-| headers    | boolean | false    | true    | Whether to show/hide headers row                                                                 |
-| pagination | object  | false    | {}      | Pagination bar configuration (Check below)                                                       |
 | routes     | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
-| toolbar    | array   | false    | \[]     | Toolbar definition (Check below)                                                                 |
-| columns    | array   | true     | -       | Columns to display                                                                               |
-| styles     | object  | false    | {}      | Custom styles for your table                                                                     |
-| editable   | boolean | false    | {}      | Set whether the table is editable                                                                |
-| editing    | boolean | false    | {}      | Set the default state of the table to be in editing mode                                         |
-| primaryKey | string  | true     | {}      | Set the primary key column of the table for actions like editing.                                |
-
-#### Pagination object
-
-| Key     | Type           | Required | Default | Description                                                                        |
-| ------- | -------------- | -------- | ------- | ---------------------------------------------------------------------------------- |
-| items   | object         | false    | {}      | Items available for display in the pagination bar. Check below for items available |
-| visible | boolean/object | false    | true    | Whether the pagination is visible or not                                           |
-
-##### Pagination items object
-
-| Key                          | Type    | Required | Default | Description                                       |
-| ---------------------------- | ------- | -------- | ------- | ------------------------------------------------- |
-| type                         | string  | true     | -       | One of the following: limiter, pages, resultCount |
-| visible                      | boolean | false    | true    | Whether the item is visible                       |
-| **Limiter specific options** |         |          |         |                                                   |
-| options                      | array   | true     | -       | Array of integers with limiter options            |
-| default                      | array   | true     | -       | One of the values in the limiter options key      |
+| components | object  | true     | -       | All the components required for your table                                                       |
+| layout     | array   | true     | -       | The layout of your table                                                                         |
+| editing    | boolean | false    | { ... } | Set the default state of the table to be in editing mode                                         |
+| primaryKey | string  | true     | { ... } | Set the primary key column of the table for actions like editing.                                |
 
 #### Routes object
 
@@ -250,30 +331,169 @@ const YourComponent = () =>
 | dir        | string | true     | -       | Sort by 'asc' or 'desc' order                                                                        |
 | resultPath | object | true     | -       | The keys object to your data. Required { data: '{your data path in json response. Ex: result.data}'} |
 
-#### Toolbar
+#### Components object
 
-Toolbar config is an array of array of object where objects are the
-toolbar items. Each inner array represents a different row.
+Components can be defined within this object as key value pairs, where `key` is the id of the component and needs to be unique and `value` is a configuration object for the specific component.
+All available components are listed below with their configuration. Custom components can be added and existing components can be overridden by using the key `renderer` in the configuration object of the component.
+Please check the example table config object above.
 
-| Key                    | Type     | Required | Default                                                       | Description                                                               |
-| ---------------------- | -------- | -------- | ------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| type                   | string   | false    | actions                                                       | Available values resetFilters, print, editable and columns                |
-| label                  | string   | true     | -                                                             | Label for the toolbar item                                                |
-| visible                | boolean  | false    | true                                                          | Whether the item is visible                                               |
-| state                  | boolean  | false    | false                                                         | Whether to pass the state object as item prop                             |
-| **For type: actions**  |          |          |                                                               |                                                                           |
-| options                | array    | true     | -                                                             | Array of option objects                                                   |
-| **-- options**         |          |          |                                                               |                                                                           |
-| type                   | string   | true     | action                                                        | Available option: action                                                  |
-| name                   | string   | true     | -                                                             | Unique name for the action                                                |
-| label                  | string   | true     | -                                                             | Label for the action                                                      |
-| thunk                  | function | true     | -                                                             | An action creator which is dispatched on action click. Check demo schema. |
-| **For type: editable** |          |          |                                                               |                                                                           |
-| labels                 | object   | false    | { show: 'Make editable', hide: 'Hide editable', save: 'Save'} | Labels for each of the buttons enabled when the table is editable         |
+#### Layout array
 
-Note: action of type "editable" is required when you set the table to be editable
+An array of arrays where each inner array represents a row in the layout, within which components can be specified, which will be displayed in the frontend.
+Please check the example table config object above.
 
-#### Columns object
+#### Available Components
+
+**_Common Properties_**
+
+| Key      | Type     | Required | Default | Description                    |
+| -------- | -------- | -------- | ------- | ------------------------------ |
+| styles   | object   | false    | {}      | styled-component styles object |
+| renderer | function | false    | -       | returns a react component      |
+| type     | string   | true     | -       | the type of the object         |
+
+##### Loader
+
+Note: This component cannot be added to the layout and does not have any other properties except styles.
+
+**_Styles object properties_**
+
+| Key     | Type   | Required | Default | Description                    |
+| ------- | ------ | -------- | ------- | ------------------------------ |
+| mask    | object | false    | {}      | styled-component styles object |
+| spinner | object | false    | {}      | styled-component styles object |
+
+##### ResultCount
+
+No unique properties
+
+##### Pages
+
+**_Styles object properties_**
+
+| Key        | Type   | Required | Default | Description                    |
+| ---------- | ------ | -------- | ------- | ------------------------------ |
+| first      | object | false    | {}      | styled-component styles object |
+| last       | object | false    | {}      | styled-component styles object |
+| previous   | object | false    | {}      | styled-component styles object |
+| next       | object | false    | {}      | styled-component styles object |
+| pageNumber | object | false    | {}      | styled-component styles object |
+
+##### Editable (type: editable)
+
+Toggles the table between editable and non-editable and shows a save button when the content of the table is modified
+
+**_Properties_**
+
+| Key    | Type     | Required | Default     | Description                                     |
+| ------ | -------- | -------- | ----------- | ----------------------------------------------- |
+| labels | object   | false    | check below | check below                                     |
+| save   | function | false    | -           | ( config ) => ( dispatch, getState ) => { ... } |
+
+**_Labels object properties_**
+
+| Key  | Type   | Required | Default       | Description                                     |
+| ---- | ------ | -------- | ------------- | ----------------------------------------------- |
+| show | string | false    | Make editable | Label for the button to show editable table     |
+| hide | string | false    | Hide editable | Label for the button to hide editable table     |
+| save | string | false    | Save          | Label for the button to save the modified table |
+
+**_Styles object properties_**
+
+| Key  | Type   | Required | Default | Description                    |
+| ---- | ------ | -------- | ------- | ------------------------------ |
+| show | object | false    | {}      | styled-component styles object |
+| hide | object | false    | {}      | styled-component styles object |
+| save | object | false    | {}      | styled-component styles object |
+
+##### Actions (type: mass-actions)
+
+**_Properties_**
+
+| Key     | Type   | Required | Default | Description                           |
+| ------- | ------ | -------- | ------- | ------------------------------------- |
+| options | array  | required | \[]     | array of actions objects              |
+| label   | string | required | -       | Label for the actions dropdown button |
+
+**_Actions object properties_**
+
+| Key   | Type     | Required | Default | Description                                     |
+| ----- | -------- | -------- | ------- | ----------------------------------------------- |
+| type  | string   | true     | -       | action                                          |
+| name  | string   | true     | -       | Unique name                                     |
+| label | string   | true     | -       | Label for the action item                       |
+| thunk | function | true     | -       | ( config ) => ( dispatch, getState ) => { ... } |
+
+**_Styles object properties_**
+
+| Key          | Type   | Required | Default | Description                    |
+| ------------ | ------ | -------- | ------- | ------------------------------ |
+| button       | object | false    | {}      | styled-component styles object |
+| dropdownMenu | object | false    | {}      | styled-component styles object |
+| dropdownItem | object | false    | {}      | styled-component styles object |
+
+##### Button (type: button)
+
+**_Properties_**
+
+| Key   | Type    | Required | Default | Description                           |
+| ----- | ------- | -------- | ------- | ------------------------------------- |
+| label | string  | required | -       | Label for the actions dropdown button |
+| state | boolean | false    | false   | Whether to pass state to this button  |
+
+##### ResetFilters (type: reset-filters)
+
+**_Properties_**
+
+| Key   | Type    | Required | Default | Description                           |
+| ----- | ------- | -------- | ------- | ------------------------------------- |
+| label | string  | required | -       | Label for the actions dropdown button |
+| state | boolean | false    | false   | Whether to pass state to this button  |
+
+##### Print (type: print)
+
+Makes the table printable.
+
+**_Properties_**
+
+| Key   | Type    | Required | Default | Description                           |
+| ----- | ------- | -------- | ------- | ------------------------------------- |
+| label | string  | required | -       | Label for the actions dropdown button |
+| state | boolean | false    | false   | Whether to pass state to this button  |
+
+##### Columns (type: columns)
+
+Shows the columns toggling dropdown.
+
+**_Properties_**
+
+| Key   | Type    | Required | Default | Description                           |
+| ----- | ------- | -------- | ------- | ------------------------------------- |
+| label | string  | required | -       | Label for the actions dropdown button |
+| state | boolean | false    | false   | Whether to pass state to this button  |
+
+**_Styles object properties_**
+
+| Key          | Type   | Required | Default | Description                    |
+| ------------ | ------ | -------- | ------- | ------------------------------ |
+| button       | object | false    | {}      | styled-component styles object |
+| dropdownMenu | object | false    | {}      | styled-component styles object |
+| dropdownItem | object | false    | {}      | styled-component styles object |
+
+##### Limiter (type: limiter)
+
+| Key     | Type    | Required | Default | Description                                                           |
+| ------- | ------- | -------- | ------- | --------------------------------------------------------------------- |
+| options | array   | required | \[]     | array of limiter counts                                               |
+| default | integer | required | \[]     | default limiter option (should be a value in the options array above) |
+
+##### Table (type: table)
+
+| Key     | Type  | Required | Default | Description                               |
+| ------- | ----- | -------- | ------- | ----------------------------------------- |
+| columns | array | required | \[]     | array of object with column configuration |
+
+**_Columns object properties_**
 
 | Key                             | Type         | Required | Default | Description                                                                                                                                              |
 | ------------------------------- | ------------ | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -297,24 +517,32 @@ Note: action of type "editable" is required when you set the table to be editabl
 | label                           | string       | true     | -       | Label for the action                                                                                                                                     |
 | thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema.                                                                                |
 
-#### Styles object
+**_Styles object properties_**
 
-Styles has the following properties available:
+| Key     | Type   | Required | Default | Description                    |
+| ------- | ------ | -------- | ------- | ------------------------------ |
+| table   | object | false    | {}      | styled-component styles object |
+| thead   | object | false    | {}      | styled-component styles object |
+| tbody   | object | false    | {}      | styled-component styles object |
+| filters | object | false    | {}      | styled-component styles object |
+| tr      | object | false    | {}      | check below                    |
+| th      | object | false    | {}      | styled-component styles object |
+| td      | object | false    | {}      | check below                    |
 
-| Key            | Type                           | Required | Default | Description                                                                                                                                                                                                                         |
-| -------------- | ------------------------------ | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| tableContainer | styled-components style object | false    | -       | Outer table container                                                                                                                                                                                                               |
-| table          | styled-components style object | false    | -       | Table component                                                                                                                                                                                                                     |
-| thead          | styled-components style object | false    | -       | Table header component                                                                                                                                                                                                              |
-| tbody          | styled-components style object | false    | -       | Table body component                                                                                                                                                                                                                |
-| tr             | object                         | false    | -       | Table rows - the object can contain the following keys `header`, `filter`, `body`, each of whose values is a styled-components style object                                                                                         |
-| th             | styled-components style object | false    | -       | Table header columns                                                                                                                                                                                                                |
-| td             | object                         | false    | -       | Table columns - the object contain the following keys `filter`, `body` whose value is a styled-components style object                                                                                                              |
-| toolbar        | object                         | false    | -       | Keys `container` and `row` which are styled-components style object and `item` which is an object with keys that are the names of the respective items (as defined in the config) and the value is a styled-components style object |
-| pagination     | object                         | false    | -       | Keys `container` - a styled-components style object and `item` - same as above toolbar item                                                                                                                                         |
-| filter         | object                         | false    | -       | Each key is the name of the column and the value is the styled-components style object                                                                                                                                              |
-| body           | object                         | false    | -       | Same as `filter` (above)                                                                                                                                                                                                            |
-| loader         | object                         | false    | -       | There are 2 style-able keys `mask` and `spinner` for the loader overlay and the loading spinner respectively                                                                                                                        |
+**_tr Styles object properties_**
+
+| Key     | Type   | Required | Default | Description                    |
+| ------- | ------ | -------- | ------- | ------------------------------ |
+| header  | object | false    | {}      | styled-component styles object |
+| filters | object | false    | {}      | styled-component styles object |
+| body    | object | false    | {}      | styled-component styles object |
+
+**_tr Styles object properties_**
+
+| Key     | Type   | Required | Default | Description                    |
+| ------- | ------ | -------- | ------- | ------------------------------ |
+| filters | object | false    | {}      | styled-component styles object |
+| body    | object | false    | {}      | styled-component styles object |
 
 ## License
 
