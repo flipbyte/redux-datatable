@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { Tr, Td, Thead, Div } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';

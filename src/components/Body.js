@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useRef, useEffect } from 'react';
 import { Loader, Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
