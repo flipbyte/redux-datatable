@@ -25,7 +25,7 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thun
 
     const [ isPrinting, setIsPrinting ] = useState(false);
     const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(columns));
-    const [ isEditing, setIsEditing ] = useState(!!config.isEditing);
+    const [ isEditing, setIsEditing ] = useState(!!config.editing);
     const [ minWidth ] = useState(calculateWidth(columns));
     const [ scrollData, setScrollData ] = useState({ top: 0, pointerEvents: '', left: 0 });
     const [ tableWidth, setTableWidth ] = useState({ width: minWidth, widthAdjustment: 1 });
@@ -48,7 +48,7 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thun
             return [ ...result, column ];
         }, [])
     };
-
+    
     // Fetch data and populate table on first load.
     useEffect(() => {
         loadData();
