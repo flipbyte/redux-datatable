@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 
 import Layout from './containers/Layout';
@@ -38,17 +38,21 @@ const ReduxDatatable = ({ config = {}, reducerName, tableData = {}, action, thun
         columns: [ visibleColumnIds, setVisibleColumnIds ],
         editing: [ isEditing, setIsEditing ],
         printing: [ isPrinting, setIsPrinting ],
-        paginationProps: calculatePaginationProps(tableData.query, config.components.Limiter.default || 10),
         minWidth,
         state,
         scroller: [ scrollData, setScrollData ],
         width: [ tableWidth, setTableWidth ],
-        visibleColumns: visibleColumnIds.reduce((result, currentIndex) => {
-            const { [currentIndex]: column } = columns;
-            return [ ...result, column ];
-        }, [])
+        paginationProps: useMemo(() => (
+            calculatePaginationProps(tableData.query, config.components.Limiter.default || 10)
+        ), [ tableData.query ]),
+        visibleColumns: useMemo(() => (
+            visibleColumnIds.reduce((result, currentIndex) => {
+                const { [currentIndex]: column } = columns;
+                return [ ...result, column ];
+            }, [])
+        ), [ visibleColumnIds ])
     };
-    
+
     // Fetch data and populate table on first load.
     useEffect(() => {
         loadData();
