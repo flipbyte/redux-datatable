@@ -76,6 +76,10 @@ const Body = ({
         };
     }, []);
 
+    useEffect(() => {
+        updateTableDimensions();
+    }, [ columns ])
+
     return (
         <Tbody
             styles={ getStyles(styles, 'tbody') }
@@ -158,13 +162,13 @@ Body.mapPropsToComponent = ({
         components: {
             Loader = {},
             Table = {}
-        }
+        },
+        entity: { schema } = {},
     },
     tableData,
     printing: [ isPrinting ],
     editing: [ isEditing ],
     scroller: [ scrollData, setScrollData ],
-    entity: { schema } = {},
     state,
     action,
     thunk,

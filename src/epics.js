@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { normalize } from 'normalizr';
 import { ofType } from 'redux-observable';
 import { Observable, of, pipe } from 'rxjs';
-import { concatMap, switchMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
+import { concatMap, mergeMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
 import { createNotification, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_ERROR } from 'react-redux-notify';
 import {
     receiveData,
@@ -25,7 +25,7 @@ const getResult = (response, resultPath) => resultPath
 
 export const setParamsEpic = ( action$, state$ ) => action$.pipe(
     ofType(SET_PAGE, SET_FILTER, SET_SORT, SET_LIMIT),
-    concatMap((action) => {
+    mergeMap((action) => {
         const { meta: { name, routes, reducerName, entity } } = action;
 
         return of(
@@ -37,7 +37,7 @@ export const setParamsEpic = ( action$, state$ ) => action$.pipe(
 
 export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(REQUEST_DATA),
-    switchMap((action) => {
+    mergeMap((action) => {
         const { name, routes, entity, reducerName } = action.meta;
         const query = _.get(state$.value, [reducerName, name]).query;
 
@@ -66,7 +66,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
             )),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
-                filter((cancelAction) => cancelAction.name === name)
+                filter((cancelAction) => cancelAction.meta.name === name)
             ))
         );
     })
@@ -74,14 +74,14 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
 
 export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
     ofType(DELETE_DATA),
-    switchMap((action) => {
+    mergeMap((action) => {
         const {
             meta: { name, routes, reducerName, entity },
             payload
         } = action;
 
         return api.delete(routes.delete.route, { params: payload.params }).pipe(
-            concatMap((response) => {
+            map((response) => {
                 if(!response.success) {
                     return of(createNotification({ type: NOTIFICATION_TYPE_ERROR, message: response.result }));
                 }

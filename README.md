@@ -63,6 +63,11 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
         },
         ...
     },
+    entity: { // optional. Check example code in /demo.
+        state: '{your state path}',
+        responseSchema: // normalizr schema,
+        schema: // normal;izr schema
+    },
     layout: [
         ['Editable'],
         ['MassActions', 'SimpleButton', 'ResetFilters', 'Spacer', 'Print', 'Columns'],
@@ -316,6 +321,7 @@ const YourComponent = () =>
 | rowHeight  | integer | true     | -       | The maximum height of each table body row                                                        |
 | routes     | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
 | components | object  | true     | -       | All the components required for your table                                                       |
+| entity     | object  | false    | -       | [Normalizr](https://github.com/paularmstrong/normalizr) specification. Check below for details.  |
 | layout     | array   | true     | -       | The layout of your table                                                                         |
 | editing    | boolean | false    | false   | Set the default state of the table to be in editing mode                                         |
 | primaryKey | string  | true     | -       | Set the primary key column of the table for actions like editing.                                |
@@ -341,6 +347,18 @@ Please check the example table config object above.
 
 An array of arrays where each inner array represents a row in the layout, within which components can be specified, which will be displayed in the frontend.
 Please check the example table config object above.
+
+#### Entity array
+
+All the fields are required when entity is defined. However, entity key itself is optional in the table config.
+
+| Key            | Type   | Required | Default | Description                                                                             |
+| -------------- | ------ | -------- | ------- | --------------------------------------------------------------------------------------- |
+| state          | object | true     | -       | Path to sub state in your top level redux state where the normalized data will be saved |
+| responseSchema | object | true     | -       | Define how the data is represented in your fetch data api response                      |
+| schema         | object | true     | -       | Define how the data is represented in each row item of the table fetch repsonse         |
+
+Note: Check the [example](https://github.com/flipbyte/redux-datatable/blob/master/demo/src/schema/normalized.js) code.
 
 #### Available Components
 

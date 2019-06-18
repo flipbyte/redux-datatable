@@ -1,9 +1,23 @@
 import React from 'react';
 import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
 import { getItemIds } from '../../../src/utils';
+import { normalize, schema } from 'normalizr';
+
+const tableSchema = ( entityName, idAttributeName, definition = {}) => {
+    const rowSchema = new schema.Entity(entityName, definition, {
+        idAttribute: idAttributeName,
+    });
+
+    const responseSchema = { data: [rowSchema] }
+
+    return {
+        rowSchema: rowSchema,
+        responseSchema: responseSchema
+    }
+};
 
 export default {
-    name: 'posts',
+    name: 'pages',
     height: 400,
     rowHeight: 50,
     editing: false,
@@ -20,6 +34,11 @@ export default {
         delete: {
             route: '/users/:id'
         }
+    },
+    entity: {
+        state: 'pages',
+        responseSchema: tableSchema('pages', 'pageId').responseSchema,
+        schema: tableSchema('pages', 'pageId').rowSchema
     },
     layout: [
         ['Editable'],
