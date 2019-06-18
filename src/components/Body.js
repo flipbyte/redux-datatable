@@ -76,6 +76,10 @@ const Body = ({
         };
     }, []);
 
+    useEffect(() => {
+        updateTableDimensions();
+    }, [ columns ])
+
     return (
         <Tbody
             styles={ getStyles(styles, 'tbody') }
