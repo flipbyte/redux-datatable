@@ -162,13 +162,13 @@ Body.mapPropsToComponent = ({
         components: {
             Loader = {},
             Table = {}
-        }
+        },
+        entity: { schema } = {},
     },
     tableData,
     printing: [ isPrinting ],
     editing: [ isEditing ],
     scroller: [ scrollData, setScrollData ],
-    entity: { schema } = {},
     state,
     action,
     thunk,
