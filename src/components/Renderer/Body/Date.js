@@ -4,12 +4,9 @@ import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
 
 const Date = ({
-    data,
-    index,
     isEditing,
     handleChange,
     isModified,
-    modifiedValue,
     value = '',
     colConfig: { name, textAlign, format, editable }
 }) => (

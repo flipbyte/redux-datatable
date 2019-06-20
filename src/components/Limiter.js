@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { SET_LIMIT } from '../actions';
-import { isUndefined } from '../utils';
+import { calculatePaginationProps } from '../utils';
 import { Field, Label } from '../styled-components';
+import ConfigContext from '../context';
 
 const Limiter = ({
-    config: { options },
-    limit,
-    action,
-    config: { styles }
+    config: { options, styles },
+    // limit,
+    // action,
+    // config: { styles }
 }) => {
+    const {
+        action,
+        getData,
+        defaultLimit,
+        config: { reducerName, name }
+    } = useContext(ConfigContext);
+    const query = useSelector(getData((tableData) => tableData.query));
+    const { limit } = calculatePaginationProps(query, defaultLimit)
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
         <Label className="rdt-limiter-label" flex noWrap styles={ styles }>
@@ -25,9 +35,9 @@ const Limiter = ({
     );
 };
 
-Limiter.mapPropsToComponent = ({
-    paginationProps: { limit },
-    action
-}) => ({ limit, action });
-
+// Limiter.mapPropsToComponent = ({
+//     paginationProps: { limit },
+//     action
+// }) => ({ limit, action });
+//
 export default Limiter;

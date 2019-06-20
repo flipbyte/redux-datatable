@@ -3,12 +3,9 @@ import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
 
 const Text = ({
-    data,
-    index,
     isEditing,
     handleChange,
     isModified,
-    modifiedValue,
     value = '',
     colConfig: { name, editable }
 }) => (

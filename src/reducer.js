@@ -5,6 +5,8 @@ import { SELECT_ALL } from './constants';
 
 let initialTableState = {
     isFetching: false,
+    isEditing: false,
+    isPrinting: false,
     title: '',
     name: '',
     items: [],
@@ -21,7 +23,12 @@ let initialTableState = {
         all: false,
         selected: {}
     },
-    modified: {}
+    modified: {},
+    visibleColumnIds: [],
+    table: {
+        width: 0,
+        widthAdjustment: 1,
+    }
 };
 
 const updateState = ( state, tableName ) => ( newState ) => {
@@ -50,7 +57,12 @@ export default function reducer(state = {}, action) {
     const tableState = getTableState(name)(state);
     const stateUpdater = updateState(state, name);
     const acceptedActions = {
-        [actions.IS_LOADING]: () => stateUpdater({ isFetching: !!payload.value }),
+        [actions.SET_IS_EDITING]: () => stateUpdater({ isEditing: !!payload.value }),
+        [actions.SET_IS_PRINTING]: () => stateUpdater({ isPrinting: !!payload.value }),
+        [actions.SET_IS_LOADING]: () => stateUpdater({ isFetching: !!payload.value }),
+        [actions.SET_TABLE_WIDTH]: () => stateUpdater({
+            table: { width: payload.width, widthAdjustment: payload.widthAdjustment }
+        }),
         [actions.REQUEST_DATA]: () => stateUpdater({ isFetching: true }),
         [actions.REQUEST_DATA_CANCEL]: () => stateUpdater({ isFetching: false }),
         [actions.RECEIVE_DATA]: () => stateUpdater({
@@ -154,7 +166,8 @@ export default function reducer(state = {}, action) {
                     }
                 }
             };
-        }
+        },
+        [actions.SET_VISIBLE_COLUMN_IDS]: () => stateUpdater({ visibleColumnIds: [ ...payload.ids ] }),
     };
 
     if (acceptedActions.hasOwnProperty(action.type)) {

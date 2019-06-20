@@ -1,10 +1,10 @@
 import React from 'react';
-import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
+import { MODIFY_DATA, REQUEST_DATA, SET_IS_LOADING } from '../../../src/actions';
 import { getItemIds } from '../../../src/utils';
 
 export default {
     name: 'posts',
-    height: 400,
+    // height: 400,
     rowHeight: 50,
     editing: false,
     primaryKey: 'pageId',
@@ -125,14 +125,13 @@ export default {
         SimpleButton: {
             type: 'button',
             label: 'Simple Button',
-            state: false,
             thunk: ( config ) => ( dispatch, getState ) => {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar button click', config, tableState);
                 config.action(REQUEST_DATA)();
-                config.action(IS_LOADING)({ value: true });
+                config.action(SET_IS_LOADING)({ value: true });
                 setTimeout(function() {
-                    config.action(IS_LOADING)({ value: false });
+                    config.action(SET_IS_LOADING)({ value: false });
                 }, 1000);
             },
             // styles: {
@@ -143,7 +142,6 @@ export default {
         ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
-            state: false,
             // styles: {
             //     backgroundColor: 'red',
             //     color: 'white'
@@ -152,7 +150,6 @@ export default {
         Print: {
             type: 'print',
             label: 'Print Table',
-            state: false,
             // styles: {
             //     backgroundColor: 'yellow',
             // }
@@ -161,8 +158,6 @@ export default {
             name: 'columns',
             type: 'columns',
             label: 'Columns',
-            visible: true,
-            state: false,
             // styles: {
             //     button: {
             //         backgroundColor: '#aaa'
@@ -235,6 +230,46 @@ export default {
                 sortable: true,
                 // editable: true
             }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
                 label: "Status",
                 type: "options",
                 name: "entityData.data.status",

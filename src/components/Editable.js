@@ -1,9 +1,11 @@
 import _ from 'lodash';
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Button } from '../styled-components';
-import { TOGGLE_EDITABLE } from '../constants';
+import { SET_IS_EDITING } from '../actions';
+import { useSelector } from 'react-redux';
+import ConfigContext from '../context';
 
-const Editable = ({ config, isModified, isEditing, setIsEditing, thunk }) => {
+const Editable = ({ config }) => {
     const {
         save,
         labels: {
@@ -13,7 +15,12 @@ const Editable = ({ config, isModified, isEditing, setIsEditing, thunk }) => {
         },
         styles = {}
     } = config;
-    const toggleEditable = () => setIsEditing(state => !state);
+    const { action, thunk, getData } = useContext(ConfigContext);
+    const { isEditing, isModified } = useSelector(getData((tableData) => ({
+        isEditing: tableData.isEditing,
+        isModified: !_.isEmpty(tableData.modified)
+    })));
+    const toggleEditable = () => action(SET_IS_EDITING)({ value: !isEditing });
     const getEditableLabel = () => !isEditing ? show : hide;
     const getEditableStyles = () => !isEditing ? styles.show : styles.hide;
     return (
@@ -40,10 +47,10 @@ const Editable = ({ config, isModified, isEditing, setIsEditing, thunk }) => {
     );
 };
 
-Editable.mapPropsToComponent = ({
-    thunk,
-    tableData,
-    editing: [ isEditing, setIsEditing ]
-}) => ({ isEditing, setIsEditing, thunk, isModified: tableData && !_.isEmpty(tableData.modified) });
+// Editable.mapPropsToComponent = ({
+//     thunk,
+//     action,
+//     tableData: { isEditing, modified },
+// }) => ({ isEditing, action, thunk, isModified: modified && !_.isEmpty(modified) });
 
 export default Editable;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
+import { MODIFY_DATA, REQUEST_DATA, SET_IS_LOADING } from '../../../src/actions';
 import { getItemIds } from '../../../src/utils';
 import { normalize, schema } from 'normalizr';
 
@@ -149,9 +149,9 @@ export default {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar button click', config, tableState);
                 config.action(REQUEST_DATA)();
-                config.action(IS_LOADING)({ value: true });
+                config.action(SET_IS_LOADING)({ value: true });
                 setTimeout(function() {
-                    config.action(IS_LOADING)({ value: false });
+                    config.action(SET_IS_LOADING)({ value: false });
                 }, 1000);
             },
             // styles: {

@@ -157,7 +157,7 @@ export const getItemIds = (selection, items, primaryKey, schema) => (
         }, [])
 )
 
-export const calculatePaginationProps = (
+export const calculatePaginationProps = _.memoize((
     query = {},
     defaultLimit = 10
 ) => {
@@ -176,7 +176,16 @@ export const calculatePaginationProps = (
         limit,
         total: limit > 0 ? Math.ceil(count / limit) : 1
     };
-};
+});
+
+export const getVisibleColumns = _.memoize(
+    (visibleColumnIds, columns) => (
+        visibleColumnIds.reduce((result, currentIndex) => {
+            const { [currentIndex]: column } = columns;
+            return [ ...result, column ];
+        }, [])
+    )
+);
 
 export const getRenderer = ( config, Renderers ) => {
     if (config.renderer && _.isFuntion(config.renderer)) {
