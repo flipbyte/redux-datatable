@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -8,7 +8,7 @@ import Row from './styled-components/Row';
 import Print from './containers/Print';
 import * as Components from './components';
 import { SET_PAGE, SET_SORT, SET_LIMIT, SET_IS_EDITING, SET_VISIBLE_COLUMN_IDS, SET_TABLE_WIDTH } from './actions';
-import { createActionCreator, isObject, calculateWidth, getInitialVisibleColumns, toPascalCase } from './utils';
+import { createActionCreator, isObject, calculateWidth, getInitialVisibleColumns, toPascalCase, prepareActionPayload } from './utils';
 import ConfigContext from './context';
 
 const ReduxDatatable = ( props ) => {
@@ -19,9 +19,6 @@ const ReduxDatatable = ( props ) => {
         Limiter = {}
     } = components;
 
-    // const [ isPrinting, setIsPrinting ] = useState(false);
-    // const [ visibleColumnIds, setVisibleColumnIds ] = useState(getInitialVisibleColumns(columns));
-    // const [ minWidth ] = useState(calculateWidth(columns));
     const minWidth = calculateWidth(columns);
     const dispatch = useDispatch();
     const preparePayload = prepareActionPayload(props, action);
@@ -45,9 +42,6 @@ const ReduxDatatable = ( props ) => {
             return [ ...result, column ];
         }, [])
     ));
-
-    // const [ scrollData, setScrollData ] = useState({ top: 0, pointerEvents: '', left: 0 });
-    // const [ tableWidth, setTableWidth ] = useState({ width: minWidth, widthAdjustment: 1 });
 
     const tableConfig = {
         action,
@@ -125,12 +119,5 @@ const ReduxDatatable = ( props ) => {
         </ConfigContext.Provider>
     );
 };
-
-const prepareActionPayload = ({
-    reducerName,
-    config: { name, routes, entity, primaryKey }
-}, action) => (
-    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action, primaryKey })
-);
 
 export default ReduxDatatable;

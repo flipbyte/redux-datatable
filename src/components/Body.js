@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useRef, useEffect, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { Loader as Spinner, Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';

@@ -1,8 +1,5 @@
-import _ from 'lodash';
-import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { deleteData } from '../../../actions';
-import { paramsResolver, prepareActionPayload, isUndefined } from '../../../utils';
+import { isUndefined } from '../../../utils';
 import { Button } from '../../../styled-components';
 
 const Actions = ({

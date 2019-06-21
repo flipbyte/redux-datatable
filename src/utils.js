@@ -77,10 +77,10 @@ export const createReducer = (reducer, predicate) => (state, action) => (
     predicate(action) || typeof state === 'undefined' ? reducer(state, action) : state
 );
 
-export const prepareActionPayload = ({ name, reducerName, routes, entity }) => (payload = {}) => ({
-    name, reducerName, routes, entity, payload
-});
-
+// export const prepareActionPayload = ({ name, reducerName, routes, entity }) => (payload = {}) => ({
+//     name, reducerName, routes, entity, payload
+// });
+//
 export const getStyles = (styles = {}, name) => {
     const { [name]: style } = styles;
     return style;
@@ -199,3 +199,10 @@ export const getRenderer = ( config, Renderers ) => {
 
     return Renderers.default;
 };
+
+export const prepareActionPayload = ({
+    reducerName,
+    config: { name, routes, entity, primaryKey }
+}, action) => (
+    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action, primaryKey })
+);

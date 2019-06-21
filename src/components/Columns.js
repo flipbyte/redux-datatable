@@ -1,30 +1,9 @@
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import withDropdown from '../hoc/withDropdown';
-import { ADD_COLUMN, REMOVE_COLUMN } from '../constants';
 import { Button, Dropdown } from '../styled-components';
 import ConfigContext from '../context';
 import { SET_VISIBLE_COLUMN_IDS } from '../actions';
-
-const updateState = (type, index, state) => {
-    let visibleColumnIds = [ ...state ];
-    if (type === ADD_COLUMN) {
-        visibleColumnIds.push(index);
-        visibleColumnIds.sort();
-    } else {
-        visibleColumnIds.splice(visibleColumnIds.indexOf(index), 1).sort();
-    }
-
-    return visibleColumnIds;
-}
-
-const updateColumns = (action, index, visibleColumnIds, event) => {
-    if (event.target.checked) {
-        action(SET_VISIBLE_COLUMN_IDS)(updateState(ADD_COLUMN, index, visibleColumnIds));
-    } else {
-        action(SET_VISIBLE_COLUMN_IDS)(updateState(REMOVE_COLUMN, index, visibleColumnIds));
-    }
-};
 
 const Columns = ({
     open,
