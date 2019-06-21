@@ -6,10 +6,7 @@ import { Field, Label } from '../styled-components';
 import ConfigContext from '../context';
 
 const Limiter = ({
-    config: { options, styles },
-    // limit,
-    // action,
-    // config: { styles }
+    config: { options, styles }
 }) => {
     const {
         action,
@@ -35,9 +32,4 @@ const Limiter = ({
     );
 };
 
-// Limiter.mapPropsToComponent = ({
-//     paginationProps: { limit },
-//     action
-// }) => ({ limit, action });
-//
 export default Limiter;

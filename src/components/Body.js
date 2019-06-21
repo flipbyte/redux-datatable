@@ -1,38 +1,14 @@
 import _ from 'lodash';
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Loader, Tbody, Tr, Td, Div } from '../styled-components';
+import { Loader as Spinner, Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
 import { getStyles, getRenderer, prepareData, getExtraBodyRowProps } from '../utils';
 import { MODIFY_DATA } from '../actions';
 import withScrollSpy from '../hoc/withScrollSpy';
 import ConfigContext from '../context';
 
-const Body = React.forwardRef(({
-    // columns,
-    // data = [],
-    // rowHeight,
-    // height,
-    // isFetching,
-    top: startTop,
-    // overScanCount = 10,
-    // isPrinting = false,
-    // innerHeight,
-    // visibleHeight = 500,
-    // styles = {},
-    // schema,
-    // state,
-    // primaryKey,
-    // modified,
-    // tableWidth: { width = '100%', widthAdjustment = 1 },
-    // setTableWidth,
-    // bodyExtraData = {},
-    // action,
-    // thunk,
-    // isEditing,
-    // minWidth,
-    // loaderStyles = {},
-}, ref) => {
+const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
     const {
         action,
         thunk,
@@ -55,10 +31,22 @@ const Body = React.forwardRef(({
     const {
         data = [], isFetching, isEditing, isPrinting, modified, width, widthAdjustment, visibleColumnIds, columns, bodyExtraData
     } = useSelector(getData(tableData => {
-        const { items: data, isFetching, isEditing, modified, isPrinting, table = {}, visibleColumnIds = [] } = tableData;
+        const {
+            items: data,
+            isFetching,
+            isEditing,
+            modified,
+            isPrinting,
+            table = {},
+            visibleColumnIds = []
+        } = tableData;
         const columns = getVisibleColumns(visibleColumnIds);
         return {
-            data, isFetching, isEditing, isPrinting, modified,
+            data,
+            isFetching,
+            isEditing,
+            isPrinting,
+            modified,
             width: table.width,
             widthAdjustment: table.widthAdjustment,
             columns,
@@ -75,11 +63,11 @@ const Body = React.forwardRef(({
     let slicedData = [];
     let startIndex = 0;
     if (isPrinting === false) {
-        const visibleLower =  startTop - overScanCount * rowHeight;
+        const visibleLower = startTop - overScanCount * rowHeight;
         const visibleUpper = startTop + visibleHeight + overScanCount * rowHeight;
 
         startIndex = Math.floor(visibleLower / rowHeight);
-        if(startIndex < 0) {
+        if (startIndex < 0) {
             startIndex = 0;
         }
 
@@ -98,7 +86,7 @@ const Body = React.forwardRef(({
             visibleHeight={ visibleHeight }
             innerHeight={ innerHeight }
         >
-            { /*isFetching && <Loader styles={ Loader.styles || {} } />*/ }
+            { !!isFetching && <Spinner styles={ Loader.styles || {} } /> }
             <div style={{ width, height: innerHeight, position: 'relative' }}>
                 { slicedData.map((item, index) => {
                     const rowIndex = startIndex + index;
@@ -162,54 +150,5 @@ const Body = React.forwardRef(({
         </Tbody>
     );
 });
-
-// Body.mapPropsToComponent = ({
-//     config: {
-//         rowHeight,
-//         height,
-//         primaryKey,
-//         components: {
-//             Loader = {},
-//             Table = {}
-//         },
-//         entity: { schema } = {},
-//     },
-//     tableData,
-//     printing: [ isPrinting ],
-//     state,
-//     action,
-//     thunk,
-//     width: [ tableWidth, setTableWidth ],
-//     minWidth,
-//     visibleColumns
-// }) => {
-//     const { items: data, isFetching, isEditing, modified } = tableData;
-//     const totalHeight = rowHeight * (data || []).length;
-//     const visibleHeight = height || totalHeight;
-//
-//     return ({
-//         bodyExtraData: getExtraBodyRowProps(tableData, visibleColumns),
-//         columns: visibleColumns,
-//         data,
-//         rowHeight,
-//         innerHeight: totalHeight,
-//         height: totalHeight > visibleHeight ? visibleHeight : totalHeight,
-//         visibleHeight: visibleHeight,
-//         isFetching,
-//         isEditing,
-//         isPrinting,
-//         schema,
-//         state,
-//         primaryKey,
-//         modified,
-//         action,
-//         thunk,
-//         setTableWidth,
-//         tableWidth,
-//         minWidth,
-//         loaderStyles: Loader.styles,
-//         styles: Table.styles
-//     });
-// }
 
 export default withScrollSpy(Body);

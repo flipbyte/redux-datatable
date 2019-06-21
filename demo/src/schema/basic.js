@@ -4,7 +4,7 @@ import { getItemIds } from '../../../src/utils';
 
 export default {
     name: 'posts',
-    // height: 400,
+    height: 400,
     rowHeight: 50,
     editing: false,
     primaryKey: 'pageId',

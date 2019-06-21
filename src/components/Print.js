@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Button } from '../styled-components';
 import ConfigContext from '../context';
+import { SET_IS_PRINTING } from '../actions';
 
 const Print = ({
     config: {
@@ -20,8 +21,4 @@ const Print = ({
     );
 };
 
-// Print.mapPropsToComponent = ({
-//     printing: [ _, setIsPrinting ]
-// }) => ({ setIsPrinting });
-//
 export default Print;

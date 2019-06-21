@@ -8,14 +8,7 @@ import { SET_FILTER } from '../actions';
 import withScrollSpy from '../hoc/withScrollSpy';
 import ConfigContext from '../context';
 
-const Filters = React.forwardRef(({
-    // columns,
-    // action,
-    // query = {},
-    children,
-    // styles = {},
-    // tableWidth: { width = '100%', widthAdjustment = 1 }
-}, ref) => {
+const Filters = React.forwardRef(({ children }, ref) => {
     const {
         action,
         config: {
@@ -69,17 +62,5 @@ const Filters = React.forwardRef(({
         </Thead>
     );
 });
-
-// Filters.mapPropsToComponent = ({
-//     visibleColumns,
-//     action,
-//     tableData: { query },
-//     width: [ tableWidth ],
-//     config: {
-//         components: {
-//             Table: { styles }
-//         }
-//     }
-// }) => ({ columns: visibleColumns, action, query, tableWidth, styles });
 
 export default withScrollSpy(Filters);

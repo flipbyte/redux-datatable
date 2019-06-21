@@ -47,10 +47,4 @@ const Editable = ({ config }) => {
     );
 };
 
-// Editable.mapPropsToComponent = ({
-//     thunk,
-//     action,
-//     tableData: { isEditing, modified },
-// }) => ({ isEditing, action, thunk, isModified: modified && !_.isEmpty(modified) });
-
 export default Editable;

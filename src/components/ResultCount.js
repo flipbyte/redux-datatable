@@ -8,9 +8,6 @@ const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
 const upperLimit = ( page, limit, count ) =>  (page * limit) > count || limit === 0 ? count : page * limit;
 
 const ResultCount = ({
-    // page,
-    // limit,
-    // count,
     config: { styles = {} }
 }) => {
     const { defaultLimit, getData } = useContext(ConfigContext);
@@ -22,9 +19,5 @@ const ResultCount = ({
         </Div>
     )
 };
-
-// ResultCount.mapPropsToComponent = ({
-//     paginationProps: { page, limit, count }
-// }) => ({ page, limit, count });
 
 export default ResultCount;

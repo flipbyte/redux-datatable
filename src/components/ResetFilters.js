@@ -18,6 +18,4 @@ const ResetFilters = ({
     );
 };
 
-// ResetFilters.mapPropsToComponent = ({ action }) => ({ action });
-
 export default ResetFilters;

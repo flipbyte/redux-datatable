@@ -52,32 +52,18 @@ const ReduxDatatable = ( props ) => {
     const tableConfig = {
         action,
         config,
-        // tableData,
+        columns,
         thunk,
         defaultLimit: Limiter.default || 10,
-        // columns: [ visibleColumnIds, setVisibleColumnIds ],
-        // printing: [ isPrinting, setIsPrinting ],
         minWidth,
-        // state,
-        // width: [ tableWidth, setTableWidth ],
         getData: (selector) => createSelector(
             state => state[reducerName][name] || {},
             selector // of the format (tableData) => {your reponse}
         ),
         getVisibleColumns: getVisibleColumns(columns),
-        // paginationProps: useMemo(() => (
-        //     calculatePaginationProps(tableData.query, config.components.Limiter.default || 10)
-        // ), [ tableData.query ]),
-        // visibleColumns: useMemo(() => (
-        //     visibleColumnIds.reduce((result, currentIndex) => {
-        //         const { [currentIndex]: column } = columns;
-        //         return [ ...result, column ];
-        //     }, [])
-        // ), [ visibleColumnIds ])
     };
 
     const isPrinting = useSelector(tableConfig.getData(({ isPrinting }) => isPrinting));
-    console.log(isPrinting);
 
     // Remove pagination props and visibleCOlumns. Create a memoized function in utils and call the function wherever that data is necessary.
     // Add visibleColumnIds, isPrinting and tableWidth to redux state.
@@ -96,10 +82,6 @@ const ReduxDatatable = ( props ) => {
     useEffect(() => {
         loadData();
     }, []);
-
-    // const mapPropsToComponent = ( Component ) => (
-    //     (Component.mapPropsToComponent && Component.mapPropsToComponent(tableConfig)) || tableConfig
-    // );
 
     const getComponent = (id) => {
         if (!!id === false) {
@@ -126,27 +108,10 @@ const ReduxDatatable = ( props ) => {
                 if (isObject(item)) {
                     const { Component } = getComponent(item.id);
                     return <Component key={ index }>{ render(item.layout) }</Component>;
-
-                    // return (
-                    //     <Component
-                    //         key={ index }
-                    //         { ...mapPropsToComponent(Component) }
-                    //     >
-                    //         { render(item.layout) }
-                    //     </Component>
-                    // );
                 }
 
                 const { Component, componentConfig } = getComponent(id);
                 return <Component key={ index } config={ componentConfig } name={ id } />;
-                // return (
-                //     <Component
-                //         key={ index }
-                //         config={ componentConfig }
-                //         name={ id }
-                //         { ...mapPropsToComponent(Component) }
-                //     />
-                // );
             }}
         </Layout>
     );
@@ -155,7 +120,7 @@ const ReduxDatatable = ( props ) => {
         <ConfigContext.Provider value={ tableConfig }>
             { !isPrinting
                 ? render(layout)
-                : <Print setIsPrinting={ setIsPrinting } root={ document.body }>{ render(layout) }</Print>
+                : <Print action={ action } root={ document.body }>{ render(layout) }</Print>
             }
         </ConfigContext.Provider>
     );
@@ -167,32 +132,5 @@ const prepareActionPayload = ({
 }, action) => (
     ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action, primaryKey })
 );
-
-// const mapStateToProps = (
-//     state,
-//     {
-//         reducerName,
-//         config: { name, entity }
-//     }
-// ) => ({
-//     tableData: state[reducerName][name],
-//     state
-// });
-//
-// const mapDispatchToProps = ( dispatch, ownProps ) => {
-//     const preparePayload = prepareActionPayload(ownProps, action);
-//     const action = ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload)));
-//     return {
-//         action,
-//         loadData: ( ) => {
-//             dispatch(setPage(preparePayload({ page: 1 })));
-//             dispatch(setLimit(preparePayload({ limit: ownProps.config.components.Limiter.default || 10 })));
-//             dispatch(setSort(preparePayload({ dir: 'desc' })));
-//             dispatch(setIsEditing(preparePayload({ value: ownProps.config.editing })))
-//
-//         },
-//         thunk: ( thunk, payload ) => dispatch(thunk(preparePayload(payload)))
-//     };
-// };
 
 export default ReduxDatatable;

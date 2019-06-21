@@ -16,6 +16,4 @@ const Button = ({ config }) => {
     );
 };
 
-// Button.mapPropsToComponent = ({ thunk }) => ({ thunk });
-
 export default Button;

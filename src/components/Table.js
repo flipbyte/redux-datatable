@@ -17,12 +17,4 @@ const Table = ({ children }) => {
     );
 }
 
-// Table.mapPropsToComponent = ({
-//     config: {
-//         components: {
-//             Table: { styles }
-//         }
-//     }
-// }) => ({ styles });
-
 export default Table;

@@ -25,16 +25,7 @@ const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 };
 
-const Header = React.forwardRef(({
-    // columns,
-    // action,
-    // query = {},
-    // selection,
-    children,
-    // styles = {},
-    // primaryKey,
-    // tableWidth: { width = '100%', widthAdjustment = 1 }
-}, ref) => {
+const Header = React.forwardRef(({ children }, ref) => {
     const {
         action,
         config: {
@@ -46,9 +37,7 @@ const Header = React.forwardRef(({
         getData,
         getVisibleColumns
     } = useContext(ConfigContext);
-    // const tableData = useSelector(getData(tableData => {
-    //     return tableData;
-    // }))
+
     const { visibleColumnIds, query, selection, width, widthAdjustment } = useSelector(
         getData(({ visibleColumnIds = [], query, selection, table = {} }) => ({
             visibleColumnIds,
@@ -97,18 +86,5 @@ const Header = React.forwardRef(({
         </Thead>
     );
 });
-
-// Header.mapPropsToComponent = ({
-//     visibleColumns,
-//     action,
-//     tableData: { query, selection },
-//     width: [ tableWidth ],
-//     config: {
-//         primaryKey,
-//         components: {
-//             Table: { styles }
-//         }
-//     }
-// }) => ({ columns: visibleColumns, action, query, tableWidth, selection, styles, primaryKey });
 
 export default withScrollSpy(Header);

@@ -34,9 +34,6 @@ const getPages = ( currentPage = 1, total = 0 ) => {
 };
 
 const Pages = ({
-    // page,
-    // total,
-    // action,
     config: {
         styles = {}
     }
@@ -96,10 +93,5 @@ const Pages = ({
         </ExtendedList>
     );
 };
-
-// Pages.mapPropsToComponent = ({
-//     paginationProps: { page, total },
-//     action
-// }) => ({ page, total, action });
 
 export default Pages;

@@ -30,6 +30,4 @@ const MassActions = ({
     );
 };
 
-// MassActions.mapPropsToComponent = ({ thunk }) => ({ thunk });
-
 export default withDropdown(MassActions);

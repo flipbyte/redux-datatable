@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as actions from './actions';
 import objectAssignDeep from 'object-assign-deep';
 import { SELECT_ALL } from './constants';
+import { isUndefined } from './utils';
 
 let initialTableState = {
     isFetching: false,
@@ -167,7 +168,21 @@ export default function reducer(state = {}, action) {
                 }
             };
         },
-        [actions.SET_VISIBLE_COLUMN_IDS]: () => stateUpdater({ visibleColumnIds: [ ...payload.ids ] }),
+        [actions.SET_VISIBLE_COLUMN_IDS]: () => {
+            if (!isUndefined(payload.ids)) {
+                return stateUpdater({ visibleColumnIds: [ ...payload.ids ] });
+            }
+            
+            let visibleColumnIds = [ ...tableState.visibleColumnIds ];
+            if (payload.checked === true) {
+                visibleColumnIds.push(payload.index);
+                visibleColumnIds.sort();
+            } else {
+                visibleColumnIds.splice(visibleColumnIds.indexOf(payload.index), 1).sort();
+            }
+
+            return stateUpdater({ visibleColumnIds });
+        }
     };
 
     if (acceptedActions.hasOwnProperty(action.type)) {

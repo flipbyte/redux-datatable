@@ -28,7 +28,7 @@
         "react-redux": "^7.1.0",
         "redux": "^4.0.1",
         "reselect": "^4.0.0",
-        "styled-components": "^4.2.0",
+        "styled-components": "^4.3.2",
         "redux-observable": "^1.1.0",
         "redux-thunk": "^2.3.0"
     },
@@ -55,7 +55,7 @@
         "redux-thunk": "^2.3.0",
         "reselect": "^4.0.0",
         "rxjs": "^6.4.0",
-        "styled-components": "^4.2.0"
+        "styled-components": "^4.3.2"
     },
     "author": "",
     "homepage": "",
