@@ -11,6 +11,13 @@ import { SET_PAGE, SET_SORT, SET_LIMIT, SET_IS_EDITING, SET_VISIBLE_COLUMN_IDS, 
 import { createActionCreator, isObject, calculateWidth, getInitialVisibleColumns, toPascalCase, prepareActionPayload } from './utils';
 import ConfigContext from './context';
 
+const getVisibleColumns = (columns) => _.memoize((visibleColumnIds) => (
+    visibleColumnIds.reduce((result, currentIndex) => {
+        const { [currentIndex]: column } = columns;
+        return [ ...result, column ];
+    }, [])
+));
+
 const ReduxDatatable = ( props ) => {
     const { config = {}, reducerName } = props;
     const { name, layout, components } = config;
@@ -36,13 +43,6 @@ const ReduxDatatable = ( props ) => {
         action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
     }, [ dispatch ]);
 
-    const getVisibleColumns = (columns) => _.memoize((visibleColumnIds) => (
-        visibleColumnIds.reduce((result, currentIndex) => {
-            const { [currentIndex]: column } = columns;
-            return [ ...result, column ];
-        }, [])
-    ));
-
     const tableConfig = {
         action,
         config,
@@ -50,11 +50,17 @@ const ReduxDatatable = ( props ) => {
         thunk,
         defaultLimit: Limiter.default || 10,
         minWidth,
+        reducerName,
+        getState: state => state,
         getData: (selector) => createSelector(
             state => state[reducerName][name] || {},
             selector // of the format (tableData) => {your reponse}
         ),
         getVisibleColumns: getVisibleColumns(columns),
+        // getValue: (name) => createSelector(
+        //     getData,
+        //     (tableData)
+        // )
     };
 
     const isPrinting = useSelector(tableConfig.getData(({ isPrinting }) => isPrinting));

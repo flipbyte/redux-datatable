@@ -38,7 +38,8 @@ export default {
     entity: {
         state: 'pages',
         responseSchema: tableSchema('pages', 'pageId').responseSchema,
-        schema: tableSchema('pages', 'pageId').rowSchema
+        schema: tableSchema('pages', 'pageId').rowSchema,
+        relatedEntities: ['pages']
     },
     layout: [
         ['Editable'],
