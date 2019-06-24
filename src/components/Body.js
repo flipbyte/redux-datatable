@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useContext } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Loader as Spinner, Tbody, Tbr, Td, Div } from '../styled-components';
+import { Loader as Spinner, Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
 import { getStyles, getRenderer } from '../utils';
 import { MODIFY_DATA } from '../actions';
@@ -79,9 +79,8 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
             rowHeight={ rowHeight }
         >
             {(rowIndex, top) => (
-                <Tbr
+                <Tr
                     key={ rowIndex }
-                    itemIndex={ rowIndex }
                     className="rdt-table-row"
                     position="absolute"
                     top={ top }
@@ -90,12 +89,12 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
                     even={ rowIndex % 2 === 0 }
                     styles={ getStyles(styles.tr, 'body') }
                 >
-                    {(column, data, index, modifiedData) => {
+                    {(column, index) => {
                         const { width, textAlign, name, type } = column;
                         const ColRenderer = getRenderer(column, Renderers);
-                        const modifiedValue = _.get(modifiedData, name);
-                        const origValue = _.get(data, name);
-                        const value = modifiedValue || origValue;
+                        // const modifiedValue = _.get(modifiedData, name);
+                        // const origValue = _.get(data, name);
+                        // const value = modifiedValue || origValue;
                         return (
                             <Td
                                 key={ index }
@@ -105,28 +104,16 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
                             >
                                 <Div className="rdt-table-col-inner">
                                     <ColRenderer
-                                        data={ data }
-                                        value={ value }
+                                        itemIndex={ rowIndex }
                                         colConfig={ column }
-                                        action={ action }
-                                        thunk={ thunk }
-                                        isEditing={ isEditing }
-                                        origValue={ origValue }
-                                        modifiedData={ modifiedData }
-                                        isModified={ _.has(modifiedData, name) }
-                                        modifiedValue={ modifiedValue }
-                                        handleChange={(event) => {
-                                            var newData = { ...modifiedData };
-                                            _.set(newData, primaryKey, primarKeyValue);
-                                            _.set(newData, event.target.name, event.target.value);
-                                            action(MODIFY_DATA)({ key: primarKeyValue, value: newData })
-                                        }}
+                                        primaryKey={ primaryKey }
+                                        schema={ schema }
                                     />
                                 </Div>
                             </Td>
                         )
                     }}
-                </Tbr>
+                </Tr>
             )}
         </Tbody>
     )

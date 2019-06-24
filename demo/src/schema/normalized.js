@@ -2,6 +2,7 @@ import React from 'react';
 import { MODIFY_DATA, REQUEST_DATA, SET_IS_LOADING } from '../../../src/actions';
 import { getItemIds } from '../../../src/utils';
 import { normalize, schema } from 'normalizr';
+import { createSelector } from 'reselect';
 
 const tableSchema = ( entityName, idAttributeName, definition = {}) => {
     const rowSchema = new schema.Entity(entityName, definition, {
@@ -15,6 +16,11 @@ const tableSchema = ( entityName, idAttributeName, definition = {}) => {
         responseSchema: responseSchema
     }
 };
+
+const pageSelector = (id) => createSelector(
+    state => state.pages,
+    (pages) => pages[id]
+);
 
 export default {
     name: 'pages',
@@ -39,7 +45,14 @@ export default {
         state: 'pages',
         responseSchema: tableSchema('pages', 'pageId').responseSchema,
         schema: tableSchema('pages', 'pageId').rowSchema,
-        relatedEntities: ['pages']
+        selectors: {
+            default: pageSelector,
+            author: (id) => createSelector(
+                pageSelector(id),
+                state => state.authors,
+                (page, authors) => authors[page.author]
+            )
+        },
     },
     layout: [
         ['Editable'],
@@ -296,7 +309,7 @@ export default {
                 width: 200,
                 editable: true,
                 filterable: true,
-            }, {
+            }/*, {
                 label: 'Actions',
                 type: 'actions',
                 name: 'actions',
@@ -331,7 +344,7 @@ export default {
 
                     }
                 }]
-            }]
+            }*/]
         }
     }
 }
