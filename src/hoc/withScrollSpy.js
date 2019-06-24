@@ -42,8 +42,8 @@ const withScrollSpy = WrappedComponent => (props) => {
         if (name === 'Body') {
             ref.current.removeEventListener('scroll', handleScroll, true);
             ref.current.addEventListener('scroll', handleScroll, true);
-            window.removeEventListener('resize', updateTableDimensions)
-            window.addEventListener('resize', updateTableDimensions)
+            window.removeEventListener('resize', updateTableDimensions);
+            window.addEventListener('resize', updateTableDimensions);
         } else {
             scrollerMap[id] = ref;
         }
@@ -57,6 +57,8 @@ const withScrollSpy = WrappedComponent => (props) => {
             }
         }
     }, [ updateTableDimensions ]);
+
+    useEffect(() => updateTableDimensions(), [ ref.current ]);
 
     return <WrappedComponent ref={ ref } { ...scrollData } { ...props } />;
 }

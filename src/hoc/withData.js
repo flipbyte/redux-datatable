@@ -7,11 +7,7 @@ import { createSelector } from 'reselect';
 const withData = WrappedComponent => (props) => {
     const { itemIndex, colConfig, primaryKey, schema } = props;
     const { selector, editable, name } = colConfig;
-    const {
-        getData,
-        thunk,
-        config: { entity = {} }
-    } = useContext(ConfigContext);
+    const { getData, thunk, action, config: { entity = {} } } = useContext(ConfigContext);
     const { selectors = {} } = entity;
 
     const isEditing = useSelector(getData(({ isEditing }) => !!editable ? false : isEditing));
@@ -22,19 +18,17 @@ const withData = WrappedComponent => (props) => {
 
     const getItem = schema
         ? selector
-            ? selectors[selector](itemIndex)
-            : selectors.default(itemIndex)
+            ? selectors[selector](primarKeyValue)
+            : selectors.default(primarKeyValue)
         : getData(tableData => tableData.items[itemIndex]);
 
     const value = useSelector(createSelector(
         [ getItem ],
         (item) => {
-            console.log(item);
+            // console.log(item);
             return _.get(item, name);
         }
     ));
-
-    console.log('value', value);
 
     const handleChange = (event) => (
         action(MODIFY_DATA)({
@@ -54,6 +48,7 @@ const withData = WrappedComponent => (props) => {
             isModified={ !!modifiedValue }
             handleChange={ handleChange }
             thunk={ thunk }
+            action={ action }
             { ...props }
         />
     );
