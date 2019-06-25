@@ -19,15 +19,12 @@ const Filters = React.forwardRef(({ children }, ref) => {
         getData,
         getVisibleColumns
     } = useContext(ConfigContext);
-    const { visibleColumnIds = [], query, width, widthAdjustment } = useSelector(
-        getData(({ visibleColumnIds, query, table = {} }) => ({
-            visibleColumnIds,
-            query,
-            width: table.width,
-            widthAdjustment: table.widthAdjustment
-        }))
-    );
+    const search = useSelector(getData(tableData => tableData.query ? tableData.query.search : {}));
+    const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
+    const widthAdjustment = useSelector(getData(tableData => tableData.table ? tableData.table.widthAdjustment : 1));
+    const visibleColumnIds = useSelector(getData(tableData => tableData.visibleColumnIds || []));
     const columns = getVisibleColumns(visibleColumnIds);
+
     return (
         <Thead styles={ getStyles(styles, 'filters') } ref={ ref }>
             <div style={{ width }}>
@@ -35,7 +32,7 @@ const Filters = React.forwardRef(({ children }, ref) => {
                     {(config, index) => {
                         const { filterable, type, width, ...rest } = config;
                         const { name } = rest;
-                        const value = _.get(query, ['search', name, 'value']);
+                        const value = _.get(search, [ name, 'value' ]);
                         const Component = getRenderer(config, Renderers);
                         return (
                             <Td
@@ -62,5 +59,7 @@ const Filters = React.forwardRef(({ children }, ref) => {
         </Thead>
     );
 });
+
+Filters.displayName = 'Filters';
 
 export default withScrollSpy(Filters);

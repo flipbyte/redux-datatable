@@ -4,7 +4,6 @@ import { Button } from '../../../styled-components';
 import withData from '../../../hoc/withData';
 
 const Actions = ({
-    extra,
     thunk,
     colConfig: { items },
     value
@@ -16,7 +15,7 @@ const Actions = ({
                 <Button
                     key={ index }
                     className={ `rdt-body-actions button ${htmlClass || ''} ${name || ''}` }
-                    onClick={ cb && thunk.bind(this, cb, { item, value, extra }) }
+                    onClick={ cb && thunk.bind(this, cb, { item, value }) }
                     styles={ styles }
                 >
                     { !isUndefined(icon) && <i className={ icon } /> }

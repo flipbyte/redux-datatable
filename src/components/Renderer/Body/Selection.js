@@ -17,9 +17,9 @@ const Selection = ({
     value: key
 }) => {
     const { getData, config: { primaryKey } } = useContext(ConfigContext);
-    const checked = useSelector(getData(({ selection }) => {
+    const checked = useSelector(getData(({ selection }) => (
         isChecked(selection, _.get(selection.selected, [primaryKey, key]))
-    }));
+    )));
     return (
         <div className="col-12">
             <Field.Input

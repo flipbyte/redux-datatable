@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
+import { MODIFY_DATA } from '../actions';
 
 const withData = WrappedComponent => (props) => {
     const { itemIndex, colConfig, primaryKey, schema } = props;
@@ -10,11 +11,11 @@ const withData = WrappedComponent => (props) => {
     const { getData, thunk, action, config: { entity = {} } } = useContext(ConfigContext);
     const { selectors = {} } = entity;
 
-    const isEditing = useSelector(getData(({ isEditing }) => !!editable ? false : isEditing));
+    const isEditing = useSelector(getData(({ isEditing }) => !editable ? false : isEditing));
     const primarKeyValue = useSelector(getData(tableData => (
-        !_.isEmpty(schema) ? tableData.items[itemIndex] : _.get(tableData.items[itemIndex], primaryKey)
+        !_.isEmpty(schema) ? tableData.items[itemIndex] : tableData.items[itemIndex][primaryKey]
     )));
-    const modifiedValue = useSelector(getData(tableData => _.get(tableData.modified, [primarKeyValue, name])));
+    const modifiedValue = useSelector(getData(tableData => _.get(tableData.modified, [primarKeyValue, name])), );
 
     const getItem = schema
         ? selector
@@ -24,10 +25,7 @@ const withData = WrappedComponent => (props) => {
 
     const value = useSelector(createSelector(
         [ getItem ],
-        (item) => {
-            // console.log(item);
-            return _.get(item, name);
-        }
+        (item) => _.get(item, name)
     ));
 
     const handleChange = (event) => (

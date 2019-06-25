@@ -254,7 +254,7 @@ export default {
                 // },
             },
             columns: [{
-                name: 'id',
+                name: 'pageId',
                 label: '',
                 sortable: false,
                 type: 'selection',
@@ -270,6 +270,30 @@ export default {
                 sortable: true,
                 // editable: true
             }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
                 label: "Status",
                 type: "options",
                 name: "entityData.data.status",

@@ -151,9 +151,10 @@ export default function reducer(state = {}, action) {
             if (payload.clear !== true) {
                 modifiedData = {
                     ...tableState.modified,
-                    [payload.key]: {
-                        ...tableState.modified[payload.key],
-                        ...payload.value
+                    [payload.pkValue]: {
+                        ...tableState.modified[payload.pkValue],
+                        [payload.pk]: payload.pkValue,
+                        [payload.key]: payload.value
                     }
                 };
             }
@@ -172,7 +173,7 @@ export default function reducer(state = {}, action) {
             if (!isUndefined(payload.ids)) {
                 return stateUpdater({ visibleColumnIds: [ ...payload.ids ] });
             }
-            
+
             let visibleColumnIds = [ ...tableState.visibleColumnIds ];
             if (payload.checked === true) {
                 visibleColumnIds.push(payload.index);

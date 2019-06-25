@@ -1,8 +1,6 @@
 import React, { Component, useRef, useState, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { calculateWidth } from '../utils';
 import ConfigContext from '../context';
-import { SET_TABLE_WIDTH } from '../actions';
 
 export let scrollerMap = {};
 
@@ -11,22 +9,7 @@ const withScrollSpy = WrappedComponent => (props) => {
     const id = _.uniqueId(name);
     const ref = useRef(null);
     const [ scrollData, setScrollData ] = useState({ top: 0, pointerEvents: 'none' });
-    const { getVisibleColumns, getData, minWidth, action, config: { height } } = useContext(ConfigContext);
-    const visibleColumnIds = useSelector(getData(tableData => tableData.visibleColumnIds));
-    const visibleColumns = visibleColumnIds ? getVisibleColumns(visibleColumnIds) : [];
-
-    const updateTableDimensions = () => {
-        const tableBodyEl = ref.current;
-        const computedTableWidth = minWidth > tableBodyEl.clientWidth || !tableBodyEl.clientWidth
-            ? minWidth
-            : tableBodyEl.clientWidth;
-
-        const percentage = computedTableWidth / calculateWidth(visibleColumns);
-        action(SET_TABLE_WIDTH)({
-            width: calculateWidth(visibleColumns, percentage),
-            widthAdjustment: percentage
-        })
-    }
+    const { getData, minWidth, config: { height } } = useContext(ConfigContext);
 
     const handleScroll = (event) => {
         _.map(scrollerMap, (ref, key, index) => (
@@ -42,8 +25,6 @@ const withScrollSpy = WrappedComponent => (props) => {
         if (name === 'Body') {
             ref.current.removeEventListener('scroll', handleScroll, true);
             ref.current.addEventListener('scroll', handleScroll, true);
-            window.removeEventListener('resize', updateTableDimensions);
-            window.addEventListener('resize', updateTableDimensions);
         } else {
             scrollerMap[id] = ref;
         }
@@ -51,14 +32,11 @@ const withScrollSpy = WrappedComponent => (props) => {
         return () => {
             if (name === 'Body') {
                 ref.current.removeEventListener('scroll', handleScroll, true);
-                window.removeEventListener('resize', updateTableDimensions)
             } else {
                 delete scrollerMap[id];
             }
         }
-    }, [ updateTableDimensions ]);
-
-    useEffect(() => updateTableDimensions(), [ ref.current ]);
+    }, [ handleScroll ]);
 
     return <WrappedComponent ref={ ref } { ...scrollData } { ...props } />;
 }

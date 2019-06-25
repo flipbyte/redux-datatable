@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { Loader as Spinner, Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
-import { getStyles, getRenderer } from '../utils';
-import { MODIFY_DATA } from '../actions';
+import { getStyles, getRenderer, calculateWidth } from '../utils';
+import { MODIFY_DATA, SET_TABLE_WIDTH } from '../actions';
 import withScrollSpy from '../hoc/withScrollSpy';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
@@ -33,12 +33,35 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
 
     const itemCount = useSelector(getData(tableData => (tableData.items || []).length));
     const isPrinting = useSelector(getData(tableData => !!tableData.isPrinting));
-    const isFetching = useSelector(getData(tableData => !!tableData.isFetching));
-    const isEditing = useSelector(getData(tableData => !!tableData.isEditing));
     const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
     const widthAdjustment = useSelector(getData(tableData => tableData.table ? tableData.table.widthAdjustment : 1));
-    const visibleColumnIds = useSelector(getData(tableData => tableData.visibleColumnIds || []));
+    const visibleColumnIds = useSelector(
+        getData(tableData => tableData.visibleColumnIds || []),
+        (nextState, prevState) => nextState.length === prevState.length
+    );
     const columns = getVisibleColumns(visibleColumnIds);
+
+    const updateTableDimensions = () => {
+        const tableBodyEl = ref.current;
+        const computedTableWidth = minWidth > tableBodyEl.clientWidth || !tableBodyEl.clientWidth
+            ? minWidth
+            : tableBodyEl.clientWidth;
+
+        const percentage = computedTableWidth / calculateWidth(columns);
+        action(SET_TABLE_WIDTH)({
+            width: calculateWidth(columns, percentage),
+            widthAdjustment: percentage
+        })
+    }
+
+    useEffect(() => {
+        // window.removeEventListener('resize', updateTableDimensions);
+        window.addEventListener('resize', updateTableDimensions);
+
+        return () => window.removeEventListener('resize', updateTableDimensions)
+    }, [ updateTableDimensions ]);
+
+    useEffect(() => updateTableDimensions(), [ ref.current, visibleColumnIds.length ]);
 
     const totalHeight = rowHeight * itemCount;
     const visibleHeight = minHeight || totalHeight;
