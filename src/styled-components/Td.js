@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { getExtendedStyles } from '../utils';
+import ConfigContext from '../context';
+import { useSelector } from 'react-redux';
 
-const Td = styled.div.attrs(({ width: maxWidth }) => ({
+const Td = ({ className, style, children, colIndex, onClick }) => {
+    const { getData } = useContext(ConfigContext);
+    const isVisible = useSelector(getData(({ visibleColumnIds }) => (
+        visibleColumnIds ? visibleColumnIds.indexOf(colIndex) !== -1 : true
+    )));
+    const width = useSelector(getData(({ visibleColumnIds, columnWidths, table }) => (
+        table ? columnWidths[visibleColumnIds.indexOf(colIndex)] * table.widthAdjustment : 0
+    )));
+
+    return isVisible && (
+        <div className={ className } style={{ maxWidth: width }} onClick={ onClick && onClick }>
+            { children }
+        </div>
+    );
+};
+
+const StyledTd = styled(Td).attrs(({ width: maxWidth }) => ({
     style: { maxWidth }
 })) `
     flex-direction: column;
@@ -24,5 +42,5 @@ const Td = styled.div.attrs(({ width: maxWidth }) => ({
     }
 `;
 
-const ExtendedTd = styled(Td)(getExtendedStyles());
+const ExtendedTd = styled(StyledTd)(getExtendedStyles());
 export default ExtendedTd;

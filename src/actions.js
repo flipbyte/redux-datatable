@@ -17,6 +17,8 @@ export const SET_IS_EDITING = 'SET_IS_EDITING';
 export const SET_IS_PRINTING = 'SET_IS_PRINTING';
 export const SET_TABLE_WIDTH = 'SET_TABLE_WIDTH';
 export const SET_VISIBLE_COLUMN_IDS = 'SET_VISIBLE_COLUMN_IDS';
+export const SET_COLUMN_WIDTHS = 'SET_COLUMN_WIDTHS';
+export const SET_BODY_INNER_WIDTH = 'SET_BODY_INNER_WIDTH';
 
 export const cancelRequest = createActionCreator(REQUEST_DATA_CANCEL);
 export const requestData = createActionCreator(REQUEST_DATA);

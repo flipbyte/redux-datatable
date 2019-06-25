@@ -172,7 +172,7 @@ export default {
         },
         Limiter: {
             type: 'limiter',
-            options: [10, 20, 50, 200, 2000, 0],
+            options: [10, 20, 50, 100, 150, 200, 500, 1000, 2000, 5000, 10000, 0],
             default: 200,
             // styles: {}
         },

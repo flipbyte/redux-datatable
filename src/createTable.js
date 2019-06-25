@@ -7,7 +7,6 @@ import Layout from './containers/Layout';
 import Row from './styled-components/Row';
 import Print from './containers/Print';
 import * as Components from './components';
-import { SET_PAGE, SET_SORT, SET_LIMIT, SET_IS_EDITING, SET_VISIBLE_COLUMN_IDS, SET_TABLE_WIDTH } from './actions';
 import ConfigContext from './context';
 import {
     createActionCreator,
@@ -17,6 +16,15 @@ import {
     toPascalCase,
     prepareActionPayload
 } from './utils';
+import {
+    SET_PAGE,
+    SET_SORT,
+    SET_LIMIT,
+    SET_IS_EDITING,
+    SET_VISIBLE_COLUMN_IDS,
+    SET_TABLE_WIDTH,
+    SET_COLUMN_WIDTHS
+} from './actions';
 
 const getVisibleColumns = (columns) => _.memoize((visibleColumnIds) => (
     visibleColumnIds.reduce((result, currentIndex) => {
@@ -48,6 +56,10 @@ const ReduxDatatable = ( props ) => {
         action(SET_IS_EDITING)({ value: config.editing });
         action(SET_VISIBLE_COLUMN_IDS)({ ids: getInitialVisibleColumns(columns) });
         action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
+        action(SET_COLUMN_WIDTHS)(columns.reduce((acc, column) => {
+            acc.push(column.width);
+            return acc
+        }, []));
     }, [ dispatch ]);
 
     const tableConfig = {

@@ -25,6 +25,9 @@ export const createActionCreator = (type) => (data) => {
     return action;
 };
 
+
+// 50 150 150 150 150 250 200 100
+
 export const getStyles = (styles = {}, name) => {
     const { [name]: style } = styles;
     return style;
@@ -39,11 +42,11 @@ export const getExtendedStyles = (name) => ({ styles = {} }) => {
     return style;
 };
 
-export const calculateWidth = ( columns, adjustment = 1 ) => (
+export const calculateWidth = _.memoize(( columns, adjustment = 1 ) => (
     columns.reduce((result, column) => (
         result + ((column.width * adjustment) || 0)
     ), 0)
-);
+));
 
 export const getInitialVisibleColumns = ( columns = [] ) => (
     columns.reduce((visibleColumnIndexes, column, index) => {
@@ -55,14 +58,6 @@ export const getInitialVisibleColumns = ( columns = [] ) => (
     }, [])
 );
 
-// export const prepareData = ( item, schema, entities ) => {
-//     if (_.isEmpty(schema) || _.isObject(item)) {
-//         return item;
-//     }
-//
-//     return denormalize(item, schema, entities);
-// };
-//
 export const getItemIds = (selection, items, primaryKey, schema) => (
     selection.all === true
         ? items.reduce((acc, item, index) => {

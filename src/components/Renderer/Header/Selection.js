@@ -4,6 +4,7 @@ import { SET_SELECTION } from '../../../actions';
 import { SELECT_ALL } from '../../../constants';
 import { Field } from '../../../styled-components';
 import ConfigContext from '../../../context';
+import { useSelector } from 'react-redux';
 
 const handleSelection = ( selector, primaryKey, event ) => {
     if (!primaryKey) {
@@ -18,8 +19,9 @@ const isIndeterminate = (selection, primaryKey) => {
     return values.includes(true) || (selection.all === true && values.includes(false));
 };
 
-const Selection = ({ name, action, selection = {} }) => {
-    const { config: { primaryKey } } = useContext(ConfigContext);
+const Selection = ({ name, action }) => {
+    const { getData, config: { primaryKey } } = useContext(ConfigContext);
+    const selection = useSelector(getData(tableData => tableData.selection || {}));
     return (
         <Field.Input
             type="checkbox"

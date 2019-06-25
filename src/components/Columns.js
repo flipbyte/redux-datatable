@@ -24,7 +24,7 @@ const Columns = ({
                 Columns
             </Button>
             <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open }  styles={ styles.dropdownMenu }>
-                { columns.map(({ name, label }, index) => (
+                { columns.map(({ name, label, width }, index) => (
                     <Dropdown.Item
                         key={ index }
                         className="rdt-toolbar-item"
@@ -35,7 +35,9 @@ const Columns = ({
                             type="checkbox"
                             style={{ margin: 5 }}
                             checked={ -1 !== visibleColumnIds.indexOf(index) }
-                            onChange={(event) => action(SET_VISIBLE_COLUMN_IDS)({ index, checked: event.target.checked})}
+                            onChange={(event) => (
+                                action(SET_VISIBLE_COLUMN_IDS)({ index, checked: event.target.checked, width })
+                            )}
                         />
                         <label htmlFor={ name }>{ label }</label>
                     </Dropdown.Item>

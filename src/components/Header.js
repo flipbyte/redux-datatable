@@ -28,40 +28,33 @@ const changeSortOrder = ( query, colName, sorter ) => {
 const Header = React.forwardRef(({ children }, ref) => {
     const {
         action,
+        columns,
         config: {
             primaryKey,
             components: {
                 Table: { styles }
             }
         },
-        getData,
-        getVisibleColumns
+        getData
     } = useContext(ConfigContext);
 
-    const { visibleColumnIds, query, selection, width, widthAdjustment } = useSelector(
-        getData(({ visibleColumnIds = [], query, selection, table = {} }) => ({
-            visibleColumnIds,
-            query,
-            selection,
-            width: table.width,
-            widthAdjustment: table.widthAdjustment
-        }))
-    );
-    const columns = getVisibleColumns(visibleColumnIds);
+    const query = useSelector(getData(tableData => tableData.query || {}));
+    const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
+
     return (
         <Thead styles={ getStyles(styles, 'thead') } ref={ ref }>
             <div style={{ width }}>
                 <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'header') }>
                     {(config, index) => {
-                        const { sortable, width, textAlign, name, type, ...rest } = config;
+                        const { sortable, textAlign, name, type, ...rest } = config;
                         const { sort, dir } = query;
                         const Component = getRenderer(config, Renderers);
                         return (
                             <Th
                                 key={ index }
+                                colIndex={ index }
                                 className={ `rdt-th ${name} ${type}` }
                                 sortable={ sortable }
-                                width={ width * widthAdjustment }
                                 textAlign={ textAlign }
                                 styles={ styles.th }
                                 onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
@@ -72,7 +65,6 @@ const Header = React.forwardRef(({ children }, ref) => {
                                         sortable={ sortable }
                                         sort={ sort }
                                         dir={ dir }
-                                        selection={ selection }
                                         primaryKey={ primaryKey }
                                         action={ action }
                                         { ...rest }

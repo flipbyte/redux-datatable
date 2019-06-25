@@ -26,11 +26,22 @@ let initialTableState = {
     },
     modified: {},
     visibleColumnIds: [],
+    columnWidths: [],
     table: {
         width: 0,
         widthAdjustment: 1,
     }
 };
+
+const calculateTableWidth = (columnWidths, clientWidth ) => {
+    const totalColWidth = columnWidths.reduce((a, b) => a + b, 0);
+    const innerWidth = totalColWidth > clientWidth ? totalColWidth : clientWidth;
+    const widthAdjustment = innerWidth / totalColWidth;
+    return {
+        width: totalColWidth * widthAdjustment,
+        widthAdjustment: widthAdjustment
+    }
+}
 
 const updateState = ( state, tableName ) => ( newState ) => {
     const { [tableName]: tableState = {} } = state;
@@ -64,6 +75,7 @@ export default function reducer(state = {}, action) {
         [actions.SET_TABLE_WIDTH]: () => stateUpdater({
             table: { width: payload.width, widthAdjustment: payload.widthAdjustment }
         }),
+        [actions.SET_COLUMN_WIDTHS]: () => stateUpdater({ columnWidths: payload }),
         [actions.REQUEST_DATA]: () => stateUpdater({ isFetching: true }),
         [actions.REQUEST_DATA_CANCEL]: () => stateUpdater({ isFetching: false }),
         [actions.RECEIVE_DATA]: () => stateUpdater({
@@ -175,14 +187,36 @@ export default function reducer(state = {}, action) {
             }
 
             let visibleColumnIds = [ ...tableState.visibleColumnIds ];
+            let columnWidths = [ ...tableState.columnWidths ];
             if (payload.checked === true) {
                 visibleColumnIds.push(payload.index);
                 visibleColumnIds.sort();
+
+                // push the width at the index of the visible column id.
+                const itemIndex = visibleColumnIds.indexOf(payload.index);
+                columnWidths.splice(itemIndex, 0, payload.width);
             } else {
-                visibleColumnIds.splice(visibleColumnIds.indexOf(payload.index), 1).sort();
+                const itemIndex = visibleColumnIds.indexOf(payload.index);
+                visibleColumnIds.splice(itemIndex, 1);
+                columnWidths.splice(itemIndex, 1);
             }
 
-            return stateUpdater({ visibleColumnIds });
+            return stateUpdater({
+                visibleColumnIds,
+                columnWidths,
+                table: {
+                    ...tableState.table,
+                    ...calculateTableWidth(columnWidths, tableState.table.clientWidth)
+                }
+            });
+        },
+        [actions.SET_BODY_INNER_WIDTH]: () => {
+            return stateUpdater({
+                table: {
+                    clientWidth: payload.clientWidth,
+                    ...calculateTableWidth(tableState.columnWidths, payload.clientWidth)
+                }
+            })
         }
     };
 
