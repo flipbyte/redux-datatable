@@ -315,7 +315,7 @@ export default {
                 label: 'Actions',
                 type: 'actions',
                 name: 'actions',
-                width: 100,
+                width: 130,
                 name: 'pageId',
                 items: [{
                     type: 'action',
