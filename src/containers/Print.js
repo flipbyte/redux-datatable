@@ -7,9 +7,9 @@ const Print = ({ action, children, ...rest }) => {
     useEffect(() => {
         window.print();
         action(SET_IS_PRINTING)({ value: false })
-    }, [])
+    }, []);
 
     return <PrintButton { ...rest }>{ children }</PrintButton>;
-}
+};
 
 export default withModal(Print);

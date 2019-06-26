@@ -39,7 +39,7 @@ const calculateTableWidth = (columnWidths, clientWidth ) => {
     const widthAdjustment = innerWidth / totalColWidth;
     return {
         width: totalColWidth * widthAdjustment,
-        widthAdjustment: widthAdjustment
+        widthAdjustment
     }
 }
 
@@ -216,7 +216,7 @@ export default function reducer(state = {}, action) {
                     clientWidth: payload.clientWidth,
                     ...calculateTableWidth(tableState.columnWidths, payload.clientWidth)
                 }
-            })
+            });
         }
     };
 
