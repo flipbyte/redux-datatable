@@ -9,19 +9,17 @@ const tableSchema = ( entityName, idAttributeName, definition = {}) => {
         idAttribute: idAttributeName,
     });
 
-    const responseSchema = { data: [rowSchema] }
+    const responseSchema = { data: [rowSchema] };
 
     return {
-        rowSchema: rowSchema,
-        responseSchema: responseSchema
+        rowSchema,
+        responseSchema
     }
 };
 
 const pageSelector = (id) => createSelector(
     state => state.pages,
-    (pages) => {
-        return pages[id]
-    }
+    (pages) => pages[id]
 );
 
 export default {
@@ -141,7 +139,7 @@ export default {
                 thunk: ( config ) => ( dispatch, getState ) => {
                     // Get current table state.
                     const tableState = getState()[config.reducerName][config.name];
-                    console.log(config, tableState);
+                    // console.log(config, tableState);
                     console.log(getItemIds(tableState.selection, tableState.items, config.primaryKey/*, config.entity.schema*/))
                     confirm('Are your sure you want to delete the selected items?')
                         ? console.log('delete items', config, getState(), tableState)
@@ -336,7 +334,7 @@ export default {
             }, {
                 label: 'Actions',
                 type: 'actions',
-                name: 'actions',
+                // name: 'actions',
                 name: 'pageId',
                 width: 100,
                 items: [{
@@ -366,4 +364,4 @@ export default {
             }]
         }
     }
-}
+};

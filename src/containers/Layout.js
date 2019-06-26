@@ -1,6 +1,6 @@
 import React from 'react';
 import { isArray } from '../utils';
-import { Container } from '../styled-components'
+import { Container } from '../styled-components';
 
 const Layout = ({ config, children, row: Row }) => isArray(config) && (
     <Container>

@@ -28,7 +28,7 @@ const renderCol = (rowIndex, primaryKey, schema, styles, column, index) => {
                 />
             </Div>
         </Td>
-    )
+    );
 };
 
 const renderRow = (columns, rowHeight, styles, primaryKey, schema, rowIndex, top) => (
@@ -71,12 +71,12 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
     const updateTableDimensions = () => {
         action(SET_BODY_INNER_WIDTH)({
             clientWidth: ref.current ? ref.current.clientWidth : minWidth,
-        })
+        });
     };
 
     useEffect(() => {
         window.addEventListener('resize', updateTableDimensions);
-        return () => window.removeEventListener('resize', updateTableDimensions)
+        return () => window.removeEventListener('resize', updateTableDimensions);
     }, [ updateTableDimensions ]);
 
     useEffect(() => updateTableDimensions(), [ ref.current ]);
@@ -98,7 +98,7 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
 
         let endIndex = Math.ceil(visibleUpper / rowHeight);
         if (endIndex > itemCount) {
-            endIndex = itemCount
+            endIndex = itemCount;
         }
         range[0] = startIndex;
         range[1] = endIndex;

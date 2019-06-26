@@ -41,7 +41,7 @@ const calculateTableWidth = (columnWidths, clientWidth ) => {
         width: totalColWidth * widthAdjustment,
         widthAdjustment
     }
-}
+};
 
 const updateState = ( state, tableName ) => ( newState ) => {
     const { [tableName]: tableState = {} } = state;
@@ -225,4 +225,4 @@ export default function reducer(state = {}, action) {
     }
 
     return state;
-}
+};

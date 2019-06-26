@@ -61,7 +61,7 @@ export const getItemIds = (selection, items, primaryKey, schema) => (
 
             return acc;
         }, [])
-)
+);
 
 export const calculatePaginationProps = _.memoize((
     query = {},

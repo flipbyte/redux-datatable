@@ -11,4 +11,4 @@ export default {
         pageTableFetchDataEpic: epics.fetchDataEpic,
         pageTableSetParamsEpic: epics.setParamsEpic
     }
-}
+};
