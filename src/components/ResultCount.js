@@ -12,12 +12,12 @@ const ResultCount = ({
 }) => {
     const { defaultLimit, getData } = useContext(ConfigContext);
     const query = useSelector(getData((tableData) => tableData.query));
-    const { page, limit, count } = calculatePaginationProps(query, defaultLimit)
+    const { page, limit, count } = calculatePaginationProps(query, defaultLimit);
     return !!count > 0 && (
         <Div className="rdt-pg-res-cnt" styles={ styles }>
             Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries
         </Div>
-    )
+    );
 };
 
 export default ResultCount;

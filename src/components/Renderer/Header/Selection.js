@@ -30,7 +30,7 @@ const Selection = ({ name, action }) => {
             onChange={(event) => handleSelection(action(SET_SELECTION), primaryKey, event)}
             ref={(el) => el && (el.indeterminate = isIndeterminate(selection, primaryKey))}
         />
-    )
+);
 };
 
 export default Selection;

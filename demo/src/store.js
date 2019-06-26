@@ -7,6 +7,7 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
+import { isUndefined } from '../../src/utils';
 
 const requestHandlers = { api, request };
 
@@ -25,7 +26,7 @@ const _prepareReducers = function(reducers) {
 };
 
 const prepareEpics = ( epics ) => {
-    if( undefined === epics || epics.length == 0 ) {
+    if( isUndefined(epics) || epics.length == 0 ) {
         return false;
     }
 
@@ -36,6 +37,7 @@ const prepareEpics = ( epics ) => {
 }
 
 const configureStore = ( config ) => {
+    const { reducers = {} } = config;
     let middlewares = [thunk];
 
     const logger = createLogger({ diff: true, duration: true, collapsed: true });
@@ -47,16 +49,11 @@ const configureStore = ( config ) => {
         middlewares.push(epicMiddleware);
     }
 
-    if(!config.reducers) {
-        config.reducers = {};
-    }
-    config.reducers.notifications = notificationReducer;
+    reducers.notifications = notificationReducer;
 
-    const reducers = _prepareReducers(config.reducers);
-
-    const rootReducer = combineReducers(reducers);
+    const rootReducer = combineReducers(_prepareReducers(reducers));
     const appliedMiddlewares = applyMiddleware(...middlewares);
-    const enhancers = compose(appliedMiddlewares)
+    const enhancers = compose(appliedMiddlewares);
 
     const store = createStore(rootReducer, enhancers);
 
@@ -75,6 +72,6 @@ const configureLogger = () => {
     });
 
     return loggerMiddleware;
-}
+};
 
 export default configureStore;

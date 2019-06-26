@@ -15,7 +15,7 @@ const withScrollSpy = WrappedComponent => (props) => {
     const handleScroll = (event) => {
         _.map(scrollerMap, (ref, key, index) => (
             ref.current.scrollLeft = event.target.scrollLeft
-        ))
+        ));
 
         if (height && event.target.scrollTop !== scrollData.top) {
             setScrollData({ top: event.target.scrollTop, pointerEvents: 'none' });
@@ -40,6 +40,6 @@ const withScrollSpy = WrappedComponent => (props) => {
     }, [ handleScroll ]);
 
     return <WrappedComponent ref={ ref } { ...scrollData } { ...props } />;
-}
+};
 
 export default withScrollSpy;

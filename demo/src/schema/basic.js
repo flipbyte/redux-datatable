@@ -106,7 +106,7 @@ export default {
                 thunk: ( config ) => ( dispatch, getState ) => {
                     // Get current table state.
                     const tableState = getState()[config.reducerName][config.name];
-                    console.log(config, tableState);
+                    // console.log(config, tableState);
                     console.log(getItemIds(tableState.selection, tableState.items, config.primaryKey/*, config.entity.schema*/));
                     confirm('Are your sure you want to delete the selected items?')
                         ? console.log('delete items', config, getState(), tableState)
@@ -314,7 +314,7 @@ export default {
             }, {
                 label: 'Actions',
                 type: 'actions',
-                name: 'actions',
+                // name: 'actions',
                 width: 130,
                 name: 'pageId',
                 items: [{
@@ -344,4 +344,4 @@ export default {
             }]
         }
     }
-}
+};

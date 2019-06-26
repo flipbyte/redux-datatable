@@ -11,9 +11,7 @@ const create = ( config = {} ) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        paramsSerializer: function(params) {
-            return qs.stringify(params)
-        }
+        paramsSerializer: (params) => qs.stringify(params)
     };
 
     let instance = Axios.create(_.merge(defaults, config));
@@ -31,7 +29,7 @@ const create = ( config = {} ) => {
     );
 
     return instance;
-}
+};
 
 export const api = create({ baseURL: 'https://reqres.in/api' });
 export const request = create();

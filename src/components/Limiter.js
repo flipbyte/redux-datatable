@@ -15,7 +15,7 @@ const Limiter = ({
         config: { reducerName, name }
     } = useContext(ConfigContext);
     const query = useSelector(getData((tableData) => tableData.query));
-    const { limit } = calculatePaginationProps(query, defaultLimit)
+    const { limit } = calculatePaginationProps(query, defaultLimit);
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
         <Label className="rdt-limiter-label" flex noWrap styles={ styles }>

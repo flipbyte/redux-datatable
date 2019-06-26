@@ -15,6 +15,6 @@ const Table = ({ children }) => {
             { children }
         </StyledTable>
     );
-}
+};
 
 export default Table;

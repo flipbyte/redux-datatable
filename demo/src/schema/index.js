@@ -14,4 +14,4 @@ export default [
         className: 'mb-4',
         config: basic
     }
-]
+];
