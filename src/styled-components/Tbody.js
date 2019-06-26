@@ -14,7 +14,7 @@ const Tbody = React.forwardRef(({
 }, ref) => (
     <div className={ className } style={ style } ref={ ref }>
         <Loader />
-        <div style={{ width, height: innerHeight, position: 'relative' }}>
+        <div style={{ height: innerHeight, position: 'relative' }}>
             { endIndex - startIndex > 0 && Array(endIndex - startIndex).fill().map((item, index) => {
                 let currentIndex = startIndex + index;
                 return children(currentIndex, currentIndex * rowHeight);

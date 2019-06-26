@@ -67,7 +67,6 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
 
     const itemCount = useSelector(getData(tableData => (tableData.items || []).length));
     const isPrinting = useSelector(getData(tableData => !!tableData.isPrinting));
-    const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
 
     const updateTableDimensions = () => {
         action(SET_BODY_INNER_WIDTH)({
@@ -114,7 +113,6 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
             visibleHeight={ visibleHeight }
             innerHeight={ innerHeight }
             range={ range }
-            width={ width }
             rowHeight={ rowHeight }
         >
             { renderRow.bind(this, columns, rowHeight, styles, primaryKey, schema) }

@@ -14,7 +14,7 @@ const Td = ({ className, style, children, colIndex, onClick }) => {
     )));
 
     return isVisible && (
-        <div className={ className } style={{ maxWidth: width }} onClick={ onClick && onClick }>
+        <div className={ className } style={{ maxWidth: width, width }} onClick={ onClick && onClick }>
             { children }
         </div>
     );
