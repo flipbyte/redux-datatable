@@ -12,3 +12,4 @@ export Spacer from './Spacer';
 export Header from './Header';
 export Body from './Body';
 export Filters from './Filters';
+export Loader from './Loader';

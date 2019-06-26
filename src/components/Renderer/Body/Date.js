@@ -1,21 +1,18 @@
-import _ from 'lodash';
 import Time, { format as formatDate } from 'react-pure-time';
 import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
+import withData from '../../../hoc/withData';
 
 const Date = ({
-    data,
-    index,
     isEditing,
     handleChange,
     isModified,
-    modifiedValue,
     value = '',
-    colConfig: { name, textAlign, format, editable }
+    colConfig: { name, textAlign, format }
 }) => (
     <Fragment>
-        { (!editable || !isEditing) && <Time value={ value } format={ format ? format : 'F j, Y, g:i a' } /> }
-        { !!editable && isEditing && (
+        { !isEditing && <Time value={ value } format={ format ? format : 'F j, Y, g:i a' } /> }
+        { isEditing && (
             <Row padding="0 0 5px">
                 <Field.Input
                     type="date"
@@ -31,4 +28,4 @@ const Date = ({
     </Fragment>
 );
 
-export default Date;
+export default withData(Date);

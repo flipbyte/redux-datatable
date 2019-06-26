@@ -1,6 +1,6 @@
 {
     "name": "@flipbyte/redux-datatable",
-    "version": "0.6.4",
+    "version": "0.7.0",
     "description": "React-Redux data table",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -27,7 +27,8 @@
         "prop-types": "^15.6.2",
         "react-redux": "^7.1.0",
         "redux": "^4.0.1",
-        "styled-components": "^4.2.0",
+        "reselect": "^4.0.0",
+        "styled-components": "^4.3.2",
         "redux-observable": "^1.1.0",
         "redux-thunk": "^2.3.0"
     },
@@ -52,8 +53,9 @@
         "redux-logger": "^3.0.6",
         "redux-observable": "^1.1.0",
         "redux-thunk": "^2.3.0",
+        "reselect": "^4.0.0",
         "rxjs": "^6.4.0",
-        "styled-components": "^4.2.0"
+        "styled-components": "^4.3.2"
     },
     "author": "",
     "homepage": "",

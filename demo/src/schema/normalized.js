@@ -1,7 +1,8 @@
 import React from 'react';
-import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
+import { MODIFY_DATA, REQUEST_DATA, SET_IS_LOADING } from '../../../src/actions';
 import { getItemIds } from '../../../src/utils';
 import { normalize, schema } from 'normalizr';
+import { createSelector } from 'reselect';
 
 const tableSchema = ( entityName, idAttributeName, definition = {}) => {
     const rowSchema = new schema.Entity(entityName, definition, {
@@ -15,6 +16,13 @@ const tableSchema = ( entityName, idAttributeName, definition = {}) => {
         responseSchema: responseSchema
     }
 };
+
+const pageSelector = (id) => createSelector(
+    state => state.pages,
+    (pages) => {
+        return pages[id]
+    }
+);
 
 export default {
     name: 'pages',
@@ -38,7 +46,15 @@ export default {
     entity: {
         state: 'pages',
         responseSchema: tableSchema('pages', 'pageId').responseSchema,
-        schema: tableSchema('pages', 'pageId').rowSchema
+        schema: tableSchema('pages', 'pageId').rowSchema,
+        selectors: {
+            default: pageSelector,
+            // author: (id) => createSelector(
+            //     pageSelector(id),
+            //     state => state.authors,
+            //     (page, authors) => authors[page.author]
+            // )
+        },
     },
     layout: [
         ['Editable'],
@@ -149,9 +165,9 @@ export default {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar button click', config, tableState);
                 config.action(REQUEST_DATA)();
-                config.action(IS_LOADING)({ value: true });
+                config.action(SET_IS_LOADING)({ value: true });
                 setTimeout(function() {
-                    config.action(IS_LOADING)({ value: false });
+                    config.action(SET_IS_LOADING)({ value: false });
                 }, 1000);
             },
             // styles: {
@@ -196,7 +212,7 @@ export default {
         },
         Limiter: {
             type: 'limiter',
-            options: [10, 20, 50, 200, 2000, 0],
+            options: [10, 20, 50, 100, 150, 200, 500, 1000, 2000, 5000, 10000, 0],
             default: 200,
             // styles: {}
         },
@@ -238,13 +254,11 @@ export default {
                 // },
             },
             columns: [{
-                name: 'ids',
+                name: 'pageId',
                 label: '',
                 sortable: false,
                 type: 'selection',
-                // indexField: '@pageId',
-                width: 50,
-                extraData: 'selection',
+                width: 50
             },  {
                 label: 'ID',
                 type: 'number',
@@ -254,6 +268,30 @@ export default {
                 sortable: true,
                 // editable: true
             }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
                 label: "Status",
                 type: "options",
                 name: "entityData.data.status",
@@ -299,15 +337,13 @@ export default {
                 label: 'Actions',
                 type: 'actions',
                 name: 'actions',
+                name: 'pageId',
                 width: 100,
                 items: [{
                     type: 'action',
                     name: 'edit',
                     label: 'Edit',
                     htmlClass: 'btn btn-secondary',
-                    params: {
-                        id: '@id',
-                    },
                     thunk: ( config ) => ( dispatch, getState ) => {
                         console.log('edit', config, getState());
                     }
@@ -316,9 +352,6 @@ export default {
                     name: 'delete',
                     label: 'Delete',
                     icon: 'trash-alt',
-                    params: {
-                        id: '@id'
-                    },
                     styles: {
                         backgroundColor: 'red',
                         color: 'white'

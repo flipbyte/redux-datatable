@@ -1,20 +1,17 @@
-import _ from 'lodash';
 import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
+import withData from '../../../hoc/withData';
 
 const Text = ({
-    data,
-    index,
     isEditing,
     handleChange,
     isModified,
-    modifiedValue,
     value = '',
     colConfig: { name, editable }
 }) => (
     <Fragment>
-        { (!editable || !isEditing) && value }
-        { !!editable && isEditing && (
+        { !isEditing && value }
+        { isEditing && (
             <Row padding="0 0 5px">
                 <Field.Input
                     type="text"
@@ -30,4 +27,4 @@ const Text = ({
     </Fragment>
 );
 
-export default Text;
+export default withData(Text);

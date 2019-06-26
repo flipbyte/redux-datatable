@@ -1,5 +1,5 @@
 import React from 'react';
-import { MODIFY_DATA, REQUEST_DATA, IS_LOADING } from '../../../src/actions';
+import { MODIFY_DATA, REQUEST_DATA, SET_IS_LOADING } from '../../../src/actions';
 import { getItemIds } from '../../../src/utils';
 
 export default {
@@ -125,14 +125,13 @@ export default {
         SimpleButton: {
             type: 'button',
             label: 'Simple Button',
-            state: false,
             thunk: ( config ) => ( dispatch, getState ) => {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar button click', config, tableState);
                 config.action(REQUEST_DATA)();
-                config.action(IS_LOADING)({ value: true });
+                config.action(SET_IS_LOADING)({ value: true });
                 setTimeout(function() {
-                    config.action(IS_LOADING)({ value: false });
+                    config.action(SET_IS_LOADING)({ value: false });
                 }, 1000);
             },
             // styles: {
@@ -143,7 +142,6 @@ export default {
         ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
-            state: false,
             // styles: {
             //     backgroundColor: 'red',
             //     color: 'white'
@@ -152,7 +150,6 @@ export default {
         Print: {
             type: 'print',
             label: 'Print Table',
-            state: false,
             // styles: {
             //     backgroundColor: 'yellow',
             // }
@@ -161,8 +158,6 @@ export default {
             name: 'columns',
             type: 'columns',
             label: 'Columns',
-            visible: true,
-            state: false,
             // styles: {
             //     button: {
             //         backgroundColor: '#aaa'
@@ -177,7 +172,7 @@ export default {
         },
         Limiter: {
             type: 'limiter',
-            options: [10, 20, 50, 200, 2000, 0],
+            options: [10, 20, 50, 100, 150, 200, 500, 1000, 2000, 5000, 10000, 0],
             default: 200,
             // styles: {}
         },
@@ -219,7 +214,7 @@ export default {
                 // },
             },
             columns: [{
-                name: 'ids',
+                name: 'pageId',
                 label: '',
                 sortable: false,
                 type: 'selection',
@@ -235,6 +230,46 @@ export default {
                 sortable: true,
                 // editable: true
             }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            }, {
+                label: 'ID',
+                type: 'number',
+                name: 'pageId',
+                width: 150,
+                filterable: true,
+                sortable: true,
+                // editable: true
+            },{
                 label: "Status",
                 type: "options",
                 name: "entityData.data.status",
@@ -280,15 +315,13 @@ export default {
                 label: 'Actions',
                 type: 'actions',
                 name: 'actions',
-                width: 100,
+                width: 130,
+                name: 'pageId',
                 items: [{
                     type: 'action',
                     name: 'edit',
                     label: 'Edit',
                     htmlClass: 'btn btn-secondary',
-                    params: {
-                        id: '@id',
-                    },
                     thunk: ( config ) => ( dispatch, getState ) => {
                         console.log('edit', config, getState());
                     }
@@ -297,9 +330,6 @@ export default {
                     name: 'delete',
                     label: 'Delete',
                     icon: 'trash-alt',
-                    params: {
-                        id: '@id'
-                    },
                     styles: {
                         backgroundColor: 'red',
                         color: 'white'

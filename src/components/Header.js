@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { Tr, Th, Thead } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';
 import { Header as Renderers } from './Renderer';
 import { SET_SORT } from '../actions';
+import withScrollSpy from '../hoc/withScrollSpy';
+import ConfigContext from '../context';
 
 const changeSortOrder = ( query, colName, sorter ) => {
     let dir = null;
@@ -22,66 +25,58 @@ const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 };
 
-const Header = ({
-    columns,
-    action,
-    query = {},
-    selection,
-    children,
-    scrollData: { left },
-    styles = {},
-    primaryKey,
-    tableWidth: { width = '100%', widthAdjustment = 1 }
-}) => (
-    <Thead styles={ getStyles(styles, 'thead') }>
-        <div style={{ width }}>
-            <Tr className="rdt-table-row" columns={ columns } left={ left }  styles={ getStyles(styles.tr, 'header') }>
-                {(config, index) => {
-                    const { sortable, width, textAlign, name, type, ...rest } = config;
-                    const { sort, dir } = query;
-                    const Component = getRenderer(config, Renderers);
-                    return (
-                        <Th
-                            key={ index }
-                            className={ `rdt-th ${name} ${type}` }
-                            sortable={ sortable }
-                            width={ width * widthAdjustment }
-                            textAlign={ textAlign }
-                            styles={ styles.th }
-                            onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
-                        >
-                            { Component && (
-                                <Component
-                                    name={ name }
-                                    sortable={ sortable }
-                                    sort={ sort }
-                                    dir={ dir }
-                                    selection={ selection }
-                                    primaryKey={ primaryKey }
-                                    action={ action }
-                                    { ...rest }
-                                />
-                            )}
-                        </Th>
-                    );
-                }}
-            </Tr>
-        </div>
-    </Thead>
-);
+const Header = React.forwardRef(({ children }, ref) => {
+    const {
+        action,
+        columns,
+        config: {
+            primaryKey,
+            components: {
+                Table: { styles }
+            }
+        },
+        getData
+    } = useContext(ConfigContext);
 
-Header.mapPropsToComponent = ({
-    visibleColumns,
-    action,
-    tableData: { query, selection },
-    width: [ tableWidth ],
-    scroller: [ scrollData ],
-    config: {
-        primaryKey,
-        components: {
-            Table: { styles }
-        }
-    }
-}) => ({ columns: visibleColumns, action, query, tableWidth, scrollData, selection, styles, primaryKey });
+    const query = useSelector(getData(tableData => tableData.query || {}));
+    const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
 
-export default Header;
+    return (
+        <Thead styles={ getStyles(styles, 'thead') } ref={ ref }>
+            <div style={{ width }}>
+                <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'header') }>
+                    {(config, index) => {
+                        const { sortable, textAlign, name, type, ...rest } = config;
+                        const { sort, dir } = query;
+                        const Component = getRenderer(config, Renderers);
+                        return (
+                            <Th
+                                key={ index }
+                                colIndex={ index }
+                                className={ `rdt-th ${name} ${type}` }
+                                sortable={ sortable }
+                                textAlign={ textAlign }
+                                styles={ styles.th }
+                                onClick={ sortable ? changeSortOrder.bind(this, query, name, action(SET_SORT)) : null }
+                            >
+                                { Component && (
+                                    <Component
+                                        name={ name }
+                                        sortable={ sortable }
+                                        sort={ sort }
+                                        dir={ dir }
+                                        primaryKey={ primaryKey }
+                                        action={ action }
+                                        { ...rest }
+                                    />
+                                )}
+                            </Th>
+                        );
+                    }}
+                </Tr>
+            </div>
+        </Thead>
+    );
+});
+
+export default withScrollSpy(Header);

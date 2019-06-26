@@ -1,69 +1,21 @@
 import qs from 'query-string';
 import _ from 'lodash';
-import { denormalize } from 'normalizr';
-
-export const defaultLimiterCongig = {
-    options: [10, 20, 50, 100, 200],
-    default: 10,
-};
+// import { denormalize } from 'normalizr';
 
 export const isArray = (value) => Array.isArray(value);
 export const isObject = (value) => typeof value === 'object';
 export const isUndefined = (value) => typeof value === 'undefined';
-export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
+// export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
 export const toPascalCase = (str) => _.chain(str).camelCase().upperFirst().value();
 
-export const getSelectedKeys = (data, dataKey) => {
-    const { [dataKey]: dataForFilter } = data;
-    if (dataForFilter) {
-        return false;
-    }
-
-    let selectedItems = {
-        [dataKey]: Object.keys(dataForFilter).filter((key) => {
-            const { [key]: value } = dataForFilter;
-            return value === true;
-        })
-    };
-
-    const paramsObject = Object.assign({}, selectedItems);
-    paramsObject.get = () => selectedItems;
-    paramsObject.toString = () => qs.stringify(selectedItems);
-    return paramsObject;
-};
-
-export const getParam = (dataKey, data) => {
-    if (!dataKey) {
-        return false;
-    }
-
-    const { [dataKey]: paramData } = data;
-    return paramData || false;
-};
-
-export const paramsResolver = (params, data) => {
-    let processedParams = {};
-    for (var key in params) {
-        if (params.hasOwnProperty(key)) {
-            const { [key]: param } = params;
-            let resolvedParam = getParam(param, data);
-            if (false === resolvedParam) {
-                continue;
-            }
-
-            processedParams = {
-                ...processedParams,
-                [key]: resolvedParam
-            };
-        }
-    }
-
-    const paramsObject = Object.assign({}, processedParams);
-    paramsObject.get = () => processedParams;
-    paramsObject.toString = () => qs.stringify(processedParams);
-
-    return paramsObject;
-};
+// export const getParam = (dataKey, data) => {
+//     if (!dataKey) {
+//         return false;
+//     }
+//
+//     const { [dataKey]: paramData } = data;
+//     return paramData || false;
+// };
 
 export const createActionCreator = (type) => (data) => {
     const { name, reducerName, routes, entity, payload } = data;
@@ -73,13 +25,10 @@ export const createActionCreator = (type) => (data) => {
     return action;
 };
 
-export const createReducer = (reducer, predicate) => (state, action) => (
-    predicate(action) || typeof state === 'undefined' ? reducer(state, action) : state
-);
 
-export const prepareActionPayload = ({ name, reducerName, routes, entity }) => (payload = {}) => ({
-    name, reducerName, routes, entity, payload
-});
+export const uuid = (a) => {
+    return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b)
+}
 
 export const getStyles = (styles = {}, name) => {
     const { [name]: style } = styles;
@@ -95,30 +44,11 @@ export const getExtendedStyles = (name) => ({ styles = {} }) => {
     return style;
 };
 
-export const getExtraBodyRowProps = (data, columns) => (
-    columns.reduce((result = {}, { name, extraData }) => {
-        result[name] = extraData
-            ? isArray(extraData)
-                ? extraData.reduce((edResult, dataKey) => {
-                    if(isArray(dataKey)) {
-                        edResult[dataKey[1] || dataKey[0]] = _.get(data, dataKey[0]);
-                    } else {
-                        edResult[dataKey] = _.get(data, dataKey);
-                    }
-
-                    return edResult;
-                }, {})
-                : { [extraData]: _.get(data, extraData) }
-            : {};
-        return result;
-    }, {})
-);
-
-export const calculateWidth = ( columns, adjustment = 1 ) => (
+export const calculateWidth = _.memoize(( columns, adjustment = 1 ) => (
     columns.reduce((result, column) => (
         result + ((column.width * adjustment) || 0)
     ), 0)
-);
+));
 
 export const getInitialVisibleColumns = ( columns = [] ) => (
     columns.reduce((visibleColumnIndexes, column, index) => {
@@ -129,14 +59,6 @@ export const getInitialVisibleColumns = ( columns = [] ) => (
         return visibleColumnIndexes;
     }, [])
 );
-
-export const prepareData = ( item, schema, state ) => {
-    if (_.isEmpty(schema) || _.isObject(item)) {
-        return item;
-    }
-
-    return denormalize(item, schema, state);
-};
 
 export const getItemIds = (selection, items, primaryKey, schema) => (
     selection.all === true
@@ -157,7 +79,7 @@ export const getItemIds = (selection, items, primaryKey, schema) => (
         }, [])
 )
 
-export const calculatePaginationProps = (
+export const calculatePaginationProps = _.memoize((
     query = {},
     defaultLimit = 10
 ) => {
@@ -176,7 +98,16 @@ export const calculatePaginationProps = (
         limit,
         total: limit > 0 ? Math.ceil(count / limit) : 1
     };
-};
+});
+
+export const getVisibleColumns = _.memoize(
+    (visibleColumnIds, columns) => (
+        visibleColumnIds.reduce((result, currentIndex) => {
+            const { [currentIndex]: column } = columns;
+            return [ ...result, column ];
+        }, [])
+    )
+);
 
 export const getRenderer = ( config, Renderers ) => {
     if (config.renderer && _.isFuntion(config.renderer)) {
@@ -190,3 +121,10 @@ export const getRenderer = ( config, Renderers ) => {
 
     return Renderers.default;
 };
+
+export const prepareActionPayload = ({
+    reducerName,
+    config: { name, routes, entity, primaryKey }
+}, action) => (
+    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action, primaryKey })
+);

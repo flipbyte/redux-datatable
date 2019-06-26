@@ -2,17 +2,16 @@ import _ from 'lodash';
 import Time from 'react-pure-time';
 import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
+import withData from '../../../hoc/withData';
 
 const Options = ({
-    data,
     isEditing,
     handleChange,
     isModified,
-    modifiedValue,
     value = '',
-    colConfig: { name, options, editable }
+    colConfig: { name, options }
 }) => {
-    if (!editable || !isEditing) {
+    if (!isEditing) {
         if(!options || !options[value]) {
             return <Fragment>{ value }</Fragment>;
         }
@@ -24,7 +23,7 @@ const Options = ({
         );
     }
 
-    return !!editable && isEditing && (
+    return isEditing && (
         <Row padding="0 0 5px">
             <Field.Select
                 name={ name }
@@ -42,4 +41,4 @@ const Options = ({
     );
 };
 
-export default Options;
+export default withData(Options);

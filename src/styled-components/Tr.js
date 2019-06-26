@@ -14,7 +14,7 @@ const StyledTr = styled(Tr).attrs(({ top, left }) => ({
     style: { top, left }
 })) `
     display: flex;
-    width: 100%;
+    width: auto;
     padding: 0;
     height: auto;
     position: relative;
@@ -22,4 +22,4 @@ const StyledTr = styled(Tr).attrs(({ top, left }) => ({
     position: ${props => props.position || 'relative'};
 `;
 const ExtendedStyledTr = styled(StyledTr)(getExtendedStyles());
-export default ExtendedStyledTr;
+export default React.memo(ExtendedStyledTr);

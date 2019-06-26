@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button as StyledButton } from '../styled-components';
+import ConfigContext from '../context';
 
-const Button = ({ config, thunk }) => {
+const Button = ({ config }) => {
+    const { thunk } = useContext(ConfigContext);
     const { thunk: cb, label, name, styles = {} } = config;
     return (
         <StyledButton
@@ -13,7 +15,5 @@ const Button = ({ config, thunk }) => {
         </StyledButton>
     );
 };
-
-Button.mapPropsToComponent = ({ thunk }) => ({ thunk });
 
 export default Button;

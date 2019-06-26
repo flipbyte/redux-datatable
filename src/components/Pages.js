@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { SET_PAGE } from '../actions';
 import styled from 'styled-components';
 import { Button } from '../styled-components';
-import { getExtendedStyles } from '../utils';
+import { getExtendedStyles, calculatePaginationProps } from '../utils';
+import ConfigContext from '../context';
 
 export const List = styled.div `
     display: inline-flex;
@@ -32,14 +34,19 @@ const getPages = ( currentPage = 1, total = 0 ) => {
 };
 
 const Pages = ({
-    page,
-    total,
-    action,
     config: {
         styles = {}
     }
 }) => {
-    const setPage = ( page ) =>  action(SET_PAGE)({ page });
+    const {
+        action,
+        getData,
+        defaultLimit,
+        config: { reducerName, name }
+    } = useContext(ConfigContext);
+    const query = useSelector(getData((tableData) => tableData.query));
+    const { page, total } = calculatePaginationProps(query, defaultLimit)
+    const setPage = ( page ) => action(SET_PAGE)({ page });
     return (
         <ExtendedList className="rdt-pg-list" styles={ styles.list }>
             <Button
@@ -86,10 +93,5 @@ const Pages = ({
         </ExtendedList>
     );
 };
-
-Pages.mapPropsToComponent = ({
-    paginationProps: { page, total },
-    action
-}) => ({ page, total, action });
 
 export default Pages;

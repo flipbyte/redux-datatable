@@ -5,6 +5,4 @@ const Spacer = styled.span `
     margin-right: auto;
 `;
 
-Spacer.mapPropsToComponent = () => ({});
-
 export default Spacer;
