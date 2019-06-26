@@ -59,6 +59,9 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             dir: 'asc',
             resultPath: {
                 data: 'data'
+            },
+            params: {
+                ...your_params_key_value_pair
             }
         },
         ...
@@ -326,6 +329,7 @@ const YourComponent = () =>
 | sort       | string | true     | -       | Your key to sort with                                                                                |
 | dir        | string | true     | -       | Sort by 'asc' or 'desc' order                                                                        |
 | resultPath | object | true     | -       | The keys object to your data. Required { data: '{your data path in json response. Ex: result.data}'} |
+| params     | object | false    | -       | Key-value pairs of additional params that you want to pass to the request                            |
 
 #### Components object
 
