@@ -26,4 +26,4 @@ const withModal = WrappedComponent => (
     }
 );
 
-export default withModal
+export default withModal;
