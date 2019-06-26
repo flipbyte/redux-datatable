@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { render } from 'react-dom';
 import tables from './schema';
 import ExampleTableContainer from './ExampleTableContainer';

@@ -7,8 +7,8 @@ module.exports = {
             externals: {
                 react: 'React',
                 lodash: '_',
-                "redux-observable": 'ReduxObservable',
-                "redux-thunk": 'ReduxThunk'
+                'redux-observable': 'ReduxObservable',
+                'redux-thunk': 'ReduxThunk'
             }
         }
     }

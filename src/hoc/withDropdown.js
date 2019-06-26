@@ -52,7 +52,7 @@ const withDropdown = WrappedComponent => (
         render() {
             return (
                 <WrappedComponent ref={ this.ref } toggle={ this.toggle } open={ this.state.open } { ...this.props } />
-            )
+            );
         }
     }
 );

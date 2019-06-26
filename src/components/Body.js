@@ -117,7 +117,7 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
         >
             { renderRow.bind(this, columns, rowHeight, styles, primaryKey, schema) }
         </Tbody>
-    )
+    );
 });
 
 export default withScrollSpy(Body);

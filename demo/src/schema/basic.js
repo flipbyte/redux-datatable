@@ -107,7 +107,7 @@ export default {
                     // Get current table state.
                     const tableState = getState()[config.reducerName][config.name];
                     console.log(config, tableState);
-                    console.log(getItemIds(tableState.selection, tableState.items, config.primaryKey/*, config.entity.schema*/))
+                    console.log(getItemIds(tableState.selection, tableState.items, config.primaryKey/*, config.entity.schema*/));
                     confirm('Are your sure you want to delete the selected items?')
                         ? console.log('delete items', config, getState(), tableState)
                         : console.log(false);
@@ -270,31 +270,31 @@ export default {
                 sortable: true,
                 // editable: true
             },{
-                label: "Status",
-                type: "options",
-                name: "entityData.data.status",
+                label: 'Status',
+                type: 'options',
+                name: 'entityData.data.status',
                 sortable: true,
                 filterable: true,
-                textAlign: "center",
+                textAlign: 'center',
                 width: 150,
                 options: {
-                    "published": {
-                        "label": "Published"
+                    published: {
+                        'label': 'Published'
                     },
-                    "draft": {
-                        "label": "Draft"
+                    draft: {
+                        'label': 'Draft'
                     },
-                    "unpublished": {
-                        "label": "Unpublished"
+                    unpublished: {
+                        'label': 'Unpublished'
                     },
-                    "pending-review": {
-                        "label": "Pending Review"
+                    'pending-review': {
+                        'label': 'Pending Review'
                     },
-                    "trashed": {
-                        "label": "Trashed"
+                    trashed: {
+                        'label': 'Trashed'
                     },
-                    "archived": {
-                        "label": "Archived"
+                    archived: {
+                        'label': 'Archived'
                     }
                 },
                 editable: true

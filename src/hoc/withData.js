@@ -15,7 +15,7 @@ const withData = WrappedComponent => (props) => {
     const primarKeyValue = useSelector(getData(tableData => (
         !_.isEmpty(schema) ? tableData.items[itemIndex] : tableData.items[itemIndex][primaryKey]
     )));
-    const modifiedValue = useSelector(getData(tableData => _.get(tableData.modified, [primarKeyValue, name])), );
+    const modifiedValue = useSelector(getData(tableData => _.get(tableData.modified, [primarKeyValue, name])));
 
     const getItem = schema
         ? selector
@@ -52,6 +52,6 @@ const withData = WrappedComponent => (props) => {
             { ...props }
         />
     );
-}
+};
 
 export default withData;

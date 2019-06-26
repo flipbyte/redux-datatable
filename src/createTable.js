@@ -58,7 +58,7 @@ const ReduxDatatable = ( props ) => {
         action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
         action(SET_COLUMN_WIDTHS)(columns.reduce((acc, column) => {
             acc.push(column.width);
-            return acc
+            return acc;
         }, []));
     }, [ dispatch ]);
 

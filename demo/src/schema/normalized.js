@@ -292,31 +292,31 @@ export default {
                 sortable: true,
                 // editable: true
             },{
-                label: "Status",
-                type: "options",
-                name: "entityData.data.status",
+                label: 'Status',
+                type: 'options',
+                name: 'entityData.data.status',
                 sortable: true,
                 filterable: true,
-                textAlign: "center",
+                textAlign: 'center',
                 width: 150,
                 options: {
-                    "published": {
-                        "label": "Published"
+                    'published': {
+                        'label': 'Published'
                     },
-                    "draft": {
-                        "label": "Draft"
+                    'draft': {
+                        'label': 'Draft'
                     },
-                    "unpublished": {
-                        "label": "Unpublished"
+                    'unpublished': {
+                        'label': 'Unpublished'
                     },
-                    "pending-review": {
-                        "label": "Pending Review"
+                    'pending-review': {
+                        'label': 'Pending Review'
                     },
-                    "trashed": {
-                        "label": "Trashed"
+                    'trashed': {
+                        'label': 'Trashed'
                     },
-                    "archived": {
-                        "label": "Archived"
+                    'archived': {
+                        'label': 'Archived'
                     }
                 },
                 editable: true

@@ -45,7 +45,7 @@ const Pages = ({
         config: { reducerName, name }
     } = useContext(ConfigContext);
     const query = useSelector(getData((tableData) => tableData.query));
-    const { page, total } = calculatePaginationProps(query, defaultLimit)
+    const { page, total } = calculatePaginationProps(query, defaultLimit);
     const setPage = ( page ) => action(SET_PAGE)({ page });
     return (
         <ExtendedList className="rdt-pg-list" styles={ styles.list }>
