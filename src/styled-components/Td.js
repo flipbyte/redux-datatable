@@ -43,4 +43,4 @@ const StyledTd = styled(Td).attrs(({ width: maxWidth }) => ({
 `;
 
 const ExtendedTd = styled(StyledTd)(getExtendedStyles());
-export default ExtendedTd;
+export default React.memo(ExtendedTd);

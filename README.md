@@ -156,20 +156,17 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
         SimpleButton: {
             type: 'button',
             label: 'Simple Button',
-            state: false,
             thunk: ( config ) => ( dispatch, getState ) => { ... },
             styles: { ... }
         },
         ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
-            state: false,
             styles: { ... }
         },
         Print: {
             type: 'print',
             label: 'Print Table',
-            state: false,
             styles: { ... }
         },
         Columns: {
@@ -177,7 +174,6 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             type: 'columns',
             label: 'Columns',
             visible: true,
-            state: false,
             styles: {
                 button: { ... },
                 dropdownMenu: { ... },
@@ -208,7 +204,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
                 }
             },
             columns: [{
-                name: 'ids',
+                name: 'id',
                 label: '',
                 sortable: false,
                 type: 'selection',
@@ -268,9 +264,6 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
                     label: 'Edit',
                     btnClass: 'btn btn-secondary',
                     icon: 'edit',
-                    params: {
-                        id: '@id',
-                    },
                     thunk: ( payload ) => ( dispatch, getState ) => {
                         console.log('edit', payload, getState());
                     },
@@ -280,9 +273,6 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
                     name: 'delete',
                     label: 'Delete',
                     icon: 'trash-alt',
-                    params: {
-                        id: '@id'
-                    },
                     thunk: ( payload ) => ( dispatch, getState ) => {
                         confirm("Are your sure you want to delete this page?")
                             ? console.log('delete', getState())
@@ -316,7 +306,7 @@ const YourComponent = () =>
 
 | Key        | Type    | Required | Default | Description                                                                                      |
 | ---------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
-| name       | string  | true     | -       | A unique key where the data for the table is saved in the table state object                     |
+| name       | string  | true     | -       | key in the row data whose value needs to be loaded for the column (does not have to be unique)   |
 | height     | integer | true     | -       | The maximum height of the table                                                                  |
 | rowHeight  | integer | true     | -       | The maximum height of each table body row                                                        |
 | routes     | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
@@ -357,6 +347,7 @@ All the fields are required when entity is defined. However, entity key itself i
 | state          | object | true     | -       | Path to sub state in your top level redux state where the normalized data will be saved |
 | responseSchema | object | true     | -       | Define how the data is represented in your fetch data api response                      |
 | schema         | object | true     | -       | Define how the data is represented in each row item of the table fetch repsonse         |
+| selectors      | object | true     | -       | Add the selectors that will be used by columns to fetch respective data                 |
 
 Note: Check the [example](https://github.com/flipbyte/redux-datatable/blob/master/demo/src/schema/normalized.js) code.
 
@@ -454,19 +445,17 @@ Toggles the table between editable and non-editable and shows a save button when
 
 **_Properties_**
 
-| Key   | Type    | Required | Default | Description                           |
-| ----- | ------- | -------- | ------- | ------------------------------------- |
-| label | string  | required | -       | Label for the actions dropdown button |
-| state | boolean | false    | false   | Whether to pass state to this button  |
+| Key   | Type   | Required | Default | Description                           |
+| ----- | ------ | -------- | ------- | ------------------------------------- |
+| label | string | required | -       | Label for the actions dropdown button |
 
 ##### ResetFilters (type: reset-filters)
 
 **_Properties_**
 
-| Key   | Type    | Required | Default | Description                           |
-| ----- | ------- | -------- | ------- | ------------------------------------- |
-| label | string  | required | -       | Label for the actions dropdown button |
-| state | boolean | false    | false   | Whether to pass state to this button  |
+| Key   | Type   | Required | Default | Description                           |
+| ----- | ------ | -------- | ------- | ------------------------------------- |
+| label | string | required | -       | Label for the actions dropdown button |
 
 ##### Print (type: print)
 
@@ -474,10 +463,9 @@ Makes the table printable.
 
 **_Properties_**
 
-| Key   | Type    | Required | Default | Description                           |
-| ----- | ------- | -------- | ------- | ------------------------------------- |
-| label | string  | required | -       | Label for the actions dropdown button |
-| state | boolean | false    | false   | Whether to pass state to this button  |
+| Key   | Type   | Required | Default | Description                           |
+| ----- | ------ | -------- | ------- | ------------------------------------- |
+| label | string | required | -       | Label for the actions dropdown button |
 
 ##### Columns (type: columns)
 
@@ -485,10 +473,9 @@ Shows the columns toggling dropdown.
 
 **_Properties_**
 
-| Key   | Type    | Required | Default | Description                           |
-| ----- | ------- | -------- | ------- | ------------------------------------- |
-| label | string  | required | -       | Label for the actions dropdown button |
-| state | boolean | false    | false   | Whether to pass state to this button  |
+| Key   | Type   | Required | Default | Description                           |
+| ----- | ------ | -------- | ------- | ------------------------------------- |
+| label | string | required | -       | Label for the actions dropdown button |
 
 **_Styles object properties_**
 
@@ -513,25 +500,25 @@ Shows the columns toggling dropdown.
 
 **_Columns object properties_**
 
-| Key                             | Type         | Required | Default | Description                                                                                   |
-| ------------------------------- | ------------ | -------- | ------- | --------------------------------------------------------------------------------------------- |
-| name                            | string       | true     | -       | Unique name for the column                                                                    |
-| label                           | string       | true     | -       | Label for the column                                                                          |
-| sortable                        | boolean      | false    | true    | Whether the column is sortable                                                                |
-| filterable                      | boolean      | false    | true    | Whether the column is filterable                                                              |
-| editable                        | boolean      | false    | false   | When the table is set to be editable, set whether the respective column is among the editable |
-| visible                         | boolean      | false    | true    | Whether the column is visible on load                                                         |
-| type                            | string       | true     | string  | Available types: selection, number, date, string, image, options, actions                     |
-| width                           | integer      | true     | -       | Width of the column                                                                           |
-| extraData                       | string/array | false    | -       | properties from the state to pass as value in the extra object.                               |
-| textAlign                       | string       | false    | left    | Text alignment in the column                                                                  |
-| renderer                        | function     | false    | -       | Define a custom renderer for column body.                                                     |
-| **type: actions**               |              |          |         |                                                                                               |
-| items                           | array        | true     | -       | array of item configuration object                                                            |
-| **- item configuration object** |              |          |         |                                                                                               |
-| name                            | string       | true     | -       | Unique name for the action                                                                    |
-| label                           | string       | true     | -       | Label for the action                                                                          |
-| thunk                           | function     | true     | -       | An action creator which is dispatched on action click. Check demo schema.                     |
+| Key                             | Type     | Required | Default | Description                                                                                   |                                                                                                                                                      |
+| ------------------------------- | -------- | -------- | ------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name                            | string   | true     | -       | Unique name for the column                                                                    |                                                                                                                                                      |
+| label                           | string   | true     | -       | Label for the column                                                                          |                                                                                                                                                      |
+| sortable                        | boolean  | false    | true    | Whether the column is sortable                                                                |                                                                                                                                                      |
+| filterable                      | boolean  | false    | true    | Whether the column is filterable                                                              |                                                                                                                                                      |
+| editable                        | boolean  | false    | false   | When the table is set to be editable, set whether the respective column is among the editable |                                                                                                                                                      |
+| visible                         | boolean  | false    | true    | Whether the column is visible on load                                                         |                                                                                                                                                      |
+| type                            | string   | true     | string  | Available types: selection, number, date, string, image, options, actions                     |                                                                                                                                                      |
+| width                           | integer  | true     | -       | Width of the column                                                                           |                                                                                                                                                      |
+| textAlign                       | string   | false    | left    | Text alignment in the column                                                                  |                                                                                                                                                      |
+| renderer                        | function | false    | -       | Define a custom renderer for column body.                                                     |                                                                                                                                                      |
+| selector                        | string   | object   | false   | -                                                                                             | Define a custom selector to pick the value for the column from the state. When string is used, the selector should be defined under entity.selectors |
+| **type: actions**               |          |          |         |                                                                                               |                                                                                                                                                      |
+| items                           | array    | true     | -       | array of item configuration object                                                            |                                                                                                                                                      |
+| **- item configuration object** |          |          |         |                                                                                               |                                                                                                                                                      |
+| name                            | string   | true     | -       | Unique name for the action                                                                    |                                                                                                                                                      |
+| label                           | string   | true     | -       | Label for the action                                                                          |                                                                                                                                                      |
+| thunk                           | function | true     | -       | An action creator which is dispatched on action click. Check demo schema.                     |                                                                                                                                                      |
 
 **_Properties specific to column of type 'options'_**
 
@@ -577,9 +564,6 @@ Example:
     label: 'Edit',
     btnClass: 'btn btn-secondary',
     icon: 'edit',
-    params: {
-        id: '@id',
-    },
     thunk: ( payload ) => ( dispatch, getState ) => {
         console.log('edit', payload, getState());
     },

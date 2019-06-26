@@ -9,6 +9,43 @@ import withScrollSpy from '../hoc/withScrollSpy';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
 
+const renderCol = (rowIndex, primaryKey, schema, styles, column, index) => {
+    const { textAlign, name, type } = column;
+    const ColRenderer = getRenderer(column, Renderers);
+    return (
+        <Td
+            key={ index }
+            colIndex={ index }
+            className={ `rdt-table-col ${name} ${type}` }
+            styles={ getStyles(styles.td, 'body') }
+        >
+            <Div className="rdt-table-col-inner">
+                <ColRenderer
+                    itemIndex={ rowIndex }
+                    colConfig={ column }
+                    primaryKey={ primaryKey }
+                    schema={ schema }
+                />
+            </Div>
+        </Td>
+    )
+};
+
+const renderRow = (columns, rowHeight, styles, primaryKey, schema, rowIndex, top) => (
+    <Tr
+        key={ rowIndex }
+        className="rdt-table-row"
+        position="absolute"
+        top={ top }
+        columns={ columns }
+        height={ rowHeight }
+        even={ rowIndex % 2 === 0 }
+        styles={ getStyles(styles.tr, 'body') }
+    >
+        { renderCol.bind(this, rowIndex, primaryKey, schema, styles) }
+    </Tr>
+);
+
 const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
     const {
         columns,
@@ -80,40 +117,7 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
             width={ width }
             rowHeight={ rowHeight }
         >
-            {(rowIndex, top) => (
-                <Tr
-                    key={ rowIndex }
-                    className="rdt-table-row"
-                    position="absolute"
-                    top={ top }
-                    columns={ columns }
-                    height={ rowHeight }
-                    even={ rowIndex % 2 === 0 }
-                    styles={ getStyles(styles.tr, 'body') }
-                >
-                    {(column, index) => {
-                        const { textAlign, name, type } = column;
-                        const ColRenderer = getRenderer(column, Renderers);
-                        return (
-                            <Td
-                                key={ index }
-                                colIndex={ index }
-                                className={ `rdt-table-col ${name} ${type}` }
-                                styles={ getStyles(styles.td, 'body') }
-                            >
-                                <Div className="rdt-table-col-inner">
-                                    <ColRenderer
-                                        itemIndex={ rowIndex }
-                                        colConfig={ column }
-                                        primaryKey={ primaryKey }
-                                        schema={ schema }
-                                    />
-                                </Div>
-                            </Td>
-                        )
-                    }}
-                </Tr>
-            )}
+            { renderRow.bind(this, columns, rowHeight, styles, primaryKey, schema) }
         </Tbody>
     )
 });

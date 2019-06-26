@@ -214,7 +214,7 @@ export default {
                 // },
             },
             columns: [{
-                name: 'ids',
+                name: 'pageId',
                 label: '',
                 sortable: false,
                 type: 'selection',
@@ -316,14 +316,12 @@ export default {
                 type: 'actions',
                 name: 'actions',
                 width: 100,
+                name: 'pageId',
                 items: [{
                     type: 'action',
                     name: 'edit',
                     label: 'Edit',
                     htmlClass: 'btn btn-secondary',
-                    params: {
-                        id: '@id',
-                    },
                     thunk: ( config ) => ( dispatch, getState ) => {
                         console.log('edit', config, getState());
                     }
@@ -332,9 +330,6 @@ export default {
                     name: 'delete',
                     label: 'Delete',
                     icon: 'trash-alt',
-                    params: {
-                        id: '@id'
-                    },
                     styles: {
                         backgroundColor: 'red',
                         color: 'white'

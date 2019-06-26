@@ -26,7 +26,7 @@ const pageSelector = (id) => createSelector(
 
 export default {
     name: 'pages',
-    // height: 400,
+    height: 400,
     rowHeight: 50,
     editing: false,
     primaryKey: 'pageId',
@@ -258,9 +258,7 @@ export default {
                 label: '',
                 sortable: false,
                 type: 'selection',
-                // indexField: '@pageId',
-                width: 50,
-                extraData: 'selection',
+                width: 50
             },  {
                 label: 'ID',
                 type: 'number',
@@ -346,9 +344,6 @@ export default {
                     name: 'edit',
                     label: 'Edit',
                     htmlClass: 'btn btn-secondary',
-                    params: {
-                        id: '@id',
-                    },
                     thunk: ( config ) => ( dispatch, getState ) => {
                         console.log('edit', config, getState());
                     }
@@ -357,9 +352,6 @@ export default {
                     name: 'delete',
                     label: 'Delete',
                     icon: 'trash-alt',
-                    params: {
-                        id: '@id'
-                    },
                     styles: {
                         backgroundColor: 'red',
                         color: 'white'

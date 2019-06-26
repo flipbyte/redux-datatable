@@ -8,14 +8,14 @@ export const isUndefined = (value) => typeof value === 'undefined';
 // export const getUrl = (baseUrl, endpoint) =>  baseUrl + endpoint;
 export const toPascalCase = (str) => _.chain(str).camelCase().upperFirst().value();
 
-export const getParam = (dataKey, data) => {
-    if (!dataKey) {
-        return false;
-    }
-
-    const { [dataKey]: paramData } = data;
-    return paramData || false;
-};
+// export const getParam = (dataKey, data) => {
+//     if (!dataKey) {
+//         return false;
+//     }
+//
+//     const { [dataKey]: paramData } = data;
+//     return paramData || false;
+// };
 
 export const createActionCreator = (type) => (data) => {
     const { name, reducerName, routes, entity, payload } = data;
@@ -26,7 +26,9 @@ export const createActionCreator = (type) => (data) => {
 };
 
 
-// 50 150 150 150 150 250 200 100
+export const uuid = (a) => {
+    return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b)
+}
 
 export const getStyles = (styles = {}, name) => {
     const { [name]: style } = styles;

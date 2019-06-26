@@ -19,7 +19,9 @@ const withData = WrappedComponent => (props) => {
 
     const getItem = schema
         ? selector
-            ? selectors[selector](primarKeyValue)
+            ? _.isFunction(selector)
+                ? selector(primarKeyValue)
+                : selectors[selector](primarKeyValue)
             : selectors.default(primarKeyValue)
         : getData(tableData => tableData.items[itemIndex]);
 
