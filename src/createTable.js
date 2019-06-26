@@ -70,7 +70,6 @@ const ReduxDatatable = ( props ) => {
         defaultLimit: Limiter.default || 10,
         minWidth,
         reducerName,
-        getState: state => state,
         getData: (selector) => createSelector(
             state => state[reducerName][name] || {},
             selector // of the format (tableData) => {your reponse}
@@ -101,7 +100,7 @@ const ReduxDatatable = ( props ) => {
             componentConfig,
             type
         };
-    }
+    };
 
     const render = (layout) => (
         <Layout config={ layout } row={ Row }>
