@@ -4,7 +4,7 @@ import { Tr, Th, Thead } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';
 import { Header as Renderers } from './Renderer';
 import { SET_SORT } from '../actions';
-import withScrollSpy from '../hoc/withScrollSpy';
+import { withScrollSpy } from '../hoc';
 import ConfigContext from '../context';
 
 const changeSortOrder = ( query, colName, sorter ) => {
@@ -32,7 +32,7 @@ const Header = React.forwardRef(({ children }, ref) => {
         config: {
             primaryKey,
             components: {
-                Table: { styles }
+                Table: { styles = {} }
             }
         },
         getData

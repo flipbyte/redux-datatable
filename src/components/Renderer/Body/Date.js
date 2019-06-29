@@ -1,7 +1,7 @@
 import Time, { format as formatDate } from 'react-pure-time';
 import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const Date = ({
     isEditing,

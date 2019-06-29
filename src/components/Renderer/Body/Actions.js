@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '../../../styled-components';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const Actions = ({
     thunk,

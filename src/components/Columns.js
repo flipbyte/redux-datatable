@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import withDropdown from '../hoc/withDropdown';
+import { withDropdown } from '../hoc';
 import { Button, Dropdown } from '../styled-components';
 import ConfigContext from '../context';
 import { SET_VISIBLE_COLUMN_IDS } from '../actions';

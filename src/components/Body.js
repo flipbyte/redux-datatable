@@ -5,7 +5,7 @@ import { Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
 import { getStyles, getRenderer } from '../utils';
 import { MODIFY_DATA, SET_BODY_INNER_WIDTH } from '../actions';
-import withScrollSpy from '../hoc/withScrollSpy';
+import { withScrollSpy } from '../hoc';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
 

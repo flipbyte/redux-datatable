@@ -4,7 +4,7 @@ import { SET_SELECTION } from '../../../actions';
 import { Field } from '../../../styled-components';
 import ConfigContext from '../../../context';
 import { useSelector } from 'react-redux';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const handleSelection = ({ key, primaryKey, action }, event ) => {
     action(SET_SELECTION)({ paramKey: primaryKey, key, value: event.target.checked });

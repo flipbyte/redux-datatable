@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const Text = ({
     isEditing,
