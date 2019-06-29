@@ -14,7 +14,7 @@ const tableSchema = ( entityName, idAttributeName, definition = {}) => {
     return {
         rowSchema,
         responseSchema
-    }
+    };
 };
 
 const pageSelector = (id) => createSelector(

@@ -36,7 +36,7 @@ const withScrollSpy = WrappedComponent => (props) => {
             } else {
                 delete scrollerMap[id];
             }
-        }
+        };
     }, [ handleScroll ]);
 
     return <WrappedComponent ref={ ref } { ...scrollData } { ...props } />;
