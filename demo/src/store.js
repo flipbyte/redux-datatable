@@ -34,7 +34,7 @@ const prepareEpics = ( epics ) => {
     let dependencies = { ...requestHandlers };
 
     return { rootEpic, dependencies };
-}
+};
 
 const configureStore = ( config ) => {
     const { reducers = {} } = config;

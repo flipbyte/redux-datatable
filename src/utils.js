@@ -68,8 +68,10 @@ export const calculatePaginationProps = _.memoize((
     defaultLimit = 10
 ) => {
     let { page, limit = 0, count = 0 } = query;
-    page = page > 1 ? page : 1;
-    limit = isUndefined(limit) !== true ? limit : defaultLimit;
+    if (page < 1) {
+        page = 1;
+    }
+    limit = limit || defaultLimit;
 
     let start = (page - 1) * limit;
     let end = start + limit - 1;
@@ -100,7 +102,7 @@ export const getRenderer = ( config, Renderers ) => {
 
     if (config.type) {
         const pcaseType = toPascalCase(config.type);
-        return !isUndefined(Renderers[pcaseType]) ? Renderers[pcaseType] : Renderers.default;
+        return Renderers[pcaseType] || Renderers.default;
     }
 
     return Renderers.default;

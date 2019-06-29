@@ -40,7 +40,7 @@ const calculateTableWidth = (columnWidths, clientWidth ) => {
     return {
         width: totalColWidth * widthAdjustment,
         widthAdjustment
-    }
+    };
 };
 
 const updateState = ( state, tableName ) => ( newState ) => {
@@ -137,7 +137,8 @@ export default function reducer(state = {}, action) {
         },
         [actions.SET_SELECTION]: () => {
             let selection = _.get(tableState, 'selection', {});
-            if (payload.type === SELECT_ALL) {
+
+            if (payload.type === SELECT_ALL || tableState.items.length === 1) {
                 selection.all = payload.value;
                 selection.selected = {};
             } else {
@@ -225,4 +226,4 @@ export default function reducer(state = {}, action) {
     }
 
     return state;
-};
+}

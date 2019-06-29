@@ -2,7 +2,7 @@ import _ from 'lodash';
 import Time from 'react-pure-time';
 import React, { Fragment } from 'react';
 import { Field, Row } from '../../../styled-components';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const Options = ({
     isEditing,

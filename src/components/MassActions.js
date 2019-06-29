@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import withDropdown from '../hoc/withDropdown';
+import { withDropdown } from '../hoc';
 import { Button, Dropdown } from '../styled-components';
 import ConfigContext from '../context';
 

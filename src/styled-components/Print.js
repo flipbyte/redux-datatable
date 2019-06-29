@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { getExtendedStyles } from '../utils';
-import withModal from '../hoc/withModal';
+import { withModal } from '../hoc';
 
 const Print = styled.div `
     position: absolute;

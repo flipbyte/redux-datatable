@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PrintButton from '../styled-components/Print';
-import withModal from '../hoc/withModal';
+import { withModal } from '../hoc';
 import { SET_IS_PRINTING } from '../actions';
 
 const Print = ({ action, children, ...rest }) => {

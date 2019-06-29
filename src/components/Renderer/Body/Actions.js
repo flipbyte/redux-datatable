@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { isUndefined } from '../../../utils';
 import { Button } from '../../../styled-components';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const Actions = ({
     thunk,
@@ -18,8 +17,8 @@ const Actions = ({
                     onClick={ cb && thunk.bind(this, cb, { item, value }) }
                     styles={ styles }
                 >
-                    { !isUndefined(icon) && <i className={ icon } /> }
-                    { !isUndefined(label) && label }
+                    { !!icon && <i className={ icon } /> }
+                    { !!label && label }
                 </Button>
             );
         })}

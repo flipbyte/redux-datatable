@@ -1,5 +1,5 @@
 import React from 'react';
-import withData from '../../../hoc/withData';
+import { withData } from '../../../hoc';
 
 const Image = ({
     value,

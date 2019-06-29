@@ -5,7 +5,7 @@ import { Tr, Td, Thead, Div } from '../styled-components';
 import { getStyles, getRenderer } from '../utils';
 import { Filters as Renderers } from './Renderer';
 import { SET_FILTER } from '../actions';
-import withScrollSpy from '../hoc/withScrollSpy';
+import { withScrollSpy } from '../hoc';
 import ConfigContext from '../context';
 
 const Filters = React.forwardRef(({ children }, ref) => {
@@ -14,7 +14,7 @@ const Filters = React.forwardRef(({ children }, ref) => {
         action,
         config: {
             components: {
-                Table: { styles }
+                Table: { styles = {} }
             }
         },
         getData

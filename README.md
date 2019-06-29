@@ -344,7 +344,7 @@ Please check the example table config object above.
 
 #### Entity array
 
-All the fields are required when entity is defined. However, entity key itself is optional in the table config.
+All the fields are required when entity is defined (data normalized). However, entity key itself is optional in the table config.
 
 | Key            | Type   | Required | Default | Description                                                                             |
 | -------------- | ------ | -------- | ------- | --------------------------------------------------------------------------------------- |
