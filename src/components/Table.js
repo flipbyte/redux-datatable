@@ -3,13 +3,8 @@ import { Table as StyledTable } from '../styled-components';
 import ConfigContext from '../context';
 
 const Table = ({ children }) => {
-    const {
-        config: {
-            components: {
-                Table: { styles }
-            }
-        }
-    } = useContext(ConfigContext);
+    const { config } = useContext(ConfigContext);
+    const { styles = {} } = config.components.Table;
     return (
         <StyledTable styles={ styles.table }>
             { children }
