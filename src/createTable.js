@@ -60,7 +60,9 @@ const ReduxDatatable = ( props ) => {
         action(SET_VISIBLE_COLUMN_IDS)({ ids: getInitialVisibleColumns(columns) });
         action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
         action(SET_COLUMN_WIDTHS)(columns.reduce((acc, column) => {
-            acc.push(column.width);
+            if (column.visible !== false) {
+                acc.push(column.width);
+            }
             return acc;
         }, []));
     }, [ dispatch ]);

@@ -33,7 +33,7 @@ let initialTableState = {
     }
 };
 
-const calculateTableWidth = (columnWidths, clientWidth ) => {
+const calculateTableWidth = (columnWidths, clientWidth) => {
     const totalColWidth = columnWidths.reduce((a, b) => a + b, 0);
     const innerWidth = totalColWidth > clientWidth ? totalColWidth : clientWidth;
     const widthAdjustment = innerWidth / totalColWidth;
