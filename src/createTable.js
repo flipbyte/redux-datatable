@@ -43,12 +43,15 @@ const ReduxDatatable = ( props ) => {
 
     const minWidth = calculateWidth(columns);
     const dispatch = useDispatch();
-    const preparePayload = prepareActionPayload(props, action);
+    const preparePayload = prepareActionPayload(props);
     const action = useCallback(
         ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
         [ dispatch ]
     );
-    const thunk = useCallback(( thunk, payload ) => dispatch(thunk(preparePayload(payload))), [ dispatch ]);
+    const thunk = useCallback(( thunk, payload ) => (
+        dispatch(thunk(preparePayload({ ...payload }), action)),
+        [ dispatch ]
+    ));
     const loadData = useCallback(() => {
         action(SET_PAGE)({ page: 1 });
         action(SET_LIMIT)({ limit: Limiter.default || 10 });
@@ -57,7 +60,9 @@ const ReduxDatatable = ( props ) => {
         action(SET_VISIBLE_COLUMN_IDS)({ ids: getInitialVisibleColumns(columns) });
         action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
         action(SET_COLUMN_WIDTHS)(columns.reduce((acc, column) => {
-            acc.push(column.width);
+            if (column.visible !== false) {
+                acc.push(column.width);
+            }
             return acc;
         }, []));
     }, [ dispatch ]);

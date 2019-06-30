@@ -159,13 +159,13 @@ export default {
             type: 'button',
             label: 'Simple Button',
             state: false,
-            thunk: ( config ) => ( dispatch, getState ) => {
+            thunk: ( config, action ) => ( dispatch, getState ) => {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar button click', config, tableState);
-                config.action(REQUEST_DATA)();
-                config.action(SET_IS_LOADING)({ value: true });
+                action(REQUEST_DATA)();
+                action(SET_IS_LOADING)({ value: true });
                 setTimeout(function() {
-                    config.action(SET_IS_LOADING)({ value: false });
+                    action(SET_IS_LOADING)({ value: false });
                 }, 1000);
             },
             // styles: {
@@ -258,12 +258,13 @@ export default {
                 type: 'selection',
                 width: 50
             },  {
-                label: 'ID',
+                label: 'ID 1',
                 type: 'number',
                 name: 'pageId',
                 width: 150,
                 filterable: true,
                 sortable: true,
+                visible: false,
                 // editable: true
             }, {
                 label: 'ID',
