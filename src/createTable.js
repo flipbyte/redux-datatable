@@ -43,12 +43,15 @@ const ReduxDatatable = ( props ) => {
 
     const minWidth = calculateWidth(columns);
     const dispatch = useDispatch();
-    const preparePayload = prepareActionPayload(props, action);
+    const preparePayload = prepareActionPayload(props);
     const action = useCallback(
         ( type ) => ( payload ) => dispatch(createActionCreator(type)(preparePayload(payload))),
         [ dispatch ]
     );
-    const thunk = useCallback(( thunk, payload ) => dispatch(thunk(preparePayload(payload))), [ dispatch ]);
+    const thunk = useCallback(( thunk, payload ) => (
+        dispatch(thunk(preparePayload({ ...payload }), action)),
+        [ dispatch ]
+    ));
     const loadData = useCallback(() => {
         action(SET_PAGE)({ page: 1 });
         action(SET_LIMIT)({ limit: Limiter.default || 10 });

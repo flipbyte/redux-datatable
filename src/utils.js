@@ -111,6 +111,6 @@ export const getRenderer = ( config, Renderers ) => {
 export const prepareActionPayload = ({
     reducerName,
     config: { name, routes, entity, primaryKey }
-}, action) => (
-    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, action, primaryKey })
+}) => (
+    ( payload = {} ) => ({ name, reducerName, routes, entity, payload, primaryKey })
 );
