@@ -17,17 +17,15 @@ export const List = styled.div `
 const ExtendedList = styled(List)(getExtendedStyles());
 
 const NUM_LINKS = 5;
-const fillRange = ( start, end ) => {
-    return Array(end - start + 1).fill().map((item, index) => start + index);
-};
+const fillRange = ( start, end ) => Array(end - start + 1).fill().map((item, index) => start + index);
 
 const getPages = ( currentPage = 1, total = 0 ) => {
     var padding = Math.floor(NUM_LINKS / 2);
     var left = (currentPage - padding < padding) ? 1 : currentPage - padding;
     var right = (left + NUM_LINKS - 1 > total) ? total : left + NUM_LINKS - 1;
 
-    left = (right === total) ?
-        (right - NUM_LINKS < 1) ? 1 : right - NUM_LINKS + 1
+    left = (right === total)
+        ? (right - NUM_LINKS < 1) ? 1 : right - NUM_LINKS + 1
         : left;
 
     return fillRange(left, right);

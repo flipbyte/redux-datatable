@@ -105,13 +105,27 @@ export default function reducer(state = {}, action) {
                 dir: payload.dir
             },
         }),
-        [actions.SET_LIMIT]: () => stateUpdater({
-            isFetching: true,
-            query: {
-                limit: parseInt(payload.limit, 10),
-                offset: (tableState.query.page - 1) * tableState.query.limit
-            },
-        }),
+        [actions.SET_LIMIT]: () => {
+            let maxPage = 1;
+            if (payload.limit > 0) {
+                maxPage = (tableState.query.count / payload.limit) || 1
+            }
+            const currentPage = tableState.query.page > maxPage ? maxPage : tableState.query.page;
+            const offset = (currentPage - 1) * payload.limit;
+
+            let page = 1;
+            if (payload.limit > 0) {
+                page = (offset / payload.limit) + 1;
+            }
+            return stateUpdater({
+                isFetching: true,
+                query: {
+                    limit: parseInt(payload.limit, 10),
+                    page,
+                    offset
+                },
+            })
+        },
         [actions.SET_FILTER]: () => {
             var updatedFilters = {};
             if (!payload.clear) {
