@@ -26,7 +26,7 @@ const _prepareReducers = function(reducers) {
 };
 
 const prepareEpics = ( epics ) => {
-    if( isUndefined(epics) || epics.length == 0 ) {
+    if( isUndefined(epics) || epics.length === 0 ) {
         return false;
     }
 
