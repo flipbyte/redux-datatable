@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { normalize } from 'normalizr';
 import { ofType } from 'redux-observable';
 import { Observable, of, pipe } from 'rxjs';
+import objectAssignDeep from 'object-assign-deep';
 import { concatMap, mergeMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
 import { createNotification, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_ERROR } from 'react-redux-notify';
 import {
@@ -42,10 +43,7 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
         const query = _.get(state$.value, [reducerName, name]).query;
 
         return api.get(routes.get.route, {
-            params: {
-                ...routes.get.params,
-                ...query
-            }
+            params: objectAssignDeep({}, routes.get.params, query)
         }).pipe(
             map((response) => {
                 if(entity) {
