@@ -71,7 +71,7 @@ export const calculatePaginationProps = _.memoize((
     if (page < 1) {
         page = 1;
     }
-    limit = limit || defaultLimit;
+    limit = isUndefined(limit) !== true ? limit : defaultLimit;
 
     let start = (page - 1) * limit;
     let end = start + limit - 1;
