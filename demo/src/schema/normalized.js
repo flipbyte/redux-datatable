@@ -158,7 +158,6 @@ export default {
         SimpleButton: {
             type: 'button',
             label: 'Simple Button',
-            state: false,
             thunk: ( config, action ) => ( dispatch, getState ) => {
                 const tableState = getState()[config.reducerName][config.name];
                 console.log('toolbar button click', config, tableState);
@@ -176,7 +175,6 @@ export default {
         ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
-            state: false,
             // styles: {
             //     backgroundColor: 'red',
             //     color: 'white'
@@ -185,7 +183,6 @@ export default {
         Print: {
             type: 'print',
             label: 'Print Table',
-            state: false,
             // styles: {
             //     backgroundColor: 'yellow',
             // }
@@ -195,7 +192,6 @@ export default {
             type: 'columns',
             label: 'Columns',
             visible: true,
-            state: false,
             // styles: {
             //     button: {
             //         backgroundColor: '#aaa'
