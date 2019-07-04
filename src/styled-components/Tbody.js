@@ -29,8 +29,8 @@ const StyledTbody = styled(Tbody).attrs(({ isPrinting, height }) => (
     width: 100%;
     margin-right: auto;
     margin-left: auto;
-    overflow-y: ${props => props.isPrinting || props.innerHeight === props.visibleHeight ? 'hidden': 'scroll'};
-    overflow-x: ${props => props.isPrinting ? 'hidden': 'scroll'};
+    overflow-y: ${props => props.isPrinting || props.innerHeight === props.height ? 'hidden': 'auto'};
+    overflow-x: ${props => props.isPrinting ? 'hidden': 'auto'};
     border-bottom: 1px solid #ddd;
 `;
 
