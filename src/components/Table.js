@@ -6,7 +6,7 @@ const Table = ({ children }) => {
     const { config } = useContext(ConfigContext);
     const { styles = {} } = config.components.Table;
     return (
-        <StyledTable styles={ styles.table }>
+        <StyledTable className="rdt-table" styles={ styles.table }>
             { children }
         </StyledTable>
     );

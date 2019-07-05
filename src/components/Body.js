@@ -106,6 +106,7 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
 
     return (
         <Tbody
+            className="table-body"
             styles={ getStyles(styles, 'tbody') }
             ref={ ref }
             isPrinting={ isPrinting }
