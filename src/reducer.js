@@ -108,20 +108,20 @@ export default function reducer(state = {}, action) {
         [actions.SET_LIMIT]: () => {
             let maxPage = 1;
             if (payload.limit > 0) {
-                maxPage = (tableState.query.count / payload.limit) || 1
+                maxPage = Math.floor((tableState.query.count / payload.limit)) || 1;
             }
             const currentPage = tableState.query.page > maxPage ? maxPage : tableState.query.page;
             const offset = (currentPage - 1) * payload.limit;
 
             let page = 1;
             if (payload.limit > 0) {
-                page = (offset / payload.limit) + 1;
+                page = Math.floor((offset / payload.limit) + 1);
             }
             return stateUpdater({
                 isFetching: true,
                 query: {
                     limit: parseInt(payload.limit, 10),
-                    page,
+                    page: page <= 1 ? 1 : page,
                     offset
                 },
             })
