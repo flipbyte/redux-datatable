@@ -23,7 +23,7 @@ const Filters = React.forwardRef(({ children }, ref) => {
     const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
 
     return (
-        <Thead styles={ getStyles(styles, 'filters') } ref={ ref }>
+        <Thead className="table-filters" styles={ getStyles(styles, 'filters') } ref={ ref }>
             <div style={{ width }}>
                 <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'filters') }>
                     {(config, index) => {

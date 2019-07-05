@@ -42,7 +42,7 @@ const Header = React.forwardRef(({ children }, ref) => {
     const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
 
     return (
-        <Thead styles={ getStyles(styles, 'thead') } ref={ ref }>
+        <Thead className="table-header" styles={ getStyles(styles, 'thead') } ref={ ref }>
             <div style={{ width }}>
                 <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'header') }>
                     {(config, index) => {
