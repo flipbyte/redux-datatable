@@ -16,7 +16,7 @@ const StyledTr = styled(Tr).attrs(({ top, left }) => ({
     display: flex;
     width: auto;
     padding: 0;
-    height: auto;
+    height: ${props => props.height ? `${props.height}px` : 'auto'};
     position: relative;
     background: none;
     position: ${props => props.position || 'relative'};
