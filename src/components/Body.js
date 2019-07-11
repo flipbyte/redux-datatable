@@ -3,11 +3,14 @@ import React, { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Tbody, Tr, Td, Div } from '../styled-components';
 import { Body as Renderers } from './Renderer';
-import { getStyles, getRenderer } from '../utils';
-import { MODIFY_DATA, SET_BODY_INNER_WIDTH } from '../actions';
+import { getStyles, getRenderer, getInitialVisibleColumns } from '../utils';
+import { MODIFY_DATA, SET_BODY_INNER_WIDTH, SET_TABLE_WIDTH, SET_VISIBLE_COLUMN_IDS, SET_COLUMN_WIDTHS } from '../actions';
 import { withScrollSpy } from '../hoc';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
+
+const addElementResizeEventListener = require('element-resize-event');
+const removeElementResizeEventListener = require('element-resize-event').unbind;
 
 const renderCol = (rowIndex, primaryKey, schema, styles, column, index) => {
     const { textAlign, name, type } = column;
@@ -70,16 +73,27 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
 
     const updateTableDimensions = () => {
         action(SET_BODY_INNER_WIDTH)({
-            clientWidth: ref.current ? ref.current.clientWidth : minWidth,
-        });
+            clientWidth: ref.current ? ref.current.parentElement.clientWidth : minWidth,
+        })
     };
 
     useEffect(() => {
-        window.addEventListener('resize', updateTableDimensions);
-        return () => window.removeEventListener('resize', updateTableDimensions);
-    }, [ updateTableDimensions ]);
+        action(SET_VISIBLE_COLUMN_IDS)({ ids: getInitialVisibleColumns(columns) });
+        action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
+        action(SET_COLUMN_WIDTHS)(columns.reduce((acc, column) => {
+            if (column.visible !== false) {
+                acc.push(column.width);
+            }
+            return acc;
+        }, []));
+    }, []);
 
-    useEffect(() => updateTableDimensions(), [ ref.current ]);
+    useEffect(() => {
+        addElementResizeEventListener(ref.current, updateTableDimensions);
+        return () => removeElementResizeEventListener(ref.current)
+    }, []);
+
+    useEffect(() => updateTableDimensions(), [ ref.current.clientWidth ]);
 
     const totalHeight = rowHeight * itemCount;
     const visibleHeight = minHeight || totalHeight;

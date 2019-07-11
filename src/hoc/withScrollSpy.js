@@ -9,7 +9,7 @@ export let scrollerMap = {};
 const withScrollSpy = WrappedComponent => (props) => {
     const { name } = props;
     const id = _.uniqueId(name);
-    const ref = useRef(null);
+    const ref = useRef({});
     const [ scrollData, setScrollData ] = useState({ top: 0, pointerEvents: 'none' });
     const { getData, minWidth, config: { name: tableName, height } } = useContext(ConfigContext);
 

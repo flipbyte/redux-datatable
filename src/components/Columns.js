@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { withDropdown } from '../hoc';
@@ -30,8 +31,11 @@ const Columns = ({
                         className="rdt-toolbar-item"
                         padding="0.25rem 0.75rem"
                         styles={ styles.dropdownItem }
+                        htmlFor={ `rdt-columns-${name}-${index}` }
                     >
-                        <input name={ name }
+                        <input
+                            id={ `rdt-columns-${name}-${index}` }
+                            name={ name }
                             type="checkbox"
                             style={{ margin: 5 }}
                             checked={ -1 !== visibleColumnIds.indexOf(index) }
@@ -39,7 +43,7 @@ const Columns = ({
                                 action(SET_VISIBLE_COLUMN_IDS)({ index, checked: event.target.checked, width })
                             )}
                         />
-                        <label htmlFor={ name }>{ label }</label>
+                        <label>{ label }</label>
                     </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
