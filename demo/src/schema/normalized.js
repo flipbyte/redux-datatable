@@ -56,7 +56,7 @@ export default {
     },
     layout: [
         ['Editable'],
-        ['MassActions', 'SimpleButton', 'ResetFilters', 'Spacer', 'Print', 'Columns'],
+        ['MassActions', 'SimpleButton', 'ExternalCustomButton', 'ResetFilters', 'Spacer', 'Print', 'Columns'],
         ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
         [{ id: 'Table', layout: [
             ['Header'],
@@ -82,6 +82,12 @@ export default {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center'
+            }
+        },
+        ExternalCustomButton: {
+            renderer: (props) => {
+                console.log(props);
+                return <button>nothing</button>
             }
         },
         // Pages: {
