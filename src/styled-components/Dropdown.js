@@ -37,7 +37,8 @@ export const Menu = styled.div `
     `};
 `;
 
-export const Item = styled.div `
+export const Item = styled.label `
+    display: block;
     clear: both;
     text-align: inherit;
     white-space: nowrap;
