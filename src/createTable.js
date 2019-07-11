@@ -84,7 +84,10 @@ const ReduxDatatable = ( props ) => {
 
         const componentConfig = _.get(components, id, false);
         if (componentConfig !== false && !!componentConfig.renderer === true) {
-            return componentConfig.renderer({ ...componentConfig });
+            return {
+                Component: componentConfig.renderer,
+                componentConfig
+            };
         }
 
         const type = toPascalCase(componentConfig.type || id);
