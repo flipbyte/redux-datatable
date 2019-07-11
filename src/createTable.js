@@ -12,7 +12,6 @@ import {
     createActionCreator,
     isObject,
     calculateWidth,
-    getInitialVisibleColumns,
     toPascalCase,
     prepareActionPayload
 } from './utils';
@@ -20,10 +19,7 @@ import {
     SET_PAGE,
     SET_SORT,
     SET_LIMIT,
-    SET_IS_EDITING,
-    SET_VISIBLE_COLUMN_IDS,
-    SET_TABLE_WIDTH,
-    SET_COLUMN_WIDTHS
+    SET_IS_EDITING
 } from './actions';
 
 const getVisibleColumns = (columns) => _.memoize((visibleColumnIds) => (
@@ -57,14 +53,6 @@ const ReduxDatatable = ( props ) => {
         action(SET_LIMIT)({ limit: Limiter.default || 10 });
         action(SET_SORT)({ dir: 'desc' });
         action(SET_IS_EDITING)({ value: config.editing });
-        action(SET_VISIBLE_COLUMN_IDS)({ ids: getInitialVisibleColumns(columns) });
-        action(SET_TABLE_WIDTH)({ width: minWidth, widthAdjustment: 1 });
-        action(SET_COLUMN_WIDTHS)(columns.reduce((acc, column) => {
-            if (column.visible !== false) {
-                acc.push(column.width);
-            }
-            return acc;
-        }, []));
     }, [ dispatch ]);
 
     const tableConfig = {
@@ -96,7 +84,7 @@ const ReduxDatatable = ( props ) => {
 
         const componentConfig = _.get(components, id, false);
         if (componentConfig !== false && !!componentConfig.renderer === true) {
-            return componentConfig.renderer({ componentConfig });
+            return componentConfig.renderer({ ...componentConfig });
         }
 
         const type = toPascalCase(componentConfig.type || id);

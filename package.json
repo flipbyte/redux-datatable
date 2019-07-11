@@ -33,6 +33,7 @@
         "redux-thunk": "^2.3.0"
     },
     "dependencies": {
+        "element-resize-event": "^3.0.3",
         "normalizr": "^3.3.0",
         "object-assign-deep": "^0.4.0",
         "query-string": "^6.1.0",
