@@ -8,13 +8,13 @@ const lowerLimit = ( page, limit ) => ((page - 1) * limit) + 1;
 const upperLimit = ( page, limit, count ) =>  (page * limit) > count || limit === 0 ? count : page * limit;
 
 const ResultCount = ({
-    config: { styles = {} }
+    config: { styles = {}, className = 'rdt-pg-res-cnt' }
 }) => {
     const { defaultLimit, getData } = useContext(ConfigContext);
     const query = useSelector(getData((tableData) => tableData.query));
     const { page, limit, count } = calculatePaginationProps(query, defaultLimit);
     return !!count > 0 && (
-        <Div className="rdt-pg-res-cnt" styles={ styles }>
+        <Div className={ className } styles={ styles }>
             Showing { lowerLimit(page, limit) } to { upperLimit(page, limit, count) } of { count } entries
         </Div>
     );

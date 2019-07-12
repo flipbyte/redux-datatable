@@ -33,7 +33,14 @@ const getPages = ( currentPage = 1, total = 0 ) => {
 
 const Pages = ({
     config: {
-        styles = {}
+        styles = {},
+        className = 'rdt-pg-list',
+        firstClassName = 'rdt-pg-first',
+        lastClassName = 'rdt-pg-last',
+        previousClassName = 'rdt-pg-prev',
+        nextClassName = 'rdt-pg-next',
+        activeClassName = 'active',
+        pageNumberClassName = 'rdt-pg-num'
     }
 }) => {
     const {
@@ -46,9 +53,9 @@ const Pages = ({
     const { page, total } = calculatePaginationProps(query, defaultLimit);
     const setPage = ( page ) => action(SET_PAGE)({ page });
     return (
-        <ExtendedList className="rdt-pg-list" styles={ styles.list }>
+        <ExtendedList className={ className } styles={ styles.list }>
             <Button
-                className="rdt-pg-first"
+                className={ firstClassName }
                 onClick={() => setPage(1)}
                 disabled={ page === 1 }
                 styles={ styles.first }
@@ -56,7 +63,7 @@ const Pages = ({
                 First
             </Button>
             <Button
-                className="rdt-pg-prev"
+                className={ previousClassName }
                 onClick={() => setPage(page - 1)}
                 disabled={ page < 2 }
                 styles={ styles.previous }
@@ -66,14 +73,14 @@ const Pages = ({
             { getPages(page, total).map( (link, index) =>
                 <Button
                     key={ index }
-                    className={ `rdt-pg-num ${page === link ? 'active' : ''}` }
+                    className={ `${pageNumberClassName} ${page === link ? activeClassName : ''}` }
                     onClick={() => setPage(link)}
                     active={ page === link }
                      styles={ styles.pageNumber }
                 >{ link }</Button>
             ) }
             <Button
-                className="rdt-pg-next"
+                className={ nextClassName }
                 onClick={() => setPage(page + 1)}
                 disabled={ page >= total }
                 styles={ styles.next }
@@ -81,7 +88,7 @@ const Pages = ({
                 Next
             </Button>
             <Button
-                className="rdt-pg-last"
+                className={ lastClassName }
                 onClick={() => setPage(total)}
                 disabled={ total === 0 || page === total }
                 styles={ styles.last }

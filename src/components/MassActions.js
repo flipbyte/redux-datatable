@@ -6,18 +6,27 @@ import ConfigContext from '../context';
 const MassActions = ({
     toggle,
     open,
-    config: { label, name, options, styles = {} },
+    config: {
+        label,
+        name,
+        options,
+        styles = {},
+        className = 'rdt-toolbar-mass-actions',
+        btnClassName = 'rdt-toolbar-button',
+        menuClassName = 'rdt-toolbar-menu',
+        menuItemClassName = 'rdt-toolbar-item',
+    },
 }) => {
     const { thunk } = useContext(ConfigContext);
     return (
-        <Dropdown.Container className={ `rdt-toolbar-mass-actions ${name || ''}` }>
-            <Button className="rdt-toolbar-button" dropdownToggle onClick={ toggle } styles={ styles.button }>
+        <Dropdown.Container className={ className }>
+            <Button className={ btnClassName } dropdownToggle onClick={ toggle } styles={ styles.button }>
                 { label }
             </Button>
-            <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open } styles={ styles.dropdownMenu }>
+            <Dropdown.Menu className={ menuClassName } hidden={ !open } styles={ styles.dropdownMenu }>
                 { options.map(({ thunk: cb, ...option, styles: itemStyles }, index) =>
                     <Dropdown.Item
-                        className="rdt-toolbar-item"
+                        className={ menuItemClassName }
                         key={ index }
                         onClick={ cb && thunk.bind(this, cb, { option }) }
                         styles={ itemStyles || styles.dropdownItem }

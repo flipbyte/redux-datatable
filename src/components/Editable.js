@@ -13,6 +13,11 @@ const Editable = ({ config }) => {
             hide = 'Hide editable',
             save: saveLabel = 'Save',
         },
+        classNames = {
+            show: 'rdt-toolbar-button',
+            hide: 'rdt-toolbar-button',
+            save: 'rdt-toolbar-button',
+        },
         styles = {}
     } = config;
     const { action, thunk, getData } = useContext(ConfigContext);
@@ -23,11 +28,12 @@ const Editable = ({ config }) => {
     const toggleEditable = () => action(SET_IS_EDITING)({ value: !isEditing });
     const getEditableLabel = () => !isEditing ? show : hide;
     const getEditableStyles = () => !isEditing ? styles.show : styles.hide;
+    const getEditableClassName = () => !isEditing ? classNames.show : classNames.hide;
     return (
         <Fragment>
             { !isModified && (
                 <Button
-                    className="rdt-toolbar-button reset-filters"
+                    className={ getEditableClassName() }
                     onClick={ toggleEditable.bind(this) }
                     styles={ getEditableStyles() }
                 >
@@ -36,7 +42,7 @@ const Editable = ({ config }) => {
             )}
             { isModified && (
                 <Button
-                    className="rdt-toolbar-button reset-filters"
+                    className={ classNames.save }
                     onClick={ save && thunk.bind(this, save, { config }) }
                     styles={ styles.save }
                 >

@@ -10,7 +10,11 @@ const Columns = ({
     open,
     toggle,
     config: {
-        styles = {}
+        styles = {},
+        className = 'rdt-toolbar-columns',
+        btnClassName = 'rdt-toolbar-button',
+        menuClassName = 'rdt-toolbar-menu',
+        menuItemClassName = 'rdt-toolbar-item',
     }
 }) => {
     const {
@@ -20,15 +24,15 @@ const Columns = ({
     } = useContext(ConfigContext);
     const visibleColumnIds = useSelector(getData(({ visibleColumnIds  }) => visibleColumnIds)) || [];
     return (
-        <Dropdown.Container className="rdt-toolbar-columns">
-            <Button  className="rdt-toolbar-btn" dropdownToggle onClick={ toggle } styles={ styles.button }>
+        <Dropdown.Container className={ className }>
+            <Button  className={ btnClassName } dropdownToggle onClick={ toggle } styles={ styles.button }>
                 Columns
             </Button>
-            <Dropdown.Menu className="rdt-toolbar-menu" hidden={ !open }  styles={ styles.dropdownMenu }>
+            <Dropdown.Menu className={ menuClassName } hidden={ !open }  styles={ styles.dropdownMenu }>
                 { columns.map(({ name, label, width }, index) => (
                     <Dropdown.Item
                         key={ index }
-                        className="rdt-toolbar-item"
+                        className={ menuItemClassName }
                         padding="0.25rem 0.75rem"
                         styles={ styles.dropdownItem }
                         htmlFor={ `rdt-columns-${name}-${index}` }

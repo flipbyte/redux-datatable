@@ -4,10 +4,10 @@ import ConfigContext from '../context';
 
 const Button = ({ config }) => {
     const { thunk } = useContext(ConfigContext);
-    const { thunk: cb, label, name, styles = {} } = config;
+    const { thunk: cb, label, name, styles = {}, className = 'rdt-toolbar-btn' } = config;
     return (
         <StyledButton
-            className={ `rdt-toolbar-btn ${name || ''}` }
+            className={ className }
             onClick={ cb && thunk.bind(this, cb, config) }
             styles={ styles }
         >

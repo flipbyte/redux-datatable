@@ -6,13 +6,14 @@ import ConfigContext from '../context';
 const ResetFilters = ({
     config: {
         label = 'Reset Filters',
-        styles = {}
+        styles = {},
+        className = 'rdt-toolbar-button reset-filters'
     }
 }) => {
     const { action } = useContext(ConfigContext);
     const clearFilter = () => action(SET_FILTER)({ clear: true });
     return (
-        <Button className="rdt-toolbar-button reset-filters" onClick={ clearFilter.bind(this) } styles={ styles }>
+        <Button className={ className } onClick={ clearFilter.bind(this) } styles={ styles }>
             { label }
         </Button>
     );

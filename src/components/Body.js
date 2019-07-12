@@ -12,14 +12,14 @@ import { createSelector } from 'reselect';
 const addElementResizeEventListener = require('element-resize-event');
 const removeElementResizeEventListener = require('element-resize-event').unbind;
 
-const renderCol = (rowIndex, primaryKey, schema, styles, column, index) => {
+const renderCol = (rowIndex, primaryKey, schema, styles, colClassName, column, index) => {
     const { textAlign, name, type } = column;
     const ColRenderer = getRenderer(column, Renderers);
     return (
         <Td
             key={ index }
             colIndex={ index }
-            className={ `rdt-table-col ${name} ${type}` }
+            className={ `${colClassName} ${name} ${type}` }
             styles={ getStyles(styles.td, 'body') }
         >
             <Div className="rdt-table-col-inner">
@@ -34,10 +34,10 @@ const renderCol = (rowIndex, primaryKey, schema, styles, column, index) => {
     );
 };
 
-const renderRow = (columns, rowHeight, styles, primaryKey, schema, rowIndex, top) => (
+const renderRow = (columns, rowHeight, styles, primaryKey, schema, rowClassName, colClassName, rowIndex, top) => (
     <Tr
         key={ rowIndex }
-        className="rdt-table-row"
+        className={ rowClassName }
         position="absolute"
         top={ top }
         columns={ columns }
@@ -45,11 +45,11 @@ const renderRow = (columns, rowHeight, styles, primaryKey, schema, rowIndex, top
         even={ rowIndex % 2 === 0 }
         styles={ getStyles(styles.tr, 'body') }
     >
-        { renderCol.bind(this, rowIndex, primaryKey, schema, styles) }
+        { renderCol.bind(this, rowIndex, primaryKey, schema, styles, colClassName) }
     </Tr>
 );
 
-const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
+const Body = React.forwardRef(({ top: startTop = 0, config }, ref) => {
     const {
         columns,
         action,
@@ -67,6 +67,12 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
             entity: { schema } = {},
         }
     } = useContext(ConfigContext);
+
+    const {
+        className = 'table-body',
+        rowClassName = 'rdt-table-row',
+        colClassName = 'rdt-table-col'
+    } = config;
 
     const itemCount = useSelector(getData(tableData => (tableData.items || []).length));
     const isPrinting = useSelector(getData(tableData => !!tableData.isPrinting));
@@ -120,7 +126,7 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
 
     return (
         <Tbody
-            className="table-body"
+            className={ className }
             styles={ getStyles(styles, 'tbody') }
             ref={ ref }
             isPrinting={ isPrinting }
@@ -130,7 +136,7 @@ const Body = React.forwardRef(({ top: startTop = 0 }, ref) => {
             range={ range }
             rowHeight={ rowHeight }
         >
-            { renderRow.bind(this, columns, rowHeight, styles, primaryKey, schema) }
+            { renderRow.bind(this, columns, rowHeight, styles, primaryKey, schema, rowClassName, colClassName) }
         </Tbody>
     );
 });
