@@ -35,19 +35,21 @@ const Columns = ({
                         className={ menuItemClassName }
                         padding="0.25rem 0.75rem"
                         styles={ styles.dropdownItem }
-                        htmlFor={ `rdt-columns-${name}-${index}` }
+                        onClick={(event) => {
+                            action(SET_VISIBLE_COLUMN_IDS)({ index, checked: !event.target.firstChild.checked, width })
+                        }}
                     >
                         <input
-                            id={ `rdt-columns-${name}-${index}` }
                             name={ name }
                             type="checkbox"
                             style={{ margin: 5 }}
                             checked={ -1 !== visibleColumnIds.indexOf(index) }
-                            onChange={(event) => (
+                            onClick={(event) => event.stopPropagation()}
+                            onChange={(event) => {
                                 action(SET_VISIBLE_COLUMN_IDS)({ index, checked: event.target.checked, width })
-                            )}
+                            }}
                         />
-                        <label>{ label }</label>
+                        { label }
                     </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
