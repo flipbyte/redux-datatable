@@ -84,6 +84,21 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
         ['Limiter', 'Spacer', 'ResultCount', 'Spacer', 'Pages'],
     ],
     components: {
+        Header: {
+            rowClassName: 'your custom class names',
+            colClassName: 'your custom class names',
+            className: 'your custom class names',
+        },
+        Body: {
+            rowClassName: 'your custom class names',
+            colClassName: 'your custom class names',
+            className: 'your custom class names',
+        },
+        Filters: {
+            rowClassName: 'your custom class names',
+            colClassName: 'your custom class names',
+            className: 'your custom class names',
+        },
         Loader: {
             styles: {
                 mask: { ... },
@@ -91,9 +106,16 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             }
         },
         ResultCount: {
+            className: 'your custom class names',
             styles: { ... }
         },
         Pages: {
+            firstClassName: 'your custom class names',
+            lastClassName: 'your custom class names',
+            nextClassName: 'your custom class names',
+            prevClassName: 'your custom class names',
+            pageNumberClassName: 'your custom class names',
+            activeClassName: 'your custom class names',
             styles: {
                 first: { ... },
                 last: { ... },
@@ -108,6 +130,11 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
                 show: 'Make editable',
                 hide: 'Hide editable',
                 save: 'Save',
+            },
+            classNames: {
+                show: 'your custom class names',
+                hide: 'your custom class names',
+                save: 'your custom class names',
             },
             save: ( config ) => ( dispatch, getState ) => {
                 const tableState = getState()[config.reducerName][config.name];
@@ -127,6 +154,10 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             name: 'actions',
             label: 'Actions',
             id: 'dropdown',
+            className: 'your custom class names',
+            btnClassName: 'your custom class names',
+            menuClassName: 'your custom class names',
+            menuItemClassName: 'your custom class names',
             styles: {
                 button: { ... },
                 dropdownMenu: { ... },
@@ -159,17 +190,20 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
         SimpleButton: {
             type: 'button',
             label: 'Simple Button',
+            className: 'your custom class names',
             thunk: ( config ) => ( dispatch, getState ) => { ... },
             styles: { ... }
         },
         ResetFilters: {
             type: 'reset-filters',
             label: 'Reset Filters',
+            className: 'your custom class names',
             styles: { ... }
         },
         Print: {
             type: 'print',
             label: 'Print Table',
+            className: 'your custom class names',
             styles: { ... }
         },
         Columns: {
@@ -177,6 +211,10 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             type: 'columns',
             label: 'Columns',
             visible: true,
+            className: 'your custom class names',
+            btnClassName: 'your custom class names',
+            menuClassName: 'your custom class names',
+            menuItemClassName: 'your custom class names',
             styles: {
                 button: { ... },
                 dropdownMenu: { ... },
@@ -187,9 +225,12 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             type: 'limiter',
             options: [10, 20, 50, 200, 2000, 0],
             default: 200,
+            className: 'your custom class names',
+            selectClassName: 'your custom class names',
             styles: { ... }
         },
         Table: {
+            className: 'your custom class names',
             styles: {
                 table: { ... },
                 thead: { ... },
@@ -359,11 +400,12 @@ Note: Check the [example](https://github.com/flipbyte/redux-datatable/blob/maste
 
 **_Common Properties_**
 
-| Key      | Type     | Required | Default | Description                                                                                        |
-| -------- | -------- | -------- | ------- | -------------------------------------------------------------------------------------------------- |
-| styles   | object   | false    | {}      | styled-component styles object or key-value pairs with values being styled-component styles object |
-| renderer | function | false    | -       | returns a react component                                                                          |
-| type     | string   | true     | -       | the type of the object                                                                             |
+| Key       | Type     | Required | Default | Description                                                                                        |
+| --------- | -------- | -------- | ------- | -------------------------------------------------------------------------------------------------- |
+| styles    | object   | false    | {}      | styled-component styles object or key-value pairs with values being styled-component styles object |
+| renderer  | function | false    | -       | returns a react component                                                                          |
+| type      | string   | true     | -       | the type of the object                                                                             |
+| className | string   | true     | varies  | html class names for top-level html element in the component                                       |
 
 ##### Loader
 
@@ -382,6 +424,17 @@ No unique properties
 
 ##### Pages
 
+**_Properties_**
+
+| Key                 | Type   | Required | Default      | Description      |
+| ------------------- | ------ | -------- | ------------ | ---------------- |
+| firstClassName      | string | false    | rdt-pg-first | html class names |
+| lastClassName       | string | false    | rdt-pg-last  | html class names |
+| prevClassName       | string | false    | rdt-pg-prev  | html class names |
+| nextClassName       | string | false    | rdt-pg-next  | html class names |
+| pageNumberClassName | string | false    | rdt-pg-num   | html class names |
+| activeClassName     | string | false    | active       | html class names |
+
 **_Styles object properties_**
 
 | Key        | Type   | Required | Default | Description                    |
@@ -398,10 +451,19 @@ Toggles the table between editable and non-editable and shows a save button when
 
 **_Properties_**
 
-| Key    | Type     | Required | Default     | Description                                     |
-| ------ | -------- | -------- | ----------- | ----------------------------------------------- |
-| labels | object   | false    | check below | check below                                     |
-| save   | function | false    | -           | ( config ) => ( dispatch, getState ) => { ... } |
+| Key        | Type     | Required | Default     | Description                                     |
+| ---------- | -------- | -------- | ----------- | ----------------------------------------------- |
+| labels     | object   | false    | check below | check below                                     |
+| save       | function | false    | -           | ( config ) => ( dispatch, getState ) => { ... } |
+| classNames | object   | false    | check below | check below                                     |
+
+**_classNames object properties_**
+
+| Key  | Type   | Required | Default                | Description      |
+| ---- | ------ | -------- | ---------------------- | ---------------- |
+| show | string | false    | rdt-toolbar-button     | html class names |
+| hide | string | false    | rdt-toolbar-button     | html class names |
+| save | string | false    | Sardt-toolbar-buttonve | html class names |
 
 **_Labels object properties_**
 
@@ -423,10 +485,13 @@ Toggles the table between editable and non-editable and shows a save button when
 
 **_Properties_**
 
-| Key     | Type   | Required | Default | Description                           |
-| ------- | ------ | -------- | ------- | ------------------------------------- |
-| options | array  | required | \[]     | array of actions objects              |
-| label   | string | required | -       | Label for the actions dropdown button |
+| Key               | Type   | Required | Default            | Description                           |
+| ----------------- | ------ | -------- | ------------------ | ------------------------------------- |
+| options           | array  | true     | \[]                | array of actions objects              |
+| label             | string | true     | -                  | Label for the actions dropdown button |
+| btnClassName      | string | false    | rdt-toolbar-button | html class names                      |
+| menuClassName     | string | false    | rdt-toolbar-menu   | html class names                      |
+| menuItemClassName | string | false    | rdt-toolbar-item   | html class names                      |
 
 **_Actions object properties_**
 
@@ -477,9 +542,12 @@ Shows the columns toggling dropdown.
 
 **_Properties_**
 
-| Key   | Type   | Required | Default | Description                           |
-| ----- | ------ | -------- | ------- | ------------------------------------- |
-| label | string | required | -       | Label for the actions dropdown button |
+| Key               | Type   | Required | Default            | Description                           |
+| ----------------- | ------ | -------- | ------------------ | ------------------------------------- |
+| label             | string | required | -                  | Label for the actions dropdown button |
+| btnClassName      | string | false    | rdt-toolbar-button | html class names                      |
+| menuClassName     | string | false    | rdt-toolbar-menu   | html class names                      |
+| menuItemClassName | string | false    | rdt-toolbar-item   | html class names                      |
 
 **_Styles object properties_**
 
@@ -491,10 +559,11 @@ Shows the columns toggling dropdown.
 
 ##### Limiter (type: limiter)
 
-| Key     | Type    | Required | Default | Description                                                           |
-| ------- | ------- | -------- | ------- | --------------------------------------------------------------------- |
-| options | array   | required | \[]     | array of limiter counts                                               |
-| default | integer | required | \[]     | default limiter option (should be a value in the options array above) |
+| Key             | Type    | Required | Default            | Description                                                           |
+| --------------- | ------- | -------- | ------------------ | --------------------------------------------------------------------- |
+| options         | array   | required | \[]                | array of limiter counts                                               |
+| default         | integer | required | \[]                | default limiter option (should be a value in the options array above) |
+| selectClassName | string  | false    | rdt-limiter-select | html class names                                                      |
 
 ##### Table (type: table)
 
