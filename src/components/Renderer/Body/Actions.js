@@ -5,15 +5,16 @@ import { withData } from '../../../hoc';
 const Actions = ({
     thunk,
     colConfig: { items },
-    value
+    value,
+    className = 'btn-group-sm'
 }) => (
-    <div className="btn-group-sm">
+    <div className={ className }>
         { items.map((item, index) => {
-            const { thunk: cb, styles, label, icon, name, htmlClass } = item;
+            const { thunk: cb, styles, label, icon, name, className = 'rdt-body-actions button' } = item;
             return (
                 <Button
                     key={ index }
-                    className={ `rdt-body-actions button ${htmlClass || ''} ${name || ''}` }
+                    className={ className }
                     onClick={ cb && thunk.bind(this, cb, { item, value }) }
                     styles={ styles }
                 >

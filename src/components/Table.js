@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import { Table as StyledTable } from '../styled-components';
-import ConfigContext from '../context';
 
-const Table = ({ children }) => {
-    const { config } = useContext(ConfigContext);
-    const { styles = {} } = config.components.Table;
+const Table = ({ children, config }) => {
+    const { styles = {}, className = 'rdt-table' } = config;
     return (
-        <StyledTable className="rdt-table" styles={ styles.table }>
+        <StyledTable className={ className } styles={ styles.table }>
             { children }
         </StyledTable>
     );

@@ -6,7 +6,7 @@ import { Field, Label } from '../styled-components';
 import ConfigContext from '../context';
 
 const Limiter = ({
-    config: { options, styles }
+    config: { options, styles, className = 'rdt-limiter-label', selectClassName = 'rdt-limiter-select' }
 }) => {
     const {
         action,
@@ -18,10 +18,10 @@ const Limiter = ({
     const { limit } = calculatePaginationProps(query, defaultLimit);
     const setLimit = ( limit ) => action(SET_LIMIT)({ limit });
     return (
-        <Label className="rdt-limiter-label" flex noWrap styles={ styles }>
+        <Label className={ className } flex noWrap styles={ styles }>
             <Field.Select
                 id="limiter"
-                className="rdt-limiter-select"
+                className={ selectClassName }
                 value={ limit }
                 onChange={ ( event ) => setLimit(event.target.value) }>
                 { options.map( (option, index) =>

@@ -6,13 +6,14 @@ import { SET_IS_PRINTING } from '../actions';
 const Print = ({
     config: {
         label = 'Print',
-        styles = {}
+        styles = {},
+        className = 'rdt-toolbar-btn print'
     }
 }) => {
     const { action } = useContext(ConfigContext);
     return (
         <Button
-            className="rdt-toolbar-button print"
+            className={ className }
             onClick={() => action(SET_IS_PRINTING)({ value: true })}
             styles={ styles }
         >

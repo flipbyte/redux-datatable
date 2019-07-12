@@ -103,8 +103,8 @@ const ReduxDatatable = ( props ) => {
             {(item, index) => {
                 var id = item;
                 if (isObject(item)) {
-                    const { Component } = getComponent(item.id);
-                    return <Component key={ index }>{ render(item.layout) }</Component>;
+                    const { Component, componentConfig } = getComponent(item.id);
+                    return <Component key={ index } config={ componentConfig }>{ render(item.layout) }</Component>;
                 }
 
                 const { Component, componentConfig } = getComponent(id);

@@ -327,7 +327,7 @@ export default {
                     type: 'action',
                     name: 'edit',
                     label: 'Edit',
-                    htmlClass: 'btn btn-secondary',
+                    className: 'btn btn-secondary',
                     thunk: ( config ) => ( dispatch, getState ) => {
                         console.log('edit', config, getState());
                     }

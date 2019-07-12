@@ -8,7 +8,7 @@ import { SET_FILTER } from '../actions';
 import { withScrollSpy } from '../hoc';
 import ConfigContext from '../context';
 
-const Filters = React.forwardRef(({ children }, ref) => {
+const Filters = React.forwardRef(({ children, config }, ref) => {
     const {
         columns,
         action,
@@ -19,13 +19,20 @@ const Filters = React.forwardRef(({ children }, ref) => {
         },
         getData
     } = useContext(ConfigContext);
+
+    const {
+        className = 'table-filters',
+        rowClassName = 'rdt-table-row',
+        colClassName = 'rdt-table-col'
+    } = config;
+
     const search = useSelector(getData(tableData => tableData.query ? tableData.query.search : {}));
     const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
 
     return (
-        <Thead className="table-filters" styles={ getStyles(styles, 'filters') } ref={ ref }>
+        <Thead className={ className } styles={ getStyles(styles, 'filters') } ref={ ref }>
             <div style={{ width }}>
-                <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'filters') }>
+                <Tr className={ rowClassName } columns={ columns } styles={ getStyles(styles.tr, 'filters') }>
                     {(config, index) => {
                         const { filterable, type, ...rest } = config;
                         const { name } = rest;
@@ -35,7 +42,7 @@ const Filters = React.forwardRef(({ children }, ref) => {
                             <Td
                                 key={ index }
                                 colIndex={ index }
-                                className={ `rdt-table-col filter ${name} ${type}` }
+                                className={ `${colClassName} filter ${name} ${type}` }
                                 styles={ getStyles(styles.td, 'filters') }
                             >
                                 { filterable && Component && (

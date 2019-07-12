@@ -25,7 +25,7 @@ const changeSortOrder = ( query, colName, sorter ) => {
     sorter({ sort: colName, dir });
 };
 
-const Header = React.forwardRef(({ children }, ref) => {
+const Header = React.forwardRef(({ children, config }, ref) => {
     const {
         action,
         columns,
@@ -38,13 +38,19 @@ const Header = React.forwardRef(({ children }, ref) => {
         getData
     } = useContext(ConfigContext);
 
+    const {
+        className = 'table-header',
+        rowClassName = 'rdt-table-row',
+        colClassName = 'rdt-th'
+    } = config;
+
     const query = useSelector(getData(tableData => tableData.query || {}));
     const width = useSelector(getData(tableData => tableData.table ? tableData.table.width : 0));
 
     return (
-        <Thead className="table-header" styles={ getStyles(styles, 'thead') } ref={ ref }>
+        <Thead className={ className } styles={ getStyles(styles, 'thead') } ref={ ref }>
             <div style={{ width }}>
-                <Tr className="rdt-table-row" columns={ columns } styles={ getStyles(styles.tr, 'header') }>
+                <Tr className={ rowClassName } columns={ columns } styles={ getStyles(styles.tr, 'header') }>
                     {(config, index) => {
                         const { sortable, textAlign, name, type, ...rest } = config;
                         const { sort, dir } = query;
@@ -53,7 +59,7 @@ const Header = React.forwardRef(({ children }, ref) => {
                             <Th
                                 key={ index }
                                 colIndex={ index }
-                                className={ `rdt-th ${name} ${type}` }
+                                className={ `${colClassName} ${name} ${type}` }
                                 sortable={ sortable }
                                 textAlign={ textAlign }
                                 styles={ styles.th }
