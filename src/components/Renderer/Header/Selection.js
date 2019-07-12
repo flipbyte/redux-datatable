@@ -23,14 +23,16 @@ const Selection = ({ name, action }) => {
     const { getData, config: { primaryKey } } = useContext(ConfigContext);
     const selection = useSelector(getData(tableData => tableData.selection || {}));
     return (
-        <Field.Input
-            type="checkbox"
-            name={ name }
-            checked={ selection.all === true && _.isEmpty(selection.selected) }
-            onChange={(event) => handleSelection(action(SET_SELECTION), primaryKey, event)}
-            ref={(el) => el && (el.indeterminate = isIndeterminate(selection, primaryKey))}
-        />
-);
+        <div className="col-12">
+            <Field.Input
+                type="checkbox"
+                name={ name }
+                checked={ selection.all === true && _.isEmpty(selection.selected) }
+                onChange={(event) => handleSelection(action(SET_SELECTION), primaryKey, event)}
+                ref={(el) => el && (el.indeterminate = isIndeterminate(selection, primaryKey))}
+            />
+        </div>
+    );
 };
 
 export default Selection;
