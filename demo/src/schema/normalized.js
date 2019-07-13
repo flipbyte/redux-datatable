@@ -148,6 +148,7 @@ export default {
                 styles: {
                     backgroundColor: 'red',
                 },
+                role: 'menu-item',
                 thunk: ( config ) => ( dispatch, getState ) => {
                     // Get current table state.
                     const tableState = getState()[config.reducerName][config.name];
@@ -165,6 +166,7 @@ export default {
                 type: 'action',
                 name: 'edit',
                 label: 'Edit this field',
+                role: 'menu-item',
             }]
         },
         SimpleButton: {
