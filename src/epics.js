@@ -4,6 +4,7 @@ import { ofType } from 'redux-observable';
 import { Observable, of, pipe } from 'rxjs';
 import objectAssignDeep from 'object-assign-deep';
 import { concatMap, mergeMap, map, takeUntil, filter, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { createNotification, NOTIFICATION_TYPE_SUCCESS, NOTIFICATION_TYPE_ERROR } from 'react-redux-notify';
 import {
     receiveData,
@@ -58,9 +59,9 @@ export const fetchDataEpic = ( action$, state$, { api }) => action$.pipe(
                 return { response, data };
             }),
             map((payload) => receiveData({ name, payload })),
-            catchError((error) => of(
+            catchError((error) =>  of(
+                createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }),
                 cancelRequest({ name }),
-                createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })
             )),
             takeUntil(action$.pipe(
                 ofType(REQUEST_DATA_CANCEL),
@@ -91,8 +92,8 @@ export const deleteDataEpic = ( action$, state$, { api }) => action$.pipe(
                 );
             }),
             catchError((error) => of(
+                createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message }),
                 cancelRequest({ name }),
-                createNotification({ type: NOTIFICATION_TYPE_ERROR, message: error.message })
             ))
         );
     })
