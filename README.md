@@ -158,6 +158,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             btnClassName: 'your custom class names',
             menuClassName: 'your custom class names',
             menuItemClassName: 'your custom class names',
+            activeClassName: 'your custom class names',
             styles: {
                 button: { ... },
                 dropdownMenu: { ... },
@@ -215,6 +216,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
             btnClassName: 'your custom class names',
             menuClassName: 'your custom class names',
             menuItemClassName: 'your custom class names',
+            activeClassName: 'your custom class names',
             styles: {
                 button: { ... },
                 dropdownMenu: { ... },
@@ -492,6 +494,7 @@ Toggles the table between editable and non-editable and shows a save button when
 | btnClassName      | string | false    | rdt-toolbar-button | html class names                      |
 | menuClassName     | string | false    | rdt-toolbar-menu   | html class names                      |
 | menuItemClassName | string | false    | rdt-toolbar-item   | html class names                      |
+| activeClassName   | string | false    | show               | html class names                      |
 
 **_Actions object properties_**
 
@@ -500,6 +503,7 @@ Toggles the table between editable and non-editable and shows a save button when
 | type  | string   | true     | -       | action                                          |
 | name  | string   | true     | -       | Unique name                                     |
 | label | string   | true     | -       | Label for the action item                       |
+| role  | string   | false    | -       | Add role 'menu-item' to hide dropdown on click  |
 | thunk | function | true     | -       | ( config ) => ( dispatch, getState ) => { ... } |
 
 **_Styles object properties_**
@@ -548,6 +552,7 @@ Shows the columns toggling dropdown.
 | btnClassName      | string | false    | rdt-toolbar-button | html class names                      |
 | menuClassName     | string | false    | rdt-toolbar-menu   | html class names                      |
 | menuItemClassName | string | false    | rdt-toolbar-item   | html class names                      |
+| activeClassName   | string | false    | show               | html class names                      |
 
 **_Styles object properties_**
 
