@@ -27,6 +27,7 @@ const Date = ({
                         modified={ isModified }
                         className={ isModified ? 'modified' : ''}
                         value={ datetime.format(inputFormat) }
+                        selected={ datetime.toDate() }
                     />
                 </Row>
             )}

@@ -4,10 +4,11 @@ import { useSelector, shallowEqual } from 'react-redux';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
 import { MODIFY_DATA } from '../actions';
+import moment from 'moment';
 
 const withData = WrappedComponent => (props) => {
     const { itemIndex, colConfig, primaryKey, schema } = props;
-    const { selector, editable, name } = colConfig;
+    const { selector, editable, name, parse = 'YYYY-MM-DD HH:mm:ss' } = colConfig;
     const { getData, thunk, action, config: { entity = {} } } = useContext(ConfigContext);
     const { selectors = {} } = entity;
 
@@ -30,14 +31,16 @@ const withData = WrappedComponent => (props) => {
         (item) => _.get(item, name)
     ));
 
-    const handleChange = (event) => (
-        action(MODIFY_DATA)({
-            pk: primaryKey,
-            pkValue: primarKeyValue,
-            key: event.target.name,
-            value: event.target.value
-        })
-    );
+    const handleChange = (value) => {
+        return (
+            action(MODIFY_DATA)({
+                pk: primaryKey,
+                pkValue: primarKeyValue,
+                key: name,
+                value: moment(value).format(parse)
+            })
+        );
+    }
 
     return (
         <WrappedComponent

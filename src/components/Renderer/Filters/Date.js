@@ -6,16 +6,16 @@ import moment from 'moment';
 var dateFrom = null;
 var dateTo = null;
 
-const applyFilter = ( name, key, filterer, value ) => {
+const applyFilter = ( name, key, filterer, format, value ) => {
     let filter = {};
 
     if (key === 0) {
-        dateFrom = moment(value).format('YYYY-MM-DD HH:mm:ss');
+        dateFrom = moment(value).format(format);
     } else {
-        dateTo = moment(value).format('YYYY-MM-DD HH:mm:ss');
+        dateTo = moment(value).format(format);
     }
 
-    if ( dateFrom || dateTo ) {
+    if (dateFrom || dateTo) {
         filter = {
             operator: OPERATOR.BETWEEN,
             field: name,
@@ -28,26 +28,35 @@ const applyFilter = ( name, key, filterer, value ) => {
     filterer(name, filter);
 };
 
-const Date = ({ name, value = [], filterer }) => (
+const Date = ({
+    name,
+    value = [],
+    filterer,
+    inputFormat = 'YYYY-MM-DD',
+    parse = 'YYYY-MM-DD HH:mm:ss',
+    showTimeSelect = false
+}) => (
     <Fragment>
         <Row padding="0 0 5px">
             <Datetime
-                name={ name }
                 className="rdt-filter-input date to"
-                value={ value[0] || '' }
+                value={ value[0] ? moment(value[0], parse).format(inputFormat) : '' }
                 placeholder="From"
-                dateFormat="YYYY-MM-DD HH:mm:ss"
-                onChange={ applyFilter.bind(this, name, 0, filterer) }
+                showTimeSelect={ showTimeSelect }
+                onChange={ applyFilter.bind(this, name, 0, filterer, parse) }
+                selected={ value[0] && moment(value[0], parse).toDate() }
+                dateFormat={ inputFormat }
             />
         </Row>
         <Row>
             <Datetime
-                name={ name }
                 className="rdt-filter-input date to"
-                value={ value[1] || '' }
-                onChange={ applyFilter.bind(this, name, 1, filterer) }
+                value={ value[1] ? moment(value[1], parse).format(inputFormat) : '' }
                 placeholder="To"
-                dateFormat="YYYY-MM-DD HH:mm:ss"
+                showTimeSelect={ showTimeSelect }
+                onChange={ applyFilter.bind(this, name, 1, filterer, parse) }
+                selected={ value[1] && moment(value[1], parse).toDate() }
+                dateFormat={ inputFormat }
             />
         </Row>
     </Fragment>
