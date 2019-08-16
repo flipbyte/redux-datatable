@@ -52,6 +52,7 @@ import { reducer, epics } from '@flipbyte/redux-datatable';
     rowHeight: 50,
     editing: false,
     primaryKey: 'id',
+    noResultsMessage: 'No row(s) found',
     routes: { // You can add other routes and handle them using custom actions.
         get: { // The route used to fetch data and it's params
             route: '/{your_route}',
@@ -350,17 +351,18 @@ const YourComponent = () =>
 
 ### Table config props
 
-| Key        | Type    | Required | Default | Description                                                                                      |
-| ---------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
-| name       | string  | true     | -       | key in the row data whose value needs to be loaded for the column (does not have to be unique)   |
-| height     | integer | true     | -       | The maximum height of the table                                                                  |
-| rowHeight  | integer | true     | -       | The maximum height of each table body row                                                        |
-| routes     | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
-| components | object  | true     | -       | All the components required for your table                                                       |
-| entity     | object  | false    | -       | [Normalizr](https://github.com/paularmstrong/normalizr) specification. Check below for details.  |
-| layout     | array   | true     | -       | The layout of your table                                                                         |
-| editing    | boolean | false    | false   | Set the default state of the table to be in editing mode                                         |
-| primaryKey | string  | true     | -       | Set the primary key column of the table for actions like editing.                                |
+| Key              | Type    | Required | Default | Description                                                                                      |
+| ---------------- | ------- | -------- | ------- | ------------------------------------------------------------------------------------------------ |
+| name             | string  | true     | -       | key in the row data whose value needs to be loaded for the column (does not have to be unique)   |
+| height           | integer | true     | -       | The maximum height of the table                                                                  |
+| rowHeight        | integer | true     | -       | The maximum height of each table body row                                                        |
+| routes           | object  | true     | -       | Routes definition to fetch data and other custom routes config for custom handling (Check below) |
+| components       | object  | true     | -       | All the components required for your table                                                       |
+| entity           | object  | false    | -       | [Normalizr](https://github.com/paularmstrong/normalizr) specification. Check below for details.  |
+| layout           | array   | true     | -       | The layout of your table                                                                         |
+| editing          | boolean | false    | false   | Set the default state of the table to be in editing mode                                         |
+| primaryKey       | string  | true     | -       | Set the primary key column of the table for actions like editing.                                |
+| noResultsMessage | string  | true     | -       | Set the message to be displayed when table is empty                                              |
 
 #### Routes object
 
