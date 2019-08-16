@@ -30,6 +30,7 @@
         "reselect": "^4.0.0",
         "styled-components": "^4.3.2",
         "redux-observable": "^1.1.0",
+        "moment": "^2.24.0",
         "redux-thunk": "^2.3.0"
     },
     "dependencies": {
@@ -37,7 +38,7 @@
         "normalizr": "^3.3.0",
         "object-assign-deep": "^0.4.0",
         "query-string": "^6.1.0",
-        "react-pure-time": "^0.2.2",
+        "react-datepicker": "^2.8.0",
         "react-redux-notify": "^4.1.1"
     },
     "devDependencies": {
@@ -45,6 +46,7 @@
         "axios-observable": "^1.1.1",
         "bootstrap": "^4.3.1",
         "lodash": ">=4.17.13",
+        "moment": "^2.24.0",
         "nwb": "0.23.x",
         "path-to-regexp": "^3.0.0",
         "react": "^16.8.6",
