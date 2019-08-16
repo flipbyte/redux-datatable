@@ -1,20 +1,18 @@
 import React, { Fragment } from 'react';
 import { OPERATOR } from '../../../constants';
 import { Field, Row, Datetime } from '../../../styled-components';
-
-// import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
 
 var dateFrom = null;
 var dateTo = null;
 
 const applyFilter = ( name, key, filterer, value ) => {
-    console.log(value);
     let filter = {};
 
     if (key === 0) {
-        dateFrom = value.toISOString();
+        dateFrom = moment(value).format('YYYY-MM-DD HH:mm:ss');
     } else {
-        dateTo = value.toISOString();
+        dateTo = moment(value).format('YYYY-MM-DD HH:mm:ss');
     }
 
     if ( dateFrom || dateTo ) {
@@ -27,36 +25,29 @@ const applyFilter = ( name, key, filterer, value ) => {
         };
     }
 
-    filterer(event.target.name, filter);
+    filterer(name, filter);
 };
 
 const Date = ({ name, value = [], filterer }) => (
     <Fragment>
         <Row padding="0 0 5px">
             <Datetime
+                name={ name }
                 className="rdt-filter-input date to"
                 value={ value[0] || '' }
                 placeholder="From"
-                popperProps={{
-                    positionFixed: true
-                }}
-                showYearDropdown
-                showMonthDropdown
-                useShortMonthInDropdown
-                dateFormat="YYYY-MMMM-d, HH:mm"
+                dateFormat="YYYY-MM-DD HH:mm:ss"
                 onChange={ applyFilter.bind(this, name, 0, filterer) }
             />
         </Row>
         <Row>
             <Datetime
+                name={ name }
                 className="rdt-filter-input date to"
                 value={ value[1] || '' }
                 onChange={ applyFilter.bind(this, name, 1, filterer) }
-                popperProps={{
-                    positionFixed: true
-                }}
                 placeholder="To"
-                dateFormat="YYYY-MMMM-d HH:mm:ss"
+                dateFormat="YYYY-MM-DD HH:mm:ss"
             />
         </Row>
     </Fragment>

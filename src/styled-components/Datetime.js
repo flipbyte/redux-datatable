@@ -5,11 +5,26 @@ import DatePicker from 'react-datepicker';
 
 const DatetimeField = ({
     className,
+    popperProps = {
+        positionFixed: true
+    },
+    showYearDropdown = true,
+    showMonthDropdown = true,
+    dropdownMode = 'select',
+    useShortMonthInDropdown = false,
     ...rest
 }) => {
     return (
         <div className={ className }>
-            <DatePicker className={ className } { ...rest } />
+            <DatePicker
+                className={ className }
+                showYearDropdown={ showYearDropdown }
+                showMonthDropdown={ showMonthDropdown }
+                dropdownMode={ dropdownMode }
+                popperProps={ popperProps }
+                useShortMonthInDropdown={ useShortMonthInDropdown }
+                { ...rest }
+            />
         </div>
     );
 };
@@ -78,12 +93,12 @@ const triangleArrowUp = () => (`
 const triangleArrowDown = () => (`
     ${triangleArrow()}
 
-    bottom: 0;
+    bottom: -8px;
     margin-top: -${triangleSize};
 
     &,
     &::before {
-        border-top: none;
+        border-bottom: none;
         border-top-color: #fff;
     }
 
@@ -432,7 +447,7 @@ const StyledDatetimeField = styled(DatetimeField)`
         width: ${itemSize};
         line-height: ${itemSize};
         text-align: center;
-        margin: ${margin};
+        margin: ${dayMargin};
     }
 
 
@@ -555,6 +570,7 @@ const StyledDatetimeField = styled(DatetimeField)`
     .react-datepicker__month-year-read-view {
         border: 1px solid transparent;
         border-radius: ${borderRadius};
+        vertical-align: baseline;
 
         &:hover {
             cursor: pointer;
