@@ -1,23 +1,26 @@
 import React, { Fragment } from 'react';
 import { OPERATOR } from '../../../constants';
-import { Field, Row } from '../../../styled-components';
+import { Field, Row, Datetime } from '../../../styled-components';
+
+// import 'react-datepicker/dist/react-datepicker.css';
 
 var dateFrom = null;
 var dateTo = null;
 
-const applyFilter = ( key, filterer, event ) => {
+const applyFilter = ( name, key, filterer, value ) => {
+    console.log(value);
     let filter = {};
 
     if (key === 0) {
-        dateFrom = event.target.value;
+        dateFrom = value.toISOString();
     } else {
-        dateTo = event.target.value;
+        dateTo = value.toISOString();
     }
 
     if ( dateFrom || dateTo ) {
         filter = {
             operator: OPERATOR.BETWEEN,
-            field: event.target.name,
+            field: name,
             value: [ dateFrom, dateTo ],
             logic: 'where',
             type: 'date',
@@ -30,25 +33,30 @@ const applyFilter = ( key, filterer, event ) => {
 const Date = ({ name, value = [], filterer }) => (
     <Fragment>
         <Row padding="0 0 5px">
-            <Field.Input
-                className="rdt-filter-input date from"
-                type="date"
-                name={ name }
+            <Datetime
+                className="rdt-filter-input date to"
                 value={ value[0] || '' }
-                onChange={ applyFilter.bind(this, 0, filterer) }
                 placeholder="From"
-                autocomplete="off"
+                popperProps={{
+                    positionFixed: true
+                }}
+                showYearDropdown
+                showMonthDropdown
+                useShortMonthInDropdown
+                dateFormat="YYYY-MMMM-d, HH:mm"
+                onChange={ applyFilter.bind(this, name, 0, filterer) }
             />
         </Row>
         <Row>
-            <Field.Input
+            <Datetime
                 className="rdt-filter-input date to"
-                type="date"
-                name={ name }
                 value={ value[1] || '' }
-                onChange={ applyFilter.bind(this, 1, filterer) }
+                onChange={ applyFilter.bind(this, name, 1, filterer) }
+                popperProps={{
+                    positionFixed: true
+                }}
                 placeholder="To"
-                autocomplete="off"
+                dateFormat="YYYY-MMMM-d HH:mm:ss"
             />
         </Row>
     </Fragment>
