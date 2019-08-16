@@ -4,7 +4,6 @@ import { useSelector, shallowEqual } from 'react-redux';
 import ConfigContext from '../context';
 import { createSelector } from 'reselect';
 import { MODIFY_DATA } from '../actions';
-import moment from 'moment';
 
 const withData = WrappedComponent => (props) => {
     const { itemIndex, colConfig, primaryKey, schema } = props;
@@ -31,13 +30,20 @@ const withData = WrappedComponent => (props) => {
         (item) => _.get(item, name)
     ));
 
-    const handleChange = (value) => {
+    const handleChange = (eventOrValue) => {
+        let value = null;
+        if (eventOrValue.target) {
+            value = eventOrValue.target.value;
+        } else {
+            value = eventOrValue;
+        }
+
         return (
             action(MODIFY_DATA)({
                 pk: primaryKey,
                 pkValue: primarKeyValue,
                 key: name,
-                value: moment(value).format(parse)
+                value: value
             })
         );
     }

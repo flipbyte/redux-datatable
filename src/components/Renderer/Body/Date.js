@@ -23,7 +23,7 @@ const Date = ({
                 <Row padding="0 0 5px">
                     <Datetime
                         name={ name }
-                        onChange={ handleChange }
+                        onChange={(value) => handleChange(moment(value).format(parse))}
                         modified={ isModified }
                         className={ isModified ? 'modified' : ''}
                         value={ datetime.format(inputFormat) }
