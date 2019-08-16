@@ -1,54 +1,62 @@
 import React, { Fragment } from 'react';
 import { OPERATOR } from '../../../constants';
-import { Field, Row } from '../../../styled-components';
+import { Field, Row, Datetime } from '../../../styled-components';
+import moment from 'moment';
 
 var dateFrom = null;
 var dateTo = null;
 
-const applyFilter = ( key, filterer, event ) => {
+const applyFilter = ( name, key, filterer, format, value ) => {
     let filter = {};
 
     if (key === 0) {
-        dateFrom = event.target.value;
+        dateFrom = moment(value).format(format);
     } else {
-        dateTo = event.target.value;
+        dateTo = moment(value).format(format);
     }
 
-    if ( dateFrom || dateTo ) {
+    if (dateFrom || dateTo) {
         filter = {
             operator: OPERATOR.BETWEEN,
-            field: event.target.name,
+            field: name,
             value: [ dateFrom, dateTo ],
             logic: 'where',
             type: 'date',
         };
     }
 
-    filterer(event.target.name, filter);
+    filterer(name, filter);
 };
 
-const Date = ({ name, value = [], filterer }) => (
+const Date = ({
+    name,
+    value = [],
+    filterer,
+    inputFormat = 'YYYY-MM-DD',
+    parse = 'YYYY-MM-DD HH:mm:ss',
+    showTimeSelect = false
+}) => (
     <Fragment>
         <Row padding="0 0 5px">
-            <Field.Input
-                className="rdt-filter-input date from"
-                type="date"
-                name={ name }
-                value={ value[0] || '' }
-                onChange={ applyFilter.bind(this, 0, filterer) }
+            <Datetime
+                className="rdt-filter-input date to"
+                value={ value[0] ? moment(value[0], parse).format(inputFormat) : '' }
                 placeholder="From"
-                autocomplete="off"
+                showTimeSelect={ showTimeSelect }
+                onChange={ applyFilter.bind(this, name, 0, filterer, parse) }
+                selected={ value[0] && moment(value[0], parse).toDate() }
+                dateFormat={ inputFormat }
             />
         </Row>
         <Row>
-            <Field.Input
+            <Datetime
                 className="rdt-filter-input date to"
-                type="date"
-                name={ name }
-                value={ value[1] || '' }
-                onChange={ applyFilter.bind(this, 1, filterer) }
+                value={ value[1] ? moment(value[1], parse).format(inputFormat) : '' }
                 placeholder="To"
-                autocomplete="off"
+                showTimeSelect={ showTimeSelect }
+                onChange={ applyFilter.bind(this, name, 1, filterer, parse) }
+                selected={ value[1] && moment(value[1], parse).toDate() }
+                dateFormat={ inputFormat }
             />
         </Row>
     </Fragment>

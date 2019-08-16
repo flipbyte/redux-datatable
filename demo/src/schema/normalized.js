@@ -28,6 +28,7 @@ export default {
     rowHeight: 50,
     editing: false,
     primaryKey: 'pageId',
+    noResultsMessage: 'Empty results',
     routes: {
         get: {
             route: '/page',

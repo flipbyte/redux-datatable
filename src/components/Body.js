@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Tbody, Tr, Td, Div } from '../styled-components';
+import { Tbody, Tr, Td, Div, Row } from '../styled-components';
 import { Body as Renderers } from './Renderer';
 import { getStyles, getRenderer, getInitialVisibleColumns } from '../utils';
 import { MODIFY_DATA, SET_BODY_INNER_WIDTH, SET_TABLE_WIDTH, SET_VISIBLE_COLUMN_IDS, SET_COLUMN_WIDTHS } from '../actions';
@@ -34,19 +34,44 @@ const renderCol = (rowIndex, primaryKey, schema, styles, colClassName, column, i
     );
 };
 
-const renderRow = (columns, rowHeight, styles, primaryKey, schema, rowClassName, colClassName, rowIndex, top) => (
-    <Tr
-        key={ rowIndex }
-        className={ rowClassName }
-        position="absolute"
-        top={ top }
-        columns={ columns }
-        height={ rowHeight }
-        even={ rowIndex % 2 === 0 }
-        styles={ getStyles(styles.tr, 'body') }
-    >
-        { renderCol.bind(this, rowIndex, primaryKey, schema, styles, colClassName) }
-    </Tr>
+const renderRow = (
+    columns,
+    rowHeight,
+    styles,
+    primaryKey,
+    schema,
+    rowClassName,
+    colClassName,
+    noResultsMessage,
+    rowIndex,
+    top
+) => (
+    rowIndex !== -1
+        ? (
+            <Tr
+                key={ rowIndex }
+                className={ rowClassName }
+                position="absolute"
+                top={ top }
+                columns={ columns }
+                height={ rowHeight }
+                even={ rowIndex % 2 === 0 }
+                styles={ getStyles(styles.tr, 'body') }
+            >
+                { renderCol.bind(this, rowIndex, primaryKey, schema, styles, colClassName) }
+            </Tr>
+        ) : (
+            <Row
+                className={ rowClassName }
+                height={ rowHeight + 'px' }
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }
+            }>
+                { noResultsMessage }
+            </Row>
+        )
 );
 
 const Body = React.forwardRef(({ top: startTop = 0, config }, ref) => {
@@ -61,6 +86,7 @@ const Body = React.forwardRef(({ top: startTop = 0, config }, ref) => {
             height: minHeight,
             primaryKey,
             overScanCount = 10,
+            noResultsMessage = 'No results found',
             components: {
                 Table: { styles = {} }
             },
@@ -130,13 +156,23 @@ const Body = React.forwardRef(({ top: startTop = 0, config }, ref) => {
             styles={ getStyles(styles, 'tbody') }
             ref={ ref }
             isPrinting={ isPrinting }
-            height={ height }
+            height={ height > 0 ? height : rowHeight }
             visibleHeight={ visibleHeight }
-            innerHeight={ innerHeight }
+            innerHeight={ innerHeight > 0 ? innerHeight : rowHeight }
             range={ range }
             rowHeight={ rowHeight }
         >
-            { renderRow.bind(this, columns, rowHeight, styles, primaryKey, schema, rowClassName, colClassName) }
+            { renderRow.bind(
+                this,
+                columns,
+                rowHeight,
+                styles,
+                primaryKey,
+                schema,
+                rowClassName,
+                colClassName,
+                noResultsMessage
+            )}
         </Tbody>
     );
 });
